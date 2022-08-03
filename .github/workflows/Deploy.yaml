@@ -20,7 +20,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Build and Push user_posts_statistic_service
+      - name: Build and Push user_posts_statistic_worker_service
         uses: docker/build-push-action@v3
         with:
           context: user_posts_statistic_service
