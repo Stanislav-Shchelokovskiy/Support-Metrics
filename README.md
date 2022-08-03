@@ -12,8 +12,8 @@ Add **.env** file containing the following env vars:
 - REDIS_DB=1
 - CELERY_BROKER_URL=redis://redis_service:6379/1
 - CELERY_RESULT_BACKEND=redis://redis_service:6379/1
-- DB_HOME=/sqlite_data
-- SQLITE_DATABASE=/sqlite_data/db
+- DB_HOME=/root/app/sqlite_data
+- SQLITE_DATABASE=/root/app/sqlite_data/db
 - CLIENT_POSTS_SQL=sql_queries/client_posts_by_tribes.sql
 
 Make sure:
