@@ -11,8 +11,6 @@ pandas = "^1.4.3"
 SQLAlchemy = "^1.4.39"
 celery = {extras = ["redis"], version = "^5.2.7"}
 redis = "^4.3.4"
-fastapi = "^0.79.0"
-uvicorn = "^0.18.2"
 pyodbc = "^4.0.34"
 flower = "^1.1.0"
 

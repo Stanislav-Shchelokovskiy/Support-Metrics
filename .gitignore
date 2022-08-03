@@ -2,3 +2,6 @@
 **.venv
 **.pytest*
 **pycache*
+**.env
+**celerybeat-schedule
+sqlite_data/*
