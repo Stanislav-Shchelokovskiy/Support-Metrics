@@ -53,5 +53,5 @@ volumes:
 
 networks:
   default:
-    name: stas_dx
+    name: support_analytics
     external: true

@@ -17,9 +17,9 @@ Add **.env** file containing the following env vars:
 - CLIENT_POSTS_SQL=sql_queries/client_posts_by_tribes.sql
 
 Make sure:
-1. <b>stas_dx</b> network is created<br>
-    docker network create -d bridge stas_dx
+1. <b>support_analytics</b> network is created<br>
+    docker network create -d bridge support_analytics
 2. <b>redice_service</b> is up<br>
-    docker run -d --name=redis_service --network=stas_dx -p 6379:6379 -p 11001:8001 redis/redis-stack:latest
+    docker run -d --name=redis_service --network=support_analytics -p 6379:6379 -p 11001:8001 redis/redis-stack:latest
 
 Then run <b>docker-compose up</b>.
