@@ -1,5 +1,5 @@
 import pytest
-from sql.sqlite_data_base import SQLiteDataBase
+from user_posts_statistic_service.sql.sqlite_data_base import SQLiteDataBase
 
 
 def test_connections():

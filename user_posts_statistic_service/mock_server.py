@@ -25,4 +25,4 @@ def user_posts():
         media_type='application/json',
     )
 
-    # ../.venv/bin/uvicorn test_server:app --host 0.0.0.0 --port 12000 --reload
+    # ../.venv/bin/uvicorn mock_server:app --host 0.0.0.0 --port 12000 --reload
