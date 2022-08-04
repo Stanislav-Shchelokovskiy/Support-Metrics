@@ -64,14 +64,9 @@ class UserPostsRepository:
         self._try_disconnect()
         return available_tribes
 
-    def get_user_posts(self, tribe_name: str) -> DataFrame:
+    def get_user_posts(self) -> DataFrame:
         self._connect_or_reuse_connection()
         user_posts_df = read_sql(
-            sql=f"""SELECT *
-                    FROM {os.environ['USER_POSTS_TABLE_NAME']}
-                    WHERE {UserPoststByTribesMeta.tribe_name} LIKE '{tribe_name}'
-                    ORDER BY {UserPoststByTribesMeta.user_posts_from_posts_from_all_users_perc} DESC"""
-            if tribe_name != 'All' else 
                 f"""SELECT *
                     FROM {os.environ['USER_POSTS_TABLE_NAME']}
                     ORDER BY {UserPoststByTribesMeta.user_posts_from_posts_from_all_users_perc} DESC""",
