@@ -64,11 +64,13 @@ class UserPostsRepository:
         self._try_disconnect()
         return available_tribes
 
-    def get_user_posts(self) -> DataFrame:
+    def get_user_posts(self, tribes: list[str]) -> DataFrame:
         self._connect_or_reuse_connection()
+        filter = ', '.join([f"'{tribe}'" for tribe in tribes])
         user_posts_df = read_sql(
-                f"""SELECT *
+            f"""SELECT *
                     FROM {os.environ['USER_POSTS_TABLE_NAME']}
+                    WHERE {UserPoststByTribesMeta.tribe_name} IN ({filter})
                     ORDER BY {UserPoststByTribesMeta.user_posts_from_posts_from_all_users_perc} DESC""",
             con=self._get_connection(),
         )
