@@ -27,4 +27,3 @@ COPY sql_queries ./sql_queries
 COPY utils ./utils
 COPY tasks.py .
 COPY user_posts_worker.py .
-COPY sqlite_data ./sqlite_data

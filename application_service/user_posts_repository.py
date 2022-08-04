@@ -1,10 +1,10 @@
 import os
 import sqlite3
-from pandas import DataFrame
+from pandas import DataFrame, read_sql
 from pathlib import Path
 
 
-class SQLiteDataBase:
+class UserPostsRepository:
 
     def __init__(
         self,
@@ -52,17 +52,34 @@ class SQLiteDataBase:
     def _get_connection(self) -> sqlite3.Connection:
         return self._db_connection
 
-    def save_tables(self, tables: dict[str, DataFrame]) -> None:
+    def get_available_tribes(self) -> list[str]:
         self._connect_or_reuse_connection()
-        if tables is not None:
-            for k, v in tables.items():
-                v.to_sql(
-                    name=k,
-                    con=self._get_connection(),
-                    if_exists='replace',
-                    index=False,
-                )
+        cursor = self._get_connection().cursor()
+        available_tribes = [
+            row[0] for row in cursor.execute(
+                f"""SELECT DISTINCT {UserPoststByTribes.tribe_name}
+                    FROM {os.environ['USER_POSTS_TABLE_NAME']}"""
+            )
+        ]
         self._try_disconnect()
+        return available_tribes
+
+    def get_user_posts(self, tribe_name: str) -> DataFrame:
+        self._connect_or_reuse_connection()
+        user_posts_df = read_sql(
+            sql=f"""SELECT *
+                    FROM {os.environ['USER_POSTS_TABLE_NAME']}
+                    WHERE {UserPoststByTribes.tribe_name} LIKE '{tribe_name}'"""
+            if tribe_name else f"""SELECT *
+                    FROM {os.environ['USER_POSTS_TABLE_NAME']}""",
+            con=self._get_connection(),
+        )
+        self._try_disconnect()
+        return user_posts_df
+
+
+class UserPoststByTribes:
+    tribe_name = 'tribe_name'
 
 
 class DbFileIsMissingException(Exception):

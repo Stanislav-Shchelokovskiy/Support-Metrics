@@ -1,0 +1,6 @@
+**/__pycache__
+**/Tests
+**/.pytest_cache
+**/.gitignore
+**celerybeat-schedule
+**/.venv

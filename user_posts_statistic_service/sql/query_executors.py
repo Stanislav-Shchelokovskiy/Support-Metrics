@@ -110,14 +110,14 @@ class SQLiteQueryExecutor(SqlQueryExecutor):
         source_tables: Dict[str, DataFrame] = None,
         kargs: Dict[str, Any] = {},
     ) -> DataFrame:
-        self.data_base.try_connect()
+        self.data_base._connect_or_reuse_connection()
         self.data_base.save_tables(source_tables)
 
         query_result = self._execute_sql_query(
             sql_query=sql_query,
-            connection=self.data_base.get_connection(),
+            connection=self.data_base._get_connection(),
             kargs=kargs,
         )
 
-        self.data_base.try_disconnect()
+        self.data_base._try_disconnect()
         return query_result

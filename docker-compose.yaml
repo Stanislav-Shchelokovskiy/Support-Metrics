@@ -2,33 +2,34 @@ version: '3.4'
 
 x-user_posts_statistic_service:
   &user_posts_statistic_service
-  image: shchelokovskiy/user_posts_statistic_worker_service:latest
+  image: shchelokovskiy/user_posts_statistic_service:latest
   restart: always
   environment:
     - SQL_SERVER
     - SQL_DATABASE
     - SQL_USER
     - SQL_PASSWORD
-    - APP_SERVER_PORT
     - CELERY_BROKER_URL
     - CELERY_RESULT_BACKEND
     - SQLITE_DATABASE
-    - CLIENT_POSTS_SQL
+    - USER_POSTS_SQL
+    - USER_POSTS_TABLE_NAME
 
 services:
 
-  # application_server:
-  #   image: shchelokovskiy/application_server:latest
-  #   restart: always
-  #   hostname: application_server
-  #   container_name: application_server
-  #   environment:
-  #     - APP_SERVER_PORT
-  #     - REDIS_SERVICE=redis_service
-  #     - FORECASTER_DB
-  #     - USERS_STATISTIC_DB
-  #   ports:
-  #     - "${APP_SERVER_PORT}:${APP_SERVER_PORT}"
+  user_posts_client:
+    image: shchelokovskiy/user_posts_client:latest
+    restart: always
+    hostname: user_posts_client
+    container_name: user_posts_client
+    command: gunicorn -w 3 -t 120 -b 0.0.0.0:$APP_SERVER_PORT plotly_server:server
+    environment:
+      - SQLITE_DATABASE
+      - USER_POSTS_TABLE_NAME
+    volumes:
+      - user-posts-volume:${DB_HOME}
+    ports:
+      - "${APP_SERVER_PORT}:${APP_SERVER_PORT}"
 
   user_posts_statistic_worker_service:
     <<: *user_posts_statistic_service
@@ -36,7 +37,7 @@ services:
     container_name: user_posts_statistic_worker_service
     command: celery --app user_posts_worker worker --beat --loglevel=INFO --concurrency 7 #--logfile=logs/celery.log
     volumes:
-      - db:${DB_HOME}
+      - user-posts-volume:${DB_HOME}
 
   user_posts_statistic_dashboard:
     <<: *user_posts_statistic_service
@@ -48,10 +49,10 @@ services:
     depends_on:
       - user_posts_statistic_worker_service
 
-volumes:
-  db:
-
 networks:
   default:
     name: support_analytics
     external: true
+
+volumes:
+  user-posts-volume:

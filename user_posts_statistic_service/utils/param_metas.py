@@ -1,7 +1,7 @@
 from sql.meta_data import MetaData
 
 
-class ClientPoststByTribesMetaData(MetaData):
+class UserPoststByTribesMetaData(MetaData):
     user_id = 'user_id'
     user_name = 'user_name'
     license_status = 'license_status'
