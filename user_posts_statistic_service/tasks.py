@@ -1,6 +1,6 @@
 import os
 
-from user_posts_statistic_service.repositories.user_posts_by_tribes_repository import UserPoststByTribesRepository
+from repositories.user_posts_by_tribes_repository import UserPoststByTribesRepository
 from sql.sqlite_data_base import SQLiteDataBase
 
 

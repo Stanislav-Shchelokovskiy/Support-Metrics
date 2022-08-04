@@ -57,7 +57,7 @@ class UserPostsRepository:
         cursor = self._get_connection().cursor()
         available_tribes = [
             row[0] for row in cursor.execute(
-                f"""SELECT DISTINCT {UserPoststByTribes.tribe_name}
+                f"""SELECT DISTINCT {UserPoststByTribesMeta.tribe_name}
                     FROM {os.environ['USER_POSTS_TABLE_NAME']}"""
             )
         ]
@@ -69,17 +69,29 @@ class UserPostsRepository:
         user_posts_df = read_sql(
             sql=f"""SELECT *
                     FROM {os.environ['USER_POSTS_TABLE_NAME']}
-                    WHERE {UserPoststByTribes.tribe_name} LIKE '{tribe_name}'"""
-            if tribe_name else f"""SELECT *
-                    FROM {os.environ['USER_POSTS_TABLE_NAME']}""",
+                    WHERE {UserPoststByTribesMeta.tribe_name} LIKE '{tribe_name}'
+                    ORDER BY {UserPoststByTribesMeta.user_posts_from_posts_from_all_users_perc} DESC"""
+            if tribe_name != 'All' else 
+                f"""SELECT *
+                    FROM {os.environ['USER_POSTS_TABLE_NAME']}
+                    ORDER BY {UserPoststByTribesMeta.user_posts_from_posts_from_all_users_perc} DESC""",
             con=self._get_connection(),
         )
         self._try_disconnect()
         return user_posts_df
 
 
-class UserPoststByTribes:
+class UserPoststByTribesMeta:
+    user_id = 'user_id'
+    user_name = 'user_name'
+    license_status = 'license_status'
     tribe_name = 'tribe_name'
+    user_posts_by_tribe = 'user_posts_by_tribe'
+    user_posts_by_tribe_from_their_all_posts_perc = 'user_posts_by_tribe_from_their_all_posts_perc'
+    user_posts_by_tribe_from_posts_from_all_users_perc = 'user_posts_by_tribe_from_posts_from_all_users_perc'
+    user_posts = 'user_posts'
+    user_posts_from_posts_from_all_users_perc = 'user_posts_from_posts_from_all_users_perc'
+    posts_from_all_users = 'posts_from_all_users'
 
 
 class DbFileIsMissingException(Exception):

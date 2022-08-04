@@ -19,7 +19,7 @@ class SQLiteDataBase:
             raise DbFileIsMissingException()
 
     def _connect(self) -> None:
-        self._check_db_file_availability()
+       # self._check_db_file_availability()
         self._disconnect()
         self._db_connection = sqlite3.connect(database=self.db_file)
 
