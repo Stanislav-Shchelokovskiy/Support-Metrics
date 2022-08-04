@@ -127,7 +127,12 @@ def create_graphs_div(df: DataFrame):
 
 def create_labeled_tribe_divs(df: DataFrame):
     return [
-        create_labeled_tribe_div(metric, df) for metric in [
+        html.Div(
+            children=[
+                html.Label(children=metric),
+                create_labeled_tribe_div(metric, df)
+            ]
+        ) for metric in [
             UserPoststByTribesMeta.
             user_posts_by_tribe_from_their_all_posts_perc,
             UserPoststByTribesMeta.
@@ -138,10 +143,8 @@ def create_labeled_tribe_divs(df: DataFrame):
 
 
 def create_labeled_tribe_div(metric: str, df: DataFrame):
-    elements = [html.Label(children=metric)]
-    elements.extend(create_graphs(metric, df))
     return html.Div(
-        children=elements,
+        children=create_graphs(metric, df),
         style={
             'display': 'flex',
             'flex-direction': 'row',
