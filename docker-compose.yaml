@@ -17,12 +17,12 @@ x-user_posts_statistic_service:
 
 services:
 
-    user_posts_statistic_client:
+  user_posts_statistic_client:
     image: shchelokovskiy/user_posts_statistic_client:latest
     restart: always
-    hostname:   user_posts_statistic_client
-    container_name:   user_posts_statistic_client
-    command: gunicorn -w 3 -t 120 -b 0.0.0.0:$APP_SERVER_PORT plotly_server:server
+    hostname: user_posts_statistic_client
+    container_name: user_posts_statistic_client
+    command: gunicorn -w 2 -t 120 -b 0.0.0.0:$APP_SERVER_PORT plotly_server:server
     environment:
       - SQLITE_DATABASE
       - USER_POSTS_TABLE_NAME
