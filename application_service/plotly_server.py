@@ -66,7 +66,7 @@ def get_user_posts_table(tribes: list[str]) -> dash_table:
             {
                 'name': i,
                 'id': i
-            } for i in user_posts_df.columns if i not in ('id', 'graph_name')
+            } for i in user_posts_df.columns if i not in ('id', 'graph_name', 'graph_name_common')
         ],
         filter_action='native',
         sort_action='native',
