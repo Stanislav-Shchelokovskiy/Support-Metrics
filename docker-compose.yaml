@@ -18,7 +18,7 @@ x-user_posts_statistic_service:
 services:
 
     user_posts_statistic_client:
-    image: shchelokovskiy/  user_posts_statistic_client:latest
+    image: shchelokovskiy/user_posts_statistic_client:latest
     restart: always
     hostname:   user_posts_statistic_client
     container_name:   user_posts_statistic_client
