@@ -11,7 +11,7 @@ services:
   user_posts_statistic_worker_service:
     <<: *user_posts_statistic_service
 
-    user_posts_statistic_client:
+  user_posts_statistic_client:
     build:
       context: application_service
       dockerfile: Dockerfile
