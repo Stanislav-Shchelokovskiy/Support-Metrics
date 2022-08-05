@@ -43,23 +43,37 @@ def create_available_tribes_selector() -> dcc.Checklist:
         value=[],
         id='tribe_selector_cl',
         inline=True,
+        style={'font-family': 'Segoe UI'},
     )
 
 
 def get_user_posts_table(tribes: list[str]) -> dash_table:
     user_posts_df = get_user_posts(tribes)
+    user_posts_df['id'] = user_posts_df.index.values
+    user_posts_df['graph_name'] = (
+        user_posts_df[UserPoststByTribesMeta.user_name] + ' ('
+        + user_posts_df[UserPoststByTribesMeta.user_id] + ', '
+        + user_posts_df[UserPoststByTribesMeta.license_status] + ')'
+    )
+    user_posts_df['graph_name_common'] = (
+        user_posts_df[UserPoststByTribesMeta.user_name] + ' ('
+        + user_posts_df[UserPoststByTribesMeta.user_id] + ')'
+    )
     return dash_table.DataTable(
         id='user_posts_table',
         data=user_posts_df.to_dict('records'),
-        columns=[{
-            'name': i,
-            'id': i
-        } for i in user_posts_df.columns],
+        columns=[
+            {
+                'name': i,
+                'id': i
+            } for i in user_posts_df.columns if i not in ('id', 'graph_name')
+        ],
         filter_action='native',
         sort_action='native',
         sort_mode='multi',
         row_selectable='multi',
         page_size=10,
+        style_cell={'font-family': 'Segoe UI'},
     )
 
 
@@ -85,19 +99,21 @@ def filter_user_posts_table(tribes):
 
 
 @app.callback(
-    Output('user_posts_table', 'selected_rows'),
-    [Input('select_all', 'n_clicks'),
-     Input('clear_selection', 'n_clicks')],
+    [Output('user_posts_table', 'selected_rows')],
+    [
+        Input('select_all', 'n_clicks'),
+        Input('clear_selection', 'n_clicks'),
+    ],
     State('user_posts_table', 'derived_virtual_data'),
     prevent_initial_call=True,
 )
 def select_all_in_posts_table(select_all, clear_selection, rows):
     ctx = callback_context
     if ctx.triggered:
-        trigger = (ctx.triggered[0]['prop_id'].split('.')[0])
-        if trigger == 'select_all':
-            return [i for i in range(len(rows))]
-    return []
+        trigger = ctx.triggered[0]['prop_id']
+        if trigger == 'select_all.n_clicks':
+            return [[row['id'] for row in rows]]
+    return [[]]
 
 
 @app.callback(
@@ -109,9 +125,6 @@ def select_all_in_posts_table(select_all, clear_selection, rows):
     prevent_initial_call=True,
 )
 def update_graphs(rows, derived_virtual_selected_rows):
-    # if derived_virtual_selected_rows is None:
-    #     raise PreventUpdate
-
     if not derived_virtual_selected_rows:
         return []
 
@@ -138,9 +151,18 @@ def create_labeled_tribe_divs(df: DataFrame):
     return [
         html.Div(
             children=[
-                html.Label(children=metric),
+                html.Label(
+                    children=get_metric_public_name(metric),
+                    style={
+                        'font-size': '20px',
+                        'font-family': 'Segoe UI'
+                    },
+                ),
                 create_labeled_tribe_div(metric, df)
-            ]
+            ],
+            style={
+                'margin': '2em',
+            }
         ) for metric in [
             UserPoststByTribesMeta.user_posts_from_posts_from_all_users_perc,
             UserPoststByTribesMeta.
@@ -149,6 +171,17 @@ def create_labeled_tribe_divs(df: DataFrame):
             user_posts_by_tribe_from_their_all_posts_perc,
         ] if metric in df
     ]
+
+
+def get_metric_public_name(original_metric_name: str) -> str:
+    return {
+        UserPoststByTribesMeta.user_posts_from_posts_from_all_users_perc:
+            'What part user posts take from all posts from all users in percent',
+        UserPoststByTribesMeta.user_posts_by_tribe_from_posts_from_all_users_perc:
+            'What part user posts by tribes take from all posts from all users in percent',
+        UserPoststByTribesMeta.user_posts_by_tribe_from_their_all_posts_perc:
+            'What part user posts by tribes take from all posts by this user',
+    }[original_metric_name]
 
 
 def create_labeled_tribe_div(metric: str, df: DataFrame):
@@ -160,13 +193,53 @@ def create_labeled_tribe_div(metric: str, df: DataFrame):
             'justify-content': 'flex-start',
             'align-items': 'flex-start',
             'flex-wrap': 'nowrap',
+            'margin': '1em',
         },
     )
 
 
 def create_graphs(metric: str, df: DataFrame) -> list[dcc.Graph]:
+    if metric == UserPoststByTribesMeta.user_posts_from_posts_from_all_users_perc:
+        return greate_graphs_by_users(metric, df)
+    return create_graphs_by_tribes(metric, df)
+
+
+def greate_graphs_by_users(metric: str, df: DataFrame) -> list[dcc.Graph]:
+    x_col_name = 'graph_name_common'
+    df = get_df_slice(
+        [
+            x_col_name,
+            metric,
+        ],
+        df,
+    )
+    return [create_graph(
+        x_col_name,
+        metric,
+        '',
+        df,
+        df[metric].max(),
+    )]
+
+
+def get_df_slice(cols: list[str], df: DataFrame) -> DataFrame:
+    df = df[cols].drop_duplicates()
+    return df
+
+
+def create_graphs_by_tribes(metric: str, df: DataFrame) -> list[dcc.Graph]:
+    x_col_name = 'graph_name'
+    df = get_df_slice(
+        [
+            x_col_name,
+            metric,
+            UserPoststByTribesMeta.tribe_name,
+        ],
+        df,
+    )
     return [
         create_graph(
+            x_col_name,
             metric,
             tribe_name,
             df[df[UserPoststByTribesMeta.tribe_name] == tribe_name],
@@ -175,34 +248,38 @@ def create_graphs(metric: str, df: DataFrame) -> list[dcc.Graph]:
     ]
 
 
-def create_graph(metric: str, tribe_name: str, df: DataFrame, y_limit: float):
+def create_graph(
+    x_col_name: str,
+    metric: str,
+    tribe_name: str,
+    df: DataFrame,
+    y_limit: float,
+):
+
     return dcc.Graph(
         id=tribe_name,
         figure={
-            'data':
-                [
-                    {
-                        'x': df[UserPoststByTribesMeta.user_name],
-                        'y': df[metric],
-                        'type': 'bar',
-                        # 'marker': {
-                        #     'color': ['#0074D9']
-                        # },
-                    }
-                ],
+            'data': [{
+                'x': df[x_col_name],
+                'y': df[metric],
+                'type': 'bar',
+            }],
             'layout':
                 {
+                    'barmode': 'group',
                     'title': {
                         'text': get_title(metric, tribe_name)
                     },
                     'xaxis': {
                         'automargin': True,
                     },
-                    'yaxis': {
-                        'automargin': False,
-                        'range': [0, y_limit]
-                    },
-                    'height': 250,
+                    'yaxis':
+                        {
+                            'automargin': True,
+                            'range': [0, y_limit * 1.2],
+                            'autorange': False,
+                        },
+                    'height': 500,
                     'margin': {
                         't': 50,
                         'l': 100,
@@ -223,11 +300,17 @@ app.layout = html.Div(
             id='commands',
             children=[
                 create_available_tribes_selector(),
-                html.Button('Select All', id='select_all', n_clicks=0),
+                html.Button(
+                    'Select All',
+                    id='select_all',
+                    n_clicks=0,
+                    style={'font-family': 'Segoe UI'},
+                ),
                 html.Button(
                     'Clear Selection',
                     id='clear_selection',
                     n_clicks=0,
+                    style={'font-family': 'Segoe UI'},
                 ),
             ],
             style={
@@ -237,10 +320,9 @@ app.layout = html.Div(
         ),
         html.Div(
             id='user_posts_table_container',
-            #children=get_user_posts_table([]),
             style={
                 'padding': 10,
-                'flex': 1
+                'flex': 1,
             },
         ),
         html.Div(
