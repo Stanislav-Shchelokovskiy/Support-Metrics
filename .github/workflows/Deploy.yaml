@@ -27,9 +27,9 @@ jobs:
           file: user_posts_statistic_service/Dockerfile.user_posts_statistic_service
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/user_posts_statistic_worker_service:latest
-      # - name: Build and Push application_server
-      #   uses: docker/build-push-action@v3
-      #   with:
-      #     context: application_server
-      #     push: true
-      #     tags: ${{ secrets.DOCKER_HUB_USERNAME }}/application_server:latest
+      - name: Build and Push application_service
+        uses: docker/build-push-action@v3
+        with:
+          context: application_service
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/user_posts_statistic_client:latest
