@@ -7,7 +7,7 @@ Add **.env** file containing the following env vars:
 - SQL_PASSWORD=..
 - APP_SERVER_PORT=11002
 - FLOWER_PORT=11003
-- CELERY_BROKER_URL=redis://redis_service:6379/0
+- CELERY_BROKER_URL=redis://redis_service:6379/1
 - CELERY_RESULT_BACKEND=redis://redis_service:6379/0
 - DB_HOME=/root/app/user_posts_data
 - SQLITE_DATABASE=/root/app/user_posts_data/db
