@@ -267,7 +267,7 @@ def create_graph(
     df: DataFrame,
     y_limit: float,
 ):
-
+    df = sort_by_metric(metric, df)
     return dcc.Graph(
         id=tribe_name,
         figure={
@@ -299,6 +299,15 @@ def create_graph(
                     },
                 },
         },
+    )
+
+
+def sort_by_metric(metric, df: DataFrame):
+    return df.sort_values(
+        by=[metric],
+        axis='index',
+        ascending=False,
+        inplace=False,
     )
 
 
