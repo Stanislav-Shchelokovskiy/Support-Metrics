@@ -88,8 +88,20 @@ def get_user_posts(tribes: list[str]) -> DataFrame:
 
 
 @app.callback(
+    Output('download_original_data', 'data'),
+    Input('btn_csv', 'n_clicks'),
+    State('tribe_selector_cl', 'value'),
+    prevent_initial_call=True,
+)
+def download_original_data(n_clicks, tribes):
+    user_posts_df = get_user_posts(tribes)
+    return dcc.send_data_frame(user_posts_df.to_csv, 'user_posts.csv')
+
+
+@app.callback(
     Output('user_posts_table_container', 'children'),
     [Input('tribe_selector_cl', 'value')],
+    prevent_initial_call=True,
 )
 def filter_user_posts_table(tribes):
     if tribes is None:
@@ -303,15 +315,19 @@ app.layout = html.Div(
                 html.Button(
                     'Select All',
                     id='select_all',
-                    n_clicks=0,
                     style={'font-family': 'Segoe UI'},
                 ),
                 html.Button(
                     'Clear Selection',
                     id='clear_selection',
-                    n_clicks=0,
                     style={'font-family': 'Segoe UI'},
                 ),
+                html.Button(
+                    'Download original data',
+                    id='btn_csv',
+                    style={'font-family': 'Segoe UI'},
+                ),
+                dcc.Download(id='download_original_data'),
             ],
             style={
                 'padding': 10,

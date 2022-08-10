@@ -99,7 +99,8 @@ user_posts_within_period_with_tribes AS (
 		posts.user_name,
 		tribes.Name AS tribe_name,
 		tribes.Id AS tribe_id,
-		license_status
+		license_status,
+		posts.ticked_id
 	FROM user_posts_within_period AS posts
 		LEFT JOIN DXStatisticsV2.dbo.TicketInfos AS ti ON ti.Id = posts.ticked_id
 		LEFT JOIN DXStatisticsV2.dbo.TribeTeamMapping AS ttm ON ttm.SupportTeam = ISNULL(ti.ProcessingSupportTeam, ti.SupportTeam)
@@ -119,6 +120,7 @@ user_posts_by_tribes AS (
 		MIN(tribe_name) AS tribe_name,
 		COUNT(post_creation_timestamp) AS user_posts_by_tribe,
 		SUM(COUNT(post_creation_timestamp)) OVER(PARTITION BY user_id) AS user_posts,
+		COUNT(DISTINCT ticked_id) AS user_tickets_by_tribe,
 		SUM(COUNT(post_creation_timestamp)) OVER() AS posts_from_all_users
 	FROM 
 		user_posts_within_period_with_tribes
@@ -138,7 +140,8 @@ SELECT
 	CONVERT(DECIMAL(6,3), user_posts_by_tribe * 100.0 / posts_from_all_users, 2) 	AS {user_posts_by_tribe_from_posts_from_all_users_perc},
 	user_posts 				AS {user_posts},
 	CONVERT(DECIMAL(6,3), user_posts * 100.0 / posts_from_all_users) 				AS {user_posts_from_posts_from_all_users_perc},
-	posts_from_all_users 	AS {posts_from_all_users}
+	posts_from_all_users 	AS {posts_from_all_users},
+	user_tickets_by_tribe 	AS {user_tickets_by_tribe}
 FROM
 	user_posts_by_tribes
 ORDER BY

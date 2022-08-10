@@ -12,3 +12,4 @@ class UserPoststByTribesMetaData(MetaData):
     user_posts = 'user_posts'
     user_posts_from_posts_from_all_users_perc = 'user_posts_from_posts_from_all_users_perc'
     posts_from_all_users = 'posts_from_all_users'
+    user_tickets_by_tribe = 'user_tickets_by_tribe'
