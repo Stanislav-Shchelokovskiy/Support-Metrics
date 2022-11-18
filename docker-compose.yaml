@@ -1,8 +1,8 @@
 version: '3.4'
 
-x-user_posts_statistic_service:
-  &user_posts_statistic_service
-  image: shchelokovskiy/user_posts_statistic_service:latest
+x-support_analytics_service:
+  &support_analytics_service
+  image: shchelokovskiy/support_analytics_service:latest
   restart: always
   environment:
     - SQL_SERVER
@@ -14,40 +14,34 @@ x-user_posts_statistic_service:
     - SQLITE_DATABASE
     - USER_POSTS_SQL
     - USER_POSTS_TABLE_NAME
+    - SERVER_PORT
 
 services:
-
-  user_posts_statistic_client:
-    image: shchelokovskiy/user_posts_statistic_client:latest
-    restart: always
-    hostname: user_posts_statistic_client
-    container_name: user_posts_statistic_client
-    command: gunicorn -w 2 -t 120 -b 0.0.0.0:$APP_SERVER_PORT plotly_server:server
-    environment:
-      - SQLITE_DATABASE
-      - USER_POSTS_TABLE_NAME
-    volumes:
-      - user-posts-volume:${DB_HOME}
-    ports:
-      - "${APP_SERVER_PORT}:${APP_SERVER_PORT}"
-
-  user_posts_statistic_worker_service:
-    <<: *user_posts_statistic_service
-    hostname: user_posts_statistic_worker_service
-    container_name: user_posts_statistic_worker_service
+  support_analytics_worker:
+    <<: *support_analytics_service
+    hostname: support_analytics_worker
+    container_name: support_analytics_worker
     command: celery --app user_posts_worker worker --beat --loglevel=INFO --concurrency 7 #--logfile=logs/celery.log
     volumes:
-      - user-posts-volume:${DB_HOME}
+      - support_analytics-volume:${DB_HOME}
 
-  user_posts_statistic_dashboard:
-    <<: *user_posts_statistic_service
-    hostname: user_posts_statistic_dashboard
-    container_name: user_posts_statistic_dashboard
-    command:  celery -A user_posts_worker flower --port=${FLOWER_PORT}
+  support_analytics_dashboard:
+    <<: *support_analytics_service
+    hostname: support_analytics_dashboard
+    container_name: support_analytics_dashboard
+    command: celery -A user_posts_worker flower --port=${FLOWER_PORT}
     ports:
       - "${FLOWER_PORT}:${FLOWER_PORT}"
     depends_on:
-      - user_posts_statistic_worker_service
+      - support_analytics_worker
+
+  support_analytics_server:
+    <<: *support_analytics_service
+    hostname: support_analytics_server
+    container_name: support_analytics_server
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    command: uvicorn support_analytics_server:app --host 0.0.0.0 --port $SERVER_PORT
 
 networks:
   default:
@@ -55,4 +49,4 @@ networks:
     external: true
 
 volumes:
-  user-posts-volume:
+  support_analytics-volume:

@@ -4,4 +4,4 @@
 **pycache*
 **.env
 **celerybeat-schedule
-**user_posts_data
+**data
