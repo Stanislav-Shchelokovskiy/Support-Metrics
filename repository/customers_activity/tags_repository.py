@@ -1,6 +1,6 @@
 from pandas import DataFrame
 from toolbox.sql.base_repository import BaseRepository
-from sql_queries.index import CustomersActivityIndex
+from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.meta import CustomersTagsMeta
 
 
@@ -19,7 +19,7 @@ class TagsRepository(BaseRepository):
         )
 
     def get_main_query_path(self, kwargs: dict) -> str:
-        return CustomersActivityIndex.get_tags_path
+        return CustomersActivitySqlPathIndex.get_tags_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return CustomersTagsMeta.get_attrs()

@@ -1,6 +1,6 @@
 from pandas import DataFrame
 from toolbox.sql.base_repository import BaseRepository
-from sql_queries.index import CustomersActivityIndex
+from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.meta import CustomersActivityMeta
 
 
@@ -19,7 +19,7 @@ class TicketsWithIterationsRepository(BaseRepository):
         )
 
     def get_main_query_path(self, kwargs: dict) -> str:
-        return CustomersActivityIndex.get_tickets_with_iterations_path
+        return CustomersActivitySqlPathIndex.get_tickets_with_iterations_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return CustomersActivityMeta.get_attrs()
