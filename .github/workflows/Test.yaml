@@ -26,5 +26,5 @@ jobs:
           poetry-version: ${{ matrix.poetry-version }}
       - name: Install dependencies
         run: poetry install
-      - name: Test user_posts_statistic_service
-        run: poetry run pytest --disable-warnings -v user_posts_statistic_service
+      - name: Test
+        run: poetry run pytest --disable-warnings -v
