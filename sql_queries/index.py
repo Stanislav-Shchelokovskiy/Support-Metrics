@@ -39,4 +39,4 @@ class CustomersActivityDBIndex:
 
     @staticmethod
     def get_tickets_with_iterations_name() -> str:
-        return CustomersActivityDBIndex.get_root_name() + 'tags'
+        return CustomersActivityDBIndex.get_root_name() + 'tickets_with_iterations'

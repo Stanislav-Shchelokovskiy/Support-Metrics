@@ -1,5 +1,5 @@
-DECLARE @start_date DATE = {start_date}
-DECLARE @end_date DATE = {end_date};
+DECLARE @start_date DATE = '{start_date}'
+DECLARE @end_date DATE = '{end_date}';
 
 
 WITH tickets_with_iterations AS (
@@ -44,8 +44,8 @@ FROM
 	) AS tt ON tt.ticket_id = ti.Id
 
 ORDER BY
-	user_id,
-	creation_date
+	{friendly_id},
+	{creation_date}
 
 -- #TicketType# --
 -- 3 -- suggestion 

@@ -1,7 +1,9 @@
 from toolbox.sql.base_repository import BaseRepository
-from repository.customers_activity.groups_repository import GroupsRepository
-from repository.customers_activity.tags_repository import TagsRepository
-from repository.customers_activity.tickets_with_iterations_repository import TicketsWithIterationsRepository
+from repository.customers_activity.repository import (
+    GroupsRepository,
+    TagsRepository,
+    TicketsWithIterationsRepository,
+)
 
 
 class CustomersActivityFactory:

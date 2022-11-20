@@ -3,5 +3,10 @@ version: '3.4'
 x-support_analytics_service:
   &support_analytics_service
   build:
-    context: .
+    context: ./
     dockerfile: Dockerfile
+
+services:
+
+  support_analytics_worker:
+    <<: *support_analytics_service

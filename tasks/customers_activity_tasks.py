@@ -28,6 +28,6 @@ def load_groups():
 def load_tickets_with_iterations(start_date: str, end_date: str):
     # yapf: disable
     tickets_repository = RepositoryFactory.customers_activity.create_tickets_with_iterations_repository()
-    df = tickets_repository.get_data()
+    df = tickets_repository.get_data(start_date=start_date, end_date=end_date)
     _save_table({CustomersActivityDBIndex.get_tickets_with_iterations_name(): df})
     # yapf: enable
