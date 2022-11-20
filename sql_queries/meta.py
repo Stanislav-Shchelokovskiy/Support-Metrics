@@ -2,14 +2,15 @@ from toolbox.sql.meta_data import MetaData
 
 
 class CustomersActivityMeta(MetaData):
-    friendly_id = 'friendly_id'
+    user_id = 'user_id'
     tribe_id = 'tribe_id'
     tribe_name = 'tribe_name'
-    ticket_scid = 'ticket_scid'
+    scid = 'scid'
     ticket_type = 'ticket_type'
     creation_date = 'creation_date'
     iterations = 'iterations'
-
+    user_groups = 'user_groups'
+    ticket_tags = 'ticket_tags'
 
 class CustomersGroupsMeta(MetaData):
     id = 'id'

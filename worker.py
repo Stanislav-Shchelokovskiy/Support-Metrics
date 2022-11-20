@@ -19,6 +19,7 @@ app = Celery(
 @worker_ready.connect
 def on_startup(sender, **kwargs):
     tasks = [
+        'customers_activity_fill_ticket_types',
         'update_customers_activity',
     ]
     sender_app: Celery = sender.app
@@ -71,6 +72,14 @@ def customers_activity_load_tickets_with_iterations(self, **kwargs):
         self,
         customers_activity.load_tickets_with_iterations,
         **CustomersActivityTasksConfig.get_tickets_with_iterations_period(),
+    )
+
+
+@app.task(name='customers_activity_fill_ticket_types', bind=True)
+def customers_activity_fill_ticket_types(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.fill_ticket_types,
     )
 
 
