@@ -32,6 +32,24 @@ def load_tickets_with_iterations(start_date: str, end_date: str):
     _save_table({CustomersActivityDBIndex.get_tickets_with_iterations_name(): df})
     # yapf: enable
 
+
 def fill_ticket_types():
-    ticket_types_repository = RepositoryFactory.customers_activity.create_ticket_types_repository()
-    ticket_types_repository.update_data()
+    df = DataFrame(
+        data={
+            'ticket_type': [1, 2, 3, 4, 5, 6, 7, 8, 11, 122],
+            'description':
+                [
+                    'Question',
+                    'Bug',
+                    'Suggestion',
+                    'KB',
+                    'Example',
+                    'Breaking Change',
+                    'LSC',
+                    'Security Advisory',
+                    'Redirect',
+                    'Internal request',
+                ]
+        }
+    )
+    _save_table({CustomersActivityDBIndex.get_ticket_types_name(): df})

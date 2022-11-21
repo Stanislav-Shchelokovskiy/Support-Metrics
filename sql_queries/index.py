@@ -30,20 +30,6 @@ class CustomersActivitySqlPathIndex:
             + '/tickets_with_iterations.sql'
         )
 
-    @staticmethod
-    def get_ticket_types_path() -> str:
-        return (
-            CustomersActivitySqlPathIndex.get_tables_path()
-            + '/ticket_types.sql'
-        )
-
-    @staticmethod
-    def get_fill_ticket_types_path() -> str:
-        return (
-            CustomersActivitySqlPathIndex.get_tables_path()
-            + '/fill_ticket_types.sql'
-        )
-
 
 class CustomersActivityDBIndex:
 

@@ -48,17 +48,3 @@ class TicketsWithIterationsRepository(BaseRepository):
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return CustomersActivityMeta.get_values()
-
-
-class TicketTypesRepository(BaseRepository):
-
-    def update_data(self, **kwargs) -> None:
-        self.ex(
-            query_file_path=CustomersActivitySqlPathIndex.get_ticket_types_path(),
-            query_format_params={}
-        )
-
-        self.execute_query(
-            query_file_path=CustomersActivitySqlPathIndex.get_fill_ticket_types_path(),
-            query_format_params={}
-        )
