@@ -12,6 +12,10 @@ class CustomersActivitySqlPathIndex:
         return CustomersActivitySqlPathIndex.get_root_path() + '/extract'
 
     @staticmethod
+    def get_local_path() -> str:
+        return CustomersActivitySqlPathIndex.get_root_path() + '/local'
+
+    @staticmethod
     def get_tables_path() -> str:
         return CustomersActivitySqlPathIndex.get_root_path() + '/tables'
 
@@ -28,6 +32,12 @@ class CustomersActivitySqlPathIndex:
         return (
             CustomersActivitySqlPathIndex.get_extract_path()
             + '/tickets_with_iterations.sql'
+        )
+
+    def get_tickets_with_iterations_period_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_local_path()
+            + '/get_tickets_with_iterations_period.sql'
         )
 
 

@@ -1,8 +1,10 @@
 from toolbox.sql.base_repository import BaseRepository
 from sql_queries.index import CustomersActivitySqlPathIndex
-from sql_queries.meta import CustomersGroupsMeta
-from sql_queries.meta import CustomersTagsMeta
-from sql_queries.meta import CustomersActivityMeta
+from sql_queries.customers_activity.meta import (
+    CustomersGroupsMeta,
+    CustomersTagsMeta,
+    CustomersActivityMeta,
+)
 
 
 class GroupsRepository(BaseRepository):

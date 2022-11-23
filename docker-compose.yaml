@@ -16,6 +16,7 @@ x-support_analytics_service:
     - USER_POSTS_SQL
     - USER_POSTS_TABLE_NAME
     - SERVER_PORT
+    - CORS_ORIGINS
 
 services:
   support_analytics_worker:
@@ -36,15 +37,15 @@ services:
     depends_on:
       - support_analytics_worker
 
-  # support_analytics_server:
-  #   <<: *support_analytics_service
-  #   hostname: support_analytics_server
-  #   container_name: support_analytics_server
-  #   ports:
-  #     - "${SERVER_PORT}:${SERVER_PORT}"
-  #   command: uvicorn server:app --host 0.0.0.0 --port $SERVER_PORT
-  #   volumes:
-  #     - support_analytics-volume:${DB_HOME}
+  support_analytics_server:
+    <<: *support_analytics_service
+    hostname: support_analytics_server
+    container_name: support_analytics_server
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    command: uvicorn server:app --host 0.0.0.0 --port $SERVER_PORT
+    volumes:
+      - support_analytics-volume:${DB_HOME}
 
 networks:
   default:

@@ -6,10 +6,11 @@ from sql_queries.index import (
     CustomersActivitySqlPathIndex,
 )
 from toolbox.sql.sql_query import SqlQuery
-from sql_queries.meta import (
+from sql_queries.customers_activity.meta import (
     CustomersActivityMeta,
     CustomersGroupsMeta,
     CustomersTagsMeta,
+    TicketsWithIterationsPeriodMeta,
 )
 
 
@@ -33,6 +34,12 @@ from sql_queries.meta import (
         (
             CustomersActivitySqlPathIndex.get_tags_path, {
                 **CustomersTagsMeta.get_attrs(),
+            }
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_tickets_with_iterations_period_path, {
+                'table_name': 'test',
+                **TicketsWithIterationsPeriodMeta.get_attrs(),
             }
         ),
     ],

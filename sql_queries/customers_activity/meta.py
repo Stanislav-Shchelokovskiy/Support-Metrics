@@ -12,6 +12,7 @@ class CustomersActivityMeta(MetaData):
     user_groups = 'user_groups'
     ticket_tags = 'ticket_tags'
 
+
 class CustomersGroupsMeta(MetaData):
     id = 'id'
     name = 'name'
@@ -22,3 +23,8 @@ class CustomersTagsMeta(MetaData):
     id = 'id'
     name = 'name'
     description = 'description'
+
+
+class TicketsWithIterationsPeriodMeta(MetaData):
+    period_start = 'period_start'
+    period_end = 'period_end'
