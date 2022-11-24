@@ -17,6 +17,7 @@ x-support_analytics_service:
     - USER_POSTS_TABLE_NAME
     - SERVER_PORT
     - CORS_ORIGINS
+    - QUERY_SERVICE_NAME
 
 services:
   support_analytics_worker:

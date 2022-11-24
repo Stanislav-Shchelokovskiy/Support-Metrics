@@ -1,10 +1,30 @@
 import os
+import urllib3
+import requests
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
-from typing import Union
 from toolbox.utils.converters import JSON_to_object
 import repository.server_repository as server_repository
+
+from typing import Dict
+
+from repository.factory import RepositoryFactory
+
+urllib3.disable_warnings()
+
+
+def query_query_service(
+    method: str,
+    params: Dict[str, str],
+) -> str:
+    headers = {}
+    return requests.get(
+        url=os.environ['QUERY_SERVICE_NAME'] + method,
+        headers=headers,
+        params=params,
+        verify=False,
+    ).text
 
 
 app = FastAPI()
@@ -31,3 +51,8 @@ def get_response(json_data: str) -> Response:
 def customers_activity_get_tickets_with_iterations_period():
     df_json = server_repository.customers_activity_get_tickets_with_iterations_period()
     return get_response(json_data=df_json)
+
+
+@app.get('/get_available_tribes')
+def get_available_tribes():
+    return query_query_service(method='/get_available_tribes')
