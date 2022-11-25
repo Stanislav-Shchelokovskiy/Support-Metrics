@@ -13,7 +13,7 @@ class GroupsRepository(BaseRepository):
     """
 
     def get_main_query_path(self, kwargs: dict) -> str:
-        return CustomersActivitySqlPathIndex.get_groups_path()
+        return CustomersActivitySqlPathIndex.get_customers_groups_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return CustomersGroupsMeta.get_attrs()

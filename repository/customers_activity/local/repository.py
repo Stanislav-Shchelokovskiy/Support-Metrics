@@ -1,4 +1,4 @@
-from toolbox.sql.base_repository import BaseRepository
+from toolbox.sql.base_repository import SqliteRepository
 from toolbox.sql.query_executors.sqlite_query_executor import SQLiteQueryExecutor
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
@@ -13,13 +13,10 @@ from sql_queries.customers_activity.meta import (
 )
 
 
-class TicketsWithIterationsRepository(BaseRepository):
+class TicketsWithIterationsRepository(SqliteRepository):
     """
     An interface to local table storing customers with their tickets and iterations.
     """
-
-    def __init__(self) -> None:
-        BaseRepository.__init__(self, query_executor=SQLiteQueryExecutor())
 
     def get_period(self) -> str:
         # yapf: disable
@@ -31,8 +28,22 @@ class TicketsWithIterationsRepository(BaseRepository):
                 }
             ).reset_index(drop=True)
         # yapf: enable
-        # DateTimeColumnsConverter.convert(
-        #     df,
-        #     cols=TicketsWithIterationsPeriodMeta.get_values(),
-        # )
         return DF_to_JSON.convert(df.iloc[0], orient='index')
+
+
+class CustomersGroupsRepository(SqliteRepository):
+    """
+    An interface to local table storing customers groups.
+    """
+
+    def get_main_query_path(self, kwargs: dict) -> str:
+        return CustomersActivitySqlPathIndex.get_select_all()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return {
+            'table_name': CustomersActivityDBIndex.get_customers_groups_name(),
+            'columns': ', '.join(CustomersGroupsMeta.get_values())
+        }
+
+    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+        return CustomersGroupsMeta.get_values()

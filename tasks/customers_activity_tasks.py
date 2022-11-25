@@ -22,7 +22,7 @@ def load_groups():
     groups_repository = RepositoryFactory.customers_activity.remote.create_groups_repository()
     # yapf: enable
     df = groups_repository.get_data()
-    _save_table({CustomersActivityDBIndex.get_groups_name(): df})
+    _save_table({CustomersActivityDBIndex.get_customers_groups_name(): df})
 
 
 def load_tickets_with_iterations(start_date: str, end_date: str):

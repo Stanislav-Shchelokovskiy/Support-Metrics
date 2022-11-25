@@ -6,25 +6,29 @@ from repository.customers_activity.remote.repository import (
 )
 from repository.customers_activity.local.repository import (
     TicketsWithIterationsRepository as SqliteTicketsWithIterationsRepository,
+    CustomersGroupsRepository as SqliteCustomersGroupsRepository,
 )
 
 
 class SqlServerFactory:
 
-    def create_groups_repository(**kwargs) -> GroupsRepository:
+    def create_groups_repository(self, **kwargs) -> GroupsRepository:
         return GroupsRepository()
 
-    def create_tags_repository(**kwargs) -> TagsRepository:
+    def create_tags_repository(self, **kwargs) -> TagsRepository:
         return TagsRepository()
 
-    def create_tickets_with_iterations_repository(**kwargs) -> TicketsWithIterationsRepository:
+    def create_tickets_with_iterations_repository(self, **kwargs) -> TicketsWithIterationsRepository:
         return TicketsWithIterationsRepository()
 
 
 class SqliteFactory:
 
-    def create_TicketsWithIterationsRepository(*kwargs) -> SqliteTicketsWithIterationsRepository:
+    def create_tickets_with_iterations_repository(self, **kwargs) -> SqliteTicketsWithIterationsRepository:
         return SqliteTicketsWithIterationsRepository()
+    
+    def create_customers_groups_repository(self, **kwargs) -> SqliteCustomersGroupsRepository:
+        return SqliteCustomersGroupsRepository()
 
 
 class CustomersActivityFactory:

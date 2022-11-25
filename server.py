@@ -11,6 +11,7 @@ from typing import Dict
 
 from repository.factory import RepositoryFactory
 
+
 urllib3.disable_warnings()
 
 
@@ -49,10 +50,18 @@ def get_response(json_data: str) -> Response:
 
 @app.get('/get_tickets_with_iterations_period')
 def customers_activity_get_tickets_with_iterations_period():
+    # yapf: disable
     df_json = server_repository.customers_activity_get_tickets_with_iterations_period()
+    # yapf: enable
     return get_response(json_data=df_json)
 
 
 @app.get('/get_available_tribes')
 def get_available_tribes():
     return query_query_service(method='/get_available_tribes')
+
+
+@app.get('/get_customers_groups')
+def customers_activity_get_customers_groups():
+    df_json = server_repository.customers_activity_get_customers_groups()
+    return get_response(json_data=df_json)

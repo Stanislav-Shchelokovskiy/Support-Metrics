@@ -20,7 +20,7 @@ class CustomersActivitySqlPathIndex:
         return CustomersActivitySqlPathIndex.get_root_path() + '/tables'
 
     @staticmethod
-    def get_groups_path() -> str:
+    def get_customers_groups_path() -> str:
         return CustomersActivitySqlPathIndex.get_extract_path() + '/groups.sql'
 
     @staticmethod
@@ -34,10 +34,17 @@ class CustomersActivitySqlPathIndex:
             + '/tickets_with_iterations.sql'
         )
 
+    @staticmethod
     def get_tickets_with_iterations_period_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_local_path()
             + '/get_tickets_with_iterations_period.sql'
+        )
+
+    @staticmethod
+    def get_select_all() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_local_path() + '/select_all.sql'
         )
 
 
@@ -49,17 +56,18 @@ class CustomersActivityDBIndex:
 
     @staticmethod
     def get_tags_name() -> str:
-        return CustomersActivityDBIndex.get_root_name() + 'TicketTags'
+        return CustomersActivityDBIndex.get_root_name() + 'TicketsTags'
 
     @staticmethod
-    def get_groups_name() -> str:
-        return CustomersActivityDBIndex.get_root_name() + 'UserGroups'
+    def get_customers_groups_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'CustomersGroups'
 
     @staticmethod
     def get_tickets_with_iterations_name() -> str:
-        return CustomersActivityDBIndex.get_root_name(
-        ) + 'TicketsWithIterations'
+        return (
+            CustomersActivityDBIndex.get_root_name() + 'TicketsWithIterations'
+        )
 
     @staticmethod
     def get_ticket_types_name() -> str:
-        return CustomersActivityDBIndex.get_root_name() + 'TicketTypes'
+        return CustomersActivityDBIndex.get_root_name() + 'TicketsTypes'

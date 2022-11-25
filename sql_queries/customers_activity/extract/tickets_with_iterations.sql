@@ -49,3 +49,5 @@ ticket_tags AS (
 		INNER JOIN CRM.dbo.Tribes AS tribes ON ttm.Tribe = tribes.Id
 		LEFT JOIN user_groups AS ug ON ug.crmid = u.CRMid
 		LEFT JOIN ticket_tags AS tt ON tt.ticket_id = ti.Id
+	WHERE
+		ti.Created BETWEEN @start_date AND @end_date

@@ -26,21 +26,31 @@ from sql_queries.customers_activity.meta import (
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_groups_path,
+            CustomersActivitySqlPathIndex.get_customers_groups_path,
             {
                 **CustomersGroupsMeta.get_attrs(),
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_tags_path, {
+            CustomersActivitySqlPathIndex.get_tags_path,
+            {
                 **CustomersTagsMeta.get_attrs(),
-            }
+            },
         ),
         (
-            CustomersActivitySqlPathIndex.get_tickets_with_iterations_period_path, {
+            CustomersActivitySqlPathIndex.
+            get_tickets_with_iterations_period_path,
+            {
                 'table_name': 'test',
                 **TicketsWithIterationsPeriodMeta.get_attrs(),
-            }
+            },
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_select_all,
+            {
+                'table_name': 'test',
+                'columns': 'qwe, asd',
+            },
         ),
     ],
 )
