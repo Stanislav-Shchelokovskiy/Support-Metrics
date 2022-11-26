@@ -16,7 +16,6 @@ class CustomersActivityMeta(MetaData):
 class CustomersGroupsMeta(MetaData):
     id = 'id'
     name = 'name'
-    note = 'note'
 
 
 class CustomersTagsMeta(MetaData):
