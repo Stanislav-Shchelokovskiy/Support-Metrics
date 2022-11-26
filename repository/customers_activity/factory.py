@@ -1,4 +1,3 @@
-from toolbox.sql.base_repository import BaseRepository
 from repository.customers_activity.remote.repository import (
     GroupsRepository,
     TagsRepository,

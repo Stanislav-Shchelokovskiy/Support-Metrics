@@ -1,4 +1,4 @@
-from toolbox.sql.base_repository import SqliteRepository
+from toolbox.sql.repository import SqliteRepository
 from toolbox.sql.query_executors.sqlite_query_executor import SQLiteQueryExecutor
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,

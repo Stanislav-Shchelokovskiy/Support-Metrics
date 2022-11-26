@@ -1,4 +1,4 @@
-from toolbox.sql.base_repository import BaseRepository
+from toolbox.sql.repository import Repository
 from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.customers_activity.meta import (
     CustomersGroupsMeta,
@@ -7,7 +7,7 @@ from sql_queries.customers_activity.meta import (
 )
 
 
-class GroupsRepository(BaseRepository):
+class GroupsRepository(Repository):
     """
     Loads groups we use to filter customers by.
     """
@@ -22,7 +22,7 @@ class GroupsRepository(BaseRepository):
         return CustomersGroupsMeta.get_values()
 
 
-class TagsRepository(BaseRepository):
+class TagsRepository(Repository):
     """
     Loads tags we use to filter customers by.
     """
@@ -37,7 +37,7 @@ class TagsRepository(BaseRepository):
         return CustomersTagsMeta.get_values()
 
 
-class TicketsWithIterationsRepository(BaseRepository):
+class TicketsWithIterationsRepository(Repository):
     """
     Loads customers with their tickets and iterations.
     """
