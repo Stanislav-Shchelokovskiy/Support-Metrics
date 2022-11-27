@@ -77,3 +77,17 @@ def customers_activity_get_tickets_types():
 def customers_activity_get_tickets_tags():
     df_json = server_repository.customers_activity_get_tickets_tags()
     return get_response(json_data=df_json)
+
+
+@app.get('/get_tickets_with_iterations_aggregates')
+def customers_activity_get_tickets_with_iterations_aggregates(
+    group_by_period: str,
+    range_start: str,
+    range_end: str,
+):
+    df_json = server_repository.customers_activity_get_tickets_with_iterations_aggregates(
+        group_by_period=group_by_period,
+        range_start=range_start,
+        range_end=range_end,
+    )
+    return get_response(json_data=df_json)

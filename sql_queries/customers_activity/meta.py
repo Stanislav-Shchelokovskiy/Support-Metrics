@@ -31,3 +31,11 @@ class TicketsTagsMeta(MetaData):
 class TicketsWithIterationsPeriodMeta(MetaData):
     period_start = 'period_start'
     period_end = 'period_end'
+
+
+class TicketsWithIterationsAggregates(MetaData):
+    creation_date = CustomersActivityMeta.creation_date
+    scid = CustomersActivityMeta.scid
+    iterations = CustomersActivityMeta.iterations
+    period = 'period'
+    tickets = 'tickets'

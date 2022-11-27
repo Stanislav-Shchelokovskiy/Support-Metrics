@@ -7,9 +7,9 @@ from toolbox.utils.converters import DF_to_JSON
 from sql_queries.customers_activity.meta import (
     CustomersGroupsMeta,
     TicketsTagsMeta,
-    CustomersActivityMeta,
     TicketsWithIterationsPeriodMeta,
     TicketsTypesMeta,
+    TicketsWithIterationsAggregates,
 )
 
 
@@ -37,7 +37,7 @@ class CustomersGroupsRepository(SqliteRepository):
     """
 
     def get_main_query_path(self, kwargs: dict) -> str:
-        return CustomersActivitySqlPathIndex.get_select_all()
+        return CustomersActivitySqlPathIndex.get_select_all_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
@@ -51,11 +51,11 @@ class CustomersGroupsRepository(SqliteRepository):
 
 class TicketsTypesRepository(SqliteRepository):
     """
-    An interface to local table storing customers groups.
+    An interface to local table storing tickets types.
     """
 
     def get_main_query_path(self, kwargs: dict) -> str:
-        return CustomersActivitySqlPathIndex.get_select_all()
+        return CustomersActivitySqlPathIndex.get_select_all_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
@@ -69,11 +69,11 @@ class TicketsTypesRepository(SqliteRepository):
 
 class TicketsTagsRepository(SqliteRepository):
     """
-    An interface to local table storing customers groups.
+    An interface to local table storing tickets tags.
     """
 
     def get_main_query_path(self, kwargs: dict) -> str:
-        return CustomersActivitySqlPathIndex.get_select_all()
+        return CustomersActivitySqlPathIndex.get_select_all_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
@@ -83,3 +83,26 @@ class TicketsTagsRepository(SqliteRepository):
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return TicketsTagsMeta.get_values()
+
+
+class TicketsWithIterationsAggregatesRepository(SqliteRepository):
+    # yapf: disable
+    def get_main_query_path(self, kwargs: dict) -> str:
+        return CustomersActivitySqlPathIndex.get_tickets_with_iterations_aggregates_path()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return {
+            **TicketsWithIterationsAggregates.get_attrs(),
+            'table_name': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
+            'group_by_period': kwargs['group_by_period'],
+            'range_start': kwargs['range_start'],
+            'range_end': kwargs['range_end'],
+        }
+    # yapf: enable
+
+    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+        return [
+            TicketsWithIterationsAggregates.period,
+            TicketsWithIterationsAggregates.tickets,
+            TicketsWithIterationsAggregates.iterations,
+        ]

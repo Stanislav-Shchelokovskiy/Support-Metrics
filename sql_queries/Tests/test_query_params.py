@@ -46,7 +46,7 @@ from sql_queries.customers_activity.meta import (
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_select_all,
+            CustomersActivitySqlPathIndex.get_select_all_path,
             {
                 'table_name': 'test',
                 'columns': 'qwe, asd',

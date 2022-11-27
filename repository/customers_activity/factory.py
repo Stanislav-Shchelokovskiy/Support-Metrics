@@ -9,6 +9,7 @@ from repository.customers_activity.local.repository import (
     CustomersGroupsRepository as SqliteCustomersGroupsRepository,
     TicketsTypesRepository as SqliteTicketsTypesRepository,
     TicketsTagsRepository as SqliteTicketsTagsRepository,
+    TicketsWithIterationsAggregatesRepository as SqliteTicketsWithIterationsAggregatesRepository,
 )
 
 
@@ -40,6 +41,9 @@ class SqliteFactory:
     
     def create_tickets_tags_repository(self, **kwargs) -> SqliteTicketsTagsRepository:
         return SqliteTicketsTagsRepository()
+    
+    def create_tickets_with_iterations_aggregates_repository(self, **kwargs) -> SqliteTicketsWithIterationsAggregatesRepository:
+        return SqliteTicketsWithIterationsAggregatesRepository()
 
 
 class CustomersActivityFactory:

@@ -17,4 +17,16 @@ def customers_activity_get_tickets_types() -> str:
 def customers_activity_get_tickets_tags() -> str:
     repository = RepositoryFactory.customers_activity.local.create_tickets_tags_repository()
     return repository.get_data_json()
+
+def customers_activity_get_tickets_with_iterations_aggregates(
+    group_by_period: str,
+    range_start: str,
+    range_end: str,
+) -> str:
+    repository = RepositoryFactory.customers_activity.local.create_tickets_with_iterations_aggregates_repository()
+    return repository.get_data_json(
+        group_by_period=group_by_period,
+        range_start=range_start,
+        range_end=range_end,
+    )
 # yapf: enable
