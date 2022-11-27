@@ -65,3 +65,9 @@ def get_available_tribes():
 def customers_activity_get_customers_groups():
     df_json = server_repository.customers_activity_get_customers_groups()
     return get_response(json_data=df_json)
+
+
+@app.get('/get_tickets_types')
+def customers_activity_get_tickets_types():
+    df_json = server_repository.customers_activity_get_tickets_types()
+    return get_response(json_data=df_json)

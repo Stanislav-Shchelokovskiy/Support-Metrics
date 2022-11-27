@@ -1,9 +1,11 @@
+from pandas import DataFrame
 from toolbox.sql.repository import Repository
 from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.customers_activity.meta import (
     CustomersGroupsMeta,
     CustomersTagsMeta,
     CustomersActivityMeta,
+    TicketsTypesMeta,
 )
 
 
@@ -50,3 +52,26 @@ class TicketsWithIterationsRepository(Repository):
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return CustomersActivityMeta.get_values()
+
+
+class TicketsTypesRepository(Repository):
+
+    def get_data(self, **kwargs) -> DataFrame:
+        return DataFrame(
+            data={
+                TicketsTypesMeta.id: [1, 2, 3, 4, 5, 6, 7, 8, 11, 122],
+                TicketsTypesMeta.name:
+                    [
+                        'Question',
+                        'Bug',
+                        'Suggestion',
+                        'KB',
+                        'Example',
+                        'Breaking Change',
+                        'LSC',
+                        'Security Advisory',
+                        'Redirect',
+                        'Internal request',
+                    ]
+            }
+        )

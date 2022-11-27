@@ -18,6 +18,11 @@ class CustomersGroupsMeta(MetaData):
     name = 'name'
 
 
+class TicketsTypesMeta(MetaData):
+    id = 'id'
+    name = 'name'
+
+
 class CustomersTagsMeta(MetaData):
     id = 'id'
     name = 'name'
