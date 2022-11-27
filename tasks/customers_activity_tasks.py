@@ -13,7 +13,7 @@ def _save_table(table: dict[str, DataFrame]):
 def load_tags():
     tags_repository = RepositoryFactory.customers_activity.remote.create_tags_repository()
     df = tags_repository.get_data()
-    _save_table({CustomersActivityDBIndex.get_tags_name(): df})
+    _save_table({CustomersActivityDBIndex.get_tickets_tags_name(): df})
 
 
 def load_groups():
@@ -31,5 +31,5 @@ def load_tickets_with_iterations(start_date: str, end_date: str):
 def fill_tickets_types():
     tickets_types_repository = RepositoryFactory.customers_activity.remote.create_tickets_types_repository()
     df = tickets_types_repository.get_data()
-    _save_table({CustomersActivityDBIndex.get_ticket_types_name(): df})
+    _save_table({CustomersActivityDBIndex.get_tickets_types_name(): df})
 # yapf: enable

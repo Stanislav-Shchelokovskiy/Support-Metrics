@@ -6,7 +6,7 @@ from sql_queries.index import (
 from toolbox.utils.converters import DF_to_JSON
 from sql_queries.customers_activity.meta import (
     CustomersGroupsMeta,
-    CustomersTagsMeta,
+    TicketsTagsMeta,
     CustomersActivityMeta,
     TicketsWithIterationsPeriodMeta,
     TicketsTypesMeta,
@@ -18,7 +18,7 @@ class TicketsWithIterationsRepository(SqliteRepository):
     An interface to local table storing customers with their tickets and iterations.
     """
 
-    def get_period(self) -> str:
+    def get_period_json(self) -> str:
         # yapf: disable
         df = self.execute_query(
                 query_file_path=CustomersActivitySqlPathIndex.get_tickets_with_iterations_period_path(),
@@ -59,9 +59,27 @@ class TicketsTypesRepository(SqliteRepository):
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
-            'table_name': CustomersActivityDBIndex.get_ticket_types_name(),
+            'table_name': CustomersActivityDBIndex.get_tickets_types_name(),
             'columns': ', '.join(TicketsTypesMeta.get_values())
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return TicketsTypesMeta.get_values()
+
+
+class TicketsTagsRepository(SqliteRepository):
+    """
+    An interface to local table storing customers groups.
+    """
+
+    def get_main_query_path(self, kwargs: dict) -> str:
+        return CustomersActivitySqlPathIndex.get_select_all()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return {
+            'table_name': CustomersActivityDBIndex.get_tickets_tags_name(),
+            'columns': ', '.join(TicketsTagsMeta.get_values())
+        }
+
+    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+        return TicketsTagsMeta.get_values()

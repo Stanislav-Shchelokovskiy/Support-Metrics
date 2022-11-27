@@ -9,7 +9,7 @@ from toolbox.sql.sql_query import SqlQuery
 from sql_queries.customers_activity.meta import (
     CustomersActivityMeta,
     CustomersGroupsMeta,
-    CustomersTagsMeta,
+    TicketsTagsMeta,
     TicketsWithIterationsPeriodMeta,
 )
 
@@ -34,7 +34,7 @@ from sql_queries.customers_activity.meta import (
         (
             CustomersActivitySqlPathIndex.get_tags_path,
             {
-                **CustomersTagsMeta.get_attrs(),
+                **TicketsTagsMeta.get_attrs(),
             },
         ),
         (

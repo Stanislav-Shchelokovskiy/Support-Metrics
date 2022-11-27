@@ -23,10 +23,9 @@ class TicketsTypesMeta(MetaData):
     name = 'name'
 
 
-class CustomersTagsMeta(MetaData):
+class TicketsTagsMeta(MetaData):
     id = 'id'
     name = 'name'
-    description = 'description'
 
 
 class TicketsWithIterationsPeriodMeta(MetaData):

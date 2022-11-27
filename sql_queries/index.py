@@ -55,7 +55,7 @@ class CustomersActivityDBIndex:
         return 'CustomersActivity_'
 
     @staticmethod
-    def get_tags_name() -> str:
+    def get_tickets_tags_name() -> str:
         return CustomersActivityDBIndex.get_root_name() + 'TicketsTags'
 
     @staticmethod
@@ -69,5 +69,5 @@ class CustomersActivityDBIndex:
         )
 
     @staticmethod
-    def get_ticket_types_name() -> str:
+    def get_tickets_types_name() -> str:
         return CustomersActivityDBIndex.get_root_name() + 'TicketsTypes'

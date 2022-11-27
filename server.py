@@ -71,3 +71,9 @@ def customers_activity_get_customers_groups():
 def customers_activity_get_tickets_types():
     df_json = server_repository.customers_activity_get_tickets_types()
     return get_response(json_data=df_json)
+
+
+@app.get('/get_tickets_tags')
+def customers_activity_get_tickets_tags():
+    df_json = server_repository.customers_activity_get_tickets_tags()
+    return get_response(json_data=df_json)
