@@ -1,5 +1,14 @@
 DECLARE @start_date DATE = '{start_date}'
-DECLARE @end_date DATE = '{end_date}'
+DECLARE @end_date DATE = '{end_date}';
+WITH ticket_tags AS (
+	SELECT
+		Tickets AS tickets,
+		STRING_AGG(CONVERT(NVARCHAR(MAX), Tags), ' ') AS tags
+	FROM
+		SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketTags
+	GROUP BY
+		Tickets
+)
 
 SELECT
 	u.FriendlyId				AS {user_id},
@@ -25,7 +34,4 @@ FROM
 		WHERE 	Customer_Id = u.CRMid ) AS ug
 	LEFT JOIN DXStatisticsV2.dbo.TribeTeamMapping AS ttm ON ttm.SupportTeam = ISNULL(ti.ProcessingSupportTeam, ti.SupportTeam)
 	INNER JOIN CRM.dbo.Tribes AS tribes ON ttm.Tribe = tribes.Id
-	OUTER APPLY(
-		SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), Tags), ' ') AS tags
-		FROM 	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketTags
-		WHERE 	Tickets = ti.Id ) AS tt
+	LEFT JOIN ticket_tags AS tt ON tt.tickets = ti.Id
