@@ -7,5 +7,8 @@ FROM
 WHERE
     {creation_date} BETWEEN '{range_start}' AND '{range_end}'
     {customer_groups_filter}
+    {ticket_types_filter}
+    {ticket_tags_filter}
+    {tribes_fitler}
 GROUP BY
     STRFTIME('{group_by_period}', {creation_date})

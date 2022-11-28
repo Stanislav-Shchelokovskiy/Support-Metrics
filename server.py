@@ -83,11 +83,13 @@ def customers_activity_get_tickets_with_iterations_aggregates(
     range_end: str,
     params: TicketsWithIterationsParams,
 ):
-    print(params)
     df_json = server_repository.customers_activity_get_tickets_with_iterations_aggregates(
         group_by_period=group_by_period,
         range_start=range_start,
         range_end=range_end,
         customers_groups=params.customers_groups,
+        tickets_types=params.tickets_types,
+        tickets_tags=params.tickets_tags,
+        tribe_ids=params.tribes,
     )
     return get_response(json_data=df_json)

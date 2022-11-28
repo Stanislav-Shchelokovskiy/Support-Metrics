@@ -98,7 +98,10 @@ class TicketsWithIterationsAggregatesRepository(SqliteRepository):
             'group_by_period': kwargs['group_by_period'],
             'range_start': kwargs['range_start'],
             'range_end': kwargs['range_end'],
-            'customer_groups_filter': TicketsWithIterationsAggregatesSqlParamsGenerator.generate_customer_groups_filter(kwargs['customers_groups'])
+            'customer_groups_filter': TicketsWithIterationsAggregatesSqlParamsGenerator.generate_customer_groups_filter(kwargs['customers_groups']),
+            'ticket_types_filter': TicketsWithIterationsAggregatesSqlParamsGenerator.generate_ticket_types_filter(kwargs['tickets_types']),
+            'ticket_tags_filter': TicketsWithIterationsAggregatesSqlParamsGenerator.generate_ticket_tags_filter(kwargs['tickets_tags']),
+            'tribes_fitler': TicketsWithIterationsAggregatesSqlParamsGenerator.generate_tribes_filter(kwargs['tribe_ids']),
         }
     # yapf: enable
 
