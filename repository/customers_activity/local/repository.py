@@ -11,6 +11,7 @@ from sql_queries.customers_activity.meta import (
     TicketsTypesMeta,
     TicketsWithIterationsAggregates,
 )
+from repository.customers_activity.local.sql_query_params_generator import TicketsWithIterationsAggregatesSqlParamsGenerator
 
 
 class TicketsWithIterationsRepository(SqliteRepository):
@@ -97,6 +98,7 @@ class TicketsWithIterationsAggregatesRepository(SqliteRepository):
             'group_by_period': kwargs['group_by_period'],
             'range_start': kwargs['range_start'],
             'range_end': kwargs['range_end'],
+            'customer_groups_filter': TicketsWithIterationsAggregatesSqlParamsGenerator.generate_customer_groups_filter(kwargs['customers_groups'])
         }
     # yapf: enable
 

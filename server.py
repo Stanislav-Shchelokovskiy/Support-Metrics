@@ -6,10 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from toolbox.utils.converters import JSON_to_object
 import repository.server_repository as server_repository
-
-from typing import Dict
-
-from repository.factory import RepositoryFactory
+from server_models import TicketsWithIterationsParams
 
 
 urllib3.disable_warnings()
@@ -17,7 +14,7 @@ urllib3.disable_warnings()
 
 def query_query_service(
     method: str,
-    params: Dict[str, str],
+    params: dict[str, str],
 ) -> str:
     headers = {}
     return requests.get(
@@ -79,15 +76,18 @@ def customers_activity_get_tickets_tags():
     return get_response(json_data=df_json)
 
 
-@app.get('/get_tickets_with_iterations_aggregates')
+@app.post('/get_tickets_with_iterations_aggregates')
 def customers_activity_get_tickets_with_iterations_aggregates(
     group_by_period: str,
     range_start: str,
     range_end: str,
+    params: TicketsWithIterationsParams,
 ):
+    print(params)
     df_json = server_repository.customers_activity_get_tickets_with_iterations_aggregates(
         group_by_period=group_by_period,
         range_start=range_start,
         range_end=range_end,
+        customers_groups=params.customers_groups,
     )
     return get_response(json_data=df_json)

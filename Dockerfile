@@ -26,5 +26,6 @@ COPY repository ./repository
 COPY sql_queries ./sql_queries
 COPY tasks ./tasks
 COPY toolbox ./toolbox
+COPY server_models.py .
 COPY server.py .
 COPY worker.py .
