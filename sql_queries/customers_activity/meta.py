@@ -4,7 +4,6 @@ from toolbox.sql.meta_data import MetaData
 class CustomersActivityMeta(MetaData):
     user_id = 'user_id'
     tribe_id = 'tribe_id'
-    tribe_name = 'tribe_name'
     scid = 'scid'
     ticket_type = 'ticket_type'
     creation_date = 'creation_date'
