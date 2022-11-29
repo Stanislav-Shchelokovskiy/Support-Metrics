@@ -20,6 +20,8 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          submodules: true
       - name: Build and Push support_analytics_service
         uses: docker/build-push-action@v3
         with:
