@@ -4,3 +4,12 @@
 **/.gitignore
 **celerybeat-schedule
 **/.venv
+**/*.md
+/data
+**/.dev_env.sh
+**/.dockerignore
+**/.env
+**/.gitignore
+**/.gitmodules
+**/.github
+**/Makefile

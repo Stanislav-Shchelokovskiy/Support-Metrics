@@ -11,17 +11,20 @@ x-support_analytics_service:
     - SQL_PASSWORD
     - CELERY_BROKER_URL
     - CELERY_RESULT_BACKEND
+    - DB_HOME
     - SQLITE_DATABASE
     - USER_POSTS_SQL
     - USER_POSTS_TABLE_NAME
     - SERVER_PORT
+    - CORS_ORIGINS
+    - QUERY_SERVICE_NAME
 
 services:
   support_analytics_worker:
     <<: *support_analytics_service
     hostname: support_analytics_worker
     container_name: support_analytics_worker
-    command: celery --app user_posts_worker worker --beat --loglevel=INFO --concurrency 7 #--logfile=logs/celery.log
+    command: celery --app worker worker --beat --loglevel=INFO --concurrency 7 #--logfile=logs/celery.log
     volumes:
       - support_analytics-volume:${DB_HOME}
 
@@ -29,7 +32,7 @@ services:
     <<: *support_analytics_service
     hostname: support_analytics_dashboard
     container_name: support_analytics_dashboard
-    command: celery -A user_posts_worker flower --port=${FLOWER_PORT}
+    command: celery -A worker flower --port=${FLOWER_PORT}
     ports:
       - "${FLOWER_PORT}:${FLOWER_PORT}"
     depends_on:
@@ -41,7 +44,9 @@ services:
     container_name: support_analytics_server
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
-    command: uvicorn support_analytics_server:app --host 0.0.0.0 --port $SERVER_PORT
+    command: uvicorn server:app --host 0.0.0.0 --port $SERVER_PORT
+    volumes:
+      - support_analytics-volume:${DB_HOME}
 
 networks:
   default:

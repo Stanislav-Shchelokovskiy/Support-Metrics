@@ -3,13 +3,14 @@ from typing import Callable
 from os import getcwd
 from toolbox.sql.index import RootPath
 from sql_queries.index import (
-    CustomersActivityIndex,
+    CustomersActivitySqlPathIndex,
 )
 from toolbox.sql.sql_query import SqlQuery
-from sql_queries.meta import (
+from sql_queries.customers_activity.meta import (
     CustomersActivityMeta,
     CustomersGroupsMeta,
-    CustomersTagsMeta,
+    TicketsTagsMeta,
+    TicketsWithIterationsPeriodMeta,
 )
 
 
@@ -17,7 +18,7 @@ from sql_queries.meta import (
     'get_query_file_path, format_params',
     [
         (
-            CustomersActivityIndex.get_tickets_with_iterations_path,
+            CustomersActivitySqlPathIndex.get_tickets_with_iterations_path,
             {
                 'start_date': 'qwe',
                 'end_date': 'asd',
@@ -25,15 +26,31 @@ from sql_queries.meta import (
             },
         ),
         (
-            CustomersActivityIndex.get_groups_path,
+            CustomersActivitySqlPathIndex.get_customers_groups_path,
             {
                 **CustomersGroupsMeta.get_attrs(),
             },
         ),
         (
-            CustomersActivityIndex.get_tags_path, {
-                **CustomersTagsMeta.get_attrs(),
-            }
+            CustomersActivitySqlPathIndex.get_tags_path,
+            {
+                **TicketsTagsMeta.get_attrs(),
+            },
+        ),
+        (
+            CustomersActivitySqlPathIndex.
+            get_tickets_with_iterations_period_path,
+            {
+                'table_name': 'test',
+                **TicketsWithIterationsPeriodMeta.get_attrs(),
+            },
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_select_all_path,
+            {
+                'table_name': 'test',
+                'columns': 'qwe, asd',
+            },
         ),
     ],
 )
