@@ -10,3 +10,9 @@ services:
 
   support_analytics_worker:
     <<: *support_analytics_service
+
+  support_analytics_dashboard:
+    <<: *support_analytics_service
+
+  support_analytics_server:
+    <<: *support_analytics_service
