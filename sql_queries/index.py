@@ -28,10 +28,10 @@ class CustomersActivitySqlPathIndex:
         return CustomersActivitySqlPathIndex.get_extract_path() + '/tags.sql'
 
     @staticmethod
-    def get_reply_types_path() -> str:
+    def get_replies_types_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_extract_path()
-            + '/reply_types.sql'
+            + '/replies_types.sql'
         )
 
     @staticmethod
@@ -84,7 +84,7 @@ class CustomersActivityDBIndex:
         return CustomersActivityDBIndex.get_root_name() + 'CustomersGroups'
 
     @staticmethod
-    def get_reply_types_name() -> str:
+    def get_replies_types_name() -> str:
         return CustomersActivityDBIndex.get_root_name() + 'CatReplyTypes'
 
     @staticmethod

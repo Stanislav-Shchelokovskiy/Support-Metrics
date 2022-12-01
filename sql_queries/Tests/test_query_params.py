@@ -40,7 +40,7 @@ from sql_queries.customers_activity.meta import (
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_reply_types_path,
+            CustomersActivitySqlPathIndex.get_replies_types_path,
             {
                 **ReplyTypesMeta.get_attrs(),
             },

@@ -27,10 +27,10 @@ def load_groups():
     _save_tables(tables={CustomersActivityDBIndex.get_customers_groups_name(): df})
 
 
-def load_reply_types():
-    reply_types_repository = RepositoryFactory.customers_activity.remote.create_reply_types_repository()
+def load_replies_types():
+    reply_types_repository = RepositoryFactory.customers_activity.remote.create_replies_types_repository()
     df = reply_types_repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_reply_types_name(): df})
+    _save_tables(tables={CustomersActivityDBIndex.get_replies_types_name(): df})
 
 
 def load_controls_features():

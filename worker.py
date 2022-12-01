@@ -47,7 +47,7 @@ def setup_periodic_tasks(sender, **kwargs):
 def update_customers_activity(**kwargs):
     app.send_task(name='customers_activity_load_tags')
     app.send_task(name='customers_activity_load_groups')
-    app.send_task(name='customers_activity_load_reply_types')
+    app.send_task(name='customers_activity_load_replies_types')
     app.send_task(name='customers_activity_load_controls_features')
     app.send_task(name='customers_activity_load_tickets_with_iterations')
 
@@ -68,16 +68,16 @@ def customers_activity_load_groups(self, **kwargs):
     )
 
 
-@app.task(name='customers_activity_load_reply_types', bind=True)
-def customers_activity_load_reply_types(self, **kwargs):
+@app.task(name='customers_activity_load_replies_types', bind=True)
+def customers_activity_load_replies_types(self, **kwargs):
     return run_retriable_task(
         self,
-        customers_activity.load_reply_types,
+        customers_activity.load_replies_types,
     )
 
 
 @app.task(name='customers_activity_load_controls_features', bind=True)
-def customers_activity_load_reply_types(self, **kwargs):
+def customers_activity_load_replies_types(self, **kwargs):
     return run_retriable_task(
         self,
         customers_activity.load_controls_features,

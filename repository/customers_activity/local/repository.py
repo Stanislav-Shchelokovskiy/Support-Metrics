@@ -97,7 +97,7 @@ class ReplyTypesRepository(SqliteRepository):
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
-            'table_name': CustomersActivityDBIndex.get_reply_types_name(),
+            'table_name': CustomersActivityDBIndex.get_replies_types_name(),
             'columns': ', '.join(ReplyTypesMeta.get_values())
         }
 

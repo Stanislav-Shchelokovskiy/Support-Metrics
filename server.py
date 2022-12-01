@@ -76,9 +76,9 @@ def customers_activity_get_tickets_tags():
     return get_response(json_data=df_json)
 
 
-@app.get('/get_reply_types')
-def customers_activity_get_reply_types():
-    df_json = server_repository.customers_activity_get_reply_types()
+@app.get('/get_replies_types')
+def customers_activity_get_replies_types():
+    df_json = server_repository.customers_activity_get_replies_types()
     return get_response(json_data=df_json)
 
 

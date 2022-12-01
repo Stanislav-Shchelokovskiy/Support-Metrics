@@ -3,7 +3,7 @@ from repository.customers_activity.remote.repository import (
     TagsRepository,
     TicketsWithIterationsRepository,
     TicketsTypesRepository,
-    ReplyTypesRepository,
+    RepliesTypesRepository,
     ControlsFeaturesRepository,
 )
 from repository.customers_activity.local.repository import (
@@ -24,8 +24,8 @@ class SqlServerFactory:
     def create_tags_repository(self, **kwargs) -> TagsRepository:
         return TagsRepository()
 
-    def create_reply_types_repository(self, **kwargs) -> ReplyTypesRepository:
-        return ReplyTypesRepository()
+    def create_replies_types_repository(self, **kwargs) -> RepliesTypesRepository:
+        return RepliesTypesRepository()
 
     def create_controls_features_repository(self, **kwargs) -> ControlsFeaturesRepository:
         return ControlsFeaturesRepository()

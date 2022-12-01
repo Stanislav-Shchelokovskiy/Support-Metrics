@@ -41,13 +41,13 @@ class TagsRepository(Repository):
         return TicketsTagsMeta.get_values()
 
 
-class ReplyTypesRepository(Repository):
+class RepliesTypesRepository(Repository):
     """
     Loads CAT reply types.
     """
 
     def get_main_query_path(self, kwargs: dict) -> str:
-        return CustomersActivitySqlPathIndex.get_reply_types_path()
+        return CustomersActivitySqlPathIndex.get_replies_types_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {**kwargs, **ReplyTypesMeta.get_attrs()}
