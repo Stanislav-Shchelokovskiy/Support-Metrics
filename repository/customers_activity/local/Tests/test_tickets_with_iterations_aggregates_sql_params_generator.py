@@ -1,6 +1,6 @@
 import pytest
 from repository.customers_activity.local.sql_query_params_generator import TicketsWithIterationsAggregatesSqlParamsGenerator
-from sql_queries.customers_activity.meta import CustomersActivityMeta
+from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
 
 
 @pytest.mark.parametrize(
@@ -11,9 +11,9 @@ from sql_queries.customers_activity.meta import CustomersActivityMeta
         ),
         (
             ['p1', 'p2'],
-            f"AND ({CustomersActivityMeta.user_groups} LIKE '%p1%' OR {CustomersActivityMeta.user_groups} LIKE '%p2%')"
+            f"AND ({TicketsWithIterationsMeta.user_groups} LIKE '%p1%' OR {TicketsWithIterationsMeta.user_groups} LIKE '%p2%')"
         ),
-        (['p1'], f"AND ({CustomersActivityMeta.user_groups} LIKE '%p1%')"),
+        (['p1'], f"AND ({TicketsWithIterationsMeta.user_groups} LIKE '%p1%')"),
     ]
 )
 def test_generate_customer_groups_filter(input: list[str], output: str):
@@ -28,8 +28,8 @@ def test_generate_customer_groups_filter(input: list[str], output: str):
             [],
             '',
         ),
-        ([1, 2], f'AND {CustomersActivityMeta.ticket_type} IN (1,2)'),
-        ([1], f'AND {CustomersActivityMeta.ticket_type} IN (1)'),
+        ([1, 2], f'AND {TicketsWithIterationsMeta.ticket_type} IN (1,2)'),
+        ([1], f'AND {TicketsWithIterationsMeta.ticket_type} IN (1)'),
     ]
 )
 def test_generate_ticket_types_filter(input: list[int], output: str):
@@ -44,8 +44,8 @@ def test_generate_ticket_types_filter(input: list[int], output: str):
             [],
             '',
         ),
-        ([1, 2], f"AND ({CustomersActivityMeta.ticket_tags} LIKE '%1%' OR {CustomersActivityMeta.ticket_tags} LIKE '%2%')"),
-        ([1], f"AND ({CustomersActivityMeta.ticket_tags} LIKE '%1%')"),
+        ([1, 2], f"AND ({TicketsWithIterationsMeta.ticket_tags} LIKE '%1%' OR {TicketsWithIterationsMeta.ticket_tags} LIKE '%2%')"),
+        ([1], f"AND ({TicketsWithIterationsMeta.ticket_tags} LIKE '%1%')"),
     ]
 )
 def test_generate_ticket_tags_filter(input: list[int], output: str):
@@ -65,11 +65,11 @@ def test_generate_ticket_tags_filter(input: list[int], output: str):
                 'qwe',
                 'asd',
             ],
-            f"AND {CustomersActivityMeta.tribe_id} IN ('qwe','asd')",
+            f"AND {TicketsWithIterationsMeta.tribe_id} IN ('qwe','asd')",
         ),
         (
             ['qwe'],
-            f"AND {CustomersActivityMeta.tribe_id} IN ('qwe')",
+            f"AND {TicketsWithIterationsMeta.tribe_id} IN ('qwe')",
         ),
     ]
 )

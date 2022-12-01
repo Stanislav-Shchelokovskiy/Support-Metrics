@@ -1,4 +1,4 @@
-from sql_queries.customers_activity.meta import CustomersActivityMeta
+from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
 
 
 # tickets_types: list[int]
@@ -13,7 +13,7 @@ class TicketsWithIterationsAggregatesSqlParamsGenerator:
         res = 'AND ('
         res += ' OR '.join(
             [
-                f"{CustomersActivityMeta.user_groups} LIKE '%{group}%'"
+                f"{TicketsWithIterationsMeta.user_groups} LIKE '%{group}%'"
                 for group in customer_groups
             ]
         )
@@ -24,7 +24,7 @@ class TicketsWithIterationsAggregatesSqlParamsGenerator:
     def generate_ticket_types_filter(tickets_types: list[int]) -> str:
         if not tickets_types:
             return ''
-        res = f'AND {CustomersActivityMeta.ticket_type} IN ('
+        res = f'AND {TicketsWithIterationsMeta.ticket_type} IN ('
         res += ','.join([str(ticket_type) for ticket_type in tickets_types])
         res += ')'
         return res
@@ -36,18 +36,18 @@ class TicketsWithIterationsAggregatesSqlParamsGenerator:
         res = 'AND ('
         res += ' OR '.join(
             [
-                f"{CustomersActivityMeta.ticket_tags} LIKE '%{ticket_tag}%'"
+                f"{TicketsWithIterationsMeta.ticket_tags} LIKE '%{ticket_tag}%'"
                 for ticket_tag in tickets_tags
             ]
         )
         res += ')'
         return res
-    
+
     @staticmethod
     def generate_tribes_filter(tribe_ids: list[str]) -> str:
         if not tribe_ids:
             return ''
-        res = f'AND {CustomersActivityMeta.tribe_id} IN ('
+        res = f'AND {TicketsWithIterationsMeta.tribe_id} IN ('
         res += ','.join([f"'{tribe_id}'" for tribe_id in tribe_ids])
         res += ')'
         return res

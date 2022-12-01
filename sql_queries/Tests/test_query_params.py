@@ -7,10 +7,12 @@ from sql_queries.index import (
 )
 from toolbox.sql.sql_query import SqlQuery
 from sql_queries.customers_activity.meta import (
-    CustomersActivityMeta,
+    TicketsWithIterationsMeta,
     CustomersGroupsMeta,
     TicketsTagsMeta,
     TicketsWithIterationsPeriodMeta,
+    ReplyTypesMeta,
+    ControlsFeaturesMeta,
 )
 
 
@@ -22,7 +24,7 @@ from sql_queries.customers_activity.meta import (
             {
                 'start_date': 'qwe',
                 'end_date': 'asd',
-                **CustomersActivityMeta.get_attrs(),
+                **TicketsWithIterationsMeta.get_attrs(),
             },
         ),
         (
@@ -35,6 +37,18 @@ from sql_queries.customers_activity.meta import (
             CustomersActivitySqlPathIndex.get_tags_path,
             {
                 **TicketsTagsMeta.get_attrs(),
+            },
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_reply_types_path,
+            {
+                **ReplyTypesMeta.get_attrs(),
+            },
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_controls_features_path,
+            {
+                **ControlsFeaturesMeta.get_attrs(),
             },
         ),
         (

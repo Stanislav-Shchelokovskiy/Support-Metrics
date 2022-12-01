@@ -20,7 +20,10 @@ SELECT
 	CAST(ti.Created AS DATE)	AS {creation_date},
 	ii.iterations				AS {iterations},
 	ug.groups					AS {user_groups},
-	tt.tags						AS {ticket_tags}
+	tt.tags						AS {ticket_tags},
+	cat.ReplyId					AS {reply_id},
+	cat.ControlId				AS {control_id},
+	cat.FeatureId				AS {feature_id}
 FROM 
 	(SELECT *
 	 FROM 	DXStatisticsV2.dbo.TicketInfos
@@ -29,6 +32,16 @@ FROM
 		SELECT 	COUNT(TicketId) AS iterations
 		FROM  	DXStatisticsV2.dbo.IterationItems AS ii
 		WHERE 	TicketId = ti.Id ) AS ii
+	OUTER APPLY (
+		SELECT
+			Ticket_Id,
+			[ReplyId] AS [ReplyId],
+			[ControlId] AS [ControlId],
+			[FeatureId] AS [FeatureId]
+		FROM ( SELECT Ticket_Id, Name, Value
+				FROM [SupportCenterPaid].[c1f0951c-3885-44cf-accb-1a390f34c342].[TicketProperties]
+				WHERE Name IN ('ReplyId', 'ControlId', 'FeatureId') AND Ticket_Id = ti.Id) AS tp
+		PIVOT(MIN(Value) FOR Name IN ([ReplyId], [ControlId], [FeatureId])) AS value ) AS cat
 	INNER JOIN SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].Users AS u ON u.Id = ti.OwnerGuid
 	INNER JOIN CRM.dbo.Customers AS crmCustomer ON crmCustomer.FriendlyId = u.FriendlyId
 	CROSS APPLY(

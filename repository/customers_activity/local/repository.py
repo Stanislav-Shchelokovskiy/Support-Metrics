@@ -9,14 +9,15 @@ from sql_queries.customers_activity.meta import (
     TicketsTagsMeta,
     TicketsWithIterationsPeriodMeta,
     TicketsTypesMeta,
-    TicketsWithIterationsAggregates,
+    TicketsWithIterationsAggregatesMeta,
+    ReplyTypesMeta,
 )
 from repository.customers_activity.local.sql_query_params_generator import TicketsWithIterationsAggregatesSqlParamsGenerator
 
 
 class TicketsWithIterationsRepository(SqliteRepository):
     """
-    An interface to local table storing customers with their tickets and iterations.
+    Interface to a local table storing customers with their tickets and iterations.
     """
 
     def get_period_json(self) -> str:
@@ -34,7 +35,7 @@ class TicketsWithIterationsRepository(SqliteRepository):
 
 class CustomersGroupsRepository(SqliteRepository):
     """
-    An interface to local table storing customers groups.
+    Interface to a local table storing customers groups.
     """
 
     def get_main_query_path(self, kwargs: dict) -> str:
@@ -52,7 +53,7 @@ class CustomersGroupsRepository(SqliteRepository):
 
 class TicketsTypesRepository(SqliteRepository):
     """
-    An interface to local table storing tickets types.
+    Interface to a local table storing tickets types.
     """
 
     def get_main_query_path(self, kwargs: dict) -> str:
@@ -70,7 +71,7 @@ class TicketsTypesRepository(SqliteRepository):
 
 class TicketsTagsRepository(SqliteRepository):
     """
-    An interface to local table storing tickets tags.
+    Interface to a local table storing tickets tags.
     """
 
     def get_main_query_path(self, kwargs: dict) -> str:
@@ -86,6 +87,24 @@ class TicketsTagsRepository(SqliteRepository):
         return TicketsTagsMeta.get_values()
 
 
+class ReplyTypesRepository(SqliteRepository):
+    """
+    Interface to a local table storing CAT reply types.
+    """
+
+    def get_main_query_path(self, kwargs: dict) -> str:
+        return CustomersActivitySqlPathIndex.get_select_all_path()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return {
+            'table_name': CustomersActivityDBIndex.get_reply_types_name(),
+            'columns': ', '.join(ReplyTypesMeta.get_values())
+        }
+
+    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+        return ReplyTypesMeta.get_values()
+
+
 class TicketsWithIterationsAggregatesRepository(SqliteRepository):
     # yapf: disable
     def get_main_query_path(self, kwargs: dict) -> str:
@@ -93,7 +112,7 @@ class TicketsWithIterationsAggregatesRepository(SqliteRepository):
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
-            **TicketsWithIterationsAggregates.get_attrs(),
+            **TicketsWithIterationsAggregatesMeta.get_attrs(),
             'table_name': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
             'group_by_period': kwargs['group_by_period'],
             'range_start': kwargs['range_start'],
@@ -107,7 +126,7 @@ class TicketsWithIterationsAggregatesRepository(SqliteRepository):
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return [
-            TicketsWithIterationsAggregates.period,
-            TicketsWithIterationsAggregates.tickets,
-            TicketsWithIterationsAggregates.iterations,
+            TicketsWithIterationsAggregatesMeta.period,
+            TicketsWithIterationsAggregatesMeta.tickets,
+            TicketsWithIterationsAggregatesMeta.iterations,
         ]
