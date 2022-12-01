@@ -44,8 +44,8 @@ def test_generate_ticket_types_filter(input: list[int], output: str):
             [],
             '',
         ),
-        ([1, 2], f'AND {CustomersActivityMeta.ticket_tags} IN (1,2)'),
-        ([1], f'AND {CustomersActivityMeta.ticket_tags} IN (1)'),
+        ([1, 2], f"AND ({CustomersActivityMeta.ticket_tags} LIKE '%1%' OR {CustomersActivityMeta.ticket_tags} LIKE '%2%')"),
+        ([1], f"AND ({CustomersActivityMeta.ticket_tags} LIKE '%1%')"),
     ]
 )
 def test_generate_ticket_tags_filter(input: list[int], output: str):

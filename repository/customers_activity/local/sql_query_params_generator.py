@@ -33,8 +33,13 @@ class TicketsWithIterationsAggregatesSqlParamsGenerator:
     def generate_ticket_tags_filter(tickets_tags: list[int]) -> str:
         if not tickets_tags:
             return ''
-        res = f'AND {CustomersActivityMeta.ticket_tags} IN ('
-        res += ','.join([str(ticket_tag) for ticket_tag in tickets_tags])
+        res = 'AND ('
+        res += ' OR '.join(
+            [
+                f"{CustomersActivityMeta.ticket_tags} LIKE '%{ticket_tag}%'"
+                for ticket_tag in tickets_tags
+            ]
+        )
         res += ')'
         return res
     
