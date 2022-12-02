@@ -28,7 +28,7 @@ FROM
 	(SELECT *
 	 FROM 	DXStatisticsV2.dbo.TicketInfos
 	 WHERE 	Created BETWEEN @start_date AND @end_date ) AS ti
-	CROSS APPLY (
+	OUTER APPLY (
 		SELECT 	COUNT(TicketId) AS iterations
 		FROM  	DXStatisticsV2.dbo.IterationItems AS ii
 		WHERE 	TicketId = ti.Id ) AS ii
