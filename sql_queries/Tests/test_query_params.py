@@ -60,10 +60,11 @@ from sql_queries.customers_activity.meta import (
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_select_all_path,
+            CustomersActivitySqlPathIndex.get_general_select_path,
             {
-                'table_name': 'test',
                 'columns': 'qwe, asd',
+                'table_name': 'test',
+                'filter_clause': '',
             },
         ),
     ],

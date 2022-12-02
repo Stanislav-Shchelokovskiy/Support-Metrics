@@ -6,7 +6,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from toolbox.utils.converters import JSON_to_object
 import repository.server_repository as server_repository
-from server_models import TicketsWithIterationsParams
+from server_models import (
+    TicketsWithIterationsParams,
+    TribeParams,
+    ControlParams,
+)
 
 
 urllib3.disable_warnings()
@@ -53,11 +57,6 @@ def customers_activity_get_tickets_with_iterations_period():
     return get_response(json_data=df_json)
 
 
-@app.get('/get_available_tribes')
-def get_available_tribes():
-    return query_query_service(method='/get_available_tribes')
-
-
 @app.get('/get_customers_groups')
 def customers_activity_get_customers_groups():
     df_json = server_repository.customers_activity_get_customers_groups()
@@ -77,8 +76,25 @@ def customers_activity_get_tickets_tags():
 
 
 @app.get('/get_replies_types')
-def customers_activity_get_replies_types():
+def customers_activity_get_cat_get_replies_types():
     df_json = server_repository.customers_activity_get_replies_types()
+    return get_response(json_data=df_json)
+
+
+@app.post('/get_controls')
+def customers_activity_cat_controls(params: TribeParams):
+    df_json = server_repository.customers_activity_get_controls(
+        tribe_ids=params.tribes,
+    )
+    return get_response(json_data=df_json)
+
+
+@app.post('/get_features')
+def customers_activity_get_cat_features(params: ControlParams):
+    df_json = server_repository.customers_activity_get_features(
+        tribe_ids=params.tribes,
+        control_ids=params.controls,
+    )
     return get_response(json_data=df_json)
 
 

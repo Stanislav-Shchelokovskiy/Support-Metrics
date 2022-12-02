@@ -1,5 +1,5 @@
 import pytest
-from repository.customers_activity.local.sql_query_params_generator import TicketsWithIterationsAggregatesSqlParamsGenerator
+from repository.customers_activity.local.sql_query_params_generator import TicketsWithIterationsAggregatesSqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
 
 
@@ -17,7 +17,7 @@ from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
     ]
 )
 def test_generate_customer_groups_filter(input: list[str], output: str):
-    assert TicketsWithIterationsAggregatesSqlParamsGenerator.generate_customer_groups_filter(
+    assert TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_customer_groups_filter(
         customer_groups=input
     ) == output
 
@@ -33,7 +33,7 @@ def test_generate_customer_groups_filter(input: list[str], output: str):
     ]
 )
 def test_generate_ticket_types_filter(input: list[int], output: str):
-    assert TicketsWithIterationsAggregatesSqlParamsGenerator.generate_ticket_types_filter(
+    assert TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_ticket_types_filter(
         tickets_types=input
     ) == output
 
@@ -44,12 +44,15 @@ def test_generate_ticket_types_filter(input: list[int], output: str):
             [],
             '',
         ),
-        ([1, 2], f"AND ({TicketsWithIterationsMeta.ticket_tags} LIKE '%1%' OR {TicketsWithIterationsMeta.ticket_tags} LIKE '%2%')"),
+        (
+            [1, 2],
+            f"AND ({TicketsWithIterationsMeta.ticket_tags} LIKE '%1%' OR {TicketsWithIterationsMeta.ticket_tags} LIKE '%2%')"
+        ),
         ([1], f"AND ({TicketsWithIterationsMeta.ticket_tags} LIKE '%1%')"),
     ]
 )
 def test_generate_ticket_tags_filter(input: list[int], output: str):
-    assert TicketsWithIterationsAggregatesSqlParamsGenerator.generate_ticket_tags_filter(
+    assert TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_ticket_tags_filter(
         tickets_tags=input
     ) == output
 
@@ -74,6 +77,6 @@ def test_generate_ticket_tags_filter(input: list[int], output: str):
     ]
 )
 def test_generate_tribes_filter(input: list[str], output: str):
-    assert TicketsWithIterationsAggregatesSqlParamsGenerator.generate_tribes_filter(
+    assert TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_tribes_filter(
         tribe_ids=input
     ) == output

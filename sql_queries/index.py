@@ -56,9 +56,9 @@ class CustomersActivitySqlPathIndex:
         )
 
     @staticmethod
-    def get_select_all_path() -> str:
+    def get_general_select_path() -> str:
         return (
-            CustomersActivitySqlPathIndex.get_local_path() + '/select_all.sql'
+            CustomersActivitySqlPathIndex.get_local_path() + '/general_select.sql'
         )
 
     @staticmethod

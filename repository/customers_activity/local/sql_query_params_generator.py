@@ -1,10 +1,22 @@
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
 
 
-# tickets_types: list[int]
-#     tickets_tags: list[int]
-#     tribes: list[str]
-class TicketsWithIterationsAggregatesSqlParamsGenerator:
+class TribesSqlFilterClauseGenerator:
+
+    def generate_in_filter(
+        col: str,
+        values: list[str],
+        filter_prefix: str = 'WHERE ',
+    ) -> str:
+        if not values:
+            return ''
+        res = f'{col} IN ('
+        res += ','.join([f"'{val}'" for val in values])
+        res += ')'
+        return filter_prefix + res
+
+
+class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
 
     @staticmethod
     def generate_customer_groups_filter(customer_groups: list[str]) -> str:
@@ -45,9 +57,8 @@ class TicketsWithIterationsAggregatesSqlParamsGenerator:
 
     @staticmethod
     def generate_tribes_filter(tribe_ids: list[str]) -> str:
-        if not tribe_ids:
-            return ''
-        res = f'AND {TicketsWithIterationsMeta.tribe_id} IN ('
-        res += ','.join([f"'{tribe_id}'" for tribe_id in tribe_ids])
-        res += ')'
-        return res
+        return TribesSqlFilterClauseGenerator.generate_in_filter(
+            col=TicketsWithIterationsMeta.tribe_id,
+            values=tribe_ids,
+            filter_prefix='AND ',
+        )
