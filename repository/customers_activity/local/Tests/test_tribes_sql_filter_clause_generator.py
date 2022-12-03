@@ -1,28 +1,92 @@
 import pytest
-from repository.customers_activity.local.sql_query_params_generator import TribesSqlFilterClauseGenerator
+from typing import Callable, Any
+from repository.customers_activity.local.sql_query_params_generator import SqlFilterClauseGenerator
 
 
 @pytest.mark.parametrize(
-    'col,tribes,output', [
+    'col, values, prefix, converter, output', [
         (
             'col',
             [],
+            'WHERE ',
+            None,
             '',
         ),
         (
             'col',
             ['p1', 'p2'],
+            'WHERE ',
+            lambda val: f"'{val}'",
             "WHERE col IN ('p1','p2')",
         ),
         (
             'col',
             ['p1'],
+            'WHERE ',
+            lambda val: f"'{val}'",
             "WHERE col IN ('p1')",
+        ),
+        (
+            'col',
+            [1, 2],
+            'AND ',
+            None,
+            "AND col IN (1,2)",
+        ),
+        (
+            'col',
+            [1],
+            'AND ',
+            None,
+            "AND col IN (1)",
         ),
     ]
 )
-def test_generate_in_filter(col: str, tribes: list[str], output: str):
-    assert TribesSqlFilterClauseGenerator.generate_in_filter(
+def test_generate_in_filter(
+    col: str,
+    values: list[str],
+    prefix: str,
+    converter: Callable[[Any], str],
+    output: str,
+):
+    assert SqlFilterClauseGenerator().generate_in_filter(
         col=col,
-        values=tribes,
+        values=values,
+        filter_prefix=prefix,
+        values_converter=converter,
+    ) == output
+
+
+@pytest.mark.parametrize(
+    'col, values, prefix, output', [
+        (
+            'col',
+            [],
+            'WHERE ',
+            '',
+        ),
+        (
+            'col',
+            ['p1', 'p2'],
+            'WHERE ',
+            "WHERE (col LIKE '%p1%' OR col LIKE '%p2%')",
+        ),
+        (
+            'col',
+            ['p1'],
+            'AND ',
+            "AND (col LIKE '%p1%')",
+        ),
+    ]
+)
+def test_generate_like_filter(
+    col: str,
+    values: list[str],
+    prefix: str,
+    output: str,
+):
+    assert SqlFilterClauseGenerator().generate_like_filter(
+        col=col,
+        values=values,
+        filter_prefix=prefix,
     ) == output

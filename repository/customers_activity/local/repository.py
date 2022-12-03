@@ -14,7 +14,7 @@ from sql_queries.customers_activity.meta import (
     ControlsFeaturesMeta,
 )
 from repository.customers_activity.local.sql_query_params_generator import (
-    TribesSqlFilterClauseGenerator,
+    SqlFilterClauseGenerator,
     TicketsWithIterationsAggregatesSqlFilterClauseGenerator,
 )
 
@@ -133,7 +133,7 @@ class ControlsRepository(SqliteRepository):
             'table_name':
                 CustomersActivityDBIndex.get_controls_features_name(),
             'filter_clause':
-                TribesSqlFilterClauseGenerator.generate_in_filter(
+                SqlFilterClauseGenerator.generate_in_filter(
                     values=kwargs['tribe_ids'],
                     col=ControlsFeaturesMeta.tribe_id,
                 ),
@@ -166,11 +166,11 @@ class FeaturesRepository(SqliteRepository):
             'table_name':
                 CustomersActivityDBIndex.get_controls_features_name(),
             'filter_clause':
-                TribesSqlFilterClauseGenerator.generate_in_filter(
+                SqlFilterClauseGenerator.generate_in_filter(
                     values=kwargs['tribe_ids'],
                     col=ControlsFeaturesMeta.tribe_id,
                     filter_prefix='WHERE ',
-                ) + TribesSqlFilterClauseGenerator.generate_in_filter(
+                ) + SqlFilterClauseGenerator.generate_in_filter(
                     values=kwargs['control_ids'],
                     col=ControlsFeaturesMeta.control_id,
                     filter_prefix='AND ',
