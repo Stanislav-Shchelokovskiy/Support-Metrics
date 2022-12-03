@@ -9,9 +9,8 @@ class SqlFilterClauseGenerator:
         col: str,
         values: list,
         filter_prefix: str,
-        values_converter: Callable[[Any], str] = None,
+        values_converter: Callable[[Any], str],
     ) -> str:
-        values_converter = values_converter or str
 
         def filter_func():
             res = f'{col} IN ('
@@ -20,9 +19,7 @@ class SqlFilterClauseGenerator:
             return res
 
         return self._generate_filter(
-            values=values,
-            filter_prefix=filter_prefix,
-            get_filter=filter_func
+            values=values, filter_prefix=filter_prefix, get_filter=filter_func
         )
 
     def generate_like_filter(
@@ -39,9 +36,7 @@ class SqlFilterClauseGenerator:
             return res
 
         return self._generate_filter(
-            values=values,
-            filter_prefix=filter_prefix,
-            get_filter=filter_func
+            values=values, filter_prefix=filter_prefix, get_filter=filter_func
         )
 
     def _generate_filter(
@@ -72,6 +67,7 @@ class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
             col=TicketsWithIterationsMeta.ticket_type,
             values=tickets_types,
             filter_prefix='AND ',
+            values_converter=str,
         )
 
     @staticmethod
@@ -87,6 +83,6 @@ class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
         return SqlFilterClauseGenerator().generate_in_filter(
             col=TicketsWithIterationsMeta.tribe_id,
             values=tribe_ids,
-            values_converter=lambda val: f"'{val}'",
             filter_prefix='AND ',
+            values_converter=lambda val: f"'{val}'",
         )

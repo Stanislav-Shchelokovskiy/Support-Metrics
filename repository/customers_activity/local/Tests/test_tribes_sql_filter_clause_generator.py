@@ -9,7 +9,7 @@ from repository.customers_activity.local.sql_query_params_generator import SqlFi
             'col',
             [],
             'WHERE ',
-            None,
+            str,
             '',
         ),
         (
@@ -30,14 +30,14 @@ from repository.customers_activity.local.sql_query_params_generator import SqlFi
             'col',
             [1, 2],
             'AND ',
-            None,
+            str,
             "AND col IN (1,2)",
         ),
         (
             'col',
             [1],
             'AND ',
-            None,
+            str,
             "AND col IN (1)",
         ),
     ]
