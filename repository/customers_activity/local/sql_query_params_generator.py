@@ -22,7 +22,7 @@ class SqlFilterClauseGenerator:
         return self._generate_filter(
             values=values,
             filter_prefix=filter_prefix,
-            get_filter_func=filter_func
+            get_filter=filter_func
         )
 
     def generate_like_filter(
@@ -41,18 +41,18 @@ class SqlFilterClauseGenerator:
         return self._generate_filter(
             values=values,
             filter_prefix=filter_prefix,
-            get_filter_func=filter_func
+            get_filter=filter_func
         )
 
     def _generate_filter(
         self,
         values: list,
         filter_prefix: str,
-        get_filter_func: Callable[[], str],
+        get_filter: Callable[[], str],
     ) -> str:
         if not values:
             return ''
-        actual_filter = get_filter_func()
+        actual_filter = get_filter()
         return filter_prefix + actual_filter
 
 
