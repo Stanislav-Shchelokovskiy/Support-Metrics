@@ -21,9 +21,9 @@ SELECT
 	ii.iterations				AS {iterations},
 	ug.groups					AS {user_groups},
 	tt.tags						AS {ticket_tags},
-	cat.ReplyId					AS {reply_id},
-	cat.ControlId				AS {control_id},
-	cat.FeatureId				AS {feature_id}
+	CAST(cat.ReplyId	AS UNIQUEIDENTIFIER) AS {reply_id},
+	CAST(cat.ControlId	AS UNIQUEIDENTIFIER) AS {control_id},
+	CAST(cat.FeatureId	AS UNIQUEIDENTIFIER) AS {feature_id}
 FROM 
 	(SELECT *
 	 FROM 	DXStatisticsV2.dbo.TicketInfos

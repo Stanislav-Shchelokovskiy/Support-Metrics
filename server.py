@@ -98,6 +98,13 @@ def customers_activity_get_cat_features(params: ControlParams):
     return get_response(json_data=df_json)
 
 
+@app.get('/get_group_by_periods')
+def customers_activity_get_group_by_periods():
+    return get_response(
+        json_data=server_repository.customers_activity_get_group_by_periods()
+    )
+
+
 @app.post('/get_tickets_with_iterations_aggregates')
 def customers_activity_get_tickets_with_iterations_aggregates(
     group_by_period: str,
@@ -113,5 +120,6 @@ def customers_activity_get_tickets_with_iterations_aggregates(
         tickets_types=params.tickets_types,
         tickets_tags=params.tickets_tags,
         tribe_ids=params.tribes,
+        reply_ids=params.replies_types,
     )
     return get_response(json_data=df_json)

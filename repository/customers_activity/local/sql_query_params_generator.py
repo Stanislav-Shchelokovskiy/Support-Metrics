@@ -37,3 +37,12 @@ class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
             filter_prefix='AND ',
             values_converter=lambda val: f"'{val}'",
         )
+
+    @staticmethod
+    def generate_reply_types_filter(reply_ids: list[str]) -> str:
+        return SqlFilterClauseGenerator().generate_in_filter(
+            col=TicketsWithIterationsMeta.reply_id,
+            values=reply_ids,
+            filter_prefix='AND ',
+            values_converter=lambda val: f"'{val}'",
+        )

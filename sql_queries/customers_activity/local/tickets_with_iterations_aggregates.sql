@@ -10,5 +10,6 @@ WHERE
     {ticket_types_filter}
     {ticket_tags_filter}
     {tribes_fitler}
+    {reply_types_filter}
 GROUP BY
     STRFTIME('{group_by_period}', {creation_date})

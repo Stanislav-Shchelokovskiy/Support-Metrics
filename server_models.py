@@ -13,3 +13,4 @@ class TicketsWithIterationsParams(TribeParams):
     customers_groups: list[str]
     tickets_types: list[int]
     tickets_tags: list[int]
+    replies_types: list[str]

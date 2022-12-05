@@ -200,6 +200,7 @@ class TicketsWithIterationsAggregatesRepository(SqliteRepository):
             'ticket_types_filter': TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_ticket_types_filter(kwargs['tickets_types']),
             'ticket_tags_filter': TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_ticket_tags_filter(kwargs['tickets_tags']),
             'tribes_fitler': TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_tribes_filter(kwargs['tribe_ids']),
+            'reply_types_filter':TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_reply_types_filter((kwargs['reply_ids']),)
         }
     # yapf: enable
 
