@@ -28,6 +28,20 @@ class CustomersActivitySqlPathIndex:
         return CustomersActivitySqlPathIndex.get_extract_path() + '/tags.sql'
 
     @staticmethod
+    def get_replies_types_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_extract_path()
+            + '/replies_types.sql'
+        )
+
+    @staticmethod
+    def get_controls_features_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_extract_path()
+            + '/controls_features.sql'
+        )
+
+    @staticmethod
     def get_tickets_with_iterations_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_extract_path()
@@ -42,9 +56,9 @@ class CustomersActivitySqlPathIndex:
         )
 
     @staticmethod
-    def get_select_all_path() -> str:
+    def get_general_select_path() -> str:
         return (
-            CustomersActivitySqlPathIndex.get_local_path() + '/select_all.sql'
+            CustomersActivitySqlPathIndex.get_local_path() + '/general_select.sql'
         )
 
     @staticmethod
@@ -68,6 +82,14 @@ class CustomersActivityDBIndex:
     @staticmethod
     def get_customers_groups_name() -> str:
         return CustomersActivityDBIndex.get_root_name() + 'CustomersGroups'
+
+    @staticmethod
+    def get_replies_types_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'CatReplyTypes'
+
+    @staticmethod
+    def get_controls_features_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'CatControlsFeatures'
 
     @staticmethod
     def get_tickets_with_iterations_name() -> str:

@@ -1,7 +1,7 @@
 from toolbox.sql.meta_data import MetaData
 
 
-class CustomersActivityMeta(MetaData):
+class TicketsWithIterationsMeta(MetaData):
     user_id = 'user_id'
     tribe_id = 'tribe_id'
     scid = 'scid'
@@ -10,21 +10,38 @@ class CustomersActivityMeta(MetaData):
     iterations = 'iterations'
     user_groups = 'user_groups'
     ticket_tags = 'ticket_tags'
+    reply_id = 'reply_id'
+    control_id = 'control_id'
+    feature_id = 'feature_id'
 
 
-class CustomersGroupsMeta(MetaData):
+class KnotMeta(MetaData):
     id = 'id'
     name = 'name'
 
 
-class TicketsTypesMeta(MetaData):
-    id = 'id'
-    name = 'name'
+class CustomersGroupsMeta(KnotMeta):
+    pass
 
 
-class TicketsTagsMeta(MetaData):
-    id = 'id'
-    name = 'name'
+class TicketsTypesMeta(KnotMeta):
+    pass
+
+
+class TicketsTagsMeta(KnotMeta):
+    pass
+
+
+class ReplyTypesMeta(KnotMeta):
+    pass
+
+
+class ControlsFeaturesMeta(MetaData):
+    tribe_id = 'tribe_id'
+    control_id = 'control_id'
+    feature_id = 'feature_id'
+    control_name = 'control_name'
+    feature_name = 'feature_name'
 
 
 class TicketsWithIterationsPeriodMeta(MetaData):
@@ -32,9 +49,9 @@ class TicketsWithIterationsPeriodMeta(MetaData):
     period_end = 'period_end'
 
 
-class TicketsWithIterationsAggregates(MetaData):
-    creation_date = CustomersActivityMeta.creation_date
-    scid = CustomersActivityMeta.scid
-    iterations = CustomersActivityMeta.iterations
+class TicketsWithIterationsAggregatesMeta(MetaData):
+    creation_date = TicketsWithIterationsMeta.creation_date
+    scid = TicketsWithIterationsMeta.scid
+    iterations = TicketsWithIterationsMeta.iterations
     period = 'period'
     tickets = 'tickets'

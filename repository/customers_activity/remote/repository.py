@@ -4,8 +4,10 @@ from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.customers_activity.meta import (
     CustomersGroupsMeta,
     TicketsTagsMeta,
-    CustomersActivityMeta,
+    TicketsWithIterationsMeta,
     TicketsTypesMeta,
+    ReplyTypesMeta,
+    ControlsFeaturesMeta,
 )
 
 
@@ -39,6 +41,36 @@ class TagsRepository(Repository):
         return TicketsTagsMeta.get_values()
 
 
+class RepliesTypesRepository(Repository):
+    """
+    Loads CAT reply types.
+    """
+
+    def get_main_query_path(self, kwargs: dict) -> str:
+        return CustomersActivitySqlPathIndex.get_replies_types_path()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return {**kwargs, **ReplyTypesMeta.get_attrs()}
+
+    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+        return ReplyTypesMeta.get_values()
+
+
+class ControlsFeaturesRepository(Repository):
+    """
+    Loads CAT controls and features.
+    """
+
+    def get_main_query_path(self, kwargs: dict) -> str:
+        return CustomersActivitySqlPathIndex.get_controls_features_path()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return {**kwargs, **ControlsFeaturesMeta.get_attrs()}
+
+    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+        return ControlsFeaturesMeta.get_values()
+
+
 class TicketsWithIterationsRepository(Repository):
     """
     Loads customers with their tickets and iterations.
@@ -48,10 +80,10 @@ class TicketsWithIterationsRepository(Repository):
         return CustomersActivitySqlPathIndex.get_tickets_with_iterations_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
-        return {**kwargs, **CustomersActivityMeta.get_attrs()}
+        return {**kwargs, **TicketsWithIterationsMeta.get_attrs()}
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return CustomersActivityMeta.get_values()
+        return TicketsWithIterationsMeta.get_values()
 
 
 class TicketsTypesRepository(Repository):
