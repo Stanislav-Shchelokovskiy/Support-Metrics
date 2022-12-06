@@ -14,7 +14,7 @@ from sql_queries.customers_activity.meta import (
     ControlsFeaturesMeta,
 )
 from repository.customers_activity.local.sql_query_params_generator import (
-    SqlFilterClauseGenerator,
+    CATSqlFilterClauseGenerator,
     TicketsWithIterationsAggregatesSqlFilterClauseGenerator,
 )
 
@@ -126,6 +126,7 @@ class ControlsRepository(SqliteRepository):
             'columns':
                 ', '.join(
                     [
+                        ControlsFeaturesMeta.tribe_id,
                         ControlsFeaturesMeta.control_id,
                         ControlsFeaturesMeta.control_name,
                     ]
@@ -133,14 +134,14 @@ class ControlsRepository(SqliteRepository):
             'table_name':
                 CustomersActivityDBIndex.get_controls_features_name(),
             'filter_clause':
-                SqlFilterClauseGenerator.generate_in_filter(
-                    values=kwargs['tribe_ids'],
-                    col=ControlsFeaturesMeta.tribe_id,
-                ),
+                CATSqlFilterClauseGenerator.generate_controls_filter(
+                    tribe_ids=kwargs['tribe_ids']
+                )
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return [
+            ControlsFeaturesMeta.tribe_id,
             ControlsFeaturesMeta.control_id,
             ControlsFeaturesMeta.control_name,
         ]
@@ -159,6 +160,8 @@ class FeaturesRepository(SqliteRepository):
             'columns':
                 ', '.join(
                     [
+                        ControlsFeaturesMeta.tribe_id,
+                        ControlsFeaturesMeta.control_id,
                         ControlsFeaturesMeta.feature_id,
                         ControlsFeaturesMeta.feature_name,
                     ]
@@ -166,43 +169,68 @@ class FeaturesRepository(SqliteRepository):
             'table_name':
                 CustomersActivityDBIndex.get_controls_features_name(),
             'filter_clause':
-                SqlFilterClauseGenerator.generate_in_filter(
-                    values=kwargs['tribe_ids'],
-                    col=ControlsFeaturesMeta.tribe_id,
-                    filter_prefix='WHERE ',
-                ) + SqlFilterClauseGenerator.generate_in_filter(
-                    values=kwargs['control_ids'],
-                    col=ControlsFeaturesMeta.control_id,
-                    filter_prefix='AND ',
-                ),
+                CATSqlFilterClauseGenerator.generate_features_filter(
+                    tribe_ids=kwargs['tribe_ids'],
+                    control_ids=kwargs['control_ids'],
+                )
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return [
+            ControlsFeaturesMeta.tribe_id,
+            ControlsFeaturesMeta.control_id,
             ControlsFeaturesMeta.feature_id,
             ControlsFeaturesMeta.feature_name,
         ]
 
 
 class TicketsWithIterationsAggregatesRepository(SqliteRepository):
-    # yapf: disable
+
     def get_main_query_path(self, kwargs: dict) -> str:
+        # yapf: disable
         return CustomersActivitySqlPathIndex.get_tickets_with_iterations_aggregates_path()
+        #yapf: enable
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        generator = TicketsWithIterationsAggregatesSqlFilterClauseGenerator
         return {
-            **TicketsWithIterationsAggregatesMeta.get_attrs(),
-            'table_name': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
-            'group_by_period': kwargs['group_by_period'],
-            'range_start': kwargs['range_start'],
-            'range_end': kwargs['range_end'],
-            'customer_groups_filter': TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_customer_groups_filter(kwargs['customers_groups']),
-            'ticket_types_filter': TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_ticket_types_filter(kwargs['tickets_types']),
-            'ticket_tags_filter': TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_ticket_tags_filter(kwargs['tickets_tags']),
-            'tribes_fitler': TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_tribes_filter(kwargs['tribe_ids']),
-            'reply_types_filter':TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_reply_types_filter((kwargs['reply_ids']),)
+            **TicketsWithIterationsAggregatesMeta.get_attrs(), 'table_name':
+                CustomersActivityDBIndex.get_tickets_with_iterations_name(),
+            'group_by_period':
+                kwargs['group_by_period'],
+            'range_start':
+                kwargs['range_start'],
+            'range_end':
+                kwargs['range_end'],
+            'customer_groups_filter':
+                generator.generate_customer_groups_filter(
+                    customer_groups=kwargs['customers_groups'],
+                ),
+            'ticket_types_filter':
+                generator.generate_ticket_types_filter(
+                    tickets_types=kwargs['tickets_types'],
+                ),
+            'ticket_tags_filter':
+                generator.generate_ticket_tags_filter(
+                    tickets_tags=kwargs['tickets_tags'],
+                ),
+            'tribes_fitler':
+                generator.generate_tribes_filter(
+                    tribe_ids=kwargs['tribe_ids'],
+                ),
+            'reply_types_filter':
+                generator.generate_reply_types_filter(
+                    reply_ids=kwargs['reply_ids'],
+                ),
+            'controls_filter':
+                generator.generate_controls_filter(
+                    control_ids=kwargs['control_ids'],
+                ),
+            'features_filter':
+                generator.generate_features_filter(
+                    feature_ids=kwargs['feature_ids'],
+                )
         }
-    # yapf: enable
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return [

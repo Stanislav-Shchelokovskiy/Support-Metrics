@@ -1,5 +1,8 @@
 from toolbox.sql.generators.filter_clause_generator import SqlFilterClauseGenerator
-from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
+from sql_queries.customers_activity.meta import (
+    TicketsWithIterationsMeta,
+    ControlsFeaturesMeta,
+)
 
 
 class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
@@ -44,5 +47,49 @@ class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
             col=TicketsWithIterationsMeta.reply_id,
             values=reply_ids,
             filter_prefix='AND ',
+            values_converter=lambda val: f"'{val}'",
+        )
+
+    @staticmethod
+    def generate_controls_filter(control_ids: list[str]) -> str:
+        return SqlFilterClauseGenerator().generate_in_filter(
+            col=TicketsWithIterationsMeta.control_id,
+            values=control_ids,
+            filter_prefix='AND ',
+            values_converter=lambda val: f"'{val}'",
+        )
+
+    @staticmethod
+    def generate_features_filter(feature_ids: list[str]) -> str:
+        return SqlFilterClauseGenerator().generate_in_filter(
+            col=TicketsWithIterationsMeta.feature_id,
+            values=feature_ids,
+            filter_prefix='AND ',
+            values_converter=lambda val: f"'{val}'",
+        )
+
+
+class CATSqlFilterClauseGenerator:
+
+    @staticmethod
+    def generate_controls_filter(tribe_ids: list[str]) -> str:
+        return SqlFilterClauseGenerator().generate_in_filter(
+            values=tribe_ids,
+            col=ControlsFeaturesMeta.tribe_id,
+            filter_prefix='WHERE ',
+            values_converter=lambda val: f"'{val}'",
+        )
+
+    @staticmethod
+    def generate_features_filter(
+        tribe_ids: list[str],
+        control_ids: list[str],
+    ) -> str:
+        return CATSqlFilterClauseGenerator.generate_controls_filter(
+            tribe_ids=tribe_ids
+        ) + SqlFilterClauseGenerator().generate_in_filter(
+            values=control_ids,
+            col=ControlsFeaturesMeta.control_id,
+            filter_prefix=' AND ',
             values_converter=lambda val: f"'{val}'",
         )

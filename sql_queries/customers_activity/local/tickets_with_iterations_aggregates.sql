@@ -11,5 +11,7 @@ WHERE
     {ticket_tags_filter}
     {tribes_fitler}
     {reply_types_filter}
+    {controls_filter}
+    {features_filter}
 GROUP BY
     STRFTIME('{group_by_period}', {creation_date})

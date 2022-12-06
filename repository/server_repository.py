@@ -35,7 +35,7 @@ def customers_activity_get_features(tribe_ids: list[str], control_ids: list[str]
 
 def customers_activity_get_group_by_periods() -> str:
     # format should contain a valid strftime string.
-    # https://sqlite.org/lang_datefunc.html 
+    # https://sqlite.org/lang_datefunc.html
     return '''[
         { "name": "Day",        "format": "%Y-%m-%d" },
         { "name": "Week-Year",  "format": "%Y-%W" },
@@ -53,6 +53,8 @@ def customers_activity_get_tickets_with_iterations_aggregates(
     tickets_tags: list[int],
     tribe_ids: list[str],
     reply_ids: list[str],
+    control_ids: list[str],
+    feature_ids: list[str],
 ) -> str:
     repository = RepositoryFactory.customers_activity.local.create_tickets_with_iterations_aggregates_repository()
     return repository.get_data_json(
@@ -64,5 +66,7 @@ def customers_activity_get_tickets_with_iterations_aggregates(
         tickets_tags=tickets_tags,
         tribe_ids=tribe_ids,
         reply_ids=reply_ids,
+        control_ids=control_ids,
+        feature_ids=feature_ids,
     )
 # yapf: enable

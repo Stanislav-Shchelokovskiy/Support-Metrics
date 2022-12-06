@@ -121,5 +121,7 @@ def customers_activity_get_tickets_with_iterations_aggregates(
         tickets_tags=params.tickets_tags,
         tribe_ids=params.tribes,
         reply_ids=params.replies_types,
+        control_ids=params.controls,
+        feature_ids=params.features,
     )
     return get_response(json_data=df_json)
