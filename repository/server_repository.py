@@ -48,13 +48,13 @@ def customers_activity_get_tickets_with_iterations_aggregates(
     group_by_period: str,
     range_start: str,
     range_end: str,
-    customers_groups: list[str],
-    tickets_types: list[int],
-    tickets_tags: list[int],
-    tribe_ids: list[str],
-    reply_ids: list[str],
-    control_ids: list[str],
-    feature_ids: list[str],
+    customers_groups,
+    tickets_types,
+    tickets_tags,
+    tribe_ids,
+    reply_ids,
+    control_ids,
+    feature_ids,
 ) -> str:
     repository = RepositoryFactory.customers_activity.local.create_tickets_with_iterations_aggregates_repository()
     return repository.get_data_json(
