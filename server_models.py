@@ -9,10 +9,16 @@ class ControlParams(TribeParams):
     controls: list[str]
 
 
-class TicketsWithIterationsParams(TribeParams):
-    customers_groups: list[str]
-    tickets_types: list[int]
-    tickets_tags: list[int]
-    replies_types: list[str]
-    controls: list[str]
-    features: list[str]
+class FilterParametersNode(BaseModel):
+    include: bool
+    values: list[int | str]
+
+
+class TicketsWithIterationsParams(BaseModel):
+    tribes: FilterParametersNode
+    customers_groups: FilterParametersNode
+    tickets_types: FilterParametersNode
+    tickets_tags: FilterParametersNode
+    replies_types: FilterParametersNode
+    controls: FilterParametersNode
+    features: FilterParametersNode

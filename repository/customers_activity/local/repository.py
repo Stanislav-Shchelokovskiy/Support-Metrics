@@ -189,48 +189,25 @@ class TicketsWithIterationsAggregatesRepository(SqliteRepository):
     def get_main_query_path(self, kwargs: dict) -> str:
         # yapf: disable
         return CustomersActivitySqlPathIndex.get_tickets_with_iterations_aggregates_path()
-        #yapf: enable
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         generator = TicketsWithIterationsAggregatesSqlFilterClauseGenerator
         return {
             **TicketsWithIterationsAggregatesMeta.get_attrs(), 'table_name':
                 CustomersActivityDBIndex.get_tickets_with_iterations_name(),
-            'group_by_period':
-                kwargs['group_by_period'],
-            'range_start':
-                kwargs['range_start'],
-            'range_end':
-                kwargs['range_end'],
-            'customer_groups_filter':
-                generator.generate_customer_groups_filter(
-                    customer_groups=kwargs['customers_groups'],
-                ),
-            'ticket_types_filter':
-                generator.generate_ticket_types_filter(
-                    tickets_types=kwargs['tickets_types'],
-                ),
-            'ticket_tags_filter':
-                generator.generate_ticket_tags_filter(
-                    tickets_tags=kwargs['tickets_tags'],
-                ),
-            'tribes_fitler':
-                generator.generate_tribes_filter(
-                    tribe_ids=kwargs['tribe_ids'],
-                ),
-            'reply_types_filter':
-                generator.generate_reply_types_filter(
-                    reply_ids=kwargs['reply_ids'],
-                ),
-            'controls_filter':
-                generator.generate_controls_filter(
-                    control_ids=kwargs['control_ids'],
-                ),
-            'features_filter':
-                generator.generate_features_filter(
-                    feature_ids=kwargs['feature_ids'],
-                )
+            'group_by_period': kwargs['group_by_period'],
+            'range_start': kwargs['range_start'],
+            'range_end': kwargs['range_end'],
+            'customer_groups_filter': generator.generate_customer_groups_filter(params=kwargs['customers_groups']),
+            'ticket_types_filter': generator.generate_ticket_types_filter(params=kwargs['tickets_types']),
+            'ticket_tags_filter': generator.generate_ticket_tags_filter(params=kwargs['tickets_tags']),
+            'tribes_fitler': generator.generate_tribes_filter(params=kwargs['tribe_ids']),
+            'reply_types_filter': generator.generate_reply_types_filter(params=kwargs['reply_ids']),
+            'controls_filter': generator.generate_controls_filter(params=kwargs['control_ids']),
+            'features_filter': generator.generate_features_filter(params=kwargs['feature_ids'])
         }
+
+    #yapf: enable
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return [
