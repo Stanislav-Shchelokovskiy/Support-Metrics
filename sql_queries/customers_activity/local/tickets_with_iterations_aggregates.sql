@@ -1,7 +1,11 @@
 SELECT
-    STRFTIME('{group_by_period}', {creation_date}) AS {period},
-    COUNT({scid}) AS {tickets},
-    SUM({iterations}) AS {iterations}
+    IIF(
+        '{group_by_period}' = '%Y-%W', 
+        STRFTIME('%Y-%m-%d', {creation_date}, 'weekday 1', '-7 day'), 
+        STRFTIME('{group_by_period}', {creation_date})
+    )                   AS {period},
+    COUNT({scid})       AS {tickets},
+    SUM({iterations})   AS {iterations}
 FROM 
     {table_name}
 WHERE
