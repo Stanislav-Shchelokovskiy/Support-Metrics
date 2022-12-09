@@ -30,11 +30,11 @@ class MockFilterParametersNode:
         ),
         (
             MockFilterParametersNode(include=False, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.user_groups} NOT LIKE '%p1%' OR {TicketsWithIterationsMeta.user_groups} NOT LIKE '%p2%')"
+            f"AND ({TicketsWithIterationsMeta.user_groups} IS NULL OR {TicketsWithIterationsMeta.user_groups} NOT LIKE '%p1%' OR {TicketsWithIterationsMeta.user_groups} NOT LIKE '%p2%')"
         ),
         (
             MockFilterParametersNode(include=False, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.user_groups} NOT LIKE '%p1%')"
+            f"AND ({TicketsWithIterationsMeta.user_groups} IS NULL OR {TicketsWithIterationsMeta.user_groups} NOT LIKE '%p1%')"
         ),
     ]
 )
@@ -67,11 +67,11 @@ def test_generate_customer_groups_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[1, 2]),
-            f'AND {TicketsWithIterationsMeta.ticket_type} NOT IN (1,2)'
+            f'AND ({TicketsWithIterationsMeta.ticket_type} IS NULL OR {TicketsWithIterationsMeta.ticket_type} NOT IN (1,2))'
         ),
         (
             MockFilterParametersNode(include=False, values=[1]),
-            f'AND {TicketsWithIterationsMeta.ticket_type} NOT IN (1)'
+            f'AND ({TicketsWithIterationsMeta.ticket_type} IS NULL OR {TicketsWithIterationsMeta.ticket_type} NOT IN (1))'
         ),
     ]
 )
@@ -104,11 +104,11 @@ def test_generate_ticket_types_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[1, 2]),
-            f"AND ({TicketsWithIterationsMeta.ticket_tags} NOT LIKE '%1%' OR {TicketsWithIterationsMeta.ticket_tags} NOT LIKE '%2%')",
+            f"AND ({TicketsWithIterationsMeta.ticket_tags} IS NULL OR {TicketsWithIterationsMeta.ticket_tags} NOT LIKE '%1%' OR {TicketsWithIterationsMeta.ticket_tags} NOT LIKE '%2%')",
         ),
         (
             MockFilterParametersNode(include=False, values=[1]),
-            f"AND ({TicketsWithIterationsMeta.ticket_tags} NOT LIKE '%1%')",
+            f"AND ({TicketsWithIterationsMeta.ticket_tags} IS NULL OR {TicketsWithIterationsMeta.ticket_tags} NOT LIKE '%1%')",
         ),
     ]
 )
@@ -147,11 +147,11 @@ def test_generate_ticket_tags_filter(
                 'qwe',
                 'asd',
             ]),
-            f"AND {TicketsWithIterationsMeta.tribe_id} NOT IN ('qwe','asd')",
+            f"AND ({TicketsWithIterationsMeta.tribe_id} IS NULL OR {TicketsWithIterationsMeta.tribe_id} NOT IN ('qwe','asd'))",
         ),
         (
             MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.tribe_id} NOT IN ('qwe')",
+            f"AND ({TicketsWithIterationsMeta.tribe_id} IS NULL OR {TicketsWithIterationsMeta.tribe_id} NOT IN ('qwe'))",
         ),
     ]
 )
@@ -190,11 +190,11 @@ def test_generate_tribes_filter(
                 'qwe',
                 'asd',
             ]),
-            f"AND {TicketsWithIterationsMeta.reply_id} NOT IN ('qwe','asd')",
+            f"AND ({TicketsWithIterationsMeta.reply_id} IS NULL OR {TicketsWithIterationsMeta.reply_id} NOT IN ('qwe','asd'))",
         ),
         (
             MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.reply_id} NOT IN ('qwe')",
+            f"AND ({TicketsWithIterationsMeta.reply_id} IS NULL OR {TicketsWithIterationsMeta.reply_id} NOT IN ('qwe'))",
         ),
     ]
 )
@@ -233,11 +233,11 @@ def test_generate_reply_types_filter(
                 'qwe',
                 'asd',
             ]),
-            f"AND {TicketsWithIterationsMeta.control_id} NOT IN ('qwe','asd')",
+            f"AND ({TicketsWithIterationsMeta.control_id} IS NULL OR {TicketsWithIterationsMeta.control_id} NOT IN ('qwe','asd'))",
         ),
         (
             MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.control_id} NOT IN ('qwe')",
+            f"AND ({TicketsWithIterationsMeta.control_id} IS NULL OR {TicketsWithIterationsMeta.control_id} NOT IN ('qwe'))",
         ),
     ]
 )
@@ -276,11 +276,11 @@ def test_generate_controls_filter(
                 'qwe',
                 'asd',
             ]),
-            f"AND {TicketsWithIterationsMeta.feature_id} NOT IN ('qwe','asd')",
+            f"AND ({TicketsWithIterationsMeta.feature_id} IS NULL OR {TicketsWithIterationsMeta.feature_id} NOT IN ('qwe','asd'))",
         ),
         (
             MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.feature_id} NOT IN ('qwe')",
+            f"AND ({TicketsWithIterationsMeta.feature_id} IS NULL OR {TicketsWithIterationsMeta.feature_id} NOT IN ('qwe'))",
         ),
     ]
 )
