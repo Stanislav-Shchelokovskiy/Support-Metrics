@@ -44,7 +44,7 @@ FROM
 		PIVOT(MIN(Value) FOR Name IN ([ReplyId], [ControlId], [FeatureId])) AS value ) AS cat
 	INNER JOIN SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].Users AS u ON u.Id = ti.OwnerGuid
 	INNER JOIN CRM.dbo.Customers AS crmCustomer ON crmCustomer.FriendlyId = u.FriendlyId
-	CROSS APPLY(
+	OUTER APPLY(
 		SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), UserGroup_Id), ' ') AS groups
 		FROM 	CRM.dbo.Customer_UserGroup
 		WHERE 	Customer_Id = crmCustomer.Id ) AS ug
