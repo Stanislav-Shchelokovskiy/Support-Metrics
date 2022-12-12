@@ -9,6 +9,7 @@ from sql_queries.customers_activity.meta import (
     TicketsTagsMeta,
     TicketsWithIterationsPeriodMeta,
     TicketsTypesMeta,
+    TicketsWithIterationsMeta,
     TicketsWithIterationsAggregatesMeta,
     ReplyTypesMeta,
     ControlsFeaturesMeta,
@@ -184,18 +185,17 @@ class FeaturesRepository(SqliteRepository):
         ]
 
 
-class TicketsWithIterationsAggregatesRepository(SqliteRepository):
+class TicketsWithIterationsRawRepository(SqliteRepository):
 
     def get_main_query_path(self, kwargs: dict) -> str:
         # yapf: disable
-        return CustomersActivitySqlPathIndex.get_tickets_with_iterations_aggregates_path()
+        return CustomersActivitySqlPathIndex.get_tickets_with_iterations_raw_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         generator = TicketsWithIterationsAggregatesSqlFilterClauseGenerator
         return {
-            **TicketsWithIterationsAggregatesMeta.get_attrs(), 'table_name':
-                CustomersActivityDBIndex.get_tickets_with_iterations_name(),
-            'group_by_period': kwargs['group_by_period'],
+            'table_name': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
+            TicketsWithIterationsMeta.creation_date: TicketsWithIterationsMeta.creation_date,
             'range_start': kwargs['range_start'],
             'range_end': kwargs['range_end'],
             'customer_groups_filter': generator.generate_customer_groups_filter(params=kwargs['customers_groups']),
@@ -207,6 +207,22 @@ class TicketsWithIterationsAggregatesRepository(SqliteRepository):
             'features_filter': generator.generate_features_filter(params=kwargs['feature_ids'])
         }
 
+    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+        return TicketsWithIterationsMeta.get_values()
+
+
+class TicketsWithIterationsAggregatesRepository(TicketsWithIterationsRawRepository):
+
+    def get_main_query_path(self, kwargs: dict) -> str:
+        # yapf: disable
+        return CustomersActivitySqlPathIndex.get_tickets_with_iterations_aggregates_path()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return {
+            **TicketsWithIterationsAggregatesMeta.get_attrs(),
+            'group_by_period': kwargs['group_by_period'],
+            **TicketsWithIterationsRawRepository.get_main_query_format_params(self, kwargs)
+        }
     #yapf: enable
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:

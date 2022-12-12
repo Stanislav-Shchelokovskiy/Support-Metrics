@@ -69,4 +69,28 @@ def customers_activity_get_tickets_with_iterations_aggregates(
         control_ids=control_ids,
         feature_ids=feature_ids,
     )
+
+def customers_activity_get_tickets_with_iterations_raw(
+    range_start: str,
+    range_end: str,
+    customers_groups,
+    tickets_types,
+    tickets_tags,
+    tribe_ids,
+    reply_ids,
+    control_ids,
+    feature_ids,
+) -> str:
+    repository = RepositoryFactory.customers_activity.local.create_tickets_with_iterations_raw_repository()
+    return repository.get_data_json(
+        range_start=range_start,
+        range_end=range_end,
+        customers_groups=customers_groups,
+        tickets_types=tickets_types,
+        tickets_tags=tickets_tags,
+        tribe_ids=tribe_ids,
+        reply_ids=reply_ids,
+        control_ids=control_ids,
+        feature_ids=feature_ids,
+    )
 # yapf: enable

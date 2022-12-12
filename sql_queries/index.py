@@ -58,7 +58,8 @@ class CustomersActivitySqlPathIndex:
     @staticmethod
     def get_general_select_path() -> str:
         return (
-            CustomersActivitySqlPathIndex.get_local_path() + '/general_select.sql'
+            CustomersActivitySqlPathIndex.get_local_path()
+            + '/general_select.sql'
         )
 
     @staticmethod
@@ -66,6 +67,13 @@ class CustomersActivitySqlPathIndex:
         return (
             CustomersActivitySqlPathIndex.get_local_path()
             + '/tickets_with_iterations_aggregates.sql'
+        )
+
+    @staticmethod
+    def get_tickets_with_iterations_raw_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_local_path()
+            + '/tickets_with_iterations_raw.sql'
         )
 
 

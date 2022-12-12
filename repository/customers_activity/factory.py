@@ -11,6 +11,7 @@ from repository.customers_activity.local.repository import (
     CustomersGroupsRepository as SqliteCustomersGroupsRepository,
     TicketsTypesRepository as SqliteTicketsTypesRepository,
     TicketsTagsRepository as SqliteTicketsTagsRepository,
+    TicketsWithIterationsRawRepository as SqliteTicketsWithIterationsRawRepository,
     TicketsWithIterationsAggregatesRepository as SqliteTicketsWithIterationsAggregatesRepository,
     ReplyTypesRepository as SqliteReplyTypesRepository,
     ControlsRepository as SqliteControlsRepository,
@@ -62,6 +63,9 @@ class SqliteFactory:
     def create_features_repository(self, **kwargs) -> SqliteFeaturesRepository:
         return SqliteFeaturesRepository()
     
+    def create_tickets_with_iterations_raw_repository(self, **kwargs) -> SqliteTicketsWithIterationsRawRepository:
+        return SqliteTicketsWithIterationsRawRepository()
+
     def create_tickets_with_iterations_aggregates_repository(self, **kwargs) -> SqliteTicketsWithIterationsAggregatesRepository:
         return SqliteTicketsWithIterationsAggregatesRepository()
 
