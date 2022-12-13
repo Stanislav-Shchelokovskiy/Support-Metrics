@@ -4,7 +4,7 @@ DECLARE @end_date DATE = '{end_date}';
 
 WITH ticket_tags AS (
 	SELECT
-		Tickets AS tickets,
+		Tickets AS ticket_id,
 		STRING_AGG(CONVERT(NVARCHAR(MAX), Tags), ' ') AS tags
 	FROM
 		SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketTags
@@ -15,6 +15,7 @@ WITH ticket_tags AS (
 SELECT
 	u.FriendlyId				AS {user_id},
 	tribes.Id					AS {tribe_id},
+	tribes.Name					AS {tribe_name},
 	ti.TicketSCID				AS {scid},
 	ti.TicketType				AS {ticket_type},
 	CAST(ti.Created AS DATE)	AS {creation_date},
@@ -22,7 +23,7 @@ SELECT
 	ug.groups					AS {user_groups},
 	tt.tags						AS {ticket_tags},
 	CAST(cat.ReplyId	AS UNIQUEIDENTIFIER) AS {reply_id},
-	CAST(cat.ControlId	AS UNIQUEIDENTIFIER) AS {control_id},
+	CAST(cat.ControlId	AS UNIQUEIDENTIFIER) AS {component_id},
 	CAST(cat.FeatureId	AS UNIQUEIDENTIFIER) AS {feature_id}
 FROM 
 	(SELECT *
@@ -50,4 +51,4 @@ FROM
 		WHERE 	Customer_Id = crmCustomer.Id ) AS ug
 	LEFT JOIN DXStatisticsV2.dbo.TribeTeamMapping AS ttm ON ttm.SupportTeam = ISNULL(ti.ProcessingSupportTeam, ti.SupportTeam)
 	INNER JOIN CRM.dbo.Tribes AS tribes ON ttm.Tribe = tribes.Id
-	LEFT JOIN ticket_tags AS tt ON tt.tickets = ti.Id
+	LEFT JOIN ticket_tags AS tt ON tt.ticket_id = ti.Id

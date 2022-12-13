@@ -6,7 +6,7 @@ class TribeParams(BaseModel):
 
 
 class ControlParams(TribeParams):
-    controls: list[str]
+    components: list[str]
 
 
 class FilterParametersNode(BaseModel):
@@ -20,5 +20,5 @@ class TicketsWithIterationsParams(BaseModel):
     tickets_types: FilterParametersNode
     tickets_tags: FilterParametersNode
     replies_types: FilterParametersNode
-    controls: FilterParametersNode
+    components: FilterParametersNode
     features: FilterParametersNode

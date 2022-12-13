@@ -12,7 +12,7 @@ from sql_queries.customers_activity.meta import (
     TicketsTagsMeta,
     TicketsWithIterationsPeriodMeta,
     ReplyTypesMeta,
-    ControlsFeaturesMeta,
+    ComponentsFeaturesMeta,
 )
 
 
@@ -46,9 +46,9 @@ from sql_queries.customers_activity.meta import (
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_controls_features_path,
+            CustomersActivitySqlPathIndex.get_components_features_path,
             {
-                **ControlsFeaturesMeta.get_attrs(),
+                **ComponentsFeaturesMeta.get_attrs(),
             },
         ),
         (

@@ -35,10 +35,10 @@ class CustomersActivitySqlPathIndex:
         )
 
     @staticmethod
-    def get_controls_features_path() -> str:
+    def get_components_features_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_extract_path()
-            + '/controls_features.sql'
+            + '/components_features.sql'
         )
 
     @staticmethod
@@ -58,7 +58,8 @@ class CustomersActivitySqlPathIndex:
     @staticmethod
     def get_general_select_path() -> str:
         return (
-            CustomersActivitySqlPathIndex.get_local_path() + '/general_select.sql'
+            CustomersActivitySqlPathIndex.get_local_path()
+            + '/general_select.sql'
         )
 
     @staticmethod
@@ -66,6 +67,13 @@ class CustomersActivitySqlPathIndex:
         return (
             CustomersActivitySqlPathIndex.get_local_path()
             + '/tickets_with_iterations_aggregates.sql'
+        )
+
+    @staticmethod
+    def get_tickets_with_iterations_raw_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_local_path()
+            + '/tickets_with_iterations_raw.sql'
         )
 
 
@@ -85,11 +93,11 @@ class CustomersActivityDBIndex:
 
     @staticmethod
     def get_replies_types_name() -> str:
-        return CustomersActivityDBIndex.get_root_name() + 'CatReplyTypes'
+        return CustomersActivityDBIndex.get_root_name() + 'CatRepliesTypes'
 
     @staticmethod
-    def get_controls_features_name() -> str:
-        return CustomersActivityDBIndex.get_root_name() + 'CatControlsFeatures'
+    def get_components_features_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'CatComponentsFeatures'
 
     @staticmethod
     def get_tickets_with_iterations_name() -> str:

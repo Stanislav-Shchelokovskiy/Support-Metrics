@@ -4,16 +4,17 @@ from repository.customers_activity.remote.repository import (
     TicketsWithIterationsRepository,
     TicketsTypesRepository,
     RepliesTypesRepository,
-    ControlsFeaturesRepository,
+    ComponentsFeaturesRepository,
 )
 from repository.customers_activity.local.repository import (
     TicketsWithIterationsRepository as SqliteTicketsWithIterationsRepository,
     CustomersGroupsRepository as SqliteCustomersGroupsRepository,
     TicketsTypesRepository as SqliteTicketsTypesRepository,
     TicketsTagsRepository as SqliteTicketsTagsRepository,
+    TicketsWithIterationsRawRepository as SqliteTicketsWithIterationsRawRepository,
     TicketsWithIterationsAggregatesRepository as SqliteTicketsWithIterationsAggregatesRepository,
     ReplyTypesRepository as SqliteReplyTypesRepository,
-    ControlsRepository as SqliteControlsRepository,
+    ComponentsRepository as SqliteComponentsRepository,
     FeaturesRepository as SqliteFeaturesRepository,
 )
 
@@ -29,8 +30,8 @@ class SqlServerFactory:
     def create_replies_types_repository(self, **kwargs) -> RepliesTypesRepository:
         return RepliesTypesRepository()
 
-    def create_controls_features_repository(self, **kwargs) -> ControlsFeaturesRepository:
-        return ControlsFeaturesRepository()
+    def create_components_features_repository(self, **kwargs) -> ComponentsFeaturesRepository:
+        return ComponentsFeaturesRepository()
 
     def create_tickets_with_iterations_repository(self, **kwargs) -> TicketsWithIterationsRepository:
         return TicketsWithIterationsRepository()
@@ -56,12 +57,15 @@ class SqliteFactory:
     def create_reply_types_repository(self, **kwargs) -> SqliteReplyTypesRepository:
         return SqliteReplyTypesRepository()
     
-    def create_controls_repository(self, **kwargs) -> SqliteControlsRepository:
-        return SqliteControlsRepository()
+    def create_components_repository(self, **kwargs) -> SqliteComponentsRepository:
+        return SqliteComponentsRepository()
     
     def create_features_repository(self, **kwargs) -> SqliteFeaturesRepository:
         return SqliteFeaturesRepository()
     
+    def create_tickets_with_iterations_raw_repository(self, **kwargs) -> SqliteTicketsWithIterationsRawRepository:
+        return SqliteTicketsWithIterationsRawRepository()
+
     def create_tickets_with_iterations_aggregates_repository(self, **kwargs) -> SqliteTicketsWithIterationsAggregatesRepository:
         return SqliteTicketsWithIterationsAggregatesRepository()
 

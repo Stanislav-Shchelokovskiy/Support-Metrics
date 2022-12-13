@@ -33,10 +33,10 @@ def load_replies_types():
     _save_tables(tables={CustomersActivityDBIndex.get_replies_types_name(): df})
 
 
-def load_controls_features():
-    controls_features_repository = RepositoryFactory.customers_activity.remote.create_controls_features_repository()
-    df = controls_features_repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_controls_features_name(): df})
+def load_components_features():
+    components_features_repository = RepositoryFactory.customers_activity.remote.create_components_features_repository()
+    df = components_features_repository.get_data()
+    _save_tables(tables={CustomersActivityDBIndex.get_components_features_name(): df})
 
 
 def load_tickets_with_iterations(start_date: str, end_date: str):

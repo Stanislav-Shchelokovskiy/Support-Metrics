@@ -2,7 +2,7 @@ from typing import Protocol
 from toolbox.sql.generators.filter_clause_generator import SqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import (
     TicketsWithIterationsMeta,
-    ControlsFeaturesMeta,
+    ComponentsFeaturesMeta,
 )
 
 
@@ -74,10 +74,10 @@ class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
         )
 
     @staticmethod
-    def generate_controls_filter(params: FilterParametersNode) -> str:
+    def generate_components_filter(params: FilterParametersNode) -> str:
         generate_filter = TicketsWithIterationsAggregatesSqlFilterClauseGenerator._generate_in_filter(params)
         return generate_filter(
-            col=TicketsWithIterationsMeta.control_id,
+            col=TicketsWithIterationsMeta.component_id,
             values=params.values,
             filter_prefix='AND ',
             values_converter=lambda val: f"'{val}'",
@@ -97,10 +97,10 @@ class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
 class CATSqlFilterClauseGenerator:
 
     @staticmethod
-    def generate_controls_filter(tribe_ids: list[str]) -> str:
+    def generate_components_filter(tribe_ids: list[str]) -> str:
         return SqlFilterClauseGenerator().generate_in_filter(
             values=tribe_ids,
-            col=ControlsFeaturesMeta.tribe_id,
+            col=ComponentsFeaturesMeta.tribe_id,
             filter_prefix='WHERE ',
             values_converter=lambda val: f"'{val}'",
         )
@@ -108,13 +108,13 @@ class CATSqlFilterClauseGenerator:
     @staticmethod
     def generate_features_filter(
         tribe_ids: list[str],
-        control_ids: list[str],
+        component_ids: list[str],
     ) -> str:
-        return CATSqlFilterClauseGenerator.generate_controls_filter(
+        return CATSqlFilterClauseGenerator.generate_components_filter(
             tribe_ids=tribe_ids
         ) + SqlFilterClauseGenerator().generate_in_filter(
-            values=control_ids,
-            col=ControlsFeaturesMeta.control_id,
+            values=component_ids,
+            col=ComponentsFeaturesMeta.component_id,
             filter_prefix=' AND ',
             values_converter=lambda val: f"'{val}'",
         )

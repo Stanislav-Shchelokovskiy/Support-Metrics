@@ -9,9 +9,11 @@ from sql_queries.customers_activity.meta import (
     TicketsTagsMeta,
     TicketsWithIterationsPeriodMeta,
     TicketsTypesMeta,
+    TicketsWithIterationsMeta,
     TicketsWithIterationsAggregatesMeta,
     ReplyTypesMeta,
-    ControlsFeaturesMeta,
+    ComponentsFeaturesMeta,
+    TicketsWithIterationsRawMeta,
 )
 from repository.customers_activity.local.sql_query_params_generator import (
     CATSqlFilterClauseGenerator,
@@ -113,9 +115,9 @@ class ReplyTypesRepository(SqliteRepository):
         return ReplyTypesMeta.get_values()
 
 
-class ControlsRepository(SqliteRepository):
+class ComponentsRepository(SqliteRepository):
     """
-    Interface to a local table storing CAT controls.
+    Interface to a local table storing CAT components.
     """
 
     def get_main_query_path(self, kwargs: dict) -> str:
@@ -126,24 +128,24 @@ class ControlsRepository(SqliteRepository):
             'columns':
                 ', '.join(
                     [
-                        ControlsFeaturesMeta.tribe_id,
-                        ControlsFeaturesMeta.control_id,
-                        ControlsFeaturesMeta.control_name,
+                        ComponentsFeaturesMeta.tribe_id,
+                        ComponentsFeaturesMeta.component_id,
+                        ComponentsFeaturesMeta.component_name,
                     ]
                 ),
             'table_name':
-                CustomersActivityDBIndex.get_controls_features_name(),
+                CustomersActivityDBIndex.get_components_features_name(),
             'filter_clause':
-                CATSqlFilterClauseGenerator.generate_controls_filter(
+                CATSqlFilterClauseGenerator.generate_components_filter(
                     tribe_ids=kwargs['tribe_ids']
                 )
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return [
-            ControlsFeaturesMeta.tribe_id,
-            ControlsFeaturesMeta.control_id,
-            ControlsFeaturesMeta.control_name,
+            ComponentsFeaturesMeta.tribe_id,
+            ComponentsFeaturesMeta.component_id,
+            ComponentsFeaturesMeta.component_name,
         ]
 
 
@@ -160,42 +162,41 @@ class FeaturesRepository(SqliteRepository):
             'columns':
                 ', '.join(
                     [
-                        ControlsFeaturesMeta.tribe_id,
-                        ControlsFeaturesMeta.control_id,
-                        ControlsFeaturesMeta.feature_id,
-                        ControlsFeaturesMeta.feature_name,
+                        ComponentsFeaturesMeta.tribe_id,
+                        ComponentsFeaturesMeta.component_id,
+                        ComponentsFeaturesMeta.feature_id,
+                        ComponentsFeaturesMeta.feature_name,
                     ]
                 ),
             'table_name':
-                CustomersActivityDBIndex.get_controls_features_name(),
+                CustomersActivityDBIndex.get_components_features_name(),
             'filter_clause':
                 CATSqlFilterClauseGenerator.generate_features_filter(
                     tribe_ids=kwargs['tribe_ids'],
-                    control_ids=kwargs['control_ids'],
+                    component_ids=kwargs['component_ids'],
                 )
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return [
-            ControlsFeaturesMeta.tribe_id,
-            ControlsFeaturesMeta.control_id,
-            ControlsFeaturesMeta.feature_id,
-            ControlsFeaturesMeta.feature_name,
+            ComponentsFeaturesMeta.tribe_id,
+            ComponentsFeaturesMeta.component_id,
+            ComponentsFeaturesMeta.feature_id,
+            ComponentsFeaturesMeta.feature_name,
         ]
 
 
-class TicketsWithIterationsAggregatesRepository(SqliteRepository):
+class TicketsWithIterationsRawRepository(SqliteRepository):
 
     def get_main_query_path(self, kwargs: dict) -> str:
         # yapf: disable
-        return CustomersActivitySqlPathIndex.get_tickets_with_iterations_aggregates_path()
+        return CustomersActivitySqlPathIndex.get_tickets_with_iterations_raw_path()
 
-    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+    def get_general_format_params(self, kwargs:dict)-> dict[str,str]:
         generator = TicketsWithIterationsAggregatesSqlFilterClauseGenerator
         return {
-            **TicketsWithIterationsAggregatesMeta.get_attrs(), 'table_name':
-                CustomersActivityDBIndex.get_tickets_with_iterations_name(),
-            'group_by_period': kwargs['group_by_period'],
+            'table_name': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
+            TicketsWithIterationsMeta.creation_date: TicketsWithIterationsMeta.creation_date,
             'range_start': kwargs['range_start'],
             'range_end': kwargs['range_end'],
             'customer_groups_filter': generator.generate_customer_groups_filter(params=kwargs['customers_groups']),
@@ -203,10 +204,35 @@ class TicketsWithIterationsAggregatesRepository(SqliteRepository):
             'ticket_tags_filter': generator.generate_ticket_tags_filter(params=kwargs['tickets_tags']),
             'tribes_fitler': generator.generate_tribes_filter(params=kwargs['tribe_ids']),
             'reply_types_filter': generator.generate_reply_types_filter(params=kwargs['reply_ids']),
-            'controls_filter': generator.generate_controls_filter(params=kwargs['control_ids']),
+            'components_filter': generator.generate_components_filter(params=kwargs['components_ids']),
             'features_filter': generator.generate_features_filter(params=kwargs['feature_ids'])
         }
 
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return {
+            'replies_types_table': CustomersActivityDBIndex.get_replies_types_name(),
+            'components_features_table': CustomersActivityDBIndex.get_components_features_name(),
+            **TicketsWithIterationsRawMeta.get_attrs(),
+            **self.get_general_format_params(kwargs)
+        }
+    #yapf: enable
+
+    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+        return TicketsWithIterationsRawMeta.get_values()
+
+
+class TicketsWithIterationsAggregatesRepository(TicketsWithIterationsRawRepository):
+
+    def get_main_query_path(self, kwargs: dict) -> str:
+        # yapf: disable
+        return CustomersActivitySqlPathIndex.get_tickets_with_iterations_aggregates_path()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return {
+            **TicketsWithIterationsAggregatesMeta.get_attrs(),
+            'group_by_period': kwargs['group_by_period'],
+            **TicketsWithIterationsRawRepository.get_general_format_params(self, kwargs)
+        }
     #yapf: enable
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
