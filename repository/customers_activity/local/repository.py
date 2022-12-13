@@ -173,7 +173,7 @@ class FeaturesRepository(SqliteRepository):
             'filter_clause':
                 CATSqlFilterClauseGenerator.generate_features_filter(
                     tribe_ids=kwargs['tribe_ids'],
-                    control_ids=kwargs['control_ids'],
+                    component_ids=kwargs['component_ids'],
                 )
         }
 

@@ -108,12 +108,12 @@ class CATSqlFilterClauseGenerator:
     @staticmethod
     def generate_features_filter(
         tribe_ids: list[str],
-        control_ids: list[str],
+        component_ids: list[str],
     ) -> str:
         return CATSqlFilterClauseGenerator.generate_components_filter(
             tribe_ids=tribe_ids
         ) + SqlFilterClauseGenerator().generate_in_filter(
-            values=control_ids,
+            values=component_ids,
             col=ComponentsFeaturesMeta.component_id,
             filter_prefix=' AND ',
             values_converter=lambda val: f"'{val}'",
