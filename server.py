@@ -81,9 +81,9 @@ def customers_activity_get_cat_get_replies_types():
     return get_response(json_data=df_json)
 
 
-@app.post('/get_controls')
-def customers_activity_cat_controls(params: TribeParams):
-    df_json = server_repository.customers_activity_get_controls(
+@app.post('/get_components')
+def customers_activity_cat_components(params: TribeParams):
+    df_json = server_repository.customers_activity_get_components(
         tribe_ids=params.tribes,
     )
     return get_response(json_data=df_json)
@@ -93,7 +93,7 @@ def customers_activity_cat_controls(params: TribeParams):
 def customers_activity_get_cat_features(params: ControlParams):
     df_json = server_repository.customers_activity_get_features(
         tribe_ids=params.tribes,
-        control_ids=params.controls,
+        component_ids=params.components,
     )
     return get_response(json_data=df_json)
 
@@ -121,7 +121,7 @@ def customers_activity_get_tickets_with_iterations_aggregates(
         tickets_tags=params.tickets_tags,
         tribe_ids=params.tribes,
         reply_ids=params.replies_types,
-        control_ids=params.controls,
+        components_ids=params.components,
         feature_ids=params.features,
     )
     return get_response(json_data=df_json)
@@ -141,7 +141,7 @@ def customers_activity_get_tickets_with_iterations_raw(
         tickets_tags=params.tickets_tags,
         tribe_ids=params.tribes,
         reply_ids=params.replies_types,
-        control_ids=params.controls,
+        components_ids=params.components,
         feature_ids=params.features,
     )
     return get_response(json_data=df_json)

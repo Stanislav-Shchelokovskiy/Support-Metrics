@@ -222,30 +222,30 @@ def test_generate_reply_types_filter(
                 'qwe',
                 'asd',
             ]),
-            f"AND {TicketsWithIterationsMeta.control_id} IN ('qwe','asd')",
+            f"AND {TicketsWithIterationsMeta.component_id} IN ('qwe','asd')",
         ),
         (
             MockFilterParametersNode(include=True, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.control_id} IN ('qwe')",
+            f"AND {TicketsWithIterationsMeta.component_id} IN ('qwe')",
         ),
         (
             MockFilterParametersNode(include=False, values=[
                 'qwe',
                 'asd',
             ]),
-            f"AND ({TicketsWithIterationsMeta.control_id} IS NULL OR {TicketsWithIterationsMeta.control_id} NOT IN ('qwe','asd'))",
+            f"AND ({TicketsWithIterationsMeta.component_id} IS NULL OR {TicketsWithIterationsMeta.component_id} NOT IN ('qwe','asd'))",
         ),
         (
             MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND ({TicketsWithIterationsMeta.control_id} IS NULL OR {TicketsWithIterationsMeta.control_id} NOT IN ('qwe'))",
+            f"AND ({TicketsWithIterationsMeta.component_id} IS NULL OR {TicketsWithIterationsMeta.component_id} NOT IN ('qwe'))",
         ),
     ]
 )
-def test_generate_controls_filter(
+def test_generate_components_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_controls_filter(
+    assert TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_components_filter(
         params=input
     ) == output
 

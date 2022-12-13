@@ -1,8 +1,8 @@
 SELECT
     ttm.Tribe   AS {tribe_id},
-	Control     AS {control_id},
+	Control     AS {component_id},
     Feature     AS {feature_id},
-	c.Name      AS {control_name},
+	c.Name      AS {component_name},
 	f.Name      AS {feature_name}
 FROM DXStatisticsV2.dbo.CaTControlFeatures AS cf
 INNER JOIN DXStatisticsV2.dbo.CaTControls AS c ON c.Id = cf.Control

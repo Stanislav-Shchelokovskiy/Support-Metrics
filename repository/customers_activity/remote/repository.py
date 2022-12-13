@@ -7,7 +7,7 @@ from sql_queries.customers_activity.meta import (
     TicketsWithIterationsMeta,
     TicketsTypesMeta,
     ReplyTypesMeta,
-    ControlsFeaturesMeta,
+    ComponentsFeaturesMeta,
 )
 
 
@@ -56,19 +56,19 @@ class RepliesTypesRepository(Repository):
         return ReplyTypesMeta.get_values()
 
 
-class ControlsFeaturesRepository(Repository):
+class ComponentsFeaturesRepository(Repository):
     """
-    Loads CAT controls and features.
+    Loads CAT components and features.
     """
 
     def get_main_query_path(self, kwargs: dict) -> str:
-        return CustomersActivitySqlPathIndex.get_controls_features_path()
+        return CustomersActivitySqlPathIndex.get_components_features_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
-        return {**kwargs, **ControlsFeaturesMeta.get_attrs()}
+        return {**kwargs, **ComponentsFeaturesMeta.get_attrs()}
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return ControlsFeaturesMeta.get_values()
+        return ComponentsFeaturesMeta.get_values()
 
 
 class TicketsWithIterationsRepository(Repository):

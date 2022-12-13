@@ -22,15 +22,15 @@ def customers_activity_get_replies_types() -> str:
     repository = RepositoryFactory.customers_activity.local.create_reply_types_repository()
     return repository.get_data_json()
 
-def customers_activity_get_controls(tribe_ids: list[str]) -> str:
-    repository = RepositoryFactory.customers_activity.local.create_controls_repository()
+def customers_activity_get_components(tribe_ids: list[str]) -> str:
+    repository = RepositoryFactory.customers_activity.local.create_components_repository()
     return repository.get_data_json(tribe_ids=tribe_ids,)
 
-def customers_activity_get_features(tribe_ids: list[str], control_ids: list[str],) -> str:
+def customers_activity_get_features(tribe_ids: list[str], component_ids: list[str],) -> str:
     repository = RepositoryFactory.customers_activity.local.create_features_repository()
     return repository.get_data_json(
             tribe_ids=tribe_ids,
-            control_ids=control_ids,
+            component_ids=component_ids,
         )
 
 def customers_activity_get_group_by_periods() -> str:
@@ -53,7 +53,7 @@ def customers_activity_get_tickets_with_iterations_aggregates(
     tickets_tags,
     tribe_ids,
     reply_ids,
-    control_ids,
+    components_ids,
     feature_ids,
 ) -> str:
     repository = RepositoryFactory.customers_activity.local.create_tickets_with_iterations_aggregates_repository()
@@ -66,7 +66,7 @@ def customers_activity_get_tickets_with_iterations_aggregates(
         tickets_tags=tickets_tags,
         tribe_ids=tribe_ids,
         reply_ids=reply_ids,
-        control_ids=control_ids,
+        components_ids=components_ids,
         feature_ids=feature_ids,
     )
 
@@ -78,7 +78,7 @@ def customers_activity_get_tickets_with_iterations_raw(
     tickets_tags,
     tribe_ids,
     reply_ids,
-    control_ids,
+    components_ids,
     feature_ids,
 ) -> str:
     repository = RepositoryFactory.customers_activity.local.create_tickets_with_iterations_raw_repository()
@@ -90,7 +90,7 @@ def customers_activity_get_tickets_with_iterations_raw(
         tickets_tags=tickets_tags,
         tribe_ids=tribe_ids,
         reply_ids=reply_ids,
-        control_ids=control_ids,
+        components_ids=components_ids,
         feature_ids=feature_ids,
     )
 # yapf: enable

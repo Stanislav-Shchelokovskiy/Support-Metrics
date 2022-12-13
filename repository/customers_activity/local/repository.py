@@ -12,7 +12,8 @@ from sql_queries.customers_activity.meta import (
     TicketsWithIterationsMeta,
     TicketsWithIterationsAggregatesMeta,
     ReplyTypesMeta,
-    ControlsFeaturesMeta,
+    ComponentsFeaturesMeta,
+    TicketsWithIterationsRawMeta,
 )
 from repository.customers_activity.local.sql_query_params_generator import (
     CATSqlFilterClauseGenerator,
@@ -114,9 +115,9 @@ class ReplyTypesRepository(SqliteRepository):
         return ReplyTypesMeta.get_values()
 
 
-class ControlsRepository(SqliteRepository):
+class ComponentsRepository(SqliteRepository):
     """
-    Interface to a local table storing CAT controls.
+    Interface to a local table storing CAT components.
     """
 
     def get_main_query_path(self, kwargs: dict) -> str:
@@ -127,24 +128,24 @@ class ControlsRepository(SqliteRepository):
             'columns':
                 ', '.join(
                     [
-                        ControlsFeaturesMeta.tribe_id,
-                        ControlsFeaturesMeta.control_id,
-                        ControlsFeaturesMeta.control_name,
+                        ComponentsFeaturesMeta.tribe_id,
+                        ComponentsFeaturesMeta.component_id,
+                        ComponentsFeaturesMeta.component_name,
                     ]
                 ),
             'table_name':
-                CustomersActivityDBIndex.get_controls_features_name(),
+                CustomersActivityDBIndex.get_components_features_name(),
             'filter_clause':
-                CATSqlFilterClauseGenerator.generate_controls_filter(
+                CATSqlFilterClauseGenerator.generate_components_filter(
                     tribe_ids=kwargs['tribe_ids']
                 )
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return [
-            ControlsFeaturesMeta.tribe_id,
-            ControlsFeaturesMeta.control_id,
-            ControlsFeaturesMeta.control_name,
+            ComponentsFeaturesMeta.tribe_id,
+            ComponentsFeaturesMeta.component_id,
+            ComponentsFeaturesMeta.component_name,
         ]
 
 
@@ -161,14 +162,14 @@ class FeaturesRepository(SqliteRepository):
             'columns':
                 ', '.join(
                     [
-                        ControlsFeaturesMeta.tribe_id,
-                        ControlsFeaturesMeta.control_id,
-                        ControlsFeaturesMeta.feature_id,
-                        ControlsFeaturesMeta.feature_name,
+                        ComponentsFeaturesMeta.tribe_id,
+                        ComponentsFeaturesMeta.component_id,
+                        ComponentsFeaturesMeta.feature_id,
+                        ComponentsFeaturesMeta.feature_name,
                     ]
                 ),
             'table_name':
-                CustomersActivityDBIndex.get_controls_features_name(),
+                CustomersActivityDBIndex.get_components_features_name(),
             'filter_clause':
                 CATSqlFilterClauseGenerator.generate_features_filter(
                     tribe_ids=kwargs['tribe_ids'],
@@ -178,10 +179,10 @@ class FeaturesRepository(SqliteRepository):
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return [
-            ControlsFeaturesMeta.tribe_id,
-            ControlsFeaturesMeta.control_id,
-            ControlsFeaturesMeta.feature_id,
-            ControlsFeaturesMeta.feature_name,
+            ComponentsFeaturesMeta.tribe_id,
+            ComponentsFeaturesMeta.component_id,
+            ComponentsFeaturesMeta.feature_id,
+            ComponentsFeaturesMeta.feature_name,
         ]
 
 
@@ -191,7 +192,7 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
         # yapf: disable
         return CustomersActivitySqlPathIndex.get_tickets_with_iterations_raw_path()
 
-    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+    def get_general_format_params(self, kwargs:dict)-> dict[str,str]:
         generator = TicketsWithIterationsAggregatesSqlFilterClauseGenerator
         return {
             'table_name': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
@@ -203,12 +204,21 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
             'ticket_tags_filter': generator.generate_ticket_tags_filter(params=kwargs['tickets_tags']),
             'tribes_fitler': generator.generate_tribes_filter(params=kwargs['tribe_ids']),
             'reply_types_filter': generator.generate_reply_types_filter(params=kwargs['reply_ids']),
-            'controls_filter': generator.generate_controls_filter(params=kwargs['control_ids']),
+            'components_filter': generator.generate_components_filter(params=kwargs['components_ids']),
             'features_filter': generator.generate_features_filter(params=kwargs['feature_ids'])
         }
 
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return {
+            'replies_types_table': CustomersActivityDBIndex.get_replies_types_name(),
+            'components_features_table': CustomersActivityDBIndex.get_components_features_name(),
+            **TicketsWithIterationsRawMeta.get_attrs(),
+            **self.get_general_format_params(kwargs)
+        }
+    #yapf: enable
+
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return TicketsWithIterationsMeta.get_values()
+        return TicketsWithIterationsRawMeta.get_values()
 
 
 class TicketsWithIterationsAggregatesRepository(TicketsWithIterationsRawRepository):
@@ -221,7 +231,7 @@ class TicketsWithIterationsAggregatesRepository(TicketsWithIterationsRawReposito
         return {
             **TicketsWithIterationsAggregatesMeta.get_attrs(),
             'group_by_period': kwargs['group_by_period'],
-            **TicketsWithIterationsRawRepository.get_main_query_format_params(self, kwargs)
+            **TicketsWithIterationsRawRepository.get_general_format_params(self, kwargs)
         }
     #yapf: enable
 

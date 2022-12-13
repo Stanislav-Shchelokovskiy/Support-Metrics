@@ -1,17 +1,21 @@
 from toolbox.sql.meta_data import MetaData
 
 
-class TicketsWithIterationsMeta(MetaData):
+class TicketsWithIterationsMainMeta(MetaData):
     user_id = 'user_id'
-    tribe_id = 'tribe_id'
+    tribe_name = 'tribe_name'
     scid = 'scid'
-    ticket_type = 'ticket_type'
     creation_date = 'creation_date'
     iterations = 'iterations'
+
+
+class TicketsWithIterationsMeta(TicketsWithIterationsMainMeta):
+    tribe_id = 'tribe_id'
+    ticket_type = 'ticket_type'
     user_groups = 'user_groups'
     ticket_tags = 'ticket_tags'
     reply_id = 'reply_id'
-    control_id = 'control_id'
+    component_id = 'component_id'
     feature_id = 'feature_id'
 
 
@@ -36,11 +40,11 @@ class ReplyTypesMeta(KnotMeta):
     pass
 
 
-class ControlsFeaturesMeta(MetaData):
+class ComponentsFeaturesMeta(MetaData):
     tribe_id = 'tribe_id'
-    control_id = 'control_id'
+    component_id = 'component_id'
     feature_id = 'feature_id'
-    control_name = 'control_name'
+    component_name = 'component_name'
     feature_name = 'feature_name'
 
 
@@ -55,3 +59,9 @@ class TicketsWithIterationsAggregatesMeta(MetaData):
     iterations = TicketsWithIterationsMeta.iterations
     period = 'period'
     tickets = 'tickets'
+
+
+class TicketsWithIterationsRawMeta(TicketsWithIterationsMainMeta):
+    reply = 'reply'
+    component = 'component'
+    feature = 'feature'
