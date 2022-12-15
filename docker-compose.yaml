@@ -9,15 +9,17 @@ x-support_analytics_service:
     - SQL_DATABASE
     - SQL_USER
     - SQL_PASSWORD
-    - CELERY_BROKER_URL
-    - CELERY_RESULT_BACKEND
-    - DB_HOME
-    - SQLITE_DATABASE
-    - USER_POSTS_SQL
-    - USER_POSTS_TABLE_NAME
     - SERVER_PORT
+    - FLOWER_PORT
     - CORS_ORIGINS
     - QUERY_SERVICE_NAME
+    - REDIS_SERVICE
+    - REDIS_PORT
+    - CELERY_BROKER_URL=redis://${REDIS_SERVICE}:${REDIS_PORT}/1
+    - CELERY_RESULT_BACKEND=redis://${REDIS_SERVICE}:${REDIS_PORT}/1
+    - REDIS_DB=SUPPORT_ANALYTICS
+    - DB_HOME
+    - SQLITE_DATABASE=${DB_HOME}/db
 
 services:
   support_analytics_worker:

@@ -6,12 +6,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from toolbox.utils.converters import JSON_to_object
 import repository.server_repository as server_repository
+from server_cache import ServerCache
 from server_models import (
     TicketsWithIterationsParams,
     TribeParams,
     ControlParams,
+    StatAppState,
 )
+import hashlib
 
+
+server_cache = ServerCache()
 
 urllib3.disable_warnings()
 
@@ -145,3 +150,17 @@ def customers_activity_get_tickets_with_iterations_raw(
         feature_ids=params.features,
     )
     return get_response(json_data=df_json)
+
+
+@app.post('/push_state')
+def push_state(params: StatAppState):
+    state = params.state
+    state_id = hashlib.md5(state.encode()).hexdigest()
+    server_cache.stat_app_state.save(value=state, key=[state_id])
+    return get_response(json_data=state_id)
+
+
+@app.get('/pull_state')
+def pull_state(state_id: str, ):
+    state = server_cache.stat_app_state.get(state_id)
+    return get_response(json_data=state)
