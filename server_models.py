@@ -22,3 +22,7 @@ class TicketsWithIterationsParams(BaseModel):
     replies_types: FilterParametersNode
     components: FilterParametersNode
     features: FilterParametersNode
+
+
+class StatAppState(BaseModel):
+    state: str

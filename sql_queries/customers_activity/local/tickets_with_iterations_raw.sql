@@ -4,7 +4,7 @@ SELECT
     t.{tribe_name},
     t.{iterations},
     t.{creation_date},
-    r.Name AS {reply},
+    r.name AS {reply},
     c.component_name AS {component},
     f.feature_name AS {feature}
 FROM (  SELECT
