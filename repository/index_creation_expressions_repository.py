@@ -5,8 +5,8 @@ from sql_queries.customers_activity.meta import (
 )
 
 
-def _create_index_expression(tbl: str, col: str) -> str:
-    return f'CREATE INDEX idx_{col} ON {tbl}({col});'
+def _create_index_expression(tbl: str, cols: list[str]) -> str:
+    return f'CREATE INDEX idx_{tbl}_{cols[0]} ON {tbl}({",".join(cols)});'
 
 
 class IndexCreationExpressionsRepository:
@@ -14,11 +14,11 @@ class IndexCreationExpressionsRepository:
         CustomersActivityDBIndex.get_components_features_name():
             _create_index_expression(
                 tbl=CustomersActivityDBIndex.get_components_features_name(),
-                col=ComponentsFeaturesMeta.tribe_id
+                cols=[ComponentsFeaturesMeta.tribe_id, ComponentsFeaturesMeta.component_id, ComponentsFeaturesMeta.feature_id]
             ),
         CustomersActivityDBIndex.get_tickets_with_iterations_name():
             _create_index_expression(
                 tbl=CustomersActivityDBIndex.get_tickets_with_iterations_name(),
-                col=TicketsWithIterationsMeta.creation_date
+                cols=[TicketsWithIterationsMeta.creation_date, TicketsWithIterationsMeta.tribe_id]
             ),
     }

@@ -7,6 +7,7 @@ class TicketsWithIterationsMainMeta(MetaData):
     scid = 'scid'
     creation_date = 'creation_date'
     iterations = 'iterations'
+    license_status = 'license_status'
 
 
 class TicketsWithIterationsMeta(TicketsWithIterationsMainMeta):
