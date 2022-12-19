@@ -22,9 +22,15 @@ from sql_queries.customers_activity.meta import (
         (
             CustomersActivitySqlPathIndex.get_tickets_with_iterations_path,
             {
+                **TicketsWithIterationsMeta.get_attrs(),
+            },
+        ),
+        (
+            CustomersActivitySqlPathIndex.
+            get_fill_tickets_with_iterations_path,
+            {
                 'start_date': 'qwe',
                 'end_date': 'asd',
-                **TicketsWithIterationsMeta.get_attrs(),
             },
         ),
         (

@@ -16,8 +16,10 @@ class CustomersActivitySqlPathIndex:
         return CustomersActivitySqlPathIndex.get_root_path() + '/local'
 
     @staticmethod
-    def get_tables_path() -> str:
-        return CustomersActivitySqlPathIndex.get_root_path() + '/tables'
+    def get_extract_temp_tables_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_extract_path() + '/temp_tables'
+        )
 
     @staticmethod
     def get_customers_groups_path() -> str:
@@ -39,6 +41,21 @@ class CustomersActivitySqlPathIndex:
         return (
             CustomersActivitySqlPathIndex.get_extract_path()
             + '/components_features.sql'
+        )
+
+    @staticmethod
+    def get_create_tickets_with_iterations_and_licenses_temp_table_path(
+    ) -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_extract_temp_tables_path()
+            + '/TicketsWithIterationsAndLicenses.sql'
+        )
+
+    @staticmethod
+    def get_fill_tickets_with_iterations_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_extract_path()
+            + '/fill_tickets_with_iterations.sql'
         )
 
     @staticmethod
@@ -97,7 +114,9 @@ class CustomersActivityDBIndex:
 
     @staticmethod
     def get_components_features_name() -> str:
-        return CustomersActivityDBIndex.get_root_name() + 'CatComponentsFeatures'
+        return (
+            CustomersActivityDBIndex.get_root_name() + 'CatComponentsFeatures'
+        )
 
     @staticmethod
     def get_tickets_with_iterations_name() -> str:
@@ -108,3 +127,7 @@ class CustomersActivityDBIndex:
     @staticmethod
     def get_tickets_types_name() -> str:
         return CustomersActivityDBIndex.get_root_name() + 'TicketsTypes'
+
+    @staticmethod
+    def get_license_statuses_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'LicenseStatuses'
