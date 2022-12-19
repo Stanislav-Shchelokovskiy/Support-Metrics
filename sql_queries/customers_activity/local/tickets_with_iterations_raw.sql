@@ -4,6 +4,7 @@ SELECT
     t.{tribe_name},
     t.{iterations},
     t.{creation_date},
+    t.{license_status},
     r.name AS {reply},
     ( SELECT component_name 
       FROM {components_features_table}
@@ -16,18 +17,8 @@ SELECT
             component_id = t.component_id AND
             feature_id = t.feature_id
       LIMIT 1 ) AS {feature}
-FROM (  SELECT
-            user_id,
-            scid,
-            tribe_id,
-            tribe_name,
-            iterations,
-            creation_date,
-            reply_id,
-            component_id,
-            feature_id
-        FROM
-            {table_name} 
+FROM (  SELECT  *
+        FROM    {table_name} 
         WHERE
             {creation_date} BETWEEN '{range_start}' AND '{range_end}'
             {customer_groups_filter}
