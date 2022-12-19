@@ -5,11 +5,21 @@ SELECT
     t.{iterations},
     t.{creation_date},
     r.name AS {reply},
-    c.component_name AS {component},
-    f.feature_name AS {feature}
+    ( SELECT component_name 
+      FROM {components_features_table}
+      WHERE tribe_id = t.tribe_id AND 
+            component_id = t.component_id
+      LIMIT 1 ) AS {component},
+    ( SELECT feature_name 
+      FROM {components_features_table}
+      WHERE tribe_id = t.tribe_id AND
+            component_id = t.component_id AND
+            feature_id = t.feature_id
+      LIMIT 1 ) AS {feature}
 FROM (  SELECT
             user_id,
             scid,
+            tribe_id,
             tribe_name,
             iterations,
             creation_date,
@@ -29,5 +39,3 @@ FROM (  SELECT
             {features_filter}
     ) AS t
     LEFT JOIN {replies_types_table} AS r ON r.id = t.reply_id
-    LEFT JOIN {components_features_table} AS c ON c.component_id = t.component_id
-    LEFT JOIN {components_features_table} AS f ON f.feature_id = t.feature_id
