@@ -13,6 +13,8 @@ from sql_queries.customers_activity.meta import (
     TicketsWithIterationsPeriodMeta,
     ReplyTypesMeta,
     ComponentsFeaturesMeta,
+    TicketsWithIterationsAggregatesMeta,
+    TicketsWithIterationsRawMeta,
 )
 
 
@@ -23,6 +25,41 @@ from sql_queries.customers_activity.meta import (
             CustomersActivitySqlPathIndex.get_tickets_with_iterations_path,
             {
                 **TicketsWithIterationsMeta.get_attrs(),
+            },
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_tickets_with_iterations_raw_path,
+            {
+                **TicketsWithIterationsRawMeta.get_attrs(),
+                'components_features_table':'components_features_table',
+                'table_name':'table_name',
+                'replies_types_table':'replies_types_table',
+                'range_start':'range_start',
+                'range_end':'range_end',
+                'tribes_fitler':'tribes_fitler',
+                'customer_groups_filter':'customer_groups_filter',
+                'ticket_types_filter':'ticket_types_filter',
+                'ticket_tags_filter':'ticket_tags_filter',
+                'reply_types_filter':'reply_types_filter',
+                'components_filter':'components_filter',
+                'features_filter':'features_filter',
+            },
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_tickets_with_iterations_aggregates_path,
+            {
+                **TicketsWithIterationsAggregatesMeta.get_attrs(),
+                'table_name':'table_name',
+                'range_start':'range_start',
+                'range_end':'range_end',
+                'group_by_period':'group_by_period',
+                'tribes_fitler':'tribes_fitler',
+                'customer_groups_filter':'customer_groups_filter',
+                'ticket_types_filter':'ticket_types_filter',
+                'ticket_tags_filter':'ticket_tags_filter',
+                'reply_types_filter':'reply_types_filter',
+                'components_filter':'components_filter',
+                'features_filter':'features_filter',
             },
         ),
         (
