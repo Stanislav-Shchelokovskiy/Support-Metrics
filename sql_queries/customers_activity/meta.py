@@ -41,6 +41,10 @@ class ReplyTypesMeta(KnotMeta):
     pass
 
 
+class LicenseStatusesMeta(KnotMeta):
+    pass
+
+
 class ComponentsFeaturesMeta(MetaData):
     tribe_id = 'tribe_id'
     component_id = 'component_id'

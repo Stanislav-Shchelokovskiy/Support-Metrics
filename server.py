@@ -110,6 +110,13 @@ def customers_activity_get_group_by_periods():
     )
 
 
+@app.get('/get_license_statuses')
+def customers_activity_get_license_statuses():
+    return get_response(
+        json_data=server_repository.customers_activity_get_license_statuses()
+    )
+
+
 @app.post('/get_tickets_with_iterations_aggregates')
 def customers_activity_get_tickets_with_iterations_aggregates(
     group_by_period: str,

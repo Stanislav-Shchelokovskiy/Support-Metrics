@@ -44,6 +44,10 @@ def customers_activity_get_group_by_periods() -> str:
     ]
     '''
 
+def customers_activity_get_license_statuses() -> str:
+    repository = RepositoryFactory.customers_activity.local.create_license_statuses_repository()
+    return repository.get_data_json()
+
 def customers_activity_get_tickets_with_iterations_aggregates(
     group_by_period: str,
     range_start: str,

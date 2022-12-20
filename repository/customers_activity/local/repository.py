@@ -14,6 +14,7 @@ from sql_queries.customers_activity.meta import (
     ReplyTypesMeta,
     ComponentsFeaturesMeta,
     TicketsWithIterationsRawMeta,
+    LicenseStatusesMeta,
 )
 from repository.customers_activity.local.sql_query_params_generator import (
     CATSqlFilterClauseGenerator,
@@ -75,6 +76,22 @@ class TicketsTypesRepository(SqliteRepository):
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return TicketsTypesMeta.get_values()
+
+
+class LicenseStatusesRepository(SqliteRepository):
+
+    def get_main_query_path(self, kwargs: dict) -> str:
+        return CustomersActivitySqlPathIndex.get_general_select_path()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return {
+            'columns': ', '.join(LicenseStatusesMeta.get_values()),
+            'table_name': CustomersActivityDBIndex.get_license_statuses_name(),
+            'filter_clause': '',
+        }
+
+    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+        return LicenseStatusesMeta.get_values()
 
 
 class TicketsTagsRepository(SqliteRepository):
