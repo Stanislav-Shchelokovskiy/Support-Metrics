@@ -4,7 +4,7 @@ SELECT
     t.{tribe_name},
     t.{iterations},
     t.{creation_date},
-    t.{license_status},
+    lc.name AS {license_status},
     r.name AS {reply},
     ( SELECT component_name 
       FROM {components_features_table}
@@ -31,3 +31,4 @@ FROM (  SELECT  *
             {license_status_filter}
     ) AS t
     LEFT JOIN {replies_types_table} AS r ON r.id = t.reply_id
+    LEFT JOIN {license_statuses_table} AS lc ON lc.id = t.license_status

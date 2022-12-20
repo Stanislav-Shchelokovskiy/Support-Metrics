@@ -230,6 +230,7 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
         return {
             'replies_types_table': CustomersActivityDBIndex.get_replies_types_name(),
             'components_features_table': CustomersActivityDBIndex.get_components_features_name(),
+            'license_statuses_table':CustomersActivityDBIndex.get_license_statuses_name(),
             **TicketsWithIterationsRawMeta.get_attrs(),
             **self.get_general_format_params(kwargs)
         }
