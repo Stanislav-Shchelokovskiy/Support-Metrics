@@ -93,6 +93,16 @@ class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
             values_converter=lambda val: f"'{val}'",
         )
 
+    @staticmethod
+    def generate_license_status_filter(params: FilterParametersNode) -> str:
+        generate_filter = TicketsWithIterationsAggregatesSqlFilterClauseGenerator._generate_in_filter(params)
+        return generate_filter(
+            col=TicketsWithIterationsMeta.license_status,
+            values=params.values,
+            filter_prefix='AND ',
+            values_converter=str,
+        )
+
 
 class CATSqlFilterClauseGenerator:
 

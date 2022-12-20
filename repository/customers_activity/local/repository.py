@@ -205,7 +205,8 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
             'tribes_fitler': generator.generate_tribes_filter(params=kwargs['tribe_ids']),
             'reply_types_filter': generator.generate_reply_types_filter(params=kwargs['reply_ids']),
             'components_filter': generator.generate_components_filter(params=kwargs['components_ids']),
-            'features_filter': generator.generate_features_filter(params=kwargs['feature_ids'])
+            'features_filter': generator.generate_features_filter(params=kwargs['feature_ids']),
+            'license_status_filter' : generator.generate_license_status_filter(params=kwargs['license_statuses']),
         }
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
