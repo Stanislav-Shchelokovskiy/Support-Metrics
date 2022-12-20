@@ -19,6 +19,7 @@ from repository.customers_activity.local.repository import (
     ReplyTypesRepository as SqliteReplyTypesRepository,
     ComponentsRepository as SqliteComponentsRepository,
     FeaturesRepository as SqliteFeaturesRepository,
+    LicenseStatusesRepository as SqliteLicenseStatusesRepository,
 )
 
 
@@ -75,6 +76,9 @@ class SqliteFactory:
 
     def create_tickets_with_iterations_aggregates_repository(self, **kwargs) -> SqliteTicketsWithIterationsAggregatesRepository:
         return SqliteTicketsWithIterationsAggregatesRepository()
+
+    def create_license_statuses_repository(self, **kwargs) ->SqliteLicenseStatusesRepository:
+        return SqliteLicenseStatusesRepository()
 # yapf: enable
 
 

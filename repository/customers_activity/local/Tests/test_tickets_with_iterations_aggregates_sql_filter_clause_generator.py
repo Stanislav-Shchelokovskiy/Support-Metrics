@@ -291,3 +291,40 @@ def test_generate_features_filter(
     assert TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_features_filter(
         params=input
     ) == output
+
+
+@pytest.mark.parametrize(
+    'input,output', [
+        (
+            MockFilterParametersNode(include=True, values=[]),
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[]),
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=True, values=[1, 2]),
+            f'AND {TicketsWithIterationsMeta.license_status} IN (1,2)'
+        ),
+        (
+            MockFilterParametersNode(include=True, values=[1]),
+            f'AND {TicketsWithIterationsMeta.license_status} IN (1)'
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[1, 2]),
+            f'AND ({TicketsWithIterationsMeta.license_status} IS NULL OR {TicketsWithIterationsMeta.license_status} NOT IN (1,2))'
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[1]),
+            f'AND ({TicketsWithIterationsMeta.license_status} IS NULL OR {TicketsWithIterationsMeta.license_status} NOT IN (1))'
+        ),
+    ]
+)
+def test_generate_license_status_filter(
+    input: MockFilterParametersNode,
+    output: str,
+):
+    assert TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_license_status_filter(
+        params=input
+    ) == output

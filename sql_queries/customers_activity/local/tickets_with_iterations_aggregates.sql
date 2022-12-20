@@ -17,6 +17,7 @@ WHERE
     {reply_types_filter}
     {components_filter}
     {features_filter}
+    {license_status_filter}
 GROUP BY
     IIF(
         '{group_by_period}' = '%Y-%W', 

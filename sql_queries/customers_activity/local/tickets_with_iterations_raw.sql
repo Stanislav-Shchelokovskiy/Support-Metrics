@@ -21,12 +21,13 @@ FROM (  SELECT  *
         FROM    {table_name} 
         WHERE
             {creation_date} BETWEEN '{range_start}' AND '{range_end}'
+            {tribes_fitler}
             {customer_groups_filter}
             {ticket_types_filter}
             {ticket_tags_filter}
-            {tribes_fitler}
             {reply_types_filter}
             {components_filter}
             {features_filter}
+            {license_status_filter}
     ) AS t
     LEFT JOIN {replies_types_table} AS r ON r.id = t.reply_id

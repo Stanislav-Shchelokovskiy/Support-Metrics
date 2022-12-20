@@ -14,6 +14,7 @@ from sql_queries.customers_activity.meta import (
     ReplyTypesMeta,
     ComponentsFeaturesMeta,
     TicketsWithIterationsRawMeta,
+    LicenseStatusesMeta,
 )
 from repository.customers_activity.local.sql_query_params_generator import (
     CATSqlFilterClauseGenerator,
@@ -75,6 +76,22 @@ class TicketsTypesRepository(SqliteRepository):
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return TicketsTypesMeta.get_values()
+
+
+class LicenseStatusesRepository(SqliteRepository):
+
+    def get_main_query_path(self, kwargs: dict) -> str:
+        return CustomersActivitySqlPathIndex.get_general_select_path()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return {
+            'columns': ', '.join(LicenseStatusesMeta.get_values()),
+            'table_name': CustomersActivityDBIndex.get_license_statuses_name(),
+            'filter_clause': '',
+        }
+
+    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+        return LicenseStatusesMeta.get_values()
 
 
 class TicketsTagsRepository(SqliteRepository):
@@ -205,7 +222,8 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
             'tribes_fitler': generator.generate_tribes_filter(params=kwargs['tribe_ids']),
             'reply_types_filter': generator.generate_reply_types_filter(params=kwargs['reply_ids']),
             'components_filter': generator.generate_components_filter(params=kwargs['components_ids']),
-            'features_filter': generator.generate_features_filter(params=kwargs['feature_ids'])
+            'features_filter': generator.generate_features_filter(params=kwargs['feature_ids']),
+            'license_status_filter' : generator.generate_license_status_filter(params=kwargs['license_statuses']),
         }
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
