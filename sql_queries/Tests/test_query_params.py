@@ -49,6 +49,7 @@ tickets_with_iterations_common_params = {
                 **tickets_with_iterations_common_params,
                 'components_features_table':'components_features_table',
                 'replies_types_table':'replies_types_table',
+                'license_statuses_table':'license_statuses_table',
             },
         ),
         (
