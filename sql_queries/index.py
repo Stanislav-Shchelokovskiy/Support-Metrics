@@ -131,3 +131,7 @@ class CustomersActivityDBIndex:
     @staticmethod
     def get_license_statuses_name() -> str:
         return CustomersActivityDBIndex.get_root_name() + 'LicenseStatuses'
+
+    @staticmethod
+    def get_conversion_statuses_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'ConversionStatuses'

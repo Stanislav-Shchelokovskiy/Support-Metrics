@@ -5,7 +5,7 @@ class TribeParams(BaseModel):
     tribes: list[str]
 
 
-class ControlParams(TribeParams):
+class FeatureParams(TribeParams):
     components: list[str]
 
 
@@ -23,7 +23,12 @@ class TicketsWithIterationsParams(BaseModel):
     components: FilterParametersNode
     features: FilterParametersNode
     license_statuses: FilterParametersNode
+    conversion_statuses: FilterParametersNode
 
 
 class StatAppState(BaseModel):
     state: str
+
+
+class ConversionStatusParams(BaseModel):
+    license_statuses: list[int]

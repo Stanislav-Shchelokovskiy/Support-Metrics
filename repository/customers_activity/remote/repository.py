@@ -9,6 +9,7 @@ from sql_queries.customers_activity.meta import (
     TicketsTypesMeta,
     ReplyTypesMeta,
     ComponentsFeaturesMeta,
+    ConversionStatusesMeta,
 )
 
 
@@ -129,7 +130,7 @@ class LicenseStatusesRepository(Repository):
     def get_data(self, **kwargs) -> DataFrame:
         return DataFrame(
             data={
-                TicketsTypesMeta.id: [0, 1, 2, 3, 4, 5, 6],
+                TicketsTypesMeta.id: [0, 1, 2, 3, 4],
                 TicketsTypesMeta.name:
                     [
                         'Licensed',
@@ -137,6 +138,20 @@ class LicenseStatusesRepository(Repository):
                         'Revoked',
                         'Free',
                         'Trial',
+                    ]
+            }
+        )
+
+
+class ConversionStatusesRepository(Repository):
+
+    def get_data(self, **kwargs) -> DataFrame:
+        return DataFrame(
+            data={
+                ConversionStatusesMeta.license_status_id: [0, 3],
+                ConversionStatusesMeta.id: [5, 6],
+                ConversionStatusesMeta.name:
+                    [
                         'Converted (paid)',
                         'Converted (free)',
                     ]

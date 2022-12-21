@@ -21,6 +21,7 @@ def on_startup(sender, **kwargs):
     tasks = [
         'customers_activity_fill_tickets_types',
         'customers_activity_fill_license_statuses',
+        'customers_activity_fill_conversion_statuses',
         'update_customers_activity',
     ]
     sender_app: Celery = sender.app
@@ -107,6 +108,14 @@ def customers_activity_fill_license_statuses(self, **kwargs):
     return run_retriable_task(
         self,
         customers_activity.fill_license_statuses,
+    )
+
+
+@app.task(name='customers_activity_fill_conversion_statuses', bind=True)
+def customers_activity_fill_conversion_statuses(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.fill_conversion_statuses,
     )
 
 

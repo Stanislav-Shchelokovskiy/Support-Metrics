@@ -8,6 +8,7 @@ class TicketsWithIterationsMainMeta(MetaData):
     creation_date = 'creation_date'
     iterations = 'iterations'
     license_status = 'license_status'
+    conversion_status = 'conversion_status'
 
 
 class TicketsWithIterationsMeta(TicketsWithIterationsMainMeta):
@@ -45,6 +46,10 @@ class LicenseStatusesMeta(KnotMeta):
     pass
 
 
+class ConversionStatusesMeta(KnotMeta):
+    license_status_id = 'license_status_id'
+
+
 class ComponentsFeaturesMeta(MetaData):
     tribe_id = 'tribe_id'
     component_id = 'component_id'
@@ -62,8 +67,10 @@ class TicketsWithIterationsAggregatesMeta(MetaData):
     creation_date = TicketsWithIterationsMeta.creation_date
     scid = TicketsWithIterationsMeta.scid
     iterations = TicketsWithIterationsMeta.iterations
+    user_id = TicketsWithIterationsMeta.user_id
     period = 'period'
     tickets = 'tickets'
+    people = 'people'
 
 
 class TicketsWithIterationsRawMeta(TicketsWithIterationsMainMeta):

@@ -328,3 +328,40 @@ def test_generate_license_status_filter(
     assert TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_license_status_filter(
         params=input
     ) == output
+
+
+@pytest.mark.parametrize(
+    'input,output', [
+        (
+            MockFilterParametersNode(include=True, values=[]),
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[]),
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=True, values=[1, 2]),
+            f'AND {TicketsWithIterationsMeta.conversion_status} IN (1,2)'
+        ),
+        (
+            MockFilterParametersNode(include=True, values=[1]),
+            f'AND {TicketsWithIterationsMeta.conversion_status} IN (1)'
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[1, 2]),
+            f'AND ({TicketsWithIterationsMeta.conversion_status} IS NULL OR {TicketsWithIterationsMeta.conversion_status} NOT IN (1,2))'
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[1]),
+            f'AND ({TicketsWithIterationsMeta.conversion_status} IS NULL OR {TicketsWithIterationsMeta.conversion_status} NOT IN (1))'
+        ),
+    ]
+)
+def test_generate_conversion_status_filter(
+    input: MockFilterParametersNode,
+    output: str,
+):
+    assert TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_conversion_status_filter(
+        params=input
+    ) == output

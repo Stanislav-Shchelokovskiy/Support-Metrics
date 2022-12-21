@@ -10,8 +10,9 @@ from server_cache import ServerCache
 from server_models import (
     TicketsWithIterationsParams,
     TribeParams,
-    ControlParams,
+    FeatureParams,
     StatAppState,
+    ConversionStatusParams,
 )
 import hashlib
 
@@ -95,7 +96,7 @@ def customers_activity_cat_components(params: TribeParams):
 
 
 @app.post('/get_features')
-def customers_activity_get_cat_features(params: ControlParams):
+def customers_activity_get_cat_features(params: FeatureParams):
     df_json = server_repository.customers_activity_get_features(
         tribe_ids=params.tribes,
         component_ids=params.components,
@@ -114,6 +115,15 @@ def customers_activity_get_group_by_periods():
 def customers_activity_get_license_statuses():
     return get_response(
         json_data=server_repository.customers_activity_get_license_statuses()
+    )
+
+
+@app.post('/get_conversion_statuses')
+def customers_activity_get_conversion_statuses(params: ConversionStatusParams):
+    return get_response(
+        json_data=server_repository.customers_activity_get_conversion_statuses(
+            license_status_ids=params.license_statuses
+        )
     )
 
 
@@ -136,6 +146,7 @@ def customers_activity_get_tickets_with_iterations_aggregates(
         components_ids=params.components,
         feature_ids=params.features,
         license_statuses=params.license_statuses,
+        conversion_statuses=params.conversion_statuses,
     )
     return get_response(json_data=df_json)
 
@@ -157,6 +168,7 @@ def customers_activity_get_tickets_with_iterations_raw(
         components_ids=params.components,
         feature_ids=params.features,
         license_statuses=params.license_statuses,
+        conversion_statuses=params.conversion_statuses,
     )
     return get_response(json_data=df_json)
 
