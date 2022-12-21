@@ -29,7 +29,8 @@ tickets_with_iterations_common_params = {
     'reply_types_filter': 'reply_types_filter',
     'components_filter': 'components_filter',
     'features_filter': 'features_filter',
-    'license_status_filter': 'license_status_filter'
+    'license_status_filter': 'license_status_filter',
+    'conversion_status_filter': 'conversion_status_filter',
 }
 
 
@@ -50,6 +51,7 @@ tickets_with_iterations_common_params = {
                 'components_features_table':'components_features_table',
                 'replies_types_table':'replies_types_table',
                 'license_statuses_table':'license_statuses_table',
+                'conversion_statuses_table':'conversion_statuses_table',
             },
         ),
         (

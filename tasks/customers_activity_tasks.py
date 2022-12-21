@@ -55,4 +55,9 @@ def fill_license_statuses():
     license_statuses_repository = RepositoryFactory.customers_activity.remote.create_license_statuses_repository()
     df = license_statuses_repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_license_statuses_name(): df})
+
+def fill_conversion_statuses():
+    conversion_statuses_repository = RepositoryFactory.customers_activity.remote.create_conversion_statuses_repository()
+    df = conversion_statuses_repository.get_data()
+    _save_tables(tables={CustomersActivityDBIndex.get_conversion_statuses_name(): df})
 # yapf: enable

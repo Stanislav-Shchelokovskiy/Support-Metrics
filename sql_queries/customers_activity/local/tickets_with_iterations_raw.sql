@@ -5,6 +5,7 @@ SELECT
     t.{iterations},
     t.{creation_date},
     lc.name AS {license_status},
+    cs.name AS {conversion_status},
     r.name AS {reply},
     ( SELECT component_name 
       FROM {components_features_table}
@@ -29,6 +30,8 @@ FROM (  SELECT  *
             {components_filter}
             {features_filter}
             {license_status_filter}
+            {conversion_status_filter}
     ) AS t
     LEFT JOIN {replies_types_table} AS r ON r.id = t.reply_id
     LEFT JOIN {license_statuses_table} AS lc ON lc.id = t.license_status
+    LEFT JOIN {conversion_statuses_table} AS cs ON cs.license_status_id = t.license_status

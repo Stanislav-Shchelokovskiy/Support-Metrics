@@ -15,10 +15,12 @@ from sql_queries.customers_activity.meta import (
     ComponentsFeaturesMeta,
     TicketsWithIterationsRawMeta,
     LicenseStatusesMeta,
+    ConversionStatusesMeta
 )
 from repository.customers_activity.local.sql_query_params_generator import (
     CATSqlFilterClauseGenerator,
     TicketsWithIterationsAggregatesSqlFilterClauseGenerator,
+    ConversionStatusesFilterClauseGenerator,
 )
 
 
@@ -92,6 +94,22 @@ class LicenseStatusesRepository(SqliteRepository):
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return LicenseStatusesMeta.get_values()
+
+
+class ConversionStatusesRepository(SqliteRepository):
+
+    def get_main_query_path(self, kwargs: dict) -> str:
+        return CustomersActivitySqlPathIndex.get_general_select_path()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return {
+            'columns': ', '.join(ConversionStatusesMeta.get_values()),
+            'table_name': CustomersActivityDBIndex.get_conversion_statuses_name(),
+            'filter_clause': ConversionStatusesFilterClauseGenerator.generate_filter(license_status_ids=kwargs['license_status_ids']),
+        }
+
+    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+        return ConversionStatusesMeta.get_values()
 
 
 class TicketsTagsRepository(SqliteRepository):
@@ -224,6 +242,7 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
             'components_filter': generator.generate_components_filter(params=kwargs['components_ids']),
             'features_filter': generator.generate_features_filter(params=kwargs['feature_ids']),
             'license_status_filter' : generator.generate_license_status_filter(params=kwargs['license_statuses']),
+            'conversion_status_filter' : generator.generate_conversion_status_filter(params=kwargs['conversion_statuses'])
         }
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
@@ -231,6 +250,7 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
             'replies_types_table': CustomersActivityDBIndex.get_replies_types_name(),
             'components_features_table': CustomersActivityDBIndex.get_components_features_name(),
             'license_statuses_table':CustomersActivityDBIndex.get_license_statuses_name(),
+            'conversion_statuses_table': CustomersActivityDBIndex.get_conversion_statuses_name(),
             **TicketsWithIterationsRawMeta.get_attrs(),
             **self.get_general_format_params(kwargs)
         }

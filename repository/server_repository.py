@@ -48,57 +48,15 @@ def customers_activity_get_license_statuses() -> str:
     repository = RepositoryFactory.customers_activity.local.create_license_statuses_repository()
     return repository.get_data_json()
 
-def customers_activity_get_tickets_with_iterations_aggregates(
-    group_by_period: str,
-    range_start: str,
-    range_end: str,
-    customers_groups,
-    tickets_types,
-    tickets_tags,
-    tribe_ids,
-    reply_ids,
-    components_ids,
-    feature_ids,
-    license_statuses,
-) -> str:
-    repository = RepositoryFactory.customers_activity.local.create_tickets_with_iterations_aggregates_repository()
-    return repository.get_data_json(
-        group_by_period=group_by_period,
-        range_start=range_start,
-        range_end=range_end,
-        customers_groups=customers_groups,
-        tickets_types=tickets_types,
-        tickets_tags=tickets_tags,
-        tribe_ids=tribe_ids,
-        reply_ids=reply_ids,
-        components_ids=components_ids,
-        feature_ids=feature_ids,
-        license_statuses=license_statuses,
-    )
+def customers_activity_get_conversion_statuses(license_status_ids: list[int]) -> str:
+    repository = RepositoryFactory.customers_activity.local.create_conversion_statuses_repository()
+    return repository.get_data_json(license_status_ids=license_status_ids)
 
-def customers_activity_get_tickets_with_iterations_raw(
-    range_start: str,
-    range_end: str,
-    customers_groups,
-    tickets_types,
-    tickets_tags,
-    tribe_ids,
-    reply_ids,
-    components_ids,
-    feature_ids,
-    license_statuses,
-) -> str:
+def customers_activity_get_tickets_with_iterations_aggregates(**kwargs) -> str:
+    repository = RepositoryFactory.customers_activity.local.create_tickets_with_iterations_aggregates_repository()
+    return repository.get_data_json(**kwargs)
+
+def customers_activity_get_tickets_with_iterations_raw(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_tickets_with_iterations_raw_repository()
-    return repository.get_data_json(
-        range_start=range_start,
-        range_end=range_end,
-        customers_groups=customers_groups,
-        tickets_types=tickets_types,
-        tickets_tags=tickets_tags,
-        tribe_ids=tribe_ids,
-        reply_ids=reply_ids,
-        components_ids=components_ids,
-        feature_ids=feature_ids,
-        license_statuses=license_statuses,
-    )
+    return repository.get_data_json(**kwargs)
 # yapf: enable

@@ -6,6 +6,7 @@ from repository.customers_activity.remote.repository import (
     RepliesTypesRepository,
     ComponentsFeaturesRepository,
     LicenseStatusesRepository,
+    ConversionStatusesRepository,
 )
 from repository.customers_activity.local.repository import (
     TicketsWithIterationsRepository as SqliteTicketsWithIterationsRepository,
@@ -20,6 +21,7 @@ from repository.customers_activity.local.repository import (
     ComponentsRepository as SqliteComponentsRepository,
     FeaturesRepository as SqliteFeaturesRepository,
     LicenseStatusesRepository as SqliteLicenseStatusesRepository,
+    ConversionStatusesRepository as SqliteConversionStatusesRepository,
 )
 
 
@@ -46,6 +48,9 @@ class SqlServerFactory:
 
     def create_license_statuses_repository(self, **kwargs) -> LicenseStatusesRepository:
         return LicenseStatusesRepository()
+
+    def create_conversion_statuses_repository(self, **kwargs) -> ConversionStatusesRepository:
+        return ConversionStatusesRepository()
 
 
 class SqliteFactory:
@@ -79,6 +84,9 @@ class SqliteFactory:
 
     def create_license_statuses_repository(self, **kwargs) ->SqliteLicenseStatusesRepository:
         return SqliteLicenseStatusesRepository()
+
+    def create_conversion_statuses_repository(self, **kwargs) ->SqliteConversionStatusesRepository:
+        return SqliteConversionStatusesRepository()
 # yapf: enable
 
 
