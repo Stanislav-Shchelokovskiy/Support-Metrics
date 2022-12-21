@@ -34,4 +34,4 @@ FROM (  SELECT  *
     ) AS t
     LEFT JOIN {replies_types_table} AS r ON r.id = t.reply_id
     LEFT JOIN {license_statuses_table} AS lc ON lc.id = t.license_status
-    LEFT JOIN {conversion_statuses_table} AS cs ON cs.license_status_id = t.license_status
+    LEFT JOIN {conversion_statuses_table} AS cs ON cs.id = t.conversion_status
