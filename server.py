@@ -118,7 +118,7 @@ def customers_activity_get_license_statuses():
     )
 
 
-@app.get('/get_conversion_statuses')
+@app.post('/get_conversion_statuses')
 def customers_activity_get_conversion_statuses(params: ConversionStatusParams):
     return get_response(
         json_data=server_repository.customers_activity_get_conversion_statuses(
