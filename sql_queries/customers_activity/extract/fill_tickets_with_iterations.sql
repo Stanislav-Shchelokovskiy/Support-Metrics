@@ -150,13 +150,11 @@ SELECT
                             IIF(creation_date < (	SELECT	ISNULL(MIN(subscription_start), DATEFROMPARTS(9999,01,01)) 
                                                     FROM	licenses 
                                                     WHERE	end_user_crmid = user_crmid
-                                ), 
-                                @trial, 
+                                ), @trial, 
                                     IIF(creation_date > (	SELECT IIF(MAX(lic_origin) = @historical_lic_origin, MAX(revoked_since), DATEFROMPARTS(9999,01,01)) 
                                                             FROM   licenses 
                                                             WHERE  end_user_crmid = user_crmid
-                                        ), 
-                                        @revoked, 
+                                        ), @revoked, 
                                             @expired)))) AS license_status
 FROM
     tickets_with_iterations

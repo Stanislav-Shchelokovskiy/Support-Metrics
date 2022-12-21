@@ -1,7 +1,7 @@
 SELECT
     IIF(
         '{group_by_period}' = '%Y-%W', 
-        STRFTIME('%Y-%m-%d', {creation_date}, 'weekday 1', '-7 day'), 
+        STRFTIME('%Y-%m-%d', {creation_date}, 'weekday 0', '-6 day'), 
         STRFTIME('{group_by_period}', {creation_date})
     )                   AS {period},
     COUNT({scid})       AS {tickets},
@@ -21,6 +21,6 @@ WHERE
 GROUP BY
     IIF(
         '{group_by_period}' = '%Y-%W', 
-        STRFTIME('%Y-%m-%d', {creation_date}, 'weekday 1', '-7 day'), 
+        STRFTIME('%Y-%m-%d', {creation_date}, 'weekday 0', '-6 day'), 
         STRFTIME('{group_by_period}', {creation_date})
     )
