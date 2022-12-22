@@ -20,6 +20,8 @@ WHERE
     {features_filter}
     {license_status_filter}
     {conversion_status_filter}
+    {platforms_filter}
+    {products_filter}
 GROUP BY
     IIF(
         '{group_by_period}' = '%Y-%W', 

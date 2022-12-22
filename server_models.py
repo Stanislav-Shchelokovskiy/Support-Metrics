@@ -9,6 +9,10 @@ class FeatureParams(TribeParams):
     components: list[str]
 
 
+class ProductParams(TribeParams):
+    platforms: list[str]
+
+
 class FilterParametersNode(BaseModel):
     include: bool
     values: list[int | str]
@@ -24,6 +28,8 @@ class TicketsWithIterationsParams(BaseModel):
     features: FilterParametersNode
     license_statuses: FilterParametersNode
     conversion_statuses: FilterParametersNode
+    platforms: FilterParametersNode
+    products: FilterParametersNode
 
 
 class StatAppState(BaseModel):

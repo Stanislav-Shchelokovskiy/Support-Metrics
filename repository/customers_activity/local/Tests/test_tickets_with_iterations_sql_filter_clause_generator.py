@@ -1,5 +1,5 @@
 import pytest
-from repository.customers_activity.local.sql_query_params_generator import TicketsWithIterationsAggregatesSqlFilterClauseGenerator
+from repository.customers_activity.local.sql_query_params_generator import TicketsWithIterationsSqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
 
 
@@ -30,11 +30,11 @@ class MockFilterParametersNode:
         ),
         (
             MockFilterParametersNode(include=False, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.user_groups} IS NULL OR {TicketsWithIterationsMeta.user_groups} NOT LIKE '%p1%' OR {TicketsWithIterationsMeta.user_groups} NOT LIKE '%p2%')"
+            f"AND ({TicketsWithIterationsMeta.user_groups} IS NULL OR NOT ({TicketsWithIterationsMeta.user_groups} LIKE '%p1%' OR {TicketsWithIterationsMeta.user_groups} LIKE '%p2%'))"
         ),
         (
             MockFilterParametersNode(include=False, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.user_groups} IS NULL OR {TicketsWithIterationsMeta.user_groups} NOT LIKE '%p1%')"
+            f"AND ({TicketsWithIterationsMeta.user_groups} IS NULL OR NOT ({TicketsWithIterationsMeta.user_groups} LIKE '%p1%'))"
         ),
     ]
 )
@@ -42,7 +42,7 @@ def test_generate_customer_groups_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_customer_groups_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_customer_groups_filter(
         params=input
     ) == output
 
@@ -79,7 +79,7 @@ def test_generate_ticket_types_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_ticket_types_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_ticket_types_filter(
         params=input
     ) == output
 
@@ -104,11 +104,11 @@ def test_generate_ticket_types_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[1, 2]),
-            f"AND ({TicketsWithIterationsMeta.ticket_tags} IS NULL OR {TicketsWithIterationsMeta.ticket_tags} NOT LIKE '%1%' OR {TicketsWithIterationsMeta.ticket_tags} NOT LIKE '%2%')",
+            f"AND ({TicketsWithIterationsMeta.ticket_tags} IS NULL OR NOT ({TicketsWithIterationsMeta.ticket_tags} LIKE '%1%' OR {TicketsWithIterationsMeta.ticket_tags} LIKE '%2%'))",
         ),
         (
             MockFilterParametersNode(include=False, values=[1]),
-            f"AND ({TicketsWithIterationsMeta.ticket_tags} IS NULL OR {TicketsWithIterationsMeta.ticket_tags} NOT LIKE '%1%')",
+            f"AND ({TicketsWithIterationsMeta.ticket_tags} IS NULL OR NOT ({TicketsWithIterationsMeta.ticket_tags} LIKE '%1%'))",
         ),
     ]
 )
@@ -116,7 +116,7 @@ def test_generate_ticket_tags_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_ticket_tags_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_ticket_tags_filter(
         params=input
     ) == output
 
@@ -159,7 +159,7 @@ def test_generate_tribes_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_tribes_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_tribes_filter(
         params=input
     ) == output
 
@@ -202,7 +202,7 @@ def test_generate_reply_types_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_reply_types_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_reply_types_filter(
         params=input
     ) == output
 
@@ -245,7 +245,7 @@ def test_generate_components_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_components_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_components_filter(
         params=input
     ) == output
 
@@ -288,7 +288,7 @@ def test_generate_features_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_features_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_features_filter(
         params=input
     ) == output
 
@@ -325,7 +325,7 @@ def test_generate_license_status_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_license_status_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_license_status_filter(
         params=input
     ) == output
 
@@ -362,6 +362,80 @@ def test_generate_conversion_status_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsAggregatesSqlFilterClauseGenerator.generate_conversion_status_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_conversion_status_filter(
+        params=input
+    ) == output
+
+
+@pytest.mark.parametrize(
+    'input,output', [
+        (
+            MockFilterParametersNode(include=True, values=[]),
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[]),
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['p1', 'p2']),
+            f"AND ({TicketsWithIterationsMeta.platforms} LIKE '%p1%' OR {TicketsWithIterationsMeta.platforms} LIKE '%p2%')"
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['p1']),
+            f"AND ({TicketsWithIterationsMeta.platforms} LIKE '%p1%')"
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['p1', 'p2']),
+            f"AND ({TicketsWithIterationsMeta.platforms} IS NULL OR NOT ({TicketsWithIterationsMeta.platforms} LIKE '%p1%' OR {TicketsWithIterationsMeta.platforms} LIKE '%p2%'))"
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['p1']),
+            f"AND ({TicketsWithIterationsMeta.platforms} IS NULL OR NOT ({TicketsWithIterationsMeta.platforms} LIKE '%p1%'))"
+        ),
+    ]
+)
+def test_generate_platforms_filter(
+    input: MockFilterParametersNode,
+    output: str,
+):
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_platforms_filter(
+        params=input
+    ) == output
+
+
+@pytest.mark.parametrize(
+    'input,output', [
+        (
+            MockFilterParametersNode(include=True, values=[]),
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[]),
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['p1', 'p2']),
+            f"AND ({TicketsWithIterationsMeta.products} LIKE '%p1%' OR {TicketsWithIterationsMeta.products} LIKE '%p2%')"
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['p1']),
+            f"AND ({TicketsWithIterationsMeta.products} LIKE '%p1%')"
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['p1', 'p2']),
+            f"AND ({TicketsWithIterationsMeta.products} IS NULL OR NOT ({TicketsWithIterationsMeta.products} LIKE '%p1%' OR {TicketsWithIterationsMeta.products} LIKE '%p2%'))"
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['p1']),
+            f"AND ({TicketsWithIterationsMeta.products} IS NULL OR NOT ({TicketsWithIterationsMeta.products} LIKE '%p1%'))"
+        ),
+    ]
+)
+def test_generate_products_filter(
+    input: MockFilterParametersNode,
+    output: str,
+):
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_products_filter(
         params=input
     ) == output

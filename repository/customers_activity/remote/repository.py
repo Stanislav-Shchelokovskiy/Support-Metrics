@@ -10,6 +10,7 @@ from sql_queries.customers_activity.meta import (
     ReplyTypesMeta,
     ComponentsFeaturesMeta,
     ConversionStatusesMeta,
+    PlatformsProductsMeta,
 )
 
 
@@ -56,50 +57,6 @@ class RepliesTypesRepository(Repository):
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return ReplyTypesMeta.get_values()
-
-
-class ComponentsFeaturesRepository(Repository):
-    """
-    Loads CAT components and features.
-    """
-
-    def get_main_query_path(self, kwargs: dict) -> str:
-        return CustomersActivitySqlPathIndex.get_components_features_path()
-
-    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
-        return {**kwargs, **ComponentsFeaturesMeta.get_attrs()}
-
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return ComponentsFeaturesMeta.get_values()
-
-
-class TicketsWithIterationsRepository(Repository):
-    """
-    Loads customers with their tickets and iterations.
-    """
-
-    def get_prep_queries(self, kwargs: dict) -> list[SqlQuery]:
-        return [
-            self.sql_query_type(
-                query_file_path=CustomersActivitySqlPathIndex.
-                get_create_tickets_with_iterations_and_licenses_temp_table_path(),
-                format_params={},
-            ),
-            self.sql_query_type(
-                query_file_path=CustomersActivitySqlPathIndex.
-                get_fill_tickets_with_iterations_path(),
-                format_params=kwargs,
-            ),
-        ]
-
-    def get_main_query_path(self, kwargs: dict) -> str:
-        return CustomersActivitySqlPathIndex.get_tickets_with_iterations_path()
-
-    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
-        return TicketsWithIterationsMeta.get_attrs()
-
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return TicketsWithIterationsMeta.get_values()
 
 
 class TicketsTypesRepository(Repository):
@@ -157,3 +114,63 @@ class ConversionStatusesRepository(Repository):
                     ]
             }
         )
+
+
+class ComponentsFeaturesRepository(Repository):
+    """
+    Loads CAT components and features.
+    """
+
+    def get_main_query_path(self, kwargs: dict) -> str:
+        return CustomersActivitySqlPathIndex.get_components_features_path()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return {**kwargs, **ComponentsFeaturesMeta.get_attrs()}
+
+    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+        return ComponentsFeaturesMeta.get_values()
+
+
+class PlatformsProductsRepository(Repository):
+    """
+    Loads available platforms and products.
+    """
+
+    def get_main_query_path(self, kwargs: dict) -> str:
+        return CustomersActivitySqlPathIndex.get_platform_products_path()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return {**kwargs, **PlatformsProductsMeta.get_attrs()}
+
+    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+        return PlatformsProductsMeta.get_values()
+
+
+class TicketsWithIterationsRepository(Repository):
+    """
+    Loads customers with their tickets and iterations.
+    """
+
+    def get_prep_queries(self, kwargs: dict) -> list[SqlQuery]:
+        return [
+            self.sql_query_type(
+                query_file_path=CustomersActivitySqlPathIndex.
+                get_create_tickets_with_iterations_and_licenses_temp_table_path(
+                ),
+                format_params={},
+            ),
+            self.sql_query_type(
+                query_file_path=CustomersActivitySqlPathIndex.
+                get_fill_tickets_with_iterations_path(),
+                format_params=kwargs,
+            ),
+        ]
+
+    def get_main_query_path(self, kwargs: dict) -> str:
+        return CustomersActivitySqlPathIndex.get_tickets_with_iterations_path()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return TicketsWithIterationsMeta.get_attrs()
+
+    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+        return TicketsWithIterationsMeta.get_values()

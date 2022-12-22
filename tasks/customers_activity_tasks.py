@@ -16,48 +16,54 @@ def _save_tables(tables: dict[str, DataFrame]):
 
 # yapf: disable
 def load_tags():
-    tags_repository = RepositoryFactory.customers_activity.remote.create_tags_repository()
-    df = tags_repository.get_data()
+    repository = RepositoryFactory.customers_activity.remote.create_tags_repository()
+    df = repository.get_data()
     tbl_name = CustomersActivityDBIndex.get_tickets_tags_name()
     _save_tables(tables={tbl_name: df})
 
 
 def load_groups():
-    groups_repository = RepositoryFactory.customers_activity.remote.create_groups_repository()
-    df = groups_repository.get_data()
+    repository = RepositoryFactory.customers_activity.remote.create_groups_repository()
+    df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_customers_groups_name(): df})
 
 
 def load_replies_types():
-    reply_types_repository = RepositoryFactory.customers_activity.remote.create_replies_types_repository()
-    df = reply_types_repository.get_data()
+    repository = RepositoryFactory.customers_activity.remote.create_replies_types_repository()
+    df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_replies_types_name(): df})
 
 
 def load_components_features():
-    components_features_repository = RepositoryFactory.customers_activity.remote.create_components_features_repository()
-    df = components_features_repository.get_data()
+    repository = RepositoryFactory.customers_activity.remote.create_components_features_repository()
+    df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_components_features_name(): df})
 
 
+def load_platforms_products():
+    repository = RepositoryFactory.customers_activity.remote.create_platforms_products_repository()
+    df = repository.get_data()
+    _save_tables(tables={CustomersActivityDBIndex.get_platforms_products_name(): df})
+
+
 def load_tickets_with_iterations(start_date: str, end_date: str):
-    tickets_repository = RepositoryFactory.customers_activity.remote.create_tickets_with_iterations_repository()
-    df = tickets_repository.get_data(start_date=start_date, end_date=end_date)
+    repository = RepositoryFactory.customers_activity.remote.create_tickets_with_iterations_repository()
+    df = repository.get_data(start_date=start_date, end_date=end_date)
     _save_tables(tables={CustomersActivityDBIndex.get_tickets_with_iterations_name(): df})
 
 
 def fill_tickets_types():
-    tickets_types_repository = RepositoryFactory.customers_activity.remote.create_tickets_types_repository()
-    df = tickets_types_repository.get_data()
+    repository = RepositoryFactory.customers_activity.remote.create_tickets_types_repository()
+    df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_tickets_types_name(): df})
 
 def fill_license_statuses():
-    license_statuses_repository = RepositoryFactory.customers_activity.remote.create_license_statuses_repository()
-    df = license_statuses_repository.get_data()
+    repository = RepositoryFactory.customers_activity.remote.create_license_statuses_repository()
+    df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_license_statuses_name(): df})
 
 def fill_conversion_statuses():
-    conversion_statuses_repository = RepositoryFactory.customers_activity.remote.create_conversion_statuses_repository()
-    df = conversion_statuses_repository.get_data()
+    repository = RepositoryFactory.customers_activity.remote.create_conversion_statuses_repository()
+    df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_conversion_statuses_name(): df})
 # yapf: enable

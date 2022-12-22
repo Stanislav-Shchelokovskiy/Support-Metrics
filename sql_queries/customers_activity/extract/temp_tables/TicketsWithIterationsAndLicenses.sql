@@ -10,6 +10,8 @@ CREATE TABLE #TicketsWithIterationsAndLicenses (
 	iterations		INT,
 	user_groups		NVARCHAR(MAX),
 	ticket_tags		NVARCHAR(MAX),
+	platforms		NVARCHAR(MAX),
+	products		NVARCHAR(MAX),
 	reply_id		UNIQUEIDENTIFIER,
 	component_id	UNIQUEIDENTIFIER,
 	feature_id		UNIQUEIDENTIFIER,

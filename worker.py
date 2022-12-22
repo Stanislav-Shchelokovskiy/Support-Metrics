@@ -51,6 +51,7 @@ def update_customers_activity(**kwargs):
     app.send_task(name='customers_activity_load_groups')
     app.send_task(name='customers_activity_load_replies_types')
     app.send_task(name='customers_activity_load_components_features')
+    app.send_task(name='customers_activity_load_platforms_products')
     app.send_task(name='customers_activity_load_tickets_with_iterations')
 
 
@@ -83,6 +84,14 @@ def customers_activity_load_components_features(self, **kwargs):
     return run_retriable_task(
         self,
         customers_activity.load_components_features,
+    )
+
+
+@app.task(name='customers_activity_load_platforms_products', bind=True)
+def customers_activity_load_platforms_products(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.load_platforms_products,
     )
 
 

@@ -31,6 +31,8 @@ FROM (  SELECT  *
             {features_filter}
             {license_status_filter}
             {conversion_status_filter}
+            {platforms_filter}
+            {products_filter}
     ) AS t
     LEFT JOIN {replies_types_table} AS r ON r.id = t.reply_id
     LEFT JOIN {license_statuses_table} AS lc ON lc.id = t.license_status

@@ -11,6 +11,7 @@ from server_models import (
     TicketsWithIterationsParams,
     TribeParams,
     FeatureParams,
+    ProductParams,
     StatAppState,
     ConversionStatusParams,
 )
@@ -88,7 +89,7 @@ def customers_activity_get_cat_get_replies_types():
 
 
 @app.post('/get_components')
-def customers_activity_cat_components(params: TribeParams):
+def customers_activity_get_cat_components(params: TribeParams):
     df_json = server_repository.customers_activity_get_components(
         tribe_ids=params.tribes,
     )
@@ -100,6 +101,23 @@ def customers_activity_get_cat_features(params: FeatureParams):
     df_json = server_repository.customers_activity_get_features(
         tribe_ids=params.tribes,
         component_ids=params.components,
+    )
+    return get_response(json_data=df_json)
+
+
+@app.post('/get_platforms')
+def customers_activity_get_platforms(params: TribeParams):
+    df_json = server_repository.customers_activity_get_platforms(
+        tribe_ids=params.tribes,
+    )
+    return get_response(json_data=df_json)
+
+
+@app.post('/get_products')
+def customers_activity_get_products(params: ProductParams):
+    df_json = server_repository.customers_activity_get_products(
+        tribe_ids=params.tribes,
+        platform_ids=params.platforms,
     )
     return get_response(json_data=df_json)
 
@@ -147,6 +165,8 @@ def customers_activity_get_tickets_with_iterations_aggregates(
         feature_ids=params.features,
         license_statuses=params.license_statuses,
         conversion_statuses=params.conversion_statuses,
+        platforms_ids=params.platforms,
+        products_ids=params.products,
     )
     return get_response(json_data=df_json)
 
@@ -169,6 +189,8 @@ def customers_activity_get_tickets_with_iterations_raw(
         feature_ids=params.features,
         license_statuses=params.license_statuses,
         conversion_statuses=params.conversion_statuses,
+        platforms_ids=params.platforms,
+        products_ids=params.products,
     )
     return get_response(json_data=df_json)
 
