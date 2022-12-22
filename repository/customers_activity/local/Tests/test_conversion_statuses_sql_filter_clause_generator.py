@@ -3,7 +3,7 @@ from repository.customers_activity.local.sql_query_params_generator import Conve
 from sql_queries.customers_activity.meta import ConversionStatusesMeta
 
 
-def test_generate_components_filter_raises_value_error():
+def test_generate_filter_raises_value_error():
     with pytest.raises(ValueError) as excInfo:
         ConversionStatusesSqlFilterClauseGenerator.generate_filter(
             license_status_ids=[]
@@ -23,7 +23,7 @@ def test_generate_components_filter_raises_value_error():
         ),
     ]
 )
-def test_generate_components_filter(
+def test_generate_filter(
     input: list[str],
     output: str,
 ):

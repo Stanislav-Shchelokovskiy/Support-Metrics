@@ -3,7 +3,7 @@ from repository.customers_activity.local.sql_query_params_generator import Platf
 from sql_queries.customers_activity.meta import PlatformsProductsMeta
 
 
-def test_generate_components_filter_raises_value_error():
+def test_generate_platforms_filter_raises_value_error():
     with pytest.raises(ValueError) as excInfo:
         PlatformsProductsSqlFilterClauseGenerator.generate_platforms_filter(
             tribe_ids=[]
@@ -23,7 +23,7 @@ def test_generate_components_filter_raises_value_error():
         ),
     ]
 )
-def test_generate_components_filter(
+def test_generate_platforms_filter(
     input: list[str],
     output: str,
 ):
@@ -51,7 +51,7 @@ def test_generate_components_filter(
         ),
     ]
 )
-def test_generate_features_filter(
+def test_generate_products_filter(
     tribes: list[str],
     platforms: list[str],
     output: str,
@@ -62,7 +62,7 @@ def test_generate_features_filter(
     ) == output
 
 
-def test_generate_features_filter_raises_value_error():
+def test_generate_products_filter_raises_value_error():
     with pytest.raises(ValueError) as excInfo:
         PlatformsProductsSqlFilterClauseGenerator.generate_products_filter(
             tribe_ids=['t1'],

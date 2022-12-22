@@ -30,11 +30,11 @@ class MockFilterParametersNode:
         ),
         (
             MockFilterParametersNode(include=False, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.user_groups} IS NULL OR {TicketsWithIterationsMeta.user_groups} NOT LIKE '%p1%' OR {TicketsWithIterationsMeta.user_groups} NOT LIKE '%p2%')"
+            f"AND ({TicketsWithIterationsMeta.user_groups} IS NULL OR NOT ({TicketsWithIterationsMeta.user_groups} LIKE '%p1%' OR {TicketsWithIterationsMeta.user_groups} LIKE '%p2%'))"
         ),
         (
             MockFilterParametersNode(include=False, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.user_groups} IS NULL OR {TicketsWithIterationsMeta.user_groups} NOT LIKE '%p1%')"
+            f"AND ({TicketsWithIterationsMeta.user_groups} IS NULL OR NOT ({TicketsWithIterationsMeta.user_groups} LIKE '%p1%'))"
         ),
     ]
 )
@@ -104,11 +104,11 @@ def test_generate_ticket_types_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[1, 2]),
-            f"AND ({TicketsWithIterationsMeta.ticket_tags} IS NULL OR {TicketsWithIterationsMeta.ticket_tags} NOT LIKE '%1%' OR {TicketsWithIterationsMeta.ticket_tags} NOT LIKE '%2%')",
+            f"AND ({TicketsWithIterationsMeta.ticket_tags} IS NULL OR NOT ({TicketsWithIterationsMeta.ticket_tags} LIKE '%1%' OR {TicketsWithIterationsMeta.ticket_tags} LIKE '%2%'))",
         ),
         (
             MockFilterParametersNode(include=False, values=[1]),
-            f"AND ({TicketsWithIterationsMeta.ticket_tags} IS NULL OR {TicketsWithIterationsMeta.ticket_tags} NOT LIKE '%1%')",
+            f"AND ({TicketsWithIterationsMeta.ticket_tags} IS NULL OR NOT ({TicketsWithIterationsMeta.ticket_tags} LIKE '%1%'))",
         ),
     ]
 )
@@ -387,11 +387,11 @@ def test_generate_conversion_status_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.platforms} IS NULL OR {TicketsWithIterationsMeta.platforms} NOT LIKE '%p1%' OR {TicketsWithIterationsMeta.platforms} NOT LIKE '%p2%')"
+            f"AND ({TicketsWithIterationsMeta.platforms} IS NULL OR NOT ({TicketsWithIterationsMeta.platforms} LIKE '%p1%' OR {TicketsWithIterationsMeta.platforms} LIKE '%p2%'))"
         ),
         (
             MockFilterParametersNode(include=False, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.platforms} IS NULL OR {TicketsWithIterationsMeta.platforms} NOT LIKE '%p1%')"
+            f"AND ({TicketsWithIterationsMeta.platforms} IS NULL OR NOT ({TicketsWithIterationsMeta.platforms} LIKE '%p1%'))"
         ),
     ]
 )
@@ -424,11 +424,11 @@ def test_generate_platforms_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.products} IS NULL OR {TicketsWithIterationsMeta.products} NOT LIKE '%p1%' OR {TicketsWithIterationsMeta.products} NOT LIKE '%p2%')"
+            f"AND ({TicketsWithIterationsMeta.products} IS NULL OR NOT ({TicketsWithIterationsMeta.products} LIKE '%p1%' OR {TicketsWithIterationsMeta.products} LIKE '%p2%'))"
         ),
         (
             MockFilterParametersNode(include=False, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.products} IS NULL OR {TicketsWithIterationsMeta.products} NOT LIKE '%p1%')"
+            f"AND ({TicketsWithIterationsMeta.products} IS NULL OR NOT ({TicketsWithIterationsMeta.products} LIKE '%p1%'))"
         ),
     ]
 )

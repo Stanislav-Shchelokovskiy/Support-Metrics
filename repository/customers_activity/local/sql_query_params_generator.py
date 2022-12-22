@@ -220,7 +220,7 @@ class PlatformsProductsSqlFilterClauseGenerator:
     ) -> str:
         if not platform_ids:
             raise ValueError('platform_ids cannot be empty')
-        return CATSqlFilterClauseGenerator.generate_components_filter(
+        return PlatformsProductsSqlFilterClauseGenerator.generate_platforms_filter(
             tribe_ids=tribe_ids
         ) + SqlFilterClauseGenerator().generate_in_filter(
             values=platform_ids,
