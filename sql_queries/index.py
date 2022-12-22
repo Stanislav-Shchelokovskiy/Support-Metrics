@@ -44,6 +44,20 @@ class CustomersActivitySqlPathIndex:
         )
 
     @staticmethod
+    def get_platform_products_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_extract_path()
+            + '/platform_products.sql'
+        )
+
+    @staticmethod
+    def get_tickets_with_iterations_period_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_local_path()
+            + '/get_tickets_with_iterations_period.sql'
+        )
+
+    @staticmethod
     def get_create_tickets_with_iterations_and_licenses_temp_table_path(
     ) -> str:
         return (
@@ -63,13 +77,6 @@ class CustomersActivitySqlPathIndex:
         return (
             CustomersActivitySqlPathIndex.get_extract_path()
             + '/tickets_with_iterations.sql'
-        )
-
-    @staticmethod
-    def get_tickets_with_iterations_period_path() -> str:
-        return (
-            CustomersActivitySqlPathIndex.get_local_path()
-            + '/get_tickets_with_iterations_period.sql'
         )
 
     @staticmethod
@@ -117,6 +124,10 @@ class CustomersActivityDBIndex:
         return (
             CustomersActivityDBIndex.get_root_name() + 'CatComponentsFeatures'
         )
+
+    @staticmethod
+    def get_platforms_products_name() -> str:
+        return (CustomersActivityDBIndex.get_root_name() + 'PlatformsProducts')
 
     @staticmethod
     def get_tickets_with_iterations_name() -> str:

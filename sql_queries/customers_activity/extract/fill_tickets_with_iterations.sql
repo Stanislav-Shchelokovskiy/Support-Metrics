@@ -135,8 +135,8 @@ SELECT
     IIF(EXISTS( SELECT TOP 1 end_user_crmid 
                 FROM   licenses 
                 WHERE  end_user_crmid = user_crmid AND 
-                        creation_date BETWEEN subscription_start AND expiration_date AND
-                        free = @paid
+                       creation_date BETWEEN subscription_start AND expiration_date AND
+                       free = @paid
                     ) OR
                     user_crmid IN (	SELECT	customer_id 
                                     FROM	enterprise_clients
@@ -144,8 +144,8 @@ SELECT
                         IIF(EXISTS( SELECT TOP 1 end_user_crmid 
                                     FROM   licenses 
                                     WHERE  end_user_crmid = user_crmid AND 
-                                            creation_date BETWEEN subscription_start AND expiration_date AND
-                                            free = @free_license
+                                           creation_date BETWEEN subscription_start AND expiration_date AND
+                                           free = @free_license
                         ), @free,
                             IIF(creation_date < (	SELECT	ISNULL(MIN(subscription_start), DATEFROMPARTS(9999,01,01)) 
                                                     FROM	licenses 

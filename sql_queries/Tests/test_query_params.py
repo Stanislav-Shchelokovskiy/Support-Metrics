@@ -15,6 +15,7 @@ from sql_queries.customers_activity.meta import (
     ComponentsFeaturesMeta,
     TicketsWithIterationsAggregatesMeta,
     TicketsWithIterationsRawMeta,
+    PlatformsProductsMeta,
 )
 
 
@@ -48,10 +49,14 @@ tickets_with_iterations_common_params = {
             {
                 **TicketsWithIterationsRawMeta.get_attrs(),
                 **tickets_with_iterations_common_params,
-                'components_features_table':'components_features_table',
-                'replies_types_table':'replies_types_table',
-                'license_statuses_table':'license_statuses_table',
-                'conversion_statuses_table':'conversion_statuses_table',
+                'components_features_table':
+                    'components_features_table',
+                'replies_types_table':
+                    'replies_types_table',
+                'license_statuses_table':
+                    'license_statuses_table',
+                'conversion_statuses_table':
+                    'conversion_statuses_table',
             },
         ),
         (
@@ -60,7 +65,8 @@ tickets_with_iterations_common_params = {
             {
                 **TicketsWithIterationsAggregatesMeta.get_attrs(),
                 **tickets_with_iterations_common_params,
-                'group_by_period':'group_by_period',
+                'group_by_period':
+                    'group_by_period',
             },
         ),
         (
@@ -96,6 +102,12 @@ tickets_with_iterations_common_params = {
             },
         ),
         (
+            CustomersActivitySqlPathIndex.get_platform_products_path,
+            {
+                **PlatformsProductsMeta.get_attrs(),
+            },
+        ),
+        (
             CustomersActivitySqlPathIndex.
             get_tickets_with_iterations_period_path,
             {
@@ -106,6 +118,7 @@ tickets_with_iterations_common_params = {
         (
             CustomersActivitySqlPathIndex.get_general_select_path,
             {
+                'DISTINCT': 'empty_string | DISTINCT',
                 'columns': 'qwe, asd',
                 'table_name': 'test',
                 'filter_clause': '',

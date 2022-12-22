@@ -1,26 +1,6 @@
 from toolbox.sql.meta_data import MetaData
 
 
-class TicketsWithIterationsMainMeta(MetaData):
-    user_id = 'user_id'
-    tribe_name = 'tribe_name'
-    scid = 'scid'
-    creation_date = 'creation_date'
-    iterations = 'iterations'
-    license_status = 'license_status'
-    conversion_status = 'conversion_status'
-
-
-class TicketsWithIterationsMeta(TicketsWithIterationsMainMeta):
-    tribe_id = 'tribe_id'
-    ticket_type = 'ticket_type'
-    user_groups = 'user_groups'
-    ticket_tags = 'ticket_tags'
-    reply_id = 'reply_id'
-    component_id = 'component_id'
-    feature_id = 'feature_id'
-
-
 class KnotMeta(MetaData):
     id = 'id'
     name = 'name'
@@ -50,17 +30,47 @@ class ConversionStatusesMeta(KnotMeta):
     license_status_id = 'license_status_id'
 
 
-class ComponentsFeaturesMeta(MetaData):
+class TribeAwaredMeta(MetaData):
     tribe_id = 'tribe_id'
+
+
+class ComponentsFeaturesMeta(TribeAwaredMeta):
     component_id = 'component_id'
     feature_id = 'feature_id'
     component_name = 'component_name'
     feature_name = 'feature_name'
 
 
+class PlatformsProductsMeta(TribeAwaredMeta):
+    platform_id = 'platform_id'
+    product_id = 'product_id'
+    platform_name = 'platform_name'
+    product_name = 'product_name'
+
+
 class TicketsWithIterationsPeriodMeta(MetaData):
     period_start = 'period_start'
     period_end = 'period_end'
+
+
+class TicketsWithIterationsMainMeta(MetaData):
+    user_id = 'user_id'
+    tribe_name = 'tribe_name'
+    scid = 'scid'
+    creation_date = 'creation_date'
+    iterations = 'iterations'
+    license_status = 'license_status'
+    conversion_status = 'conversion_status'
+
+
+class TicketsWithIterationsMeta(TicketsWithIterationsMainMeta):
+    tribe_id = TribeAwaredMeta.tribe_id
+    ticket_type = 'ticket_type'
+    user_groups = 'user_groups'
+    ticket_tags = 'ticket_tags'
+    reply_id = 'reply_id'
+    component_id = 'component_id'
+    feature_id = 'feature_id'
 
 
 class TicketsWithIterationsAggregatesMeta(MetaData):
