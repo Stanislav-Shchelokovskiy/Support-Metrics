@@ -69,7 +69,7 @@ class TicketsWithIterationsMeta(TicketsWithIterationsMainMeta):
     user_groups = 'user_groups'
     ticket_tags = 'ticket_tags'
     platforms = 'platforms'
-    products = 'platforms'
+    products = 'products'
     reply_id = 'reply_id'
     component_id = 'component_id'
     feature_id = 'feature_id'
