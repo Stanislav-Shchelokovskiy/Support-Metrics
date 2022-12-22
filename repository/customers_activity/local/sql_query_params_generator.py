@@ -160,8 +160,6 @@ class CATSqlFilterClauseGenerator:
 
     @staticmethod
     def generate_components_filter(tribe_ids: list[str]) -> str:
-        if not tribe_ids:
-            raise ValueError('tribe_ids cannot be empty')
         return SqlFilterClauseGenerator().generate_in_filter(
             values=tribe_ids,
             col=ComponentsFeaturesMeta.tribe_id,
@@ -174,24 +172,22 @@ class CATSqlFilterClauseGenerator:
         tribe_ids: list[str],
         component_ids: list[str],
     ) -> str:
-        if not component_ids:
-            raise ValueError('component_ids cannot be empty')
-        return CATSqlFilterClauseGenerator.generate_components_filter(
+        tribes_fitler = CATSqlFilterClauseGenerator.generate_components_filter(
             tribe_ids=tribe_ids
-        ) + SqlFilterClauseGenerator().generate_in_filter(
+        )
+        components_filter = SqlFilterClauseGenerator().generate_in_filter(
             values=component_ids,
             col=ComponentsFeaturesMeta.component_id,
-            filter_prefix=' AND ',
+            filter_prefix=' AND ' if tribes_fitler else 'WHERE ',
             values_converter=lambda val: f"'{val}'",
         )
+        return tribes_fitler + components_filter
 
 
 class ConversionStatusesSqlFilterClauseGenerator:
 
     @staticmethod
     def generate_filter(license_status_ids: list[int]) -> str:
-        if not license_status_ids:
-            raise ValueError('license_status_ids cannot be empty')
         return SqlFilterClauseGenerator().generate_in_filter(
             values=license_status_ids,
             col=ConversionStatusesMeta.license_status_id,
@@ -204,8 +200,6 @@ class PlatformsProductsSqlFilterClauseGenerator:
 
     @staticmethod
     def generate_platforms_filter(tribe_ids: list[str]) -> str:
-        if not tribe_ids:
-            raise ValueError('tribe_ids cannot be empty')
         return SqlFilterClauseGenerator().generate_in_filter(
             values=tribe_ids,
             col=PlatformsProductsMeta.tribe_id,
@@ -218,13 +212,13 @@ class PlatformsProductsSqlFilterClauseGenerator:
         tribe_ids: list[str],
         platform_ids: list[str],
     ) -> str:
-        if not platform_ids:
-            raise ValueError('platform_ids cannot be empty')
-        return PlatformsProductsSqlFilterClauseGenerator.generate_platforms_filter(
+        platforms_filter = PlatformsProductsSqlFilterClauseGenerator.generate_platforms_filter(
             tribe_ids=tribe_ids
-        ) + SqlFilterClauseGenerator().generate_in_filter(
+        )
+        products_filter = SqlFilterClauseGenerator().generate_in_filter(
             values=platform_ids,
             col=PlatformsProductsMeta.platform_id,
-            filter_prefix=' AND ',
+            filter_prefix=' AND ' if platforms_filter else 'WHERE ',
             values_converter=lambda val: f"'{val}'",
         )
+        return platforms_filter + products_filter
