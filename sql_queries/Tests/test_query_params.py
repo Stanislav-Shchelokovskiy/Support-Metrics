@@ -32,6 +32,8 @@ tickets_with_iterations_common_params = {
     'features_filter': 'features_filter',
     'license_status_filter': 'license_status_filter',
     'conversion_status_filter': 'conversion_status_filter',
+    'platforms_filter': 'platforms_filter',
+    'products_filter': 'products_filter',
 }
 
 
@@ -49,14 +51,10 @@ tickets_with_iterations_common_params = {
             {
                 **TicketsWithIterationsRawMeta.get_attrs(),
                 **tickets_with_iterations_common_params,
-                'components_features_table':
-                    'components_features_table',
-                'replies_types_table':
-                    'replies_types_table',
-                'license_statuses_table':
-                    'license_statuses_table',
-                'conversion_statuses_table':
-                    'conversion_statuses_table',
+                'components_features_table': 'components_features_table',
+                'replies_types_table': 'replies_types_table',
+                'license_statuses_table': 'license_statuses_table',
+                'conversion_statuses_table': 'conversion_statuses_table',
             },
         ),
         (
@@ -65,8 +63,7 @@ tickets_with_iterations_common_params = {
             {
                 **TicketsWithIterationsAggregatesMeta.get_attrs(),
                 **tickets_with_iterations_common_params,
-                'group_by_period':
-                    'group_by_period',
+                'group_by_period': 'group_by_period',
             },
         ),
         (

@@ -28,6 +28,8 @@ class TicketsWithIterationsParams(BaseModel):
     features: FilterParametersNode
     license_statuses: FilterParametersNode
     conversion_statuses: FilterParametersNode
+    platforms: FilterParametersNode
+    products: FilterParametersNode
 
 
 class StatAppState(BaseModel):

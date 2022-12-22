@@ -92,8 +92,8 @@ tickets_with_iterations AS (
 		ii.iterations				AS iterations,
 		ug.groups					AS user_groups,
 		tt.tags						AS ticket_tags,
-		platforms.ids				AS platform_ids,
-		products.ids				AS product_ids,
+		platforms.ids				AS platforms,
+		products.ids				AS products,
 		CAST(cat.ReplyId	AS UNIQUEIDENTIFIER) AS reply_id,
 		CAST(cat.ControlId	AS UNIQUEIDENTIFIER) AS component_id,
 		CAST(cat.FeatureId	AS UNIQUEIDENTIFIER) AS feature_id

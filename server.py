@@ -165,6 +165,8 @@ def customers_activity_get_tickets_with_iterations_aggregates(
         feature_ids=params.features,
         license_statuses=params.license_statuses,
         conversion_statuses=params.conversion_statuses,
+        platforms_ids=params.platforms,
+        products_ids=params.products,
     )
     return get_response(json_data=df_json)
 
@@ -187,6 +189,8 @@ def customers_activity_get_tickets_with_iterations_raw(
         feature_ids=params.features,
         license_statuses=params.license_statuses,
         conversion_statuses=params.conversion_statuses,
+        platforms_ids=params.platforms,
+        products_ids=params.products,
     )
     return get_response(json_data=df_json)
 

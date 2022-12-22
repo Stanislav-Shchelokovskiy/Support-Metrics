@@ -13,7 +13,7 @@ class FilterParametersNode(Protocol):
     values: list
 
 
-class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
+class TicketsWithIterationsSqlFilterClauseGenerator:
 
     @staticmethod
     def _generate_like_filter(params: FilterParametersNode):
@@ -29,7 +29,7 @@ class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
 
     @staticmethod
     def generate_customer_groups_filter(params: FilterParametersNode) -> str:
-        generate_filter = TicketsWithIterationsAggregatesSqlFilterClauseGenerator._generate_like_filter(
+        generate_filter = TicketsWithIterationsSqlFilterClauseGenerator._generate_like_filter(
             params
         )
         return generate_filter(
@@ -40,7 +40,7 @@ class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
 
     @staticmethod
     def generate_ticket_types_filter(params: FilterParametersNode) -> str:
-        generate_filter = TicketsWithIterationsAggregatesSqlFilterClauseGenerator._generate_in_filter(
+        generate_filter = TicketsWithIterationsSqlFilterClauseGenerator._generate_in_filter(
             params
         )
         return generate_filter(
@@ -52,7 +52,7 @@ class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
 
     @staticmethod
     def generate_ticket_tags_filter(params: FilterParametersNode) -> str:
-        generate_filter = TicketsWithIterationsAggregatesSqlFilterClauseGenerator._generate_like_filter(
+        generate_filter = TicketsWithIterationsSqlFilterClauseGenerator._generate_like_filter(
             params
         )
         return generate_filter(
@@ -63,7 +63,7 @@ class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
 
     @staticmethod
     def generate_tribes_filter(params: FilterParametersNode) -> str:
-        generate_filter = TicketsWithIterationsAggregatesSqlFilterClauseGenerator._generate_in_filter(
+        generate_filter = TicketsWithIterationsSqlFilterClauseGenerator._generate_in_filter(
             params
         )
         return generate_filter(
@@ -75,7 +75,7 @@ class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
 
     @staticmethod
     def generate_reply_types_filter(params: FilterParametersNode) -> str:
-        generate_filter = TicketsWithIterationsAggregatesSqlFilterClauseGenerator._generate_in_filter(
+        generate_filter = TicketsWithIterationsSqlFilterClauseGenerator._generate_in_filter(
             params
         )
         return generate_filter(
@@ -87,7 +87,7 @@ class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
 
     @staticmethod
     def generate_components_filter(params: FilterParametersNode) -> str:
-        generate_filter = TicketsWithIterationsAggregatesSqlFilterClauseGenerator._generate_in_filter(
+        generate_filter = TicketsWithIterationsSqlFilterClauseGenerator._generate_in_filter(
             params
         )
         return generate_filter(
@@ -99,7 +99,7 @@ class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
 
     @staticmethod
     def generate_features_filter(params: FilterParametersNode) -> str:
-        generate_filter = TicketsWithIterationsAggregatesSqlFilterClauseGenerator._generate_in_filter(
+        generate_filter = TicketsWithIterationsSqlFilterClauseGenerator._generate_in_filter(
             params
         )
         return generate_filter(
@@ -111,7 +111,7 @@ class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
 
     @staticmethod
     def generate_license_status_filter(params: FilterParametersNode) -> str:
-        generate_filter = TicketsWithIterationsAggregatesSqlFilterClauseGenerator._generate_in_filter(
+        generate_filter = TicketsWithIterationsSqlFilterClauseGenerator._generate_in_filter(
             params
         )
         return generate_filter(
@@ -123,7 +123,7 @@ class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
 
     @staticmethod
     def generate_conversion_status_filter(params: FilterParametersNode) -> str:
-        generate_filter = TicketsWithIterationsAggregatesSqlFilterClauseGenerator._generate_in_filter(
+        generate_filter = TicketsWithIterationsSqlFilterClauseGenerator._generate_in_filter(
             params
         )
         return generate_filter(
@@ -131,6 +131,28 @@ class TicketsWithIterationsAggregatesSqlFilterClauseGenerator:
             values=params.values,
             filter_prefix='AND ',
             values_converter=str,
+        )
+
+    @staticmethod
+    def generate_platforms_filter(params: FilterParametersNode) -> str:
+        generate_filter = TicketsWithIterationsSqlFilterClauseGenerator._generate_like_filter(
+            params
+        )
+        return generate_filter(
+            col=TicketsWithIterationsMeta.platforms,
+            values=params.values,
+            filter_prefix='AND ',
+        )
+
+    @staticmethod
+    def generate_products_filter(params: FilterParametersNode) -> str:
+        generate_filter = TicketsWithIterationsSqlFilterClauseGenerator._generate_like_filter(
+            params
+        )
+        return generate_filter(
+            col=TicketsWithIterationsMeta.products,
+            values=params.values,
+            filter_prefix='AND ',
         )
 
 

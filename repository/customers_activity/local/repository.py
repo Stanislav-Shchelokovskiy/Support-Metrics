@@ -20,7 +20,7 @@ from sql_queries.customers_activity.meta import (
 )
 from repository.customers_activity.local.sql_query_params_generator import (
     CATSqlFilterClauseGenerator,
-    TicketsWithIterationsAggregatesSqlFilterClauseGenerator,
+    TicketsWithIterationsSqlFilterClauseGenerator,
     ConversionStatusesSqlFilterClauseGenerator,
     PlatformsProductsSqlFilterClauseGenerator,
 )
@@ -299,7 +299,7 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
         return CustomersActivitySqlPathIndex.get_tickets_with_iterations_raw_path()
 
     def get_general_format_params(self, kwargs:dict)-> dict[str,str]:
-        generator = TicketsWithIterationsAggregatesSqlFilterClauseGenerator
+        generator = TicketsWithIterationsSqlFilterClauseGenerator
         return {
             'table_name': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
             TicketsWithIterationsMeta.creation_date: TicketsWithIterationsMeta.creation_date,
@@ -313,7 +313,9 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
             'components_filter': generator.generate_components_filter(params=kwargs['components_ids']),
             'features_filter': generator.generate_features_filter(params=kwargs['feature_ids']),
             'license_status_filter' : generator.generate_license_status_filter(params=kwargs['license_statuses']),
-            'conversion_status_filter' : generator.generate_conversion_status_filter(params=kwargs['conversion_statuses'])
+            'conversion_status_filter' : generator.generate_conversion_status_filter(params=kwargs['conversion_statuses']),
+            'platforms_filter': generator.generate_platforms_filter(params=kwargs['platforms_ids']),
+            'products_filter': generator.generate_products_filter(params=kwargs['products_ids']),
         }
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
