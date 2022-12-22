@@ -92,6 +92,8 @@ tickets_with_iterations AS (
 		ii.iterations				AS iterations,
 		ug.groups					AS user_groups,
 		tt.tags						AS ticket_tags,
+		platforms.ids				AS platform_ids,
+		products.ids				AS product_ids,
 		CAST(cat.ReplyId	AS UNIQUEIDENTIFIER) AS reply_id,
 		CAST(cat.ControlId	AS UNIQUEIDENTIFIER) AS component_id,
 		CAST(cat.FeatureId	AS UNIQUEIDENTIFIER) AS feature_id
@@ -123,6 +125,14 @@ tickets_with_iterations AS (
 			SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), UserGroup_Id), ' ') AS groups
 			FROM 	CRM.dbo.Customer_UserGroup
 			WHERE 	Customer_Id = crmCustomer.Id ) AS ug
+		OUTER APPLY(
+			SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), CAST(Value AS UNIQUEIDENTIFIER)), ' ') AS ids
+			FROM SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
+			WHERE Name = 'PlatformedProductId' AND Ticket_Id = ti.Id AND Value NOT LIKE '%:%') AS platforms
+		OUTER APPLY(
+			SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), CAST(Value AS UNIQUEIDENTIFIER)), ' ') AS ids
+			FROM SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
+			WHERE Name = 'ProductId' AND Ticket_Id = ti.Id) AS products
 		LEFT JOIN DXStatisticsV2.dbo.TribeTeamMapping AS ttm ON ttm.SupportTeam = ISNULL(ti.ProcessingSupportTeam, ti.SupportTeam)
 		INNER JOIN CRM.dbo.Tribes AS tribes ON ttm.Tribe = tribes.Id
 		LEFT JOIN ticket_tags AS tt ON tt.ticket_id = ti.Id

@@ -17,6 +17,8 @@ SELECT
 	{iterations},
 	{user_groups},
 	{ticket_tags},
+	{platform_ids},
+	{product_ids},
 	{reply_id},
 	{component_id},
 	{feature_id},
