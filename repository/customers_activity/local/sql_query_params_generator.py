@@ -215,10 +215,15 @@ class PlatformsProductsSqlFilterClauseGenerator:
         platforms_filter = PlatformsProductsSqlFilterClauseGenerator.generate_platforms_filter(
             tribe_ids=tribe_ids
         )
-        products_filter = SqlFilterClauseGenerator().generate_in_filter(
+        generator = SqlFilterClauseGenerator()
+        products_filter = generator.generate_in_filter(
             values=platform_ids,
             col=PlatformsProductsMeta.platform_id,
             filter_prefix=' AND' if platforms_filter else 'WHERE',
             values_converter=lambda val: f"'{val}'",
+        )
+        products_filter += generator.generate_is_not_null_filter(
+            filter_prefix=' AND' if products_filter or platforms_filter else 'WHERE',
+            col=PlatformsProductsMeta.product_id,
         )
         return platforms_filter + products_filter
