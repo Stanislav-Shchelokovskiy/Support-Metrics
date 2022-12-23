@@ -137,7 +137,7 @@ class PlatformsProductsRepository(Repository):
     """
 
     def get_main_query_path(self, kwargs: dict) -> str:
-        return CustomersActivitySqlPathIndex.get_platform_products_path()
+        return CustomersActivitySqlPathIndex.get_platforms_products_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {**kwargs, **PlatformsProductsMeta.get_attrs()}
