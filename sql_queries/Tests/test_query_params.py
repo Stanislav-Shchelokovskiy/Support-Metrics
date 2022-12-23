@@ -99,7 +99,7 @@ tickets_with_iterations_common_params = {
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_platform_products_path,
+            CustomersActivitySqlPathIndex.get_platforms_products_path,
             {
                 **PlatformsProductsMeta.get_attrs(),
             },

@@ -44,10 +44,10 @@ class CustomersActivitySqlPathIndex:
         )
 
     @staticmethod
-    def get_platform_products_path() -> str:
+    def get_platforms_products_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_extract_path()
-            + '/platform_products.sql'
+            + '/platforms_products.sql'
         )
 
     @staticmethod
