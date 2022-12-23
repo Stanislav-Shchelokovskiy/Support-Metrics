@@ -35,7 +35,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         return generate_filter(
             col=TicketsWithIterationsMeta.user_groups,
             values=params.values,
-            filter_prefix='AND ',
+            filter_prefix='AND',
         )
 
     @staticmethod
@@ -46,7 +46,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         return generate_filter(
             col=TicketsWithIterationsMeta.ticket_type,
             values=params.values,
-            filter_prefix='AND ',
+            filter_prefix='AND',
             values_converter=str,
         )
 
@@ -58,7 +58,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         return generate_filter(
             col=TicketsWithIterationsMeta.ticket_tags,
             values=params.values,
-            filter_prefix='AND ',
+            filter_prefix='AND',
         )
 
     @staticmethod
@@ -69,7 +69,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         return generate_filter(
             col=TicketsWithIterationsMeta.tribe_id,
             values=params.values,
-            filter_prefix='AND ',
+            filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",
         )
 
@@ -81,7 +81,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         return generate_filter(
             col=TicketsWithIterationsMeta.reply_id,
             values=params.values,
-            filter_prefix='AND ',
+            filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",
         )
 
@@ -93,7 +93,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         return generate_filter(
             col=TicketsWithIterationsMeta.component_id,
             values=params.values,
-            filter_prefix='AND ',
+            filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",
         )
 
@@ -105,7 +105,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         return generate_filter(
             col=TicketsWithIterationsMeta.feature_id,
             values=params.values,
-            filter_prefix='AND ',
+            filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",
         )
 
@@ -117,7 +117,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         return generate_filter(
             col=TicketsWithIterationsMeta.license_status,
             values=params.values,
-            filter_prefix='AND ',
+            filter_prefix='AND',
             values_converter=str,
         )
 
@@ -129,7 +129,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         return generate_filter(
             col=TicketsWithIterationsMeta.conversion_status,
             values=params.values,
-            filter_prefix='AND ',
+            filter_prefix='AND',
             values_converter=str,
         )
 
@@ -141,7 +141,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         return generate_filter(
             col=TicketsWithIterationsMeta.platforms,
             values=params.values,
-            filter_prefix='AND ',
+            filter_prefix='AND',
         )
 
     @staticmethod
@@ -152,7 +152,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         return generate_filter(
             col=TicketsWithIterationsMeta.products,
             values=params.values,
-            filter_prefix='AND ',
+            filter_prefix='AND',
         )
 
 
@@ -163,7 +163,7 @@ class CATSqlFilterClauseGenerator:
         return SqlFilterClauseGenerator().generate_in_filter(
             values=tribe_ids,
             col=ComponentsFeaturesMeta.tribe_id,
-            filter_prefix='WHERE ',
+            filter_prefix='WHERE',
             values_converter=lambda val: f"'{val}'",
         )
 
@@ -178,7 +178,7 @@ class CATSqlFilterClauseGenerator:
         components_filter = SqlFilterClauseGenerator().generate_in_filter(
             values=component_ids,
             col=ComponentsFeaturesMeta.component_id,
-            filter_prefix=' AND ' if tribes_fitler else 'WHERE ',
+            filter_prefix=' AND' if tribes_fitler else 'WHERE',
             values_converter=lambda val: f"'{val}'",
         )
         return tribes_fitler + components_filter
@@ -191,7 +191,7 @@ class ConversionStatusesSqlFilterClauseGenerator:
         return SqlFilterClauseGenerator().generate_in_filter(
             values=license_status_ids,
             col=ConversionStatusesMeta.license_status_id,
-            filter_prefix='WHERE ',
+            filter_prefix='WHERE',
             values_converter=str,
         )
 
@@ -203,7 +203,7 @@ class PlatformsProductsSqlFilterClauseGenerator:
         return SqlFilterClauseGenerator().generate_in_filter(
             values=tribe_ids,
             col=PlatformsProductsMeta.tribe_id,
-            filter_prefix='WHERE ',
+            filter_prefix='WHERE',
             values_converter=lambda val: f"'{val}'",
         )
 
@@ -218,7 +218,7 @@ class PlatformsProductsSqlFilterClauseGenerator:
         products_filter = SqlFilterClauseGenerator().generate_in_filter(
             values=platform_ids,
             col=PlatformsProductsMeta.platform_id,
-            filter_prefix=' AND ' if platforms_filter else 'WHERE ',
+            filter_prefix=' AND' if platforms_filter else 'WHERE',
             values_converter=lambda val: f"'{val}'",
         )
         return platforms_filter + products_filter
