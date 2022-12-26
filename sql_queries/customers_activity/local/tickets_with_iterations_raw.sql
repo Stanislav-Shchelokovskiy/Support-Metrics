@@ -10,7 +10,7 @@ SELECT
       LIMIT 1 )  AS {license_status},
     ( SELECT name 
       FROM {conversion_statuses_table}
-      WHERE license_status_id = t.license_status
+      WHERE id = t.conversion_status
       LIMIT 1 ) AS {conversion_status},
     ( SELECT name 
       FROM {replies_types_table}
