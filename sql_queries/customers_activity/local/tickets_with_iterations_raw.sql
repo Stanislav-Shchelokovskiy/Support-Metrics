@@ -4,9 +4,18 @@ SELECT
     t.{tribe_name},
     t.{iterations},
     t.{creation_date},
-    lc.name AS {license_status},
-    cs.name AS {conversion_status},
-    r.name AS {reply},
+    ( SELECT name 
+      FROM {license_statuses_table}
+      WHERE id = t.license_status
+      LIMIT 1 )  AS {license_status},
+    ( SELECT name 
+      FROM {conversion_statuses_table}
+      WHERE license_status_id = t.license_status
+      LIMIT 1 ) AS {conversion_status},
+    ( SELECT name 
+      FROM {replies_types_table}
+      WHERE id = t.reply_id
+      LIMIT 1 ) AS {reply},
     ( SELECT component_name 
       FROM {components_features_table}
       WHERE tribe_id = t.tribe_id AND 
@@ -18,22 +27,17 @@ SELECT
             component_id = t.component_id AND
             feature_id = t.feature_id
       LIMIT 1 ) AS {feature}
-FROM (  SELECT  *
-        FROM    {table_name} 
-        WHERE
-            {creation_date} BETWEEN '{range_start}' AND '{range_end}'
-            {tribes_fitler}
-            {customer_groups_filter}
-            {ticket_types_filter}
-            {ticket_tags_filter}
-            {reply_types_filter}
-            {components_filter}
-            {features_filter}
-            {license_status_filter}
-            {conversion_status_filter}
-            {platforms_filter}
-            {products_filter}
-    ) AS t
-    LEFT JOIN {replies_types_table} AS r ON r.id = t.reply_id
-    LEFT JOIN {license_statuses_table} AS lc ON lc.id = t.license_status
-    LEFT JOIN {conversion_statuses_table} AS cs ON cs.id = t.conversion_status
+FROM {table_name} AS t
+WHERE 
+      {creation_date} BETWEEN '{range_start}' AND '{range_end}'
+      {tribes_fitler}
+      {customer_groups_filter}
+      {ticket_types_filter}
+      {ticket_tags_filter}
+      {reply_types_filter}
+      {components_filter}
+      {features_filter}
+      {license_status_filter}
+      {conversion_status_filter}
+      {platforms_filter}
+      {products_filter}
