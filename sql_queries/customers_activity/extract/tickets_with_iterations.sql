@@ -23,13 +23,23 @@ SELECT
 	{component_id},
 	{feature_id},
 	{license_status},
-	IIF(trial_user_id IS NOT NULL, 
+	IIF(EXISTS(SELECT TOP 1 user_id
+			   FROM #TicketsWithIterationsAndLicenses
+			   WHERE user_id = ti.user_id AND license_status = @trial), 
 		IIF(license_status = @licensed, @converted_paid, 
-			IIF(license_status = @free,  @converted_free, NULL)), 
-				NULL) AS {conversion_status}
+			IIF(license_status = @free,  @converted_free,
+				IIF(license_status = @trial, 
+					IIF(EXISTS(SELECT TOP 1 user_id
+							   FROM #TicketsWithIterationsAndLicenses
+							   WHERE user_id = ti.user_id AND license_status = @licensed), @converted_paid,
+						IIF(EXISTS(SELECT TOP 1 user_id
+								   FROM #TicketsWithIterationsAndLicenses
+								   WHERE user_id = ti.user_id AND license_status = @free), @converted_free, 
+						NULL)
+					),
+				NULL)
+			)
+		), 
+	NULL) AS {conversion_status}
 FROM 
 	#TicketsWithIterationsAndLicenses AS ti
-	OUTER APPLY (SELECT DISTINCT user_id AS trial_user_id
-				 FROM	#TicketsWithIterationsAndLicenses
-				 WHERE	user_id = ti.user_id AND
-						license_status = @trial) AS ti_trial

@@ -105,12 +105,14 @@ class ConversionStatusesRepository(Repository):
     def get_data(self, **kwargs) -> DataFrame:
         return DataFrame(
             data={
-                ConversionStatusesMeta.license_status_id: [0, 3],
-                ConversionStatusesMeta.id: [5, 6],
+                ConversionStatusesMeta.license_status_id: [0, 3, 4, 4],
+                ConversionStatusesMeta.id: [5, 6, 5, 6],
                 ConversionStatusesMeta.name:
                     [
-                        'Converted (paid)',
-                        'Converted (free)',
+                        'Paid',
+                        'Free',
+                        'Paid',
+                        'Free',
                     ]
             }
         )

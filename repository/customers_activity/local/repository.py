@@ -114,7 +114,7 @@ class ConversionStatusesRepository(SqliteRepository):
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
-            'DISTINCT': '',
+            'DISTINCT': 'DISTINCT',
             'columns': ', '.join(ConversionStatusesMeta.get_values()),
             'table_name': CustomersActivityDBIndex.get_conversion_statuses_name(),
             'filter_clause': ConversionStatusesSqlFilterClauseGenerator.generate_filter(
