@@ -61,6 +61,11 @@ class TicketsWithIterationsMainMeta(MetaData):
     iterations = 'iterations'
     license_status = 'license_status'
     conversion_status = 'conversion_status'
+    emp_post_id = 'emp_post_id'
+    emp_crmid = 'emp_crmid'
+    emp_name = 'emp_name'
+    emp_pos_name = 'emp_pos_name'
+    emp_tribe_name = 'emp_tribe_name'
 
 
 class TicketsWithIterationsMeta(TicketsWithIterationsMainMeta):
@@ -73,6 +78,8 @@ class TicketsWithIterationsMeta(TicketsWithIterationsMainMeta):
     reply_id = 'reply_id'
     component_id = 'component_id'
     feature_id = 'feature_id'
+    emp_pos_id = 'emp_pos_id'
+    emp_tribe_id = 'emp_tribe_id'
 
 
 class TicketsWithIterationsAggregatesMeta(MetaData):
@@ -80,6 +87,7 @@ class TicketsWithIterationsAggregatesMeta(MetaData):
     scid = TicketsWithIterationsMeta.scid
     iterations = TicketsWithIterationsMeta.iterations
     user_id = TicketsWithIterationsMeta.user_id
+    emp_post_id = TicketsWithIterationsMeta.emp_post_id
     period = 'period'
     tickets = 'tickets'
     people = 'people'

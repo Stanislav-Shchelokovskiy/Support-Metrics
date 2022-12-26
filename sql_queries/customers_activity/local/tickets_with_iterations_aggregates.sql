@@ -3,10 +3,10 @@ SELECT
         '{group_by_period}' = '%Y-%W', 
         STRFTIME('%Y-%m-%d', {creation_date}, 'weekday 0', '-6 day'), 
         STRFTIME('{group_by_period}', {creation_date})
-    )                           AS {period},
-    COUNT(DISTINCT {user_id})   AS {people},
-    COUNT({scid})               AS {tickets},
-    SUM({iterations})           AS {iterations}
+    )                                               AS {period},
+    COUNT(DISTINCT {user_id})                       AS {people},
+    COUNT(DISTINCT {scid})                          AS {tickets},
+    COUNT({emp_post_id}) OVER (PARTITION BY scid)   AS {iterations}
 FROM 
     {table_name}
 WHERE

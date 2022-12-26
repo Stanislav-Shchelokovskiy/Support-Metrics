@@ -26,6 +26,7 @@ from repository.customers_activity.local.repository import (
     ConversionStatusesRepository as SqliteConversionStatusesRepository,
     PlatformsRepository as SqlitePlatformsRepository,
     ProductsRepository as SqliteProductsRepository,
+    PositionsRepository as SqlitePositionsRepository,
 )
 
 
@@ -100,6 +101,9 @@ class SqliteFactory:
 
     def create_tickets_with_iterations_aggregates_repository(self, **kwargs) -> SqliteTicketsWithIterationsAggregatesRepository:
         return SqliteTicketsWithIterationsAggregatesRepository()
+
+    def create_positions_repository(self, **kwargs) -> SqlitePositionsRepository:
+        return SqlitePositionsRepository()
 # yapf: enable
 
 

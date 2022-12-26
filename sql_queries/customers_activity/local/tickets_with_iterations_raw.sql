@@ -26,7 +26,12 @@ SELECT
       WHERE tribe_id = t.tribe_id AND
             component_id = t.component_id AND
             feature_id = t.feature_id
-      LIMIT 1 ) AS {feature}
+      LIMIT 1 ) AS {feature},
+      {emp_post_id},
+      {emp_crmid},
+	{emp_name},
+	{emp_pos_name},
+      {emp_tribe_name}
 FROM {table_name} AS t
 WHERE 
       {creation_date} BETWEEN '{range_start}' AND '{range_end}'

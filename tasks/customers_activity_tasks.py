@@ -9,8 +9,7 @@ def _save_tables(tables: dict[str, DataFrame]):
     sqlitedb = get_or_create_db()
     sqlitedb.save_tables(
         tables=tables,
-        create_index_expressions=IndexCreationExpressionsRepository.
-        customers_activity_create_index_expressions,
+        create_index_expressions=IndexCreationExpressionsRepository.customers_activity_create_index_expressions,
     )
 
 

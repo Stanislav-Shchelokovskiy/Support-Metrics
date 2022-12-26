@@ -40,6 +40,13 @@ SELECT
 				NULL)
 			)
 		), 
-	NULL) AS {conversion_status}
+	NULL) AS {conversion_status},
+	{emp_post_id},
+	{emp_name},
+	{emp_pos_name},
+	{emp_tribe_name},
+	{emp_crmid},
+	{emp_pos_id},
+	{emp_tribe_id}
 FROM 
 	#TicketsWithIterationsAndLicenses AS ti

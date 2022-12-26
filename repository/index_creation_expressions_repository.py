@@ -12,13 +12,35 @@ def _create_index_expression(tbl: str, cols: list[str]) -> str:
 class IndexCreationExpressionsRepository:
     customers_activity_create_index_expressions = {
         CustomersActivityDBIndex.get_components_features_name():
-            _create_index_expression(
-                tbl=CustomersActivityDBIndex.get_components_features_name(),
-                cols=[ComponentsFeaturesMeta.tribe_id, ComponentsFeaturesMeta.component_id, ComponentsFeaturesMeta.feature_id]
-            ),
+            [
+                _create_index_expression(
+                    tbl=CustomersActivityDBIndex.get_components_features_name(
+                    ),
+                    cols=[
+                        ComponentsFeaturesMeta.tribe_id,
+                        ComponentsFeaturesMeta.component_id,
+                        ComponentsFeaturesMeta.feature_id
+                    ]
+                ),
+            ],
         CustomersActivityDBIndex.get_tickets_with_iterations_name():
-            _create_index_expression(
-                tbl=CustomersActivityDBIndex.get_tickets_with_iterations_name(),
-                cols=[TicketsWithIterationsMeta.creation_date, TicketsWithIterationsMeta.tribe_id]
-            ),
+            [
+                _create_index_expression(
+                    tbl=CustomersActivityDBIndex.
+                    get_tickets_with_iterations_name(),
+                    cols=[
+                        TicketsWithIterationsMeta.creation_date,
+                        TicketsWithIterationsMeta.tribe_id,
+                        TicketsWithIterationsMeta.emp_pos_id,
+                    ]
+                ),
+                _create_index_expression(
+                    tbl=CustomersActivityDBIndex.
+                    get_tickets_with_iterations_name(),
+                    cols=[
+                        TicketsWithIterationsMeta.emp_pos_id,
+                        TicketsWithIterationsMeta.emp_pos_name,
+                    ]
+                ),
+            ],
     }

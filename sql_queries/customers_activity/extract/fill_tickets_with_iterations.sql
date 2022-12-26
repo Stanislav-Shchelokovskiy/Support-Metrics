@@ -4,8 +4,12 @@ DECLARE @end_date   DATE = '{end_date}'
 DECLARE @free_license TINYINT = 6
 DECLARE @paid		  TINYINT = 0
 
-DECLARE @actual_lic_origin     TINYINT = 0
-DECLARE @historical_lic_origin TINYINT = 1
+DECLARE @note			TINYINT = 3
+DECLARE @description	TINYINT = 0
+
+DECLARE @actual_lic_origin		TINYINT = 0
+DECLARE @historical_lic_origin	TINYINT = 1
+
 
 DECLARE @licensed		TINYINT = 0
 DECLARE @expired		TINYINT = 1
@@ -80,16 +84,16 @@ licenses AS (
 			WHERE IsTraining = 0 AND Id=oi.SaleItem_Id) AS si
 ),
 
-tickets_with_iterations AS (
+tickets AS (
 	SELECT
 		crmCustomer.Id				AS user_crmid,
 		u.FriendlyId				AS user_id,
 		tribes.Id					AS tribe_id,
 		tribes.Name					AS tribe_name,
-		ti.TicketSCID				AS scid,
+		ti.Id						AS ticket_id,
+		ti.TicketSCID				AS ticket_scid,
 		ti.TicketType				AS ticket_type,
 		CAST(ti.Created AS DATE)	AS creation_date,
-		ii.iterations				AS iterations,
 		ug.groups					AS user_groups,
 		tt.tags						AS ticket_tags,
 		platforms.ids				AS platforms,
@@ -101,10 +105,6 @@ tickets_with_iterations AS (
 		(SELECT *
 		 FROM 	DXStatisticsV2.dbo.TicketInfos
 		 WHERE 	Created BETWEEN @start_date AND @end_date ) AS ti
-		OUTER APPLY (
-			SELECT 	COUNT(TicketId) AS iterations
-			FROM  	DXStatisticsV2.dbo.IterationItems AS ii
-			WHERE 	TicketId = ti.Id ) AS ii
 		OUTER APPLY (
 			SELECT
 				Ticket_Id,
@@ -136,35 +136,106 @@ tickets_with_iterations AS (
 		LEFT JOIN DXStatisticsV2.dbo.TribeTeamMapping AS ttm ON ttm.SupportTeam = ISNULL(ti.ProcessingSupportTeam, ti.SupportTeam)
 		INNER JOIN CRM.dbo.Tribes AS tribes ON ttm.Tribe = tribes.Id
 		LEFT JOIN ticket_tags AS tt ON tt.ticket_id = ti.Id
+),
+
+employees AS (
+	SELECT 
+		u.Id 						  AS id,
+		e.Id		 				  AS crmid,
+		u.PublicName 				  AS name,
+		tribes.Id 					  AS tribe_id,
+		tribes.Name 				  AS tribe_name,
+		e.EmployeePosition_Id 		  AS position_id,
+		ep.Name 					  AS position_name,
+		IIF(eer.Id IS NOT NULL, 1, 0) AS has_support_processing_role,
+		e.retired					  AS retired,
+		IIF(l.Id IS NOT NULL, 1, 0)	  AS is_junior
+	FROM (SELECT Id, 
+				 Tribe_Id, 
+				 EmployeePosition_Id,
+				 EmployeeLevel_Id,
+				 IIF(RetiredAt IS NOT NULL AND RetirementReason IS NOT NULL, 1, 0) AS retired  
+			FROM crm.dbo.Employees ) AS e
+			INNER JOIN CRM.dbo.Customers AS c ON c.Id = e.Id
+			CROSS APPLY (
+			SELECT Id, PublicName, FriendlyId
+			FROM   SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].Users 
+			WHERE  Id != '66CA407C-2E49-4079-ABC1-A7B3BE418668' AND
+				   FriendlyId = c.FriendlyId ) AS u
+			OUTER APPLY (
+			SELECT Id
+			FROM   crm.dbo.EmployeeLevels
+			WHERE  Id = e.EmployeeLevel_Id AND
+				   (Name LIKE '%Junior%' OR Name LIKE '%Trainee%') ) AS l
+			LEFT JOIN crm.dbo.Tribes AS tribes ON tribes.Id = e.Tribe_Id
+			LEFT JOIN crm.dbo.EmployeePositions AS ep ON ep.Id = e.EmployeePosition_Id
+			LEFT JOIN crm.dbo.Employee_EmployeeRole AS eer ON e.Id = eer.Employee_Id AND
+															  eer.EmployeeRole_Id = '4D99A826-A414-45F8-A3F9-4F57564E4B24'
+),
+
+tickets_with_iterations AS (
+	SELECT
+		t.user_crmid,
+		t.user_id,
+		t.tribe_id,
+		t.tribe_name,
+		t.ticket_scid,
+		t.ticket_type,
+		t.creation_date,
+		t.user_groups,
+		t.ticket_tags,
+		t.platforms,
+		t.products,
+		t.reply_id,
+		t.component_id,
+		t.feature_id,
+		p.Id			AS emp_post_id,
+		e.crmid			AS emp_crmid,
+		e.name			AS emp_name,
+		e.position_id	AS emp_pos_id,
+		e.position_name AS emp_pos_name,
+		e.tribe_id		AS emp_tribe_id,
+		e.tribe_name	AS emp_tribe_name
+	FROM 
+		tickets AS t
+		LEFT JOIN DXStatisticsV2.dbo.IterationItems AS ii ON ii.TicketId = t.ticket_id
+		CROSS APPLY	(SELECT Id, Owner
+					 FROM   DXStatisticsV2.dbo.Posts
+					 WHERE  Created BETWEEN @start_date AND @end_date AND 
+							Id = ii.PostId AND
+							Type NOT IN (@note, @description)) AS p
+		INNER JOIN	employees AS e ON e.id = p.Owner
 )
 
 
 INSERT INTO #TicketsWithIterationsAndLicenses
 SELECT
-    *,
-    IIF(EXISTS( SELECT TOP 1 end_user_crmid 
-                FROM   licenses 
-                WHERE  end_user_crmid = user_crmid AND 
-                       creation_date BETWEEN subscription_start AND expiration_date AND
-                       free = @paid
-                    ) OR
-                    user_crmid IN (	SELECT	customer_id 
-                                    FROM	enterprise_clients
-                    ), @licensed,
-                        IIF(EXISTS( SELECT TOP 1 end_user_crmid 
-                                    FROM   licenses 
-                                    WHERE  end_user_crmid = user_crmid AND 
-                                           creation_date BETWEEN subscription_start AND expiration_date AND
-                                           free = @free_license
-                        ), @free,
-                            IIF(creation_date < (	SELECT	ISNULL(MIN(subscription_start), DATEFROMPARTS(9999,01,01)) 
-                                                    FROM	licenses 
-                                                    WHERE	end_user_crmid = user_crmid
-                                ), @trial, 
-                                    IIF(creation_date > (	SELECT IIF(MAX(lic_origin) = @historical_lic_origin, MAX(revoked_since), DATEFROMPARTS(9999,01,01)) 
-                                                            FROM   licenses 
-                                                            WHERE  end_user_crmid = user_crmid
-                                        ), @revoked, 
-                                            @expired)))) AS license_status
+	*,
+	IIF(EXISTS( SELECT TOP 1 end_user_crmid 
+				FROM   licenses 
+				WHERE  end_user_crmid = user_crmid AND 
+						creation_date BETWEEN subscription_start AND expiration_date AND
+						free = @paid
+					) OR
+					user_crmid IN (	SELECT	customer_id 
+									FROM	enterprise_clients
+					), @licensed,
+						IIF(EXISTS( SELECT TOP 1 end_user_crmid 
+									FROM   licenses 
+									WHERE  end_user_crmid = user_crmid AND 
+											creation_date BETWEEN subscription_start AND expiration_date AND
+											free = @free_license
+						), @free,
+							IIF(creation_date < (	SELECT	ISNULL(MIN(subscription_start), DATEFROMPARTS(9999,01,01)) 
+													FROM	licenses 
+													WHERE	end_user_crmid = user_crmid
+								), 
+								@trial, 
+									IIF(creation_date > (	SELECT IIF(MAX(lic_origin) = @historical_lic_origin, MAX(revoked_since), DATEFROMPARTS(9999,01,01)) 
+															FROM   licenses 
+															WHERE  end_user_crmid = user_crmid
+										), 
+										@revoked, 
+											@expired)))) AS license_status
 FROM
-    tickets_with_iterations
+	tickets_with_iterations
