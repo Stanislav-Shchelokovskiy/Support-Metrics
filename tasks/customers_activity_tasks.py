@@ -9,7 +9,8 @@ def _save_tables(tables: dict[str, DataFrame]):
     sqlitedb = get_or_create_db()
     sqlitedb.save_tables(
         tables=tables,
-        create_index_expressions=IndexCreationExpressionsRepository.customers_activity_create_index_expressions,
+        create_index_expressions=IndexCreationExpressionsRepository.
+        customers_activity_create_index_expressions,
     )
 
 
@@ -56,13 +57,21 @@ def fill_tickets_types():
     df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_tickets_types_name(): df})
 
+
 def fill_license_statuses():
     repository = RepositoryFactory.customers_activity.remote.create_license_statuses_repository()
     df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_license_statuses_name(): df})
 
+
 def fill_conversion_statuses():
     repository = RepositoryFactory.customers_activity.remote.create_conversion_statuses_repository()
     df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_conversion_statuses_name(): df})
+
+
+def fill_employees_positions():
+    repository = RepositoryFactory.customers_activity.remote.create_positions_repository()
+    df = repository.get_data()
+    _save_tables(tables={CustomersActivityDBIndex.get_positions_name(): df})
 # yapf: enable

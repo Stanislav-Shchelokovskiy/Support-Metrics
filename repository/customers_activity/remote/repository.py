@@ -11,6 +11,7 @@ from sql_queries.customers_activity.meta import (
     ComponentsFeaturesMeta,
     ConversionStatusesMeta,
     PlatformsProductsMeta,
+    PositionsMeta,
 )
 
 
@@ -57,6 +58,21 @@ class RepliesTypesRepository(Repository):
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return ReplyTypesMeta.get_values()
+
+
+class PositionsRepository(Repository):
+    """
+    Loads employees positions.
+    """
+
+    def get_main_query_path(self, kwargs: dict) -> str:
+        return CustomersActivitySqlPathIndex.get_positions_path()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return {**kwargs, **PositionsMeta.get_attrs()}
+
+    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+        return PositionsMeta.get_values()
 
 
 class TicketsTypesRepository(Repository):
@@ -107,13 +123,12 @@ class ConversionStatusesRepository(Repository):
             data={
                 ConversionStatusesMeta.license_status_id: [0, 3, 4, 4],
                 ConversionStatusesMeta.id: [5, 6, 5, 6],
-                ConversionStatusesMeta.name:
-                    [
-                        'Paid',
-                        'Free',
-                        'Paid',
-                        'Free',
-                    ]
+                ConversionStatusesMeta.name: [
+                    'Paid',
+                    'Free',
+                    'Paid',
+                    'Free',
+                ]
             }
         )
 

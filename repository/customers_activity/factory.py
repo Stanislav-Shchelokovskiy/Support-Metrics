@@ -8,6 +8,7 @@ from repository.customers_activity.remote.repository import (
     LicenseStatusesRepository,
     ConversionStatusesRepository,
     PlatformsProductsRepository,
+    PositionsRepository,
 )
 from repository.customers_activity.local.repository import (
     TicketsWithIterationsPeriodRepository as
@@ -59,6 +60,9 @@ class SqlServerFactory:
 
     def create_platforms_products_repository(self, **kwargs) -> PlatformsProductsRepository:
         return PlatformsProductsRepository()
+
+    def create_positions_repository(self, **kwargs)-> PositionsRepository:
+        return PositionsRepository()
 
 
 class SqliteFactory:

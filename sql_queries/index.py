@@ -51,6 +51,12 @@ class CustomersActivitySqlPathIndex:
         )
 
     @staticmethod
+    def get_positions_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_extract_path() + '/positions.sql'
+        )
+
+    @staticmethod
     def get_tickets_with_iterations_period_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_local_path()
@@ -146,3 +152,7 @@ class CustomersActivityDBIndex:
     @staticmethod
     def get_conversion_statuses_name() -> str:
         return CustomersActivityDBIndex.get_root_name() + 'ConversionStatuses'
+
+    @staticmethod
+    def get_positions_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'Positions'

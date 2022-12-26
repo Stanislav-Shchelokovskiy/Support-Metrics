@@ -17,6 +17,7 @@ from sql_queries.customers_activity.meta import (
     LicenseStatusesMeta,
     ConversionStatusesMeta,
     PlatformsProductsMeta,
+    PositionsMeta,
 )
 from repository.customers_activity.local.sql_query_params_generator import (
     CATSqlFilterClauseGenerator,
@@ -136,14 +137,14 @@ class PositionsRepository(SqliteRepository):
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
-            'DISTINCT': 'DISTINCT',
+            'DISTINCT': '',
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
-            'table_name': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
+            'table_name': CustomersActivityDBIndex.get_positions_name(),
             'filter_clause': '',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return [TicketsWithIterationsMeta.emp_pos_id, TicketsWithIterationsMeta.emp_pos_name]
+        return PositionsMeta.get_values()
 
 
 class TicketsTagsRepository(SqliteRepository):

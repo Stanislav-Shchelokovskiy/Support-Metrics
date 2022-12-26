@@ -22,6 +22,10 @@ class ReplyTypesMeta(KnotMeta):
     pass
 
 
+class PositionsMeta(KnotMeta):
+    pass
+
+
 class LicenseStatusesMeta(KnotMeta):
     pass
 

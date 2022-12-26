@@ -16,6 +16,7 @@ from sql_queries.customers_activity.meta import (
     TicketsWithIterationsAggregatesMeta,
     TicketsWithIterationsRawMeta,
     PlatformsProductsMeta,
+    PositionsMeta,
 )
 
 
@@ -102,6 +103,12 @@ tickets_with_iterations_common_params = {
             CustomersActivitySqlPathIndex.get_platforms_products_path,
             {
                 **PlatformsProductsMeta.get_attrs(),
+            },
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_positions_path,
+            {
+                **PositionsMeta.get_attrs(),
             },
         ),
         (

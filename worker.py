@@ -53,6 +53,7 @@ def update_customers_activity(**kwargs):
     app.send_task(name='customers_activity_load_components_features')
     app.send_task(name='customers_activity_load_platforms_products')
     app.send_task(name='customers_activity_load_tickets_with_iterations')
+    app.send_task(name='customers_activity_fill_employees_positions')
 
 
 @app.task(name='customers_activity_load_tags', bind=True)
@@ -125,6 +126,14 @@ def customers_activity_fill_conversion_statuses(self, **kwargs):
     return run_retriable_task(
         self,
         customers_activity.fill_conversion_statuses,
+    )
+
+
+@app.task(name='customers_activity_fill_employees_positions', bind=True)
+def customers_activity_fill_employees_positions(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.fill_employees_positions,
     )
 
 
