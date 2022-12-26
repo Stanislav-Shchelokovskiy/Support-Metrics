@@ -29,8 +29,8 @@ SELECT
       LIMIT 1 ) AS {feature},
       {emp_post_id},
       {emp_crmid},
-	{emp_name},
-	{emp_pos_name},
+	    {emp_name},
+	    {emp_pos_name},
       {emp_tribe_name}
 FROM {table_name} AS t
 WHERE 

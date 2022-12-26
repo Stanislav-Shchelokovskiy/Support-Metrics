@@ -150,23 +150,21 @@ employees AS (
 		IIF(eer.Id IS NOT NULL, 1, 0) AS has_support_processing_role,
 		e.retired					  AS retired,
 		IIF(l.Id IS NOT NULL, 1, 0)	  AS is_junior
-	FROM (SELECT Id, 
+	FROM (	SELECT Id, 
 				 Tribe_Id, 
 				 EmployeePosition_Id,
 				 EmployeeLevel_Id,
 				 IIF(RetiredAt IS NOT NULL AND RetirementReason IS NOT NULL, 1, 0) AS retired  
 			FROM crm.dbo.Employees ) AS e
 			INNER JOIN CRM.dbo.Customers AS c ON c.Id = e.Id
-			CROSS APPLY (
-			SELECT Id, PublicName, FriendlyId
-			FROM   SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].Users 
-			WHERE  Id != '66CA407C-2E49-4079-ABC1-A7B3BE418668' AND
-				   FriendlyId = c.FriendlyId ) AS u
-			OUTER APPLY (
-			SELECT Id
-			FROM   crm.dbo.EmployeeLevels
-			WHERE  Id = e.EmployeeLevel_Id AND
-				   (Name LIKE '%Junior%' OR Name LIKE '%Trainee%') ) AS l
+			CROSS APPLY (SELECT Id, PublicName, FriendlyId
+						 FROM   SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].Users 
+						 WHERE  Id != '66CA407C-2E49-4079-ABC1-A7B3BE418668' AND
+								FriendlyId = c.FriendlyId ) AS u
+			OUTER APPLY (SELECT Id
+						 FROM   crm.dbo.EmployeeLevels
+						 WHERE  Id = e.EmployeeLevel_Id AND
+								(Name LIKE '%Junior%' OR Name LIKE '%Trainee%') ) AS l
 			LEFT JOIN crm.dbo.Tribes AS tribes ON tribes.Id = e.Tribe_Id
 			LEFT JOIN crm.dbo.EmployeePositions AS ep ON ep.Id = e.EmployeePosition_Id
 			LEFT JOIN crm.dbo.Employee_EmployeeRole AS eer ON e.Id = eer.Employee_Id AND
