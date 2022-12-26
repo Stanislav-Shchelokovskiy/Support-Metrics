@@ -65,7 +65,7 @@ licenses AS (
 		end_user_crmid,
 		lic_origin,
 		revoked_since,
-		oi.SubscriptionStart AS subscription_start,
+		CONVERT(DATE, oi.SubscriptionStart) AS subscription_start,
 		DATEADD(DAY, ISNULL(oi.HoldingPeriod, 99999), oi.SubscriptionStart) AS expiration_date,
 		IIF(o.Status = @free_license, @free_license, @paid) AS free
 	FROM
