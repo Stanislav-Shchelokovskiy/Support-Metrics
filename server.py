@@ -174,6 +174,7 @@ def customers_activity_get_tickets_with_iterations_aggregates(
         conversion_statuses=params.conversion_statuses,
         platforms_ids=params.platforms,
         products_ids=params.products,
+        positions_ids=params.positions,
     )
     return get_response(json_data=df_json)
 
@@ -198,6 +199,7 @@ def customers_activity_get_tickets_with_iterations_raw(
         conversion_statuses=params.conversion_statuses,
         platforms_ids=params.platforms,
         products_ids=params.products,
+        positions_ids=params.positions,
     )
     return get_response(json_data=df_json)
 

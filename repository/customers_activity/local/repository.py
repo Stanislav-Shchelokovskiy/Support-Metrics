@@ -1,3 +1,4 @@
+import repository.customers_activity.local.tickets_with_iterations_path_selector as tickets_with_iterations_path_selector
 from toolbox.sql.repository import SqliteRepository
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
@@ -297,7 +298,7 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
     """
 
     def get_main_query_path(self, kwargs: dict) -> str:
-        return CustomersActivitySqlPathIndex.get_tickets_with_iterations_raw_path()
+        return tickets_with_iterations_path_selector.select_tickets_with_iterations_raw_path(kwargs)
 
     def get_general_format_params(self, kwargs:dict)-> dict[str,str]:
         generator = TicketsWithIterationsSqlFilterClauseGenerator
@@ -340,7 +341,7 @@ class TicketsWithIterationsAggregatesRepository(TicketsWithIterationsRawReposito
     """
 
     def get_main_query_path(self, kwargs: dict) -> str:
-        return CustomersActivitySqlPathIndex.get_tickets_with_iterations_aggregates_path()
+        return tickets_with_iterations_path_selector.select_tickets_with_iterations_aggregates_path(kwargs)
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {

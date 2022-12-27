@@ -11,7 +11,8 @@ SELECT
 	{user_id},
 	{tribe_id},
 	{tribe_name},
-	{scid},
+	{ticket_id},
+	{ticket_scid},
 	{ticket_type},
 	{creation_date},
 	{iterations},
@@ -40,13 +41,6 @@ SELECT
 				NULL)
 			)
 		), 
-	NULL) AS {conversion_status},
-	{emp_post_id},
-	{emp_name},
-	{emp_pos_name},
-	{emp_tribe_name},
-	{emp_crmid},
-	{emp_pos_id},
-	{emp_tribe_id}
+	NULL) AS {conversion_status}
 FROM 
 	#TicketsWithIterationsAndLicenses AS ti

@@ -2,13 +2,13 @@ from repository.customers_activity.remote.repository import (
     GroupsRepository,
     TagsRepository,
     TicketsWithIterationsRepository,
-    TicketsTypesRepository,
     RepliesTypesRepository,
     ComponentsFeaturesRepository,
     LicenseStatusesRepository,
     ConversionStatusesRepository,
     PlatformsProductsRepository,
     PositionsRepository,
+    EmployeesIterationsRepository,
 )
 from repository.customers_activity.local.repository import (
     TicketsWithIterationsPeriodRepository as
@@ -49,9 +49,6 @@ class SqlServerFactory:
     def create_tickets_with_iterations_repository(self, **kwargs) -> TicketsWithIterationsRepository:
         return TicketsWithIterationsRepository()
 
-    def create_tickets_types_repository(self, **kwargs) -> TicketsTypesRepository:
-        return TicketsTypesRepository()
-
     def create_license_statuses_repository(self, **kwargs) -> LicenseStatusesRepository:
         return LicenseStatusesRepository()
 
@@ -63,6 +60,9 @@ class SqlServerFactory:
 
     def create_positions_repository(self, **kwargs)-> PositionsRepository:
         return PositionsRepository()
+
+    def create_employees_iterations_repository(self, **kwargs)-> EmployeesIterationsRepository:
+        return EmployeesIterationsRepository()
 
 
 class SqliteFactory:
