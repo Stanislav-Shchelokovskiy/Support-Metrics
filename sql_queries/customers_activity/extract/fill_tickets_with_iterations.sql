@@ -123,23 +123,24 @@ tickets_with_iterations AS (
 			WHERE	IsEmployee = 0 AND Id = ti.OwnerGuid AND FriendlyId != 'A2151720'
 		)  AS u
 		INNER JOIN CRM.dbo.Customers AS crmCustomer ON crmCustomer.FriendlyId = u.FriendlyId
-		OUTER APPLY(
+		OUTER APPLY (
 			SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), UserGroup_Id), ' ') AS groups
 			FROM 	CRM.dbo.Customer_UserGroup
 			WHERE 	Customer_Id = crmCustomer.Id ) AS ug
-		OUTER APPLY(
+		OUTER APPLY (
 			SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), CAST(Value AS UNIQUEIDENTIFIER)), ' ') AS ids
 			FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
 			WHERE	Name = 'PlatformedProductId' AND Ticket_Id = ti.Id AND Value NOT LIKE '%:%') AS platforms
-		OUTER APPLY(
+		OUTER APPLY (
 			SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), CAST(Value AS UNIQUEIDENTIFIER)), ' ') AS ids
 			FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
 			WHERE	Name = 'ProductId' AND Ticket_Id = ti.Id) AS products
-		OUTER APPLY(
+		OUTER APPLY (
 			SELECT  TOP 1 t.Id, t.Name
 			FROM	DXStatisticsV2.dbo.TribeTeamMapping AS ttm
 					INNER JOIN CRM.dbo.Tribes AS t ON t.Id = ttm.Tribe
-			WHERE   ttm.SupportTeam = ti.SupportTeam ) AS tribes
+			WHERE   ttm.SupportTeam = ti.SupportTeam 
+			ORDER BY t.Name ) AS tribes
 		LEFT JOIN ticket_tags AS tt ON tt.ticket_id = ti.Id
 )
 
