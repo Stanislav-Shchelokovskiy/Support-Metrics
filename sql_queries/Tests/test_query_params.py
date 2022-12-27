@@ -7,7 +7,7 @@ from sql_queries.index import (
 )
 from toolbox.sql.sql_query import SqlQuery
 from sql_queries.customers_activity.meta import (
-    TicketsWithIterationsMeta,
+    TicketsWithLicensesMeta,
     CustomersGroupsMeta,
     TicketsTagsMeta,
     TicketsWithIterationsPeriodMeta,
@@ -25,7 +25,7 @@ tickets_with_iterations_common_params = {
     'ticket_id': 'ticket_id,',
     'range_start': 'range_start',
     'range_end': 'range_end',
-    'tribes_fitler': 'tribes_fitler',
+    'tribes_filter': 'tribes_filter',
     'customer_groups_filter': 'customer_groups_filter',
     'ticket_types_filter': 'ticket_types_filter',
     'ticket_tags_filter': 'ticket_tags_filter',
@@ -44,9 +44,9 @@ tickets_with_iterations_common_params = {
     'get_query_file_path, format_params',
     [
         (
-            CustomersActivitySqlPathIndex.get_tickets_with_iterations_path,
+            CustomersActivitySqlPathIndex.get_tickets_with_licenses_path,
             {
-                **TicketsWithIterationsMeta.get_attrs(),
+                **TicketsWithLicensesMeta.get_attrs(),
             },
         ),
         (
@@ -71,7 +71,7 @@ tickets_with_iterations_common_params = {
         ),
         (
             CustomersActivitySqlPathIndex.
-            get_fill_tickets_with_iterations_path,
+            get_fill_tickets_with_licenses_path,
             {
                 'start_date': 'qwe',
                 'end_date': 'asd',
@@ -109,7 +109,7 @@ tickets_with_iterations_common_params = {
         ),
         (
             CustomersActivitySqlPathIndex.
-            get_tickets_with_iterations_period_path,
+            get_tickets_period_path,
             {
                 'table_name': 'test',
                 **TicketsWithIterationsPeriodMeta.get_attrs(),

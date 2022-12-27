@@ -52,7 +52,7 @@ def update_customers_activity(**kwargs):
     app.send_task(name='customers_activity_load_replies_types')
     app.send_task(name='customers_activity_load_components_features')
     app.send_task(name='customers_activity_load_platforms_products')
-    app.send_task(name='customers_activity_load_tickets_with_iterations')
+    app.send_task(name='customers_activity_load_tickets_with_licenses')
     app.send_task(name='customers_activity_load_employees_iterations')
 
 
@@ -96,12 +96,12 @@ def customers_activity_load_platforms_products(self, **kwargs):
     )
 
 
-@app.task(name='customers_activity_load_tickets_with_iterations', bind=True)
-def customers_activity_load_tickets_with_iterations(self, **kwargs):
+@app.task(name='customers_activity_load_tickets_with_licenses', bind=True)
+def customers_activity_load_tickets_with_licenses(self, **kwargs):
     return run_retriable_task(
         self,
-        customers_activity.load_tickets_with_iterations,
-        **CustomersActivityTasksConfig.get_tickets_with_iterations_period(),
+        customers_activity.load_tickets_with_licenses,
+        **CustomersActivityTasksConfig.get_tickets_with_licenses_period(),
     )
 
 
@@ -134,7 +134,7 @@ def customers_activity_load_employees_iterations(self, **kwargs):
     return run_retriable_task(
         self,
         customers_activity.load_employees_iterations,
-        **CustomersActivityTasksConfig.get_tickets_with_iterations_period(),
+        **CustomersActivityTasksConfig.get_tickets_with_licenses_period(),
     )
 
 

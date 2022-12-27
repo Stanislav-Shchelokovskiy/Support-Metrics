@@ -1,7 +1,7 @@
 from repository.customers_activity.remote.repository import (
     GroupsRepository,
     TagsRepository,
-    TicketsWithIterationsRepository,
+    TicketsWithLicensesRepository,
     RepliesTypesRepository,
     ComponentsFeaturesRepository,
     LicenseStatusesRepository,
@@ -10,7 +10,7 @@ from repository.customers_activity.remote.repository import (
     EmployeesIterationsRepository,
 )
 from repository.customers_activity.local.repository import (
-    TicketsWithIterationsPeriodRepository as
+    TicketsPeriodRepository as
     SqliteTicketsWithIterationsPeriodRepository,
     CustomersGroupsRepository as SqliteCustomersGroupsRepository,
     TicketsTypesRepository as SqliteTicketsTypesRepository,
@@ -45,8 +45,8 @@ class SqlServerFactory:
     def create_components_features_repository(self, **kwargs) -> ComponentsFeaturesRepository:
         return ComponentsFeaturesRepository()
 
-    def create_tickets_with_iterations_repository(self, **kwargs) -> TicketsWithIterationsRepository:
-        return TicketsWithIterationsRepository()
+    def create_tickets_with_licenses_repository(self, **kwargs) -> TicketsWithLicensesRepository:
+        return TicketsWithLicensesRepository()
 
     def create_license_statuses_repository(self, **kwargs) -> LicenseStatusesRepository:
         return LicenseStatusesRepository()

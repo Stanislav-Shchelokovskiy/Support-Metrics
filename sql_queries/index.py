@@ -58,32 +58,32 @@ class CustomersActivitySqlPathIndex:
         )
 
     @staticmethod
-    def get_tickets_with_iterations_period_path() -> str:
+    def get_tickets_period_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_local_path()
-            + '/get_tickets_with_iterations_period.sql'
+            + '/get_tickets_period.sql'
         )
 
     @staticmethod
-    def get_create_tickets_with_iterations_and_licenses_temp_table_path(
+    def get_create_tickets_with_licenses_temp_table_path(
     ) -> str:
         return (
             CustomersActivitySqlPathIndex.get_extract_temp_tables_path()
-            + '/TicketsWithIterationsAndLicenses.sql'
+            + '/TicketsWithLicenses.sql'
         )
 
     @staticmethod
-    def get_fill_tickets_with_iterations_path() -> str:
+    def get_fill_tickets_with_licenses_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_extract_path()
-            + '/fill_tickets_with_iterations.sql'
+            + '/fill_tickets_with_licenses.sql'
         )
 
     @staticmethod
-    def get_tickets_with_iterations_path() -> str:
+    def get_tickets_with_licenses_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_extract_path()
-            + '/tickets_with_iterations.sql'
+            + '/tickets_with_licenses.sql'
         )
 
     @staticmethod
@@ -137,9 +137,9 @@ class CustomersActivityDBIndex:
         return (CustomersActivityDBIndex.get_root_name() + 'PlatformsProducts')
 
     @staticmethod
-    def get_tickets_with_iterations_name() -> str:
+    def get_tickets_with_licenses_name() -> str:
         return (
-            CustomersActivityDBIndex.get_root_name() + 'TicketsWithIterations'
+            CustomersActivityDBIndex.get_root_name() + 'TicketsWithLicenses'
         )
 
     @staticmethod

@@ -91,7 +91,6 @@ tickets_with_iterations AS (
 		ti.TicketSCID				AS ticket_scid,
 		ti.TicketType				AS ticket_type,
 		CAST(ti.Created AS DATE)	AS creation_date,
-		ii.iterations				AS iterations,
 		ug.groups					AS user_groups,
 		tt.tags						AS ticket_tags,
 		platforms.ids				AS platforms,
@@ -103,10 +102,6 @@ tickets_with_iterations AS (
 			SELECT	Id, TicketSCID, TicketType, Created, OwnerGuid, ISNULL(ProcessingSupportTeam, SupportTeam) AS SupportTeam
 			FROM 	DXStatisticsV2.dbo.TicketInfos
 			WHERE 	Created BETWEEN @start_date AND @end_date ) AS ti
-		OUTER APPLY (
-			SELECT 	COUNT(TicketId) AS iterations
-			FROM  	DXStatisticsV2.dbo.IterationItems AS ii
-			WHERE 	TicketId = ti.Id ) AS ii
 		OUTER APPLY (
 			SELECT
 				Ticket_Id,
@@ -145,7 +140,7 @@ tickets_with_iterations AS (
 )
 
 
-INSERT INTO #TicketsWithIterationsAndLicenses
+INSERT INTO #TicketsWithLicenses
 SELECT
     *,
     IIF(EXISTS( SELECT TOP 1 end_user_crmid 

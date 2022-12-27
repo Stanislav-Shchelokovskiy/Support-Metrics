@@ -35,7 +35,7 @@ FROM {tickets_with_iterations_table} AS t
     ) AS ei ON ei.ticket_id = t.ticket_id
 WHERE 
     {creation_date} BETWEEN '{range_start}' AND '{range_end}'
-    {tribes_fitler}
+    {tribes_filter}
     {customer_groups_filter}
     {ticket_types_filter}
     {ticket_tags_filter}

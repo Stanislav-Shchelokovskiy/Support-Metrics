@@ -1,7 +1,7 @@
 from typing import Protocol
 from toolbox.sql.generators.filter_clause_generator import SqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import (
-    TicketsWithIterationsMeta,
+    TicketsWithLicensesMeta,
     EmployeesIterations,
 )
 
@@ -31,7 +31,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithIterationsMeta.user_groups,
+            col=TicketsWithLicensesMeta.user_groups,
             values=params.values,
             filter_prefix='AND',
         )
@@ -42,7 +42,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithIterationsMeta.ticket_type,
+            col=TicketsWithLicensesMeta.ticket_type,
             values=params.values,
             filter_prefix='AND',
             values_converter=str,
@@ -54,7 +54,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithIterationsMeta.ticket_tags,
+            col=TicketsWithLicensesMeta.ticket_tags,
             values=params.values,
             filter_prefix='AND',
         )
@@ -65,7 +65,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithIterationsMeta.tribe_id,
+            col=TicketsWithLicensesMeta.tribe_id,
             values=params.values,
             filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",
@@ -77,7 +77,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithIterationsMeta.reply_id,
+            col=TicketsWithLicensesMeta.reply_id,
             values=params.values,
             filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",
@@ -89,7 +89,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithIterationsMeta.component_id,
+            col=TicketsWithLicensesMeta.component_id,
             values=params.values,
             filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",
@@ -101,7 +101,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithIterationsMeta.feature_id,
+            col=TicketsWithLicensesMeta.feature_id,
             values=params.values,
             filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",
@@ -113,7 +113,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithIterationsMeta.license_status,
+            col=TicketsWithLicensesMeta.license_status,
             values=params.values,
             filter_prefix='AND',
             values_converter=str,
@@ -125,7 +125,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithIterationsMeta.conversion_status,
+            col=TicketsWithLicensesMeta.conversion_status,
             values=params.values,
             filter_prefix='AND',
             values_converter=str,
@@ -137,7 +137,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithIterationsMeta.platforms,
+            col=TicketsWithLicensesMeta.platforms,
             values=params.values,
             filter_prefix='AND',
         )
@@ -148,7 +148,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithIterationsMeta.products,
+            col=TicketsWithLicensesMeta.products,
             values=params.values,
             filter_prefix='AND',
         )

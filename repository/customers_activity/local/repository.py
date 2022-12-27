@@ -9,7 +9,7 @@ from sql_queries.customers_activity.meta import (
     TicketsTagsMeta,
     TicketsWithIterationsPeriodMeta,
     TicketsTypesMeta,
-    TicketsWithIterationsMeta,
+    TicketsWithLicensesMeta,
     TicketsWithIterationsAggregatesMeta,
     ReplyTypesMeta,
     ComponentsFeaturesMeta,
@@ -26,7 +26,7 @@ from repository.customers_activity.local.sql_query_params_generator.tickets_with
 
 
 # yapf: disable
-class TicketsWithIterationsPeriodRepository(SqliteRepository):
+class TicketsPeriodRepository(SqliteRepository):
     """
     Interface to a local table storing min and max boundarise
     for tickets and iterations.
@@ -34,9 +34,9 @@ class TicketsWithIterationsPeriodRepository(SqliteRepository):
     def get_period_json(self) -> str:
 
         df = self.execute_query(
-                query_file_path=CustomersActivitySqlPathIndex.get_tickets_with_iterations_period_path(),
+                query_file_path=CustomersActivitySqlPathIndex.get_tickets_period_path(),
                 query_format_params={
-                    'table_name': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
+                    'table_name': CustomersActivityDBIndex.get_tickets_with_licenses_name(),
                     **TicketsWithIterationsPeriodMeta.get_attrs(),
                 }
             ).reset_index(drop=True)
@@ -300,16 +300,16 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
     def get_general_format_params(self, kwargs:dict)-> dict[str,str]:
         generator = TicketsWithIterationsSqlFilterClauseGenerator
         return {
-            'tickets_with_iterations_table': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
+            'tickets_with_iterations_table': CustomersActivityDBIndex.get_tickets_with_licenses_name(),
             'employees_iterations_table': CustomersActivityDBIndex.get_employees_iterations_name(),
-            TicketsWithIterationsMeta.creation_date: TicketsWithIterationsMeta.creation_date,
-            TicketsWithIterationsMeta.ticket_id: TicketsWithIterationsMeta.ticket_id,
+            TicketsWithLicensesMeta.creation_date: TicketsWithLicensesMeta.creation_date,
+            TicketsWithLicensesMeta.ticket_id: TicketsWithLicensesMeta.ticket_id,
             'range_start': kwargs['range_start'],
             'range_end': kwargs['range_end'],
             'customer_groups_filter': generator.generate_customer_groups_filter(params=kwargs['customers_groups']),
             'ticket_types_filter': generator.generate_ticket_types_filter(params=kwargs['tickets_types']),
             'ticket_tags_filter': generator.generate_ticket_tags_filter(params=kwargs['tickets_tags']),
-            'tribes_fitler': generator.generate_tribes_filter(params=kwargs['tribe_ids']),
+            'tribes_filter': generator.generate_tribes_filter(params=kwargs['tribe_ids']),
             'reply_types_filter': generator.generate_reply_types_filter(params=kwargs['reply_ids']),
             'components_filter': generator.generate_components_filter(params=kwargs['components_ids']),
             'features_filter': generator.generate_features_filter(params=kwargs['feature_ids']),

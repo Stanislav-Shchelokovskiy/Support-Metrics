@@ -15,7 +15,6 @@ SELECT
 	{ticket_scid},
 	{ticket_type},
 	{creation_date},
-	{iterations},
 	{user_groups},
 	{ticket_tags},
 	{platforms},
@@ -25,16 +24,16 @@ SELECT
 	{feature_id},
 	{license_status},
 	IIF(EXISTS(SELECT TOP 1 user_id
-			   FROM #TicketsWithIterationsAndLicenses
+			   FROM #TicketsWithLicenses
 			   WHERE user_id = ti.user_id AND license_status = @trial), 
 		IIF(license_status = @licensed, @converted_paid, 
 			IIF(license_status = @free,  @converted_free,
 				IIF(license_status = @trial, 
 					IIF(EXISTS(SELECT TOP 1 user_id
-							   FROM #TicketsWithIterationsAndLicenses
+							   FROM #TicketsWithLicenses
 							   WHERE user_id = ti.user_id AND license_status = @licensed), @converted_paid,
 						IIF(EXISTS(SELECT TOP 1 user_id
-								   FROM #TicketsWithIterationsAndLicenses
+								   FROM #TicketsWithLicenses
 								   WHERE user_id = ti.user_id AND license_status = @free), @converted_free, 
 						NULL)
 					),
@@ -43,4 +42,4 @@ SELECT
 		), 
 	NULL) AS {conversion_status}
 FROM 
-	#TicketsWithIterationsAndLicenses AS ti
+	#TicketsWithLicenses AS ti

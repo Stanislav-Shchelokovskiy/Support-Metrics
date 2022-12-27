@@ -1,7 +1,7 @@
 import pytest
 from repository.customers_activity.local.sql_query_params_generator.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import (
-    TicketsWithIterationsMeta,
+    TicketsWithLicensesMeta,
     EmployeesIterations,
 )
 
@@ -21,23 +21,23 @@ class MockFilterParametersNode:
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.user_groups} IS NULL)',
+            f'AND ({TicketsWithLicensesMeta.user_groups} IS NULL)',
         ),
         (
             MockFilterParametersNode(include=True, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.user_groups} LIKE '%p1%' OR {TicketsWithIterationsMeta.user_groups} LIKE '%p2%')"
+            f"AND ({TicketsWithLicensesMeta.user_groups} LIKE '%p1%' OR {TicketsWithLicensesMeta.user_groups} LIKE '%p2%')"
         ),
         (
             MockFilterParametersNode(include=True, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.user_groups} LIKE '%p1%')"
+            f"AND ({TicketsWithLicensesMeta.user_groups} LIKE '%p1%')"
         ),
         (
             MockFilterParametersNode(include=False, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.user_groups} IS NULL OR NOT ({TicketsWithIterationsMeta.user_groups} LIKE '%p1%' OR {TicketsWithIterationsMeta.user_groups} LIKE '%p2%'))"
+            f"AND ({TicketsWithLicensesMeta.user_groups} IS NULL OR NOT ({TicketsWithLicensesMeta.user_groups} LIKE '%p1%' OR {TicketsWithLicensesMeta.user_groups} LIKE '%p2%'))"
         ),
         (
             MockFilterParametersNode(include=False, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.user_groups} IS NULL OR NOT ({TicketsWithIterationsMeta.user_groups} LIKE '%p1%'))"
+            f"AND ({TicketsWithLicensesMeta.user_groups} IS NULL OR NOT ({TicketsWithLicensesMeta.user_groups} LIKE '%p1%'))"
         ),
     ]
 )
@@ -58,23 +58,23 @@ def test_generate_customer_groups_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.ticket_type} IS NULL)',
+            f'AND ({TicketsWithLicensesMeta.ticket_type} IS NULL)',
         ),
         (
             MockFilterParametersNode(include=True, values=[1, 2]),
-            f'AND {TicketsWithIterationsMeta.ticket_type} IN (1,2)'
+            f'AND {TicketsWithLicensesMeta.ticket_type} IN (1,2)'
         ),
         (
             MockFilterParametersNode(include=True, values=[1]),
-            f'AND {TicketsWithIterationsMeta.ticket_type} IN (1)'
+            f'AND {TicketsWithLicensesMeta.ticket_type} IN (1)'
         ),
         (
             MockFilterParametersNode(include=False, values=[1, 2]),
-            f'AND ({TicketsWithIterationsMeta.ticket_type} IS NULL OR {TicketsWithIterationsMeta.ticket_type} NOT IN (1,2))'
+            f'AND ({TicketsWithLicensesMeta.ticket_type} IS NULL OR {TicketsWithLicensesMeta.ticket_type} NOT IN (1,2))'
         ),
         (
             MockFilterParametersNode(include=False, values=[1]),
-            f'AND ({TicketsWithIterationsMeta.ticket_type} IS NULL OR {TicketsWithIterationsMeta.ticket_type} NOT IN (1))'
+            f'AND ({TicketsWithLicensesMeta.ticket_type} IS NULL OR {TicketsWithLicensesMeta.ticket_type} NOT IN (1))'
         ),
     ]
 )
@@ -95,23 +95,23 @@ def test_generate_ticket_types_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.ticket_tags} IS NULL)',
+            f'AND ({TicketsWithLicensesMeta.ticket_tags} IS NULL)',
         ),
         (
             MockFilterParametersNode(include=True, values=[1, 2]),
-            f"AND ({TicketsWithIterationsMeta.ticket_tags} LIKE '%1%' OR {TicketsWithIterationsMeta.ticket_tags} LIKE '%2%')",
+            f"AND ({TicketsWithLicensesMeta.ticket_tags} LIKE '%1%' OR {TicketsWithLicensesMeta.ticket_tags} LIKE '%2%')",
         ),
         (
             MockFilterParametersNode(include=True, values=[1]),
-            f"AND ({TicketsWithIterationsMeta.ticket_tags} LIKE '%1%')",
+            f"AND ({TicketsWithLicensesMeta.ticket_tags} LIKE '%1%')",
         ),
         (
             MockFilterParametersNode(include=False, values=[1, 2]),
-            f"AND ({TicketsWithIterationsMeta.ticket_tags} IS NULL OR NOT ({TicketsWithIterationsMeta.ticket_tags} LIKE '%1%' OR {TicketsWithIterationsMeta.ticket_tags} LIKE '%2%'))",
+            f"AND ({TicketsWithLicensesMeta.ticket_tags} IS NULL OR NOT ({TicketsWithLicensesMeta.ticket_tags} LIKE '%1%' OR {TicketsWithLicensesMeta.ticket_tags} LIKE '%2%'))",
         ),
         (
             MockFilterParametersNode(include=False, values=[1]),
-            f"AND ({TicketsWithIterationsMeta.ticket_tags} IS NULL OR NOT ({TicketsWithIterationsMeta.ticket_tags} LIKE '%1%'))",
+            f"AND ({TicketsWithLicensesMeta.ticket_tags} IS NULL OR NOT ({TicketsWithLicensesMeta.ticket_tags} LIKE '%1%'))",
         ),
     ]
 )
@@ -132,29 +132,29 @@ def test_generate_ticket_tags_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.tribe_id} IS NULL)',
+            f'AND ({TicketsWithLicensesMeta.tribe_id} IS NULL)',
         ),
         (
             MockFilterParametersNode(include=True, values=[
                 'qwe',
                 'asd',
             ]),
-            f"AND {TicketsWithIterationsMeta.tribe_id} IN ('qwe','asd')",
+            f"AND {TicketsWithLicensesMeta.tribe_id} IN ('qwe','asd')",
         ),
         (
             MockFilterParametersNode(include=True, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.tribe_id} IN ('qwe')",
+            f"AND {TicketsWithLicensesMeta.tribe_id} IN ('qwe')",
         ),
         (
             MockFilterParametersNode(include=False, values=[
                 'qwe',
                 'asd',
             ]),
-            f"AND ({TicketsWithIterationsMeta.tribe_id} IS NULL OR {TicketsWithIterationsMeta.tribe_id} NOT IN ('qwe','asd'))",
+            f"AND ({TicketsWithLicensesMeta.tribe_id} IS NULL OR {TicketsWithLicensesMeta.tribe_id} NOT IN ('qwe','asd'))",
         ),
         (
             MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND ({TicketsWithIterationsMeta.tribe_id} IS NULL OR {TicketsWithIterationsMeta.tribe_id} NOT IN ('qwe'))",
+            f"AND ({TicketsWithLicensesMeta.tribe_id} IS NULL OR {TicketsWithLicensesMeta.tribe_id} NOT IN ('qwe'))",
         ),
     ]
 )
@@ -175,29 +175,29 @@ def test_generate_tribes_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.reply_id} IS NULL)',
+            f'AND ({TicketsWithLicensesMeta.reply_id} IS NULL)',
         ),
         (
             MockFilterParametersNode(include=True, values=[
                 'qwe',
                 'asd',
             ]),
-            f"AND {TicketsWithIterationsMeta.reply_id} IN ('qwe','asd')",
+            f"AND {TicketsWithLicensesMeta.reply_id} IN ('qwe','asd')",
         ),
         (
             MockFilterParametersNode(include=True, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.reply_id} IN ('qwe')",
+            f"AND {TicketsWithLicensesMeta.reply_id} IN ('qwe')",
         ),
         (
             MockFilterParametersNode(include=False, values=[
                 'qwe',
                 'asd',
             ]),
-            f"AND ({TicketsWithIterationsMeta.reply_id} IS NULL OR {TicketsWithIterationsMeta.reply_id} NOT IN ('qwe','asd'))",
+            f"AND ({TicketsWithLicensesMeta.reply_id} IS NULL OR {TicketsWithLicensesMeta.reply_id} NOT IN ('qwe','asd'))",
         ),
         (
             MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND ({TicketsWithIterationsMeta.reply_id} IS NULL OR {TicketsWithIterationsMeta.reply_id} NOT IN ('qwe'))",
+            f"AND ({TicketsWithLicensesMeta.reply_id} IS NULL OR {TicketsWithLicensesMeta.reply_id} NOT IN ('qwe'))",
         ),
     ]
 )
@@ -218,29 +218,29 @@ def test_generate_reply_types_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.component_id} IS NULL)',
+            f'AND ({TicketsWithLicensesMeta.component_id} IS NULL)',
         ),
         (
             MockFilterParametersNode(include=True, values=[
                 'qwe',
                 'asd',
             ]),
-            f"AND {TicketsWithIterationsMeta.component_id} IN ('qwe','asd')",
+            f"AND {TicketsWithLicensesMeta.component_id} IN ('qwe','asd')",
         ),
         (
             MockFilterParametersNode(include=True, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.component_id} IN ('qwe')",
+            f"AND {TicketsWithLicensesMeta.component_id} IN ('qwe')",
         ),
         (
             MockFilterParametersNode(include=False, values=[
                 'qwe',
                 'asd',
             ]),
-            f"AND ({TicketsWithIterationsMeta.component_id} IS NULL OR {TicketsWithIterationsMeta.component_id} NOT IN ('qwe','asd'))",
+            f"AND ({TicketsWithLicensesMeta.component_id} IS NULL OR {TicketsWithLicensesMeta.component_id} NOT IN ('qwe','asd'))",
         ),
         (
             MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND ({TicketsWithIterationsMeta.component_id} IS NULL OR {TicketsWithIterationsMeta.component_id} NOT IN ('qwe'))",
+            f"AND ({TicketsWithLicensesMeta.component_id} IS NULL OR {TicketsWithLicensesMeta.component_id} NOT IN ('qwe'))",
         ),
     ]
 )
@@ -261,29 +261,29 @@ def test_generate_components_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.feature_id} IS NULL)',
+            f'AND ({TicketsWithLicensesMeta.feature_id} IS NULL)',
         ),
         (
             MockFilterParametersNode(include=True, values=[
                 'qwe',
                 'asd',
             ]),
-            f"AND {TicketsWithIterationsMeta.feature_id} IN ('qwe','asd')",
+            f"AND {TicketsWithLicensesMeta.feature_id} IN ('qwe','asd')",
         ),
         (
             MockFilterParametersNode(include=True, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.feature_id} IN ('qwe')",
+            f"AND {TicketsWithLicensesMeta.feature_id} IN ('qwe')",
         ),
         (
             MockFilterParametersNode(include=False, values=[
                 'qwe',
                 'asd',
             ]),
-            f"AND ({TicketsWithIterationsMeta.feature_id} IS NULL OR {TicketsWithIterationsMeta.feature_id} NOT IN ('qwe','asd'))",
+            f"AND ({TicketsWithLicensesMeta.feature_id} IS NULL OR {TicketsWithLicensesMeta.feature_id} NOT IN ('qwe','asd'))",
         ),
         (
             MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND ({TicketsWithIterationsMeta.feature_id} IS NULL OR {TicketsWithIterationsMeta.feature_id} NOT IN ('qwe'))",
+            f"AND ({TicketsWithLicensesMeta.feature_id} IS NULL OR {TicketsWithLicensesMeta.feature_id} NOT IN ('qwe'))",
         ),
     ]
 )
@@ -304,23 +304,23 @@ def test_generate_features_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.license_status} IS NULL)',
+            f'AND ({TicketsWithLicensesMeta.license_status} IS NULL)',
         ),
         (
             MockFilterParametersNode(include=True, values=[1, 2]),
-            f'AND {TicketsWithIterationsMeta.license_status} IN (1,2)'
+            f'AND {TicketsWithLicensesMeta.license_status} IN (1,2)'
         ),
         (
             MockFilterParametersNode(include=True, values=[1]),
-            f'AND {TicketsWithIterationsMeta.license_status} IN (1)'
+            f'AND {TicketsWithLicensesMeta.license_status} IN (1)'
         ),
         (
             MockFilterParametersNode(include=False, values=[1, 2]),
-            f'AND ({TicketsWithIterationsMeta.license_status} IS NULL OR {TicketsWithIterationsMeta.license_status} NOT IN (1,2))'
+            f'AND ({TicketsWithLicensesMeta.license_status} IS NULL OR {TicketsWithLicensesMeta.license_status} NOT IN (1,2))'
         ),
         (
             MockFilterParametersNode(include=False, values=[1]),
-            f'AND ({TicketsWithIterationsMeta.license_status} IS NULL OR {TicketsWithIterationsMeta.license_status} NOT IN (1))'
+            f'AND ({TicketsWithLicensesMeta.license_status} IS NULL OR {TicketsWithLicensesMeta.license_status} NOT IN (1))'
         ),
     ]
 )
@@ -341,23 +341,23 @@ def test_generate_license_status_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.conversion_status} IS NULL)',
+            f'AND ({TicketsWithLicensesMeta.conversion_status} IS NULL)',
         ),
         (
             MockFilterParametersNode(include=True, values=[1, 2]),
-            f'AND {TicketsWithIterationsMeta.conversion_status} IN (1,2)'
+            f'AND {TicketsWithLicensesMeta.conversion_status} IN (1,2)'
         ),
         (
             MockFilterParametersNode(include=True, values=[1]),
-            f'AND {TicketsWithIterationsMeta.conversion_status} IN (1)'
+            f'AND {TicketsWithLicensesMeta.conversion_status} IN (1)'
         ),
         (
             MockFilterParametersNode(include=False, values=[1, 2]),
-            f'AND ({TicketsWithIterationsMeta.conversion_status} IS NULL OR {TicketsWithIterationsMeta.conversion_status} NOT IN (1,2))'
+            f'AND ({TicketsWithLicensesMeta.conversion_status} IS NULL OR {TicketsWithLicensesMeta.conversion_status} NOT IN (1,2))'
         ),
         (
             MockFilterParametersNode(include=False, values=[1]),
-            f'AND ({TicketsWithIterationsMeta.conversion_status} IS NULL OR {TicketsWithIterationsMeta.conversion_status} NOT IN (1))'
+            f'AND ({TicketsWithLicensesMeta.conversion_status} IS NULL OR {TicketsWithLicensesMeta.conversion_status} NOT IN (1))'
         ),
     ]
 )
@@ -378,23 +378,23 @@ def test_generate_conversion_status_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.platforms} IS NULL)',
+            f'AND ({TicketsWithLicensesMeta.platforms} IS NULL)',
         ),
         (
             MockFilterParametersNode(include=True, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.platforms} LIKE '%p1%' OR {TicketsWithIterationsMeta.platforms} LIKE '%p2%')"
+            f"AND ({TicketsWithLicensesMeta.platforms} LIKE '%p1%' OR {TicketsWithLicensesMeta.platforms} LIKE '%p2%')"
         ),
         (
             MockFilterParametersNode(include=True, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.platforms} LIKE '%p1%')"
+            f"AND ({TicketsWithLicensesMeta.platforms} LIKE '%p1%')"
         ),
         (
             MockFilterParametersNode(include=False, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.platforms} IS NULL OR NOT ({TicketsWithIterationsMeta.platforms} LIKE '%p1%' OR {TicketsWithIterationsMeta.platforms} LIKE '%p2%'))"
+            f"AND ({TicketsWithLicensesMeta.platforms} IS NULL OR NOT ({TicketsWithLicensesMeta.platforms} LIKE '%p1%' OR {TicketsWithLicensesMeta.platforms} LIKE '%p2%'))"
         ),
         (
             MockFilterParametersNode(include=False, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.platforms} IS NULL OR NOT ({TicketsWithIterationsMeta.platforms} LIKE '%p1%'))"
+            f"AND ({TicketsWithLicensesMeta.platforms} IS NULL OR NOT ({TicketsWithLicensesMeta.platforms} LIKE '%p1%'))"
         ),
     ]
 )
@@ -415,23 +415,23 @@ def test_generate_platforms_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.products} IS NULL)',
+            f'AND ({TicketsWithLicensesMeta.products} IS NULL)',
         ),
         (
             MockFilterParametersNode(include=True, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.products} LIKE '%p1%' OR {TicketsWithIterationsMeta.products} LIKE '%p2%')"
+            f"AND ({TicketsWithLicensesMeta.products} LIKE '%p1%' OR {TicketsWithLicensesMeta.products} LIKE '%p2%')"
         ),
         (
             MockFilterParametersNode(include=True, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.products} LIKE '%p1%')"
+            f"AND ({TicketsWithLicensesMeta.products} LIKE '%p1%')"
         ),
         (
             MockFilterParametersNode(include=False, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.products} IS NULL OR NOT ({TicketsWithIterationsMeta.products} LIKE '%p1%' OR {TicketsWithIterationsMeta.products} LIKE '%p2%'))"
+            f"AND ({TicketsWithLicensesMeta.products} IS NULL OR NOT ({TicketsWithLicensesMeta.products} LIKE '%p1%' OR {TicketsWithLicensesMeta.products} LIKE '%p2%'))"
         ),
         (
             MockFilterParametersNode(include=False, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.products} IS NULL OR NOT ({TicketsWithIterationsMeta.products} LIKE '%p1%'))"
+            f"AND ({TicketsWithLicensesMeta.products} IS NULL OR NOT ({TicketsWithLicensesMeta.products} LIKE '%p1%'))"
         ),
     ]
 )

@@ -1,7 +1,7 @@
 from sql_queries.index import CustomersActivityDBIndex
 from sql_queries.customers_activity.meta import (
     ComponentsFeaturesMeta,
-    TicketsWithIterationsMeta,
+    TicketsWithLicensesMeta,
     EmployeesIterations,
 )
 
@@ -24,14 +24,14 @@ class IndexCreationExpressionsRepository:
                     ]
                 ),
             ],
-        CustomersActivityDBIndex.get_tickets_with_iterations_name():
+        CustomersActivityDBIndex.get_tickets_with_licenses_name():
             [
                 _create_index_expression(
                     tbl=CustomersActivityDBIndex.
-                    get_tickets_with_iterations_name(),
+                    get_tickets_with_licenses_name(),
                     cols=[
-                        TicketsWithIterationsMeta.creation_date,
-                        TicketsWithIterationsMeta.tribe_id,
+                        TicketsWithLicensesMeta.creation_date,
+                        TicketsWithLicensesMeta.tribe_id,
                     ]
                 ),
             ],

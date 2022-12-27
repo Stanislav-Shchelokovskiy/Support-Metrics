@@ -5,7 +5,7 @@ from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.customers_activity.meta import (
     CustomersGroupsMeta,
     TicketsTagsMeta,
-    TicketsWithIterationsMeta,
+    TicketsWithLicensesMeta,
     TicketsTypesMeta,
     ReplyTypesMeta,
     ComponentsFeaturesMeta,
@@ -140,30 +140,30 @@ class EmployeesIterationsRepository(Repository):
         return EmployeesIterations.get_values()
 
 
-class TicketsWithIterationsRepository(Repository):
+class TicketsWithLicensesRepository(Repository):
     """
-    Loads customers with their tickets and iterations.
+    Loads customers with their tickets and licenses.
     """
 
     def get_prep_queries(self, kwargs: dict) -> list[SqlQuery]:
         return [
             self.sql_query_type(
                 query_file_path=CustomersActivitySqlPathIndex.
-                get_create_tickets_with_iterations_and_licenses_temp_table_path(),
+                get_create_tickets_with_licenses_temp_table_path(),
                 format_params={},
             ),
             self.sql_query_type(
                 query_file_path=CustomersActivitySqlPathIndex.
-                get_fill_tickets_with_iterations_path(),
+                get_fill_tickets_with_licenses_path(),
                 format_params=kwargs,
             ),
         ]
 
     def get_main_query_path(self, kwargs: dict) -> str:
-        return CustomersActivitySqlPathIndex.get_tickets_with_iterations_path()
+        return CustomersActivitySqlPathIndex.get_tickets_with_licenses_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
-        return TicketsWithIterationsMeta.get_attrs()
+        return TicketsWithLicensesMeta.get_attrs()
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return TicketsWithIterationsMeta.get_values()
+        return TicketsWithLicensesMeta.get_values()
