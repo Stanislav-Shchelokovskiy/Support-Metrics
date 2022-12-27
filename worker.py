@@ -20,9 +20,9 @@ app = Celery(
 def on_startup(sender, **kwargs):
     tasks = [
         'customers_activity_load_tickets_types',
-       # 'customers_activity_load_license_statuses',
-      #  'customers_activity_load_conversion_statuses',
-     #   'update_customers_activity',
+        'customers_activity_load_license_statuses',
+        'customers_activity_load_conversion_statuses',
+        'update_customers_activity',
     ]
     sender_app: Celery = sender.app
     with sender_app.connection() as conn:
@@ -53,7 +53,6 @@ def update_customers_activity(**kwargs):
     app.send_task(name='customers_activity_load_components_features')
     app.send_task(name='customers_activity_load_platforms_products')
     app.send_task(name='customers_activity_load_tickets_with_iterations')
-    app.send_task(name='customers_activity_load_employees_positions')
     app.send_task(name='customers_activity_load_employees_iterations')
 
 
@@ -127,14 +126,6 @@ def customers_activity_load_conversion_statuses(self, **kwargs):
     return run_retriable_task(
         self,
         customers_activity.load_conversion_statuses,
-    )
-
-
-@app.task(name='customers_activity_load_employees_positions', bind=True)
-def customers_activity_load_employees_positions(self, **kwargs):
-    return run_retriable_task(
-        self,
-        customers_activity.load_employees_positions,
     )
 
 

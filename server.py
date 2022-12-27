@@ -145,7 +145,7 @@ def customers_activity_get_conversion_statuses(params: ConversionStatusParams):
     )
 
 
-@app.post('/get_positions')
+@app.get('/get_positions')
 def customers_activity_get_positions():
     return get_response(
         json_data=server_repository.customers_activity_get_positions()

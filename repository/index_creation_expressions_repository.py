@@ -38,11 +38,19 @@ class IndexCreationExpressionsRepository:
         CustomersActivityDBIndex.get_employees_iterations_name():
             [
                 _create_index_expression(
-                    tbl=CustomersActivityDBIndex.
-                    get_employees_iterations_name(),
+                    tbl=CustomersActivityDBIndex.get_employees_iterations_name(
+                    ),
                     cols=[
                         EmployeesIterations.ticket_id,
                         EmployeesIterations.pos_id,
+                    ]
+                ),
+                _create_index_expression(
+                    tbl=CustomersActivityDBIndex.get_employees_iterations_name(
+                    ),
+                    cols=[
+                        EmployeesIterations.pos_id,
+                        EmployeesIterations.pos_name,
                     ]
                 ),
             ],

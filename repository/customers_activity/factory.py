@@ -7,7 +7,6 @@ from repository.customers_activity.remote.repository import (
     LicenseStatusesRepository,
     ConversionStatusesRepository,
     PlatformsProductsRepository,
-    PositionsRepository,
     EmployeesIterationsRepository,
 )
 from repository.customers_activity.local.repository import (
@@ -57,9 +56,6 @@ class SqlServerFactory:
 
     def create_platforms_products_repository(self, **kwargs) -> PlatformsProductsRepository:
         return PlatformsProductsRepository()
-
-    def create_positions_repository(self, **kwargs)-> PositionsRepository:
-        return PositionsRepository()
 
     def create_employees_iterations_repository(self, **kwargs)-> EmployeesIterationsRepository:
         return EmployeesIterationsRepository()

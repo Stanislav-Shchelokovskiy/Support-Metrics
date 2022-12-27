@@ -22,10 +22,6 @@ class ReplyTypesMeta(KnotMeta):
     pass
 
 
-class PositionsMeta(KnotMeta):
-    pass
-
-
 class LicenseStatusesMeta(KnotMeta):
     pass
 
@@ -67,9 +63,21 @@ class TicketsWithIterationsMainMeta(MetaData):
     conversion_status = 'conversion_status'
 
 
+class EmployeesIterations(MetaData):
+    ticket_id = 'ticket_id'
+    post_id = 'post_id'
+    scid = 'scid'
+    crmid = 'crmid'
+    tribe_id = 'tribe_id'
+    pos_id = 'pos_id'
+    name = 'name'
+    pos_name = 'pos_name'
+    tribe_name = 'tribe_name'
+
+
 class TicketsWithIterationsMeta(TicketsWithIterationsMainMeta):
     tribe_id = TribeAwaredMeta.tribe_id
-    ticket_id = 'ticket_id'
+    ticket_id = EmployeesIterations.ticket_id
     ticket_type = 'ticket_type'
     user_groups = 'user_groups'
     ticket_tags = 'ticket_tags'
@@ -94,15 +102,3 @@ class TicketsWithIterationsRawMeta(TicketsWithIterationsMainMeta):
     reply = 'reply'
     component = 'component'
     feature = 'feature'
-
-
-class EmployeesIterations(MetaData):
-    ticket_id = 'ticket_id'
-    post_id = 'post_id'
-    scid = 'scid'
-    crmid = 'crmid'
-    tribe_id = 'tribe_id'
-    pos_id = 'pos_id'
-    name = 'name'
-    pos_name = 'pos_name'
-    tribe_name = 'tribe_name'

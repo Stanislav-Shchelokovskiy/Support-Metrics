@@ -1,5 +1,5 @@
 import pytest
-from repository.customers_activity.local.sql_query_params_generator import CATSqlFilterClauseGenerator
+from repository.customers_activity.local.sql_query_params_generator.cat import CATSqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import ComponentsFeaturesMeta
 
 

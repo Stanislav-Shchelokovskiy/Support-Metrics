@@ -1,4 +1,3 @@
-import repository.customers_activity.local.tickets_with_iterations_path_selector as tickets_with_iterations_path_selector
 from toolbox.sql.repository import SqliteRepository
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
@@ -18,14 +17,12 @@ from sql_queries.customers_activity.meta import (
     LicenseStatusesMeta,
     ConversionStatusesMeta,
     PlatformsProductsMeta,
-    PositionsMeta,
+    EmployeesIterations,
 )
-from repository.customers_activity.local.sql_query_params_generator import (
-    CATSqlFilterClauseGenerator,
-    TicketsWithIterationsSqlFilterClauseGenerator,
-    ConversionStatusesSqlFilterClauseGenerator,
-    PlatformsProductsSqlFilterClauseGenerator,
-)
+from repository.customers_activity.local.sql_query_params_generator.cat import CATSqlFilterClauseGenerator
+from repository.customers_activity.local.sql_query_params_generator.conversion_statuses import ConversionStatusesSqlFilterClauseGenerator
+from repository.customers_activity.local.sql_query_params_generator.platforms_products import PlatformsProductsSqlFilterClauseGenerator
+from repository.customers_activity.local.sql_query_params_generator.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
 
 
 # yapf: disable
@@ -138,14 +135,14 @@ class PositionsRepository(SqliteRepository):
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
-            'DISTINCT': '',
+            'DISTINCT': 'DISTINCT',
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
-            'table_name': CustomersActivityDBIndex.get_positions_name(),
+            'table_name': CustomersActivityDBIndex.get_employees_iterations_name(),
             'filter_clause': '',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return PositionsMeta.get_values()
+        return [EmployeesIterations.pos_id, EmployeesIterations.pos_name]
 
 
 class TicketsTagsRepository(SqliteRepository):
@@ -298,13 +295,15 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
     """
 
     def get_main_query_path(self, kwargs: dict) -> str:
-        return tickets_with_iterations_path_selector.select_tickets_with_iterations_raw_path(kwargs)
+        return CustomersActivitySqlPathIndex.get_tickets_with_iterations_raw_path()
 
     def get_general_format_params(self, kwargs:dict)-> dict[str,str]:
         generator = TicketsWithIterationsSqlFilterClauseGenerator
         return {
-            'table_name': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
+            'tickets_with_iterations_table': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
+            'employees_iterations_table': CustomersActivityDBIndex.get_employees_iterations_name(),
             TicketsWithIterationsMeta.creation_date: TicketsWithIterationsMeta.creation_date,
+            TicketsWithIterationsMeta.ticket_id: TicketsWithIterationsMeta.ticket_id,
             'range_start': kwargs['range_start'],
             'range_end': kwargs['range_end'],
             'customer_groups_filter': generator.generate_customer_groups_filter(params=kwargs['customers_groups']),
@@ -318,6 +317,7 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
             'conversion_status_filter' : generator.generate_conversion_status_filter(params=kwargs['conversion_statuses']),
             'platforms_filter': generator.generate_platforms_filter(params=kwargs['platforms_ids']),
             'products_filter': generator.generate_products_filter(params=kwargs['products_ids']),
+            'positions_filter': generator.generate_positions_filter(params=kwargs['positions_ids'])
         }
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
@@ -341,7 +341,7 @@ class TicketsWithIterationsAggregatesRepository(TicketsWithIterationsRawReposito
     """
 
     def get_main_query_path(self, kwargs: dict) -> str:
-        return tickets_with_iterations_path_selector.select_tickets_with_iterations_aggregates_path(kwargs)
+        return CustomersActivitySqlPathIndex.get_tickets_with_iterations_aggregates_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {

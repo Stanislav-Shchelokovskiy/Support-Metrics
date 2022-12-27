@@ -88,10 +88,4 @@ def load_conversion_statuses():
     df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_conversion_statuses_name(): df})
 
-
-def load_employees_positions():
-    repository = RepositoryFactory.customers_activity.remote.create_positions_repository()
-    df = repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_positions_name(): df})
-
 # yapf: enable

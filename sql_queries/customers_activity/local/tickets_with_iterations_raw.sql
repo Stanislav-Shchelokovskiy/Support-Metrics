@@ -27,17 +27,22 @@ SELECT
              component_id = t.component_id AND
              feature_id = t.feature_id
       LIMIT 1 ) AS {feature}
-FROM {table_name} AS t
+FROM {tickets_with_iterations_table} AS t
+    INNER JOIN (
+		SELECT {ticket_id}
+		FROM {employees_iterations_table}
+    {positions_filter} 
+    ) AS ei ON ei.ticket_id = t.ticket_id
 WHERE 
-      {creation_date} BETWEEN '{range_start}' AND '{range_end}'
-      {tribes_fitler}
-      {customer_groups_filter}
-      {ticket_types_filter}
-      {ticket_tags_filter}
-      {reply_types_filter}
-      {components_filter}
-      {features_filter}
-      {license_status_filter}
-      {conversion_status_filter}
-      {platforms_filter}
-      {products_filter}
+    {creation_date} BETWEEN '{range_start}' AND '{range_end}'
+    {tribes_fitler}
+    {customer_groups_filter}
+    {ticket_types_filter}
+    {ticket_tags_filter}
+    {reply_types_filter}
+    {components_filter}
+    {features_filter}
+    {license_status_filter}
+    {conversion_status_filter}
+    {platforms_filter}
+    {products_filter}
