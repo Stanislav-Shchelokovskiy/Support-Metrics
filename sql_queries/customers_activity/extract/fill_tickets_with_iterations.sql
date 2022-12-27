@@ -100,7 +100,7 @@ tickets_with_iterations AS (
 		CAST(cat.ControlId	AS UNIQUEIDENTIFIER) AS component_id,
 		CAST(cat.FeatureId	AS UNIQUEIDENTIFIER) AS feature_id
 	FROM (
-			SELECT	*
+			SELECT	Id, TicketSCID, TicketType, Created, OwnerGuid, ISNULL(ProcessingSupportTeam, SupportTeam) AS SupportTeam
 			FROM 	DXStatisticsV2.dbo.TicketInfos
 			WHERE 	Created BETWEEN @start_date AND @end_date ) AS ti
 		OUTER APPLY (
@@ -135,11 +135,11 @@ tickets_with_iterations AS (
 			SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), CAST(Value AS UNIQUEIDENTIFIER)), ' ') AS ids
 			FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
 			WHERE	Name = 'ProductId' AND Ticket_Id = ti.Id) AS products
-		LEFT JOIN DXStatisticsV2.dbo.TribeTeamMapping AS ttm ON ttm.SupportTeam = ISNULL(ti.ProcessingSupportTeam, ti.SupportTeam)
-		CROSS APPLY (
-			SELECT	TOP 1 Id, Name
-			FROM	CRM.dbo.Tribes
-			WHERE	Id = ttm.Tribe ) AS tribes
+		OUTER APPLY(
+			SELECT  TOP 1 t.Id, t.Name
+			FROM	DXStatisticsV2.dbo.TribeTeamMapping AS ttm
+					INNER JOIN CRM.dbo.Tribes AS t ON t.Id = ttm.Tribe
+			WHERE   ttm.SupportTeam = ti.SupportTeam ) AS tribes
 		LEFT JOIN ticket_tags AS tt ON tt.ticket_id = ti.Id
 )
 
