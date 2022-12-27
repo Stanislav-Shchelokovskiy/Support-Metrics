@@ -2,12 +2,12 @@ from repository.customers_activity.remote.repository import (
     GroupsRepository,
     TagsRepository,
     TicketsWithIterationsRepository,
-    TicketsTypesRepository,
     RepliesTypesRepository,
     ComponentsFeaturesRepository,
     LicenseStatusesRepository,
     ConversionStatusesRepository,
     PlatformsProductsRepository,
+    EmployeesIterationsRepository,
 )
 from repository.customers_activity.local.repository import (
     TicketsWithIterationsPeriodRepository as
@@ -26,6 +26,7 @@ from repository.customers_activity.local.repository import (
     ConversionStatusesRepository as SqliteConversionStatusesRepository,
     PlatformsRepository as SqlitePlatformsRepository,
     ProductsRepository as SqliteProductsRepository,
+    PositionsRepository as SqlitePositionsRepository,
 )
 
 
@@ -47,9 +48,6 @@ class SqlServerFactory:
     def create_tickets_with_iterations_repository(self, **kwargs) -> TicketsWithIterationsRepository:
         return TicketsWithIterationsRepository()
 
-    def create_tickets_types_repository(self, **kwargs) -> TicketsTypesRepository:
-        return TicketsTypesRepository()
-
     def create_license_statuses_repository(self, **kwargs) -> LicenseStatusesRepository:
         return LicenseStatusesRepository()
 
@@ -58,6 +56,9 @@ class SqlServerFactory:
 
     def create_platforms_products_repository(self, **kwargs) -> PlatformsProductsRepository:
         return PlatformsProductsRepository()
+
+    def create_employees_iterations_repository(self, **kwargs)-> EmployeesIterationsRepository:
+        return EmployeesIterationsRepository()
 
 
 class SqliteFactory:
@@ -100,6 +101,9 @@ class SqliteFactory:
 
     def create_tickets_with_iterations_aggregates_repository(self, **kwargs) -> SqliteTicketsWithIterationsAggregatesRepository:
         return SqliteTicketsWithIterationsAggregatesRepository()
+
+    def create_positions_repository(self, **kwargs) -> SqlitePositionsRepository:
+        return SqlitePositionsRepository()
 # yapf: enable
 
 

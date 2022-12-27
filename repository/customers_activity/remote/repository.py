@@ -11,6 +11,7 @@ from sql_queries.customers_activity.meta import (
     ComponentsFeaturesMeta,
     ConversionStatusesMeta,
     PlatformsProductsMeta,
+    EmployeesIterations,
 )
 
 
@@ -59,29 +60,6 @@ class RepliesTypesRepository(Repository):
         return ReplyTypesMeta.get_values()
 
 
-class TicketsTypesRepository(Repository):
-
-    def get_data(self, **kwargs) -> DataFrame:
-        return DataFrame(
-            data={
-                TicketsTypesMeta.id: [1, 2, 3, 4, 5, 6, 7, 8, 11, 122],
-                TicketsTypesMeta.name:
-                    [
-                        'Question',
-                        'Bug',
-                        'Suggestion',
-                        'KB',
-                        'Example',
-                        'Breaking Change',
-                        'LSC',
-                        'Security Advisory',
-                        'Redirect',
-                        'Internal request',
-                    ]
-            }
-        )
-
-
 class LicenseStatusesRepository(Repository):
 
     def get_data(self, **kwargs) -> DataFrame:
@@ -107,13 +85,12 @@ class ConversionStatusesRepository(Repository):
             data={
                 ConversionStatusesMeta.license_status_id: [0, 3, 4, 4],
                 ConversionStatusesMeta.id: [5, 6, 5, 6],
-                ConversionStatusesMeta.name:
-                    [
-                        'Paid',
-                        'Free',
-                        'Paid',
-                        'Free',
-                    ]
+                ConversionStatusesMeta.name: [
+                    'Paid',
+                    'Free',
+                    'Paid',
+                    'Free',
+                ]
             }
         )
 
@@ -148,6 +125,21 @@ class PlatformsProductsRepository(Repository):
         return PlatformsProductsMeta.get_values()
 
 
+class EmployeesIterationsRepository(Repository):
+    """
+    Loads employee iterations.
+    """
+
+    def get_main_query_path(self, kwargs: dict) -> str:
+        return CustomersActivitySqlPathIndex.get_employees_iterations_path()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return {**kwargs, **EmployeesIterations.get_attrs()}
+
+    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+        return EmployeesIterations.get_values()
+
+
 class TicketsWithIterationsRepository(Repository):
     """
     Loads customers with their tickets and iterations.
@@ -157,8 +149,7 @@ class TicketsWithIterationsRepository(Repository):
         return [
             self.sql_query_type(
                 query_file_path=CustomersActivitySqlPathIndex.
-                get_create_tickets_with_iterations_and_licenses_temp_table_path(
-                ),
+                get_create_tickets_with_iterations_and_licenses_temp_table_path(),
                 format_params={},
             ),
             self.sql_query_type(

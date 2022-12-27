@@ -19,9 +19,9 @@ app = Celery(
 @worker_ready.connect
 def on_startup(sender, **kwargs):
     tasks = [
-        'customers_activity_fill_tickets_types',
-        'customers_activity_fill_license_statuses',
-        'customers_activity_fill_conversion_statuses',
+        'customers_activity_load_tickets_types',
+        'customers_activity_load_license_statuses',
+        'customers_activity_load_conversion_statuses',
         'update_customers_activity',
     ]
     sender_app: Celery = sender.app
@@ -53,6 +53,7 @@ def update_customers_activity(**kwargs):
     app.send_task(name='customers_activity_load_components_features')
     app.send_task(name='customers_activity_load_platforms_products')
     app.send_task(name='customers_activity_load_tickets_with_iterations')
+    app.send_task(name='customers_activity_load_employees_iterations')
 
 
 @app.task(name='customers_activity_load_tags', bind=True)
@@ -104,27 +105,36 @@ def customers_activity_load_tickets_with_iterations(self, **kwargs):
     )
 
 
-@app.task(name='customers_activity_fill_tickets_types', bind=True)
-def customers_activity_fill_tickets_types(self, **kwargs):
+@app.task(name='customers_activity_load_tickets_types', bind=True)
+def customers_activity_load_tickets_types(self, **kwargs):
     return run_retriable_task(
         self,
-        customers_activity.fill_tickets_types,
+        customers_activity.load_tickets_types,
     )
 
 
-@app.task(name='customers_activity_fill_license_statuses', bind=True)
-def customers_activity_fill_license_statuses(self, **kwargs):
+@app.task(name='customers_activity_load_license_statuses', bind=True)
+def customers_activity_load_license_statuses(self, **kwargs):
     return run_retriable_task(
         self,
-        customers_activity.fill_license_statuses,
+        customers_activity.load_license_statuses,
     )
 
 
-@app.task(name='customers_activity_fill_conversion_statuses', bind=True)
-def customers_activity_fill_conversion_statuses(self, **kwargs):
+@app.task(name='customers_activity_load_conversion_statuses', bind=True)
+def customers_activity_load_conversion_statuses(self, **kwargs):
     return run_retriable_task(
         self,
-        customers_activity.fill_conversion_statuses,
+        customers_activity.load_conversion_statuses,
+    )
+
+
+@app.task(name='customers_activity_load_employees_iterations', bind=True)
+def customers_activity_load_employees_iterations(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.load_employees_iterations,
+        **CustomersActivityTasksConfig.get_tickets_with_iterations_period(),
     )
 
 

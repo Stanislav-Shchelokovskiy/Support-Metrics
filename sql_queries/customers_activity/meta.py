@@ -56,15 +56,28 @@ class TicketsWithIterationsPeriodMeta(MetaData):
 class TicketsWithIterationsMainMeta(MetaData):
     user_id = 'user_id'
     tribe_name = 'tribe_name'
-    scid = 'scid'
+    ticket_scid = 'ticket_scid'
     creation_date = 'creation_date'
     iterations = 'iterations'
     license_status = 'license_status'
     conversion_status = 'conversion_status'
 
 
+class EmployeesIterations(MetaData):
+    ticket_id = 'ticket_id'
+    post_id = 'post_id'
+    scid = 'scid'
+    crmid = 'crmid'
+    tribe_id = 'tribe_id'
+    pos_id = 'pos_id'
+    name = 'name'
+    pos_name = 'pos_name'
+    tribe_name = 'tribe_name'
+
+
 class TicketsWithIterationsMeta(TicketsWithIterationsMainMeta):
     tribe_id = TribeAwaredMeta.tribe_id
+    ticket_id = EmployeesIterations.ticket_id
     ticket_type = 'ticket_type'
     user_groups = 'user_groups'
     ticket_tags = 'ticket_tags'
@@ -77,7 +90,7 @@ class TicketsWithIterationsMeta(TicketsWithIterationsMainMeta):
 
 class TicketsWithIterationsAggregatesMeta(MetaData):
     creation_date = TicketsWithIterationsMeta.creation_date
-    scid = TicketsWithIterationsMeta.scid
+    ticket_scid = TicketsWithIterationsMeta.ticket_scid
     iterations = TicketsWithIterationsMeta.iterations
     user_id = TicketsWithIterationsMeta.user_id
     period = 'period'

@@ -17,13 +17,12 @@ from sql_queries.customers_activity.meta import (
     LicenseStatusesMeta,
     ConversionStatusesMeta,
     PlatformsProductsMeta,
+    EmployeesIterations,
 )
-from repository.customers_activity.local.sql_query_params_generator import (
-    CATSqlFilterClauseGenerator,
-    TicketsWithIterationsSqlFilterClauseGenerator,
-    ConversionStatusesSqlFilterClauseGenerator,
-    PlatformsProductsSqlFilterClauseGenerator,
-)
+from repository.customers_activity.local.sql_query_params_generator.cat import CATSqlFilterClauseGenerator
+from repository.customers_activity.local.sql_query_params_generator.conversion_statuses import ConversionStatusesSqlFilterClauseGenerator
+from repository.customers_activity.local.sql_query_params_generator.platforms_products import PlatformsProductsSqlFilterClauseGenerator
+from repository.customers_activity.local.sql_query_params_generator.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
 
 
 # yapf: disable
@@ -55,7 +54,7 @@ class CustomersGroupsRepository(SqliteRepository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
             'DISTINCT': '',
-            'columns': ', '.join(CustomersGroupsMeta.get_values()),
+            'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_customers_groups_name(),
             'filter_clause': '',
         }
@@ -75,7 +74,7 @@ class TicketsTypesRepository(SqliteRepository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
             'DISTINCT': '',
-            'columns': ', '.join(TicketsTypesMeta.get_values()),
+            'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_tickets_types_name(),
             'filter_clause': '',
         }
@@ -95,7 +94,7 @@ class LicenseStatusesRepository(SqliteRepository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
             'DISTINCT': '',
-            'columns': ', '.join(LicenseStatusesMeta.get_values()),
+            'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_license_statuses_name(),
             'filter_clause': '',
         }
@@ -114,8 +113,8 @@ class ConversionStatusesRepository(SqliteRepository):
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
-            'DISTINCT': 'DISTINCT',
-            'columns': ', '.join(ConversionStatusesMeta.get_values()),
+            'DISTINCT': '',
+            'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_conversion_statuses_name(),
             'filter_clause': ConversionStatusesSqlFilterClauseGenerator.generate_filter(
                     license_status_ids=kwargs['license_status_ids']
@@ -124,6 +123,26 @@ class ConversionStatusesRepository(SqliteRepository):
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return ConversionStatusesMeta.get_values()
+
+
+class PositionsRepository(SqliteRepository):
+    """
+    Interface to a local table storing available positions.
+    """
+
+    def get_main_query_path(self, kwargs: dict) -> str:
+        return CustomersActivitySqlPathIndex.get_general_select_path()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return {
+            'DISTINCT': 'DISTINCT',
+            'columns': ', '.join(self.get_must_have_columns(kwargs)),
+            'table_name': CustomersActivityDBIndex.get_employees_iterations_name(),
+            'filter_clause': '',
+        }
+
+    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+        return [EmployeesIterations.pos_id, EmployeesIterations.pos_name]
 
 
 class TicketsTagsRepository(SqliteRepository):
@@ -137,7 +156,7 @@ class TicketsTagsRepository(SqliteRepository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
             'DISTINCT': '',
-            'columns': ', '.join(TicketsTagsMeta.get_values()),
+            'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_tickets_tags_name(),
             'filter_clause': '',
         }
@@ -157,7 +176,7 @@ class ReplyTypesRepository(SqliteRepository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
             'DISTINCT': '',
-            'columns': ', '.join(ReplyTypesMeta.get_values()),
+            'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_replies_types_name(),
             'filter_clause': '',
         }
@@ -177,12 +196,7 @@ class ComponentsRepository(SqliteRepository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
             'DISTINCT': 'DISTINCT',
-            'columns': ', '.join(
-                    [
-                        ComponentsFeaturesMeta.component_id,
-                        ComponentsFeaturesMeta.component_name,
-                    ]
-                ),
+            'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_components_features_name(),
             'filter_clause': CATSqlFilterClauseGenerator.generate_components_filter(
                     tribe_ids=kwargs['tribe_ids']
@@ -208,12 +222,7 @@ class FeaturesRepository(SqliteRepository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
             'DISTINCT': '',
-            'columns': ', '.join(
-                    [
-                        ComponentsFeaturesMeta.feature_id,
-                        ComponentsFeaturesMeta.feature_name,
-                    ]
-                ),
+            'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_components_features_name(),
             'filter_clause': CATSqlFilterClauseGenerator.generate_features_filter(
                     tribe_ids=kwargs['tribe_ids'],
@@ -239,12 +248,7 @@ class PlatformsRepository(SqliteRepository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
             'DISTINCT': 'DISTINCT',
-            'columns': ', '.join(
-                    [
-                        PlatformsProductsMeta.platform_id,
-                        PlatformsProductsMeta.platform_name,
-                    ]
-                ),
+            'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_platforms_products_name(),
             'filter_clause': PlatformsProductsSqlFilterClauseGenerator.generate_platforms_filter(
                     tribe_ids=kwargs['tribe_ids']
@@ -270,12 +274,7 @@ class ProductsRepository(SqliteRepository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
             'DISTINCT': '',
-            'columns': ', '.join(
-                    [
-                        PlatformsProductsMeta.product_id,
-                        PlatformsProductsMeta.product_name,
-                    ]
-                ),
+            'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_platforms_products_name(),
             'filter_clause': PlatformsProductsSqlFilterClauseGenerator.generate_products_filter(
                     tribe_ids=kwargs['tribe_ids'],
@@ -301,8 +300,10 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
     def get_general_format_params(self, kwargs:dict)-> dict[str,str]:
         generator = TicketsWithIterationsSqlFilterClauseGenerator
         return {
-            'table_name': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
+            'tickets_with_iterations_table': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
+            'employees_iterations_table': CustomersActivityDBIndex.get_employees_iterations_name(),
             TicketsWithIterationsMeta.creation_date: TicketsWithIterationsMeta.creation_date,
+            TicketsWithIterationsMeta.ticket_id: TicketsWithIterationsMeta.ticket_id,
             'range_start': kwargs['range_start'],
             'range_end': kwargs['range_end'],
             'customer_groups_filter': generator.generate_customer_groups_filter(params=kwargs['customers_groups']),
@@ -316,6 +317,7 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
             'conversion_status_filter' : generator.generate_conversion_status_filter(params=kwargs['conversion_statuses']),
             'platforms_filter': generator.generate_platforms_filter(params=kwargs['platforms_ids']),
             'products_filter': generator.generate_products_filter(params=kwargs['products_ids']),
+            'positions_filter': generator.generate_positions_filter(params=kwargs['positions_ids'])
         }
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:

@@ -20,7 +20,9 @@ from sql_queries.customers_activity.meta import (
 
 
 tickets_with_iterations_common_params = {
-    'table_name': 'table_name',
+    'tickets_with_iterations_table': 'table_name',
+    'employees_iterations_table': 'employees_iterations_table',
+    'ticket_id': 'ticket_id,',
     'range_start': 'range_start',
     'range_end': 'range_end',
     'tribes_fitler': 'tribes_fitler',
@@ -34,6 +36,7 @@ tickets_with_iterations_common_params = {
     'conversion_status_filter': 'conversion_status_filter',
     'platforms_filter': 'platforms_filter',
     'products_filter': 'products_filter',
+    'positions_filter': 'positions_filter',
 }
 
 

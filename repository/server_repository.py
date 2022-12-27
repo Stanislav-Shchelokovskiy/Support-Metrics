@@ -67,12 +67,17 @@ def customers_activity_get_components(tribe_ids: list[str]) -> str:
     return repository.get_data_json(tribe_ids=tribe_ids,)
 
 
-def customers_activity_get_features(tribe_ids: list[str], component_ids: list[str],) -> str:
+def customers_activity_get_features(tribe_ids: list[str], component_ids: list[str]) -> str:
     repository = RepositoryFactory.customers_activity.local.create_features_repository()
     return repository.get_data_json(
             tribe_ids=tribe_ids,
             component_ids=component_ids,
         )
+
+
+def customers_activity_get_positions() -> str:
+    repository = RepositoryFactory.customers_activity.local.create_positions_repository()
+    return repository.get_data_json()
 
 
 def customers_activity_get_tickets_with_iterations_aggregates(**kwargs) -> str:

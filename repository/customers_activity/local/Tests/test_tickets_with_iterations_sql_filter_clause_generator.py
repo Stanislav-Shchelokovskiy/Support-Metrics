@@ -1,6 +1,9 @@
 import pytest
-from repository.customers_activity.local.sql_query_params_generator import TicketsWithIterationsSqlFilterClauseGenerator
-from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
+from repository.customers_activity.local.sql_query_params_generator.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
+from sql_queries.customers_activity.meta import (
+    TicketsWithIterationsMeta,
+    EmployeesIterations,
+)
 
 
 class MockFilterParametersNode:
@@ -215,7 +218,7 @@ def test_generate_reply_types_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-             f'AND ({TicketsWithIterationsMeta.component_id} IS NULL)',
+            f'AND ({TicketsWithIterationsMeta.component_id} IS NULL)',
         ),
         (
             MockFilterParametersNode(include=True, values=[
@@ -437,5 +440,48 @@ def test_generate_products_filter(
     output: str,
 ):
     assert TicketsWithIterationsSqlFilterClauseGenerator.generate_products_filter(
+        params=input
+    ) == output
+
+
+@pytest.mark.parametrize(
+    'input,output', [
+        (
+            MockFilterParametersNode(include=True, values=[]),
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[]),
+            f'WHERE ({EmployeesIterations.pos_id} IS NULL)',
+        ),
+        (
+            MockFilterParametersNode(include=True, values=[
+                'qwe',
+                'asd',
+            ]),
+            f"WHERE {EmployeesIterations.pos_id} IN ('qwe','asd')",
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['qwe']),
+            f"WHERE {EmployeesIterations.pos_id} IN ('qwe')",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[
+                'qwe',
+                'asd',
+            ]),
+            f"WHERE ({EmployeesIterations.pos_id} IS NULL OR {EmployeesIterations.pos_id} NOT IN ('qwe','asd'))",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['qwe']),
+            f"WHERE ({EmployeesIterations.pos_id} IS NULL OR {EmployeesIterations.pos_id} NOT IN ('qwe'))",
+        ),
+    ]
+)
+def test_generate_positions_filter(
+    input: MockFilterParametersNode,
+    output: str,
+):
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_positions_filter(
         params=input
     ) == output

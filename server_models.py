@@ -30,6 +30,7 @@ class TicketsWithIterationsParams(BaseModel):
     conversion_statuses: FilterParametersNode
     platforms: FilterParametersNode
     products: FilterParametersNode
+    positions: FilterParametersNode
 
 
 class StatAppState(BaseModel):

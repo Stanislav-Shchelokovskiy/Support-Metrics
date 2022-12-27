@@ -4,8 +4,12 @@ DECLARE @end_date   DATE = '{end_date}'
 DECLARE @free_license TINYINT = 6
 DECLARE @paid		  TINYINT = 0
 
-DECLARE @actual_lic_origin     TINYINT = 0
-DECLARE @historical_lic_origin TINYINT = 1
+DECLARE @note			TINYINT = 3
+DECLARE @description	TINYINT = 0
+
+DECLARE @actual_lic_origin		TINYINT = 0
+DECLARE @historical_lic_origin	TINYINT = 1
+
 
 DECLARE @licensed		TINYINT = 0
 DECLARE @expired		TINYINT = 1
@@ -27,12 +31,9 @@ WITH ticket_tags AS (
 ),
 
 enterprise_clients AS (
-	SELECT
-		Customer_Id AS customer_id
-	FROM 
-		DXStatisticsV2.dbo.UserInGroups
-	WHERE 
-		UserGroup_Id = '943B96B1-7C80-11E5-BF27-6470020143F0' --Barclays licensed customers
+	SELECT Customer_Id AS customer_id
+	FROM   DXStatisticsV2.dbo.UserInGroups
+	WHERE  UserGroup_Id = '943B96B1-7C80-11E5-BF27-6470020143F0' --Barclays licensed customers
 ),
 
 licenses_only AS (
@@ -86,7 +87,8 @@ tickets_with_iterations AS (
 		u.FriendlyId				AS user_id,
 		tribes.Id					AS tribe_id,
 		tribes.Name					AS tribe_name,
-		ti.TicketSCID				AS scid,
+		ti.Id						AS ticket_id,
+		ti.TicketSCID				AS ticket_scid,
 		ti.TicketType				AS ticket_type,
 		CAST(ti.Created AS DATE)	AS creation_date,
 		ii.iterations				AS iterations,
@@ -97,10 +99,10 @@ tickets_with_iterations AS (
 		CAST(cat.ReplyId	AS UNIQUEIDENTIFIER) AS reply_id,
 		CAST(cat.ControlId	AS UNIQUEIDENTIFIER) AS component_id,
 		CAST(cat.FeatureId	AS UNIQUEIDENTIFIER) AS feature_id
-	FROM 
-		(SELECT *
-		 FROM 	DXStatisticsV2.dbo.TicketInfos
-		 WHERE 	Created BETWEEN @start_date AND @end_date ) AS ti
+	FROM (
+			SELECT	*
+			FROM 	DXStatisticsV2.dbo.TicketInfos
+			WHERE 	Created BETWEEN @start_date AND @end_date ) AS ti
 		OUTER APPLY (
 			SELECT 	COUNT(TicketId) AS iterations
 			FROM  	DXStatisticsV2.dbo.IterationItems AS ii
@@ -111,7 +113,7 @@ tickets_with_iterations AS (
 				[ReplyId] AS [ReplyId],
 				[ControlId] AS [ControlId],
 				[FeatureId] AS [FeatureId]
-			FROM ( SELECT Ticket_Id, Name, Value
+			FROM (	SELECT Ticket_Id, Name, Value
 					FROM [SupportCenterPaid].[c1f0951c-3885-44cf-accb-1a390f34c342].[TicketProperties]
 					WHERE Name IN ('ReplyId', 'ControlId', 'FeatureId') AND Ticket_Id = ti.Id) AS tp
 			PIVOT(MIN(Value) FOR Name IN ([ReplyId], [ControlId], [FeatureId])) AS value ) AS cat
@@ -127,14 +129,17 @@ tickets_with_iterations AS (
 			WHERE 	Customer_Id = crmCustomer.Id ) AS ug
 		OUTER APPLY(
 			SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), CAST(Value AS UNIQUEIDENTIFIER)), ' ') AS ids
-			FROM SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
-			WHERE Name = 'PlatformedProductId' AND Ticket_Id = ti.Id AND Value NOT LIKE '%:%') AS platforms
+			FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
+			WHERE	Name = 'PlatformedProductId' AND Ticket_Id = ti.Id AND Value NOT LIKE '%:%') AS platforms
 		OUTER APPLY(
 			SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), CAST(Value AS UNIQUEIDENTIFIER)), ' ') AS ids
-			FROM SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
-			WHERE Name = 'ProductId' AND Ticket_Id = ti.Id) AS products
+			FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
+			WHERE	Name = 'ProductId' AND Ticket_Id = ti.Id) AS products
 		LEFT JOIN DXStatisticsV2.dbo.TribeTeamMapping AS ttm ON ttm.SupportTeam = ISNULL(ti.ProcessingSupportTeam, ti.SupportTeam)
-		INNER JOIN CRM.dbo.Tribes AS tribes ON ttm.Tribe = tribes.Id
+		CROSS APPLY (
+			SELECT	TOP 1 Id, Name
+			FROM	CRM.dbo.Tribes
+			WHERE	Id = ttm.Tribe ) AS tribes
 		LEFT JOIN ticket_tags AS tt ON tt.ticket_id = ti.Id
 )
 

@@ -5,10 +5,15 @@ SELECT
         STRFTIME('{group_by_period}', {creation_date})
     )                           AS {period},
     COUNT(DISTINCT {user_id})   AS {people},
-    COUNT({scid})               AS {tickets},
+    COUNT({ticket_scid})        AS {tickets},
     SUM({iterations})           AS {iterations}
 FROM 
-    {table_name}
+    {tickets_with_iterations_table} AS t
+    INNER JOIN (
+		SELECT {ticket_id}
+		FROM {employees_iterations_table}
+        {positions_filter} 
+    ) AS ei ON ei.ticket_id = t.ticket_id
 WHERE
     {creation_date} BETWEEN '{range_start}' AND '{range_end}'
     {tribes_fitler}
