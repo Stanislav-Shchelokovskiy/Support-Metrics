@@ -1,3 +1,5 @@
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
+
 DECLARE @start_date DATE = '{start_date}'
 DECLARE @end_date   DATE = '{end_date}'
 
