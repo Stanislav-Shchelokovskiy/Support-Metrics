@@ -1,9 +1,6 @@
 from typing import Protocol
 from toolbox.sql.generators.filter_clause_generator import SqlFilterClauseGenerator
-from sql_queries.customers_activity.meta import (
-    TicketsWithLicensesMeta,
-    EmployeesIterationsMeta,
-)
+from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
 
 
 class FilterParametersNode(Protocol):
@@ -31,7 +28,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithLicensesMeta.user_groups,
+            col=TicketsWithIterationsMeta.user_groups,
             values=params.values,
             filter_prefix='AND',
         )
@@ -42,7 +39,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithLicensesMeta.ticket_type,
+            col=TicketsWithIterationsMeta.ticket_type,
             values=params.values,
             filter_prefix='AND',
             values_converter=str,
@@ -54,7 +51,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithLicensesMeta.ticket_tags,
+            col=TicketsWithIterationsMeta.ticket_tags,
             values=params.values,
             filter_prefix='AND',
         )
@@ -65,7 +62,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithLicensesMeta.tribe_id,
+            col=TicketsWithIterationsMeta.tribe_id,
             values=params.values,
             filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",
@@ -77,7 +74,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithLicensesMeta.reply_id,
+            col=TicketsWithIterationsMeta.reply_id,
             values=params.values,
             filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",
@@ -89,7 +86,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithLicensesMeta.component_id,
+            col=TicketsWithIterationsMeta.component_id,
             values=params.values,
             filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",
@@ -101,7 +98,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithLicensesMeta.feature_id,
+            col=TicketsWithIterationsMeta.feature_id,
             values=params.values,
             filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",
@@ -113,7 +110,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithLicensesMeta.license_status,
+            col=TicketsWithIterationsMeta.license_status,
             values=params.values,
             filter_prefix='AND',
             values_converter=str,
@@ -125,7 +122,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithLicensesMeta.conversion_status,
+            col=TicketsWithIterationsMeta.conversion_status,
             values=params.values,
             filter_prefix='AND',
             values_converter=str,
@@ -137,7 +134,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithLicensesMeta.platforms,
+            col=TicketsWithIterationsMeta.platforms,
             values=params.values,
             filter_prefix='AND',
         )
@@ -148,7 +145,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithLicensesMeta.products,
+            col=TicketsWithIterationsMeta.products,
             values=params.values,
             filter_prefix='AND',
         )
@@ -159,8 +156,8 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=EmployeesIterationsMeta.pos_id,
+            col=TicketsWithIterationsMeta.emp_pos_id,
             values=params.values,
-            filter_prefix='WHERE',
+            filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",
         )

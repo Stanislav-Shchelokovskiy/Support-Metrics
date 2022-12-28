@@ -54,8 +54,8 @@ def update_customers_activity(**kwargs):
             customers_activity_load_replies_types.si(),
             customers_activity_load_components_features.si(),
             customers_activity_load_platforms_products.si(),
-            customers_activity_load_tickets_with_licenses.si(),
-            customers_activity_load_employees_iterations.si(),
+           # customers_activity_load_tickets_with_licenses.si(),
+           # customers_activity_load_employees_iterations.si(),
         ]
     )(customers_activity_build_tables.si())
 
