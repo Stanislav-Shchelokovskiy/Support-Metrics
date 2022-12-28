@@ -2,7 +2,8 @@ from sql_queries.index import CustomersActivityDBIndex
 from sql_queries.customers_activity.meta import (
     ComponentsFeaturesMeta,
     TicketsWithLicensesMeta,
-    EmployeesIterations,
+    EmployeesIterationsMeta,
+    PlatformsProductsMeta,
 )
 
 
@@ -24,34 +25,22 @@ class IndexCreationExpressionsRepository:
                     ]
                 ),
             ],
-        CustomersActivityDBIndex.get_tickets_with_licenses_name():
+        CustomersActivityDBIndex.get_platforms_products_name():
             [
                 _create_index_expression(
-                    tbl=CustomersActivityDBIndex.
-                    get_tickets_with_licenses_name(),
+                    tbl=CustomersActivityDBIndex.get_platforms_products_name(),
                     cols=[
-                        TicketsWithLicensesMeta.creation_date,
-                        TicketsWithLicensesMeta.tribe_id,
+                        PlatformsProductsMeta.tribe_id,
+                        PlatformsProductsMeta.platform_id,
+                        PlatformsProductsMeta.product_id
                     ]
                 ),
             ],
         CustomersActivityDBIndex.get_employees_iterations_name():
             [
                 _create_index_expression(
-                    tbl=CustomersActivityDBIndex.get_employees_iterations_name(
-                    ),
-                    cols=[
-                        EmployeesIterations.ticket_id,
-                        EmployeesIterations.pos_id,
-                    ]
-                ),
-                _create_index_expression(
-                    tbl=CustomersActivityDBIndex.get_employees_iterations_name(
-                    ),
-                    cols=[
-                        EmployeesIterations.pos_id,
-                        EmployeesIterations.pos_name,
-                    ]
+                    tbl=CustomersActivityDBIndex.get_employees_iterations_name(),
+                    cols=[EmployeesIterationsMeta.ticket_id]
                 ),
             ],
     }

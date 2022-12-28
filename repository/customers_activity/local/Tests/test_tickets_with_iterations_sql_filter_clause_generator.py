@@ -2,7 +2,7 @@ import pytest
 from repository.customers_activity.local.sql_query_params_generator.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import (
     TicketsWithLicensesMeta,
-    EmployeesIterations,
+    EmployeesIterationsMeta,
 )
 
 
@@ -452,29 +452,29 @@ def test_generate_products_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'WHERE ({EmployeesIterations.pos_id} IS NULL)',
+            f'WHERE ({EmployeesIterationsMeta.pos_id} IS NULL)',
         ),
         (
             MockFilterParametersNode(include=True, values=[
                 'qwe',
                 'asd',
             ]),
-            f"WHERE {EmployeesIterations.pos_id} IN ('qwe','asd')",
+            f"WHERE {EmployeesIterationsMeta.pos_id} IN ('qwe','asd')",
         ),
         (
             MockFilterParametersNode(include=True, values=['qwe']),
-            f"WHERE {EmployeesIterations.pos_id} IN ('qwe')",
+            f"WHERE {EmployeesIterationsMeta.pos_id} IN ('qwe')",
         ),
         (
             MockFilterParametersNode(include=False, values=[
                 'qwe',
                 'asd',
             ]),
-            f"WHERE ({EmployeesIterations.pos_id} IS NULL OR {EmployeesIterations.pos_id} NOT IN ('qwe','asd'))",
+            f"WHERE ({EmployeesIterationsMeta.pos_id} IS NULL OR {EmployeesIterationsMeta.pos_id} NOT IN ('qwe','asd'))",
         ),
         (
             MockFilterParametersNode(include=False, values=['qwe']),
-            f"WHERE ({EmployeesIterations.pos_id} IS NULL OR {EmployeesIterations.pos_id} NOT IN ('qwe'))",
+            f"WHERE ({EmployeesIterationsMeta.pos_id} IS NULL OR {EmployeesIterationsMeta.pos_id} NOT IN ('qwe'))",
         ),
     ]
 )

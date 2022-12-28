@@ -4,7 +4,7 @@ import urllib3
 from pandas import DataFrame
 from toolbox.sql.sqlite_db import get_or_create_db
 from sql_queries.index import CustomersActivityDBIndex
-from repository.factory import RepositoryFactory
+from repository.factory import RepositoryFactory, TablesBuilder
 from repository.index_creation_expressions_repository import IndexCreationExpressionsRepository
 
 
@@ -88,4 +88,8 @@ def load_conversion_statuses():
     df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_conversion_statuses_name(): df})
 
+
+def build_tables():
+    TablesBuilder.customers_activity.build_tickets_with_iterations()
+    TablesBuilder.customers_activity.build_positions()
 # yapf: enable

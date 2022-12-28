@@ -16,16 +16,19 @@ from sql_queries.customers_activity.meta import (
     TicketsWithIterationsAggregatesMeta,
     TicketsWithIterationsRawMeta,
     PlatformsProductsMeta,
+    TicketsWithIterationsMeta,
+    PositionsMeta,
+    EmployeesIterationsMeta,
 )
 
 
 tickets_with_iterations_common_params = {
     'tickets_with_iterations_table': 'table_name',
-    'employees_iterations_table': 'employees_iterations_table',
-    'ticket_id': 'ticket_id,',
+    'creation_date': 'creation_date',
     'range_start': 'range_start',
     'range_end': 'range_end',
     'tribes_filter': 'tribes_filter',
+    'positions_filter': 'positions_filter',
     'customer_groups_filter': 'customer_groups_filter',
     'ticket_types_filter': 'ticket_types_filter',
     'ticket_tags_filter': 'ticket_tags_filter',
@@ -36,7 +39,6 @@ tickets_with_iterations_common_params = {
     'conversion_status_filter': 'conversion_status_filter',
     'platforms_filter': 'platforms_filter',
     'products_filter': 'products_filter',
-    'positions_filter': 'positions_filter',
 }
 
 
@@ -54,10 +56,10 @@ tickets_with_iterations_common_params = {
             {
                 **TicketsWithIterationsRawMeta.get_attrs(),
                 **tickets_with_iterations_common_params,
-                'components_features_table': 'components_features_table',
-                'replies_types_table': 'replies_types_table',
                 'license_statuses_table': 'license_statuses_table',
                 'conversion_statuses_table': 'conversion_statuses_table',
+                'replies_types_table': 'replies_types_table',
+                'components_features_table': 'components_features_table',
             },
         ),
         (
@@ -84,7 +86,7 @@ tickets_with_iterations_common_params = {
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_tags_path,
+            CustomersActivitySqlPathIndex.get_ticket_tags_path,
             {
                 **TicketsTagsMeta.get_attrs(),
             },
@@ -122,6 +124,26 @@ tickets_with_iterations_common_params = {
                 'columns': 'qwe, asd',
                 'table_name': 'test',
                 'filter_clause': '',
+            },
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_tickets_with_iterations_path,
+            {
+                **TicketsWithIterationsMeta.get_attrs(),
+                **EmployeesIterationsMeta.get_attrs(),
+                'TicketsWithIterations': 'TicketsWithIterations',
+                'TicketsWithLicenses': 'TicketsWithLicenses',
+                'EmployeesIterations': 'EmployeesIterations',
+            },
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_positions_path,
+            {
+                **PositionsMeta.get_attrs(),
+                'EmployeesIterations': 'EmployeesIterations',
+                'Positions': 'Positions',
+                'pos_id': EmployeesIterationsMeta.pos_id,
+                'pos_name': EmployeesIterationsMeta.pos_name
             },
         ),
     ],

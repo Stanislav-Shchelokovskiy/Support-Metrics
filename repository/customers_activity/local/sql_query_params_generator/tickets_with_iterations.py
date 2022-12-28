@@ -2,7 +2,7 @@ from typing import Protocol
 from toolbox.sql.generators.filter_clause_generator import SqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import (
     TicketsWithLicensesMeta,
-    EmployeesIterations,
+    EmployeesIterationsMeta,
 )
 
 
@@ -159,7 +159,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=EmployeesIterations.pos_id,
+            col=EmployeesIterationsMeta.pos_id,
             values=params.values,
             filter_prefix='WHERE',
             values_converter=lambda val: f"'{val}'",
