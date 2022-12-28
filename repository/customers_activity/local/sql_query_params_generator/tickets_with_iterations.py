@@ -1,9 +1,6 @@
 from typing import Protocol
 from toolbox.sql.generators.filter_clause_generator import SqlFilterClauseGenerator
-from sql_queries.customers_activity.meta import (
-    TicketsWithIterationsMeta,
-    EmployeesIterations,
-)
+from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
 
 
 class FilterParametersNode(Protocol):
@@ -159,8 +156,8 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=EmployeesIterations.pos_id,
+            col=TicketsWithIterationsMeta.emp_pos_id,
             values=params.values,
-            filter_prefix='WHERE',
+            filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",
         )

@@ -91,7 +91,6 @@ tickets_with_iterations AS (
 		ti.TicketSCID				AS ticket_scid,
 		ti.TicketType				AS ticket_type,
 		CAST(ti.Created AS DATE)	AS creation_date,
-		ii.iterations				AS iterations,
 		ug.groups					AS user_groups,
 		tt.tags						AS ticket_tags,
 		platforms.ids				AS platforms,
@@ -100,13 +99,9 @@ tickets_with_iterations AS (
 		CAST(cat.ControlId	AS UNIQUEIDENTIFIER) AS component_id,
 		CAST(cat.FeatureId	AS UNIQUEIDENTIFIER) AS feature_id
 	FROM (
-			SELECT	*
+			SELECT	Id, TicketSCID, TicketType, Created, OwnerGuid, ISNULL(ProcessingSupportTeam, SupportTeam) AS SupportTeam
 			FROM 	DXStatisticsV2.dbo.TicketInfos
 			WHERE 	Created BETWEEN @start_date AND @end_date ) AS ti
-		OUTER APPLY (
-			SELECT 	COUNT(TicketId) AS iterations
-			FROM  	DXStatisticsV2.dbo.IterationItems AS ii
-			WHERE 	TicketId = ti.Id ) AS ii
 		OUTER APPLY (
 			SELECT
 				Ticket_Id,
@@ -123,28 +118,29 @@ tickets_with_iterations AS (
 			WHERE	IsEmployee = 0 AND Id = ti.OwnerGuid AND FriendlyId != 'A2151720'
 		)  AS u
 		INNER JOIN CRM.dbo.Customers AS crmCustomer ON crmCustomer.FriendlyId = u.FriendlyId
-		OUTER APPLY(
+		OUTER APPLY (
 			SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), UserGroup_Id), ' ') AS groups
 			FROM 	CRM.dbo.Customer_UserGroup
 			WHERE 	Customer_Id = crmCustomer.Id ) AS ug
-		OUTER APPLY(
+		OUTER APPLY (
 			SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), CAST(Value AS UNIQUEIDENTIFIER)), ' ') AS ids
 			FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
 			WHERE	Name = 'PlatformedProductId' AND Ticket_Id = ti.Id AND Value NOT LIKE '%:%') AS platforms
-		OUTER APPLY(
+		OUTER APPLY (
 			SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), CAST(Value AS UNIQUEIDENTIFIER)), ' ') AS ids
 			FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
 			WHERE	Name = 'ProductId' AND Ticket_Id = ti.Id) AS products
-		LEFT JOIN DXStatisticsV2.dbo.TribeTeamMapping AS ttm ON ttm.SupportTeam = ISNULL(ti.ProcessingSupportTeam, ti.SupportTeam)
-		CROSS APPLY (
-			SELECT	TOP 1 Id, Name
-			FROM	CRM.dbo.Tribes
-			WHERE	Id = ttm.Tribe ) AS tribes
+		OUTER APPLY (
+			SELECT  TOP 1 t.Id, t.Name
+			FROM	DXStatisticsV2.dbo.TribeTeamMapping AS ttm
+					INNER JOIN CRM.dbo.Tribes AS t ON t.Id = ttm.Tribe
+			WHERE   ttm.SupportTeam = ti.SupportTeam 
+			ORDER BY t.Name ) AS tribes
 		LEFT JOIN ticket_tags AS tt ON tt.ticket_id = ti.Id
 )
 
 
-INSERT INTO #TicketsWithIterationsAndLicenses
+INSERT INTO #TicketsWithLicenses
 SELECT
     *,
     IIF(EXISTS( SELECT TOP 1 end_user_crmid 

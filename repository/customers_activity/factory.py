@@ -1,43 +1,57 @@
-from repository.customers_activity.remote.repository import (
-    GroupsRepository,
-    TagsRepository,
-    TicketsWithIterationsRepository,
-    RepliesTypesRepository,
-    ComponentsFeaturesRepository,
-    LicenseStatusesRepository,
-    ConversionStatusesRepository,
-    PlatformsProductsRepository,
+from repository.customers_activity.remote.tickets_with_iterations import (
+    TicketsWithLicensesRepository,
     EmployeesIterationsRepository,
 )
-from repository.customers_activity.local.repository import (
-    TicketsWithIterationsPeriodRepository as
-    SqliteTicketsWithIterationsPeriodRepository,
+from repository.customers_activity.remote.tickets import (
+    CustomersGroupsRepository,
+    TicketsTagsRepository,
+)
+from repository.customers_activity.remote.cat import (
+    RepliesTypesRepository,
+    ComponentsFeaturesRepository,
+)
+from repository.customers_activity.remote.platforms_products import PlatformsProductsRepository
+from repository.customers_activity.remote.licenses_conversion import (
+    LicenseStatusesRepository,
+    ConversionStatusesRepository,
+)
+from repository.customers_activity.local.tickets import (
     CustomersGroupsRepository as SqliteCustomersGroupsRepository,
     TicketsTypesRepository as SqliteTicketsTypesRepository,
     TicketsTagsRepository as SqliteTicketsTagsRepository,
+)
+from repository.customers_activity.local.licenses_conversion import (
+    LicenseStatusesRepository as SqliteLicenseStatusesRepository,
+    ConversionStatusesRepository as SqliteConversionStatusesRepository,
+)
+from repository.customers_activity.local.platforms_products import (
+    PlatformsRepository as SqlitePlatformsRepository,
+    ProductsRepository as SqliteProductsRepository,
+)
+from repository.customers_activity.local.cat import (
+    ReplyTypesRepository as SqliteReplyTypesRepository,
+    ComponentsRepository as SqliteComponentsRepository,
+    FeaturesRepository as SqliteFeaturesRepository,
+)
+from repository.customers_activity.local.tickets_with_iterations import (
+    TicketsPeriodRepository as SqliteTicketsWithIterationsPeriodRepository,
     TicketsWithIterationsRawRepository as
     SqliteTicketsWithIterationsRawRepository,
     TicketsWithIterationsAggregatesRepository as
     SqliteTicketsWithIterationsAggregatesRepository,
-    ReplyTypesRepository as SqliteReplyTypesRepository,
-    ComponentsRepository as SqliteComponentsRepository,
-    FeaturesRepository as SqliteFeaturesRepository,
-    LicenseStatusesRepository as SqliteLicenseStatusesRepository,
-    ConversionStatusesRepository as SqliteConversionStatusesRepository,
-    PlatformsRepository as SqlitePlatformsRepository,
-    ProductsRepository as SqliteProductsRepository,
-    PositionsRepository as SqlitePositionsRepository,
 )
+from repository.customers_activity.local.employees import PositionsRepository as SqlitePositionsRepository
+from repository.customers_activity.local.tables_builder import TablesBuilder
 
 
 # yapf: disable
 class SqlServerFactory:
 
-    def create_groups_repository(self, **kwargs) -> GroupsRepository:
-        return GroupsRepository()
+    def create_groups_repository(self, **kwargs) -> CustomersGroupsRepository:
+        return CustomersGroupsRepository()
 
-    def create_tags_repository(self, **kwargs) -> TagsRepository:
-        return TagsRepository()
+    def create_tags_repository(self, **kwargs) -> TicketsTagsRepository:
+        return TicketsTagsRepository()
 
     def create_replies_types_repository(self, **kwargs) -> RepliesTypesRepository:
         return RepliesTypesRepository()
@@ -45,8 +59,8 @@ class SqlServerFactory:
     def create_components_features_repository(self, **kwargs) -> ComponentsFeaturesRepository:
         return ComponentsFeaturesRepository()
 
-    def create_tickets_with_iterations_repository(self, **kwargs) -> TicketsWithIterationsRepository:
-        return TicketsWithIterationsRepository()
+    def create_tickets_with_licenses_repository(self, **kwargs) -> TicketsWithLicensesRepository:
+        return TicketsWithLicensesRepository()
 
     def create_license_statuses_repository(self, **kwargs) -> LicenseStatusesRepository:
         return LicenseStatusesRepository()
@@ -110,3 +124,7 @@ class SqliteFactory:
 class CustomersActivityFactory:
     remote = SqlServerFactory()
     local = SqliteFactory()
+
+
+class CustomersActivityTablesBuilderFactory:
+    customers_activity = TablesBuilder()

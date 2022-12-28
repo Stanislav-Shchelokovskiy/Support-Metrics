@@ -2,7 +2,6 @@ SELECT
     t.{user_id},
     t.{ticket_scid},
     t.{tribe_name},
-    t.{iterations},
     t.{creation_date},
     ( SELECT name 
       FROM   {license_statuses_table}
@@ -26,16 +25,16 @@ SELECT
       WHERE  tribe_id = t.tribe_id AND
              component_id = t.component_id AND
              feature_id = t.feature_id
-      LIMIT 1 ) AS {feature}
+      LIMIT 1 ) AS {feature},
+    t.{emp_post_id},
+    t.{emp_name},
+    t.{emp_pos_name},
+    t.{emp_tribe_name}
 FROM {tickets_with_iterations_table} AS t
-    INNER JOIN (
-		SELECT {ticket_id}
-		FROM {employees_iterations_table}
-    {positions_filter} 
-    ) AS ei ON ei.ticket_id = t.ticket_id
 WHERE 
     {creation_date} BETWEEN '{range_start}' AND '{range_end}'
-    {tribes_fitler}
+    {tribes_filter}
+    {positions_filter}
     {customer_groups_filter}
     {ticket_types_filter}
     {ticket_tags_filter}

@@ -3,20 +3,15 @@ SELECT
         '{group_by_period}' = '%Y-%W', 
         STRFTIME('%Y-%m-%d', {creation_date}, 'weekday 0', '-6 day'), 
         STRFTIME('{group_by_period}', {creation_date})
-    )                           AS {period},
-    COUNT(DISTINCT {user_id})   AS {people},
-    COUNT({ticket_scid})        AS {tickets},
-    SUM({iterations})           AS {iterations}
-FROM 
-    {tickets_with_iterations_table} AS t
-    INNER JOIN (
-		SELECT {ticket_id}
-		FROM {employees_iterations_table}
-        {positions_filter} 
-    ) AS ei ON ei.ticket_id = t.ticket_id
+    )                               AS {period},
+    COUNT(DISTINCT {user_id})       AS {people},
+    COUNT(DISTINCT {ticket_scid})   AS {tickets},
+    COUNT({emp_post_id})            AS {iterations}
+FROM {tickets_with_iterations_table}
 WHERE
     {creation_date} BETWEEN '{range_start}' AND '{range_end}'
-    {tribes_fitler}
+    {tribes_filter}
+    {positions_filter}
     {customer_groups_filter}
     {ticket_types_filter}
     {ticket_tags_filter}

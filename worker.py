@@ -1,7 +1,7 @@
 import os
 from typing import Callable
 
-from celery import Celery
+from celery import Celery, chord
 from celery.schedules import crontab
 from celery.signals import worker_ready
 
@@ -47,13 +47,41 @@ def setup_periodic_tasks(sender, **kwargs):
 
 @app.task(name='update_customers_activity')
 def update_customers_activity(**kwargs):
-    app.send_task(name='customers_activity_load_tags')
-    app.send_task(name='customers_activity_load_groups')
-    app.send_task(name='customers_activity_load_replies_types')
-    app.send_task(name='customers_activity_load_components_features')
-    app.send_task(name='customers_activity_load_platforms_products')
-    app.send_task(name='customers_activity_load_tickets_with_iterations')
-    app.send_task(name='customers_activity_load_employees_iterations')
+    chord(
+        [
+            customers_activity_load_tags.si(),
+            customers_activity_load_groups.si(),
+            customers_activity_load_replies_types.si(),
+            customers_activity_load_components_features.si(),
+            customers_activity_load_platforms_products.si(),
+            customers_activity_load_tickets_with_licenses.si(),
+            customers_activity_load_employees_iterations.si(),
+        ]
+    )(customers_activity_build_tables.si())
+
+
+@app.task(name='customers_activity_load_tickets_types', bind=True)
+def customers_activity_load_tickets_types(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.load_tickets_types,
+    )
+
+
+@app.task(name='customers_activity_load_license_statuses', bind=True)
+def customers_activity_load_license_statuses(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.load_license_statuses,
+    )
+
+
+@app.task(name='customers_activity_load_conversion_statuses', bind=True)
+def customers_activity_load_conversion_statuses(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.load_conversion_statuses,
+    )
 
 
 @app.task(name='customers_activity_load_tags', bind=True)
@@ -96,36 +124,12 @@ def customers_activity_load_platforms_products(self, **kwargs):
     )
 
 
-@app.task(name='customers_activity_load_tickets_with_iterations', bind=True)
-def customers_activity_load_tickets_with_iterations(self, **kwargs):
+@app.task(name='customers_activity_load_tickets_with_licenses', bind=True)
+def customers_activity_load_tickets_with_licenses(self, **kwargs):
     return run_retriable_task(
         self,
-        customers_activity.load_tickets_with_iterations,
-        **CustomersActivityTasksConfig.get_tickets_with_iterations_period(),
-    )
-
-
-@app.task(name='customers_activity_load_tickets_types', bind=True)
-def customers_activity_load_tickets_types(self, **kwargs):
-    return run_retriable_task(
-        self,
-        customers_activity.load_tickets_types,
-    )
-
-
-@app.task(name='customers_activity_load_license_statuses', bind=True)
-def customers_activity_load_license_statuses(self, **kwargs):
-    return run_retriable_task(
-        self,
-        customers_activity.load_license_statuses,
-    )
-
-
-@app.task(name='customers_activity_load_conversion_statuses', bind=True)
-def customers_activity_load_conversion_statuses(self, **kwargs):
-    return run_retriable_task(
-        self,
-        customers_activity.load_conversion_statuses,
+        customers_activity.load_tickets_with_licenses,
+        **CustomersActivityTasksConfig.get_tickets_with_licenses_period(),
     )
 
 
@@ -134,7 +138,15 @@ def customers_activity_load_employees_iterations(self, **kwargs):
     return run_retriable_task(
         self,
         customers_activity.load_employees_iterations,
-        **CustomersActivityTasksConfig.get_tickets_with_iterations_period(),
+        **CustomersActivityTasksConfig.get_tickets_with_licenses_period(),
+    )
+
+
+@app.task(name='customers_activity_build_tables', bind=True)
+def customers_activity_build_tables(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.build_tables,
     )
 
 
