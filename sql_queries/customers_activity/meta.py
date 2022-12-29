@@ -87,21 +87,26 @@ class TicketsWithLicensesMeta(TicketTribeMeta):
 
 class EmployeesIterationsMeta(TicketTribeMeta):
     post_id = 'post_id'
-    scid = 'scid'
     crmid = 'crmid'
-    pos_id = 'pos_id'
+    position_id = 'position_id'
     name = 'name'
-    pos_name = 'pos_name'
+    position_name = 'position_name'
+
+
+class EmployeesMeta(MetaData):
+    tribe_id = EmployeesIterationsMeta.tribe_id
+    position_id = EmployeesIterationsMeta.position_id
+    crmid = EmployeesIterationsMeta.crmid
+    name = EmployeesIterationsMeta.name
 
 
 class TicketsWithIterationsMeta(TicketsWithLicensesMeta):
     emp_post_id = 'emp_post_id'
-    emp_scid = 'emp_scid'
     emp_crmid = 'emp_crmid'
     emp_tribe_id = 'emp_tribe_id'
-    emp_pos_id = 'emp_pos_id'
+    emp_position_id = 'emp_position_id'
     emp_name = 'emp_name'
-    emp_pos_name = 'emp_pos_name'
+    emp_position_name = 'emp_position_name'
     emp_tribe_name = 'emp_tribe_name'
 
 
@@ -111,7 +116,7 @@ class TicketsWithIterationsAggregatesMeta(MetaData):
     people = 'people'
     ticket_scid = TicketsWithIterationsMeta.ticket_scid
     tickets = 'tickets'
-    emp_post_id = TicketsWithIterationsMeta.emp_pos_id
+    emp_post_id = TicketsWithIterationsMeta.emp_post_id
     iterations = 'iterations'
 
 
@@ -126,5 +131,5 @@ class TicketsWithIterationsRawMeta(MetaData):
     feature = 'feature'
     emp_post_id = TicketsWithIterationsMeta.emp_post_id
     emp_name = TicketsWithIterationsMeta.emp_name
-    emp_pos_name = TicketsWithIterationsMeta.emp_pos_name
+    emp_position_name = TicketsWithIterationsMeta.emp_position_name
     emp_tribe_name = TicketsWithIterationsMeta.emp_tribe_name

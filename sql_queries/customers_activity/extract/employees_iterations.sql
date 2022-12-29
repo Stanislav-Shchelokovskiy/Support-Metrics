@@ -1,3 +1,5 @@
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
+
 DECLARE @start_date DATE = '{start_date}'
 DECLARE @end_date   DATE = '{end_date}'
 
@@ -7,12 +9,11 @@ DECLARE @description	TINYINT = 0
 SELECT
 	ii.TicketId		AS {ticket_id},
 	ii.PostId		AS {post_id},
-	e.scid			AS {scid},
 	e.crmid			AS {crmid},
 	e.tribe_id		AS {tribe_id},
-	e.position_id	AS {pos_id},
+	e.position_id	AS {position_id},
 	e.name			AS {name},
-	e.position_name AS {pos_name},
+	e.position_name AS {position_name},
 	e.tribe_name	AS {tribe_name}
 FROM ( SELECT 	TicketId, PostId
 	   FROM  	DXStatisticsV2.dbo.IterationItems AS ii

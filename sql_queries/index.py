@@ -120,10 +120,24 @@ class CustomersActivitySqlPathIndex:
         )
 
     @staticmethod
-    def get_positions_path() -> str:
+    def get_emp_positions_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_transform_load_path()
-            + '/positions.sql'
+            + '/emp_positions.sql'
+        )
+
+    @staticmethod
+    def get_emp_tribes_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_transform_load_path()
+            + '/emp_tribes.sql'
+        )
+
+    @staticmethod
+    def get_employees_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_transform_load_path()
+            + '/emps.sql'
         )
 
 
@@ -168,8 +182,16 @@ class CustomersActivityDBIndex:
         return CustomersActivityDBIndex.get_root_name() + 'ConversionStatuses'
 
     @staticmethod
-    def get_positions_name() -> str:
-        return CustomersActivityDBIndex.get_root_name() + 'Positions'
+    def get_emp_positions_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'EmpPositions'
+
+    @staticmethod
+    def get_emp_tribes_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'EmpTribes'
+
+    @staticmethod
+    def get_employees_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'Employees'
 
     @staticmethod
     def get_tickets_with_licenses_name() -> str:

@@ -19,6 +19,9 @@ from sql_queries.customers_activity.meta import (
     TicketsWithIterationsMeta,
     PositionsMeta,
     EmployeesIterationsMeta,
+    TribeMeta,
+    TribesMeta,
+    EmployeesMeta,
 )
 
 
@@ -29,6 +32,8 @@ tickets_with_iterations_common_params = {
     'range_end': 'range_end',
     'tribes_filter': 'tribes_filter',
     'positions_filter': 'positions_filter',
+    'emp_tribes_filter': 'emp_tribes_filter',
+    'emps_filter': 'emps_filter',
     'customer_groups_filter': 'customer_groups_filter',
     'ticket_types_filter': 'ticket_types_filter',
     'ticket_tags_filter': 'ticket_tags_filter',
@@ -137,13 +142,30 @@ tickets_with_iterations_common_params = {
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_positions_path,
+            CustomersActivitySqlPathIndex.get_emp_positions_path,
             {
                 **PositionsMeta.get_attrs(),
                 'EmployeesIterations': 'EmployeesIterations',
-                'Positions': 'Positions',
-                'pos_id': EmployeesIterationsMeta.pos_id,
-                'pos_name': EmployeesIterationsMeta.pos_name
+                'EmpPositions': 'EmpPositions',
+                'position_id': EmployeesIterationsMeta.position_id,
+                'position_name': EmployeesIterationsMeta.position_name
+            },
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_emp_tribes_path,
+            {
+                **TribeMeta.get_attrs(),
+                **TribesMeta.get_attrs(),
+                'EmpTribes': 'EmpTribes',
+                'EmployeesIterations': 'EmployeesIterations',
+            }
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_employees_path,
+            {
+                **EmployeesMeta.get_attrs(),
+                'Employees': 'Employees',
+                'EmployeesIterations': 'EmployeesIterations',
             },
         ),
     ],
