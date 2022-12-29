@@ -13,13 +13,14 @@ class ProductParams(TribeParams):
     platforms: list[str]
 
 
-class EmployeeParams(TribeParams):
-    positions: list[str]
-
-
 class FilterParametersNode(BaseModel):
     include: bool
     values: list[int | str]
+
+
+class EmployeeParams(BaseModel):
+    tribes: FilterParametersNode
+    positions: FilterParametersNode
 
 
 class TicketsWithIterationsParams(BaseModel):
