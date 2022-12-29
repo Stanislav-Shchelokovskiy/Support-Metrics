@@ -12,7 +12,7 @@ from repository.customers_activity.local.Tests.mocks import MockFilterParameters
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.user_groups} IS NULL)',
+            f'AND {TicketsWithIterationsMeta.user_groups} IS NULL',
         ),
         (
             MockFilterParametersNode(include=True, values=['p1', 'p2']),
@@ -49,7 +49,7 @@ def test_generate_customer_groups_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.ticket_type} IS NULL)',
+            f'AND {TicketsWithIterationsMeta.ticket_type} IS NULL',
         ),
         (
             MockFilterParametersNode(include=True, values=[1, 2]),
@@ -86,7 +86,7 @@ def test_generate_ticket_types_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.ticket_tags} IS NULL)',
+            f'AND {TicketsWithIterationsMeta.ticket_tags} IS NULL',
         ),
         (
             MockFilterParametersNode(include=True, values=[1, 2]),
@@ -123,7 +123,7 @@ def test_generate_ticket_tags_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.tribe_id} IS NULL)',
+            f'AND {TicketsWithIterationsMeta.tribe_id} IS NULL',
         ),
         (
             MockFilterParametersNode(include=True, values=[
@@ -166,7 +166,7 @@ def test_generate_tribes_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.reply_id} IS NULL)',
+            f'AND {TicketsWithIterationsMeta.reply_id} IS NULL',
         ),
         (
             MockFilterParametersNode(include=True, values=[
@@ -209,7 +209,7 @@ def test_generate_reply_types_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.component_id} IS NULL)',
+            f'AND {TicketsWithIterationsMeta.component_id} IS NULL',
         ),
         (
             MockFilterParametersNode(include=True, values=[
@@ -252,7 +252,7 @@ def test_generate_components_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.feature_id} IS NULL)',
+            f'AND {TicketsWithIterationsMeta.feature_id} IS NULL',
         ),
         (
             MockFilterParametersNode(include=True, values=[
@@ -295,7 +295,7 @@ def test_generate_features_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.license_status} IS NULL)',
+            f'AND {TicketsWithIterationsMeta.license_status} IS NULL',
         ),
         (
             MockFilterParametersNode(include=True, values=[1, 2]),
@@ -332,7 +332,7 @@ def test_generate_license_status_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.conversion_status} IS NULL)',
+            f'AND {TicketsWithIterationsMeta.conversion_status} IS NULL',
         ),
         (
             MockFilterParametersNode(include=True, values=[1, 2]),
@@ -369,7 +369,7 @@ def test_generate_conversion_status_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.platforms} IS NULL)',
+            f'AND {TicketsWithIterationsMeta.platforms} IS NULL',
         ),
         (
             MockFilterParametersNode(include=True, values=['p1', 'p2']),
@@ -406,7 +406,7 @@ def test_generate_platforms_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.products} IS NULL)',
+            f'AND {TicketsWithIterationsMeta.products} IS NULL',
         ),
         (
             MockFilterParametersNode(include=True, values=['p1', 'p2']),
@@ -443,7 +443,7 @@ def test_generate_products_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.emp_position_id} IS NULL)',
+            f'AND {TicketsWithIterationsMeta.emp_position_id} IS NULL',
         ),
         (
             MockFilterParametersNode(include=True, values=[
@@ -486,7 +486,7 @@ def test_generate_positions_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.emp_tribe_id} IS NULL)',
+            f'AND {TicketsWithIterationsMeta.emp_tribe_id} IS NULL',
         ),
         (
             MockFilterParametersNode(include=True, values=[
@@ -529,7 +529,7 @@ def test_generate_emp_tribes_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND ({TicketsWithIterationsMeta.emp_crmid} IS NULL)',
+            f'AND {TicketsWithIterationsMeta.emp_crmid} IS NULL',
         ),
         (
             MockFilterParametersNode(include=True, values=[
