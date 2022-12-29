@@ -482,3 +482,46 @@ def test_generate_positions_filter(
     assert TicketsWithIterationsSqlFilterClauseGenerator.generate_positions_filter(
         params=input
     ) == output
+
+
+@pytest.mark.parametrize(
+    'input,output', [
+        (
+            MockFilterParametersNode(include=True, values=[]),
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[]),
+            f'AND ({TicketsWithIterationsMeta.emp_tribe_id} IS NULL)',
+        ),
+        (
+            MockFilterParametersNode(include=True, values=[
+                'qwe',
+                'asd',
+            ]),
+            f"AND {TicketsWithIterationsMeta.emp_tribe_id} IN ('qwe','asd')",
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['qwe']),
+            f"AND {TicketsWithIterationsMeta.emp_tribe_id} IN ('qwe')",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[
+                'qwe',
+                'asd',
+            ]),
+            f"AND ({TicketsWithIterationsMeta.emp_tribe_id} IS NULL OR {TicketsWithIterationsMeta.emp_tribe_id} NOT IN ('qwe','asd'))",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['qwe']),
+            f"AND ({TicketsWithIterationsMeta.emp_tribe_id} IS NULL OR {TicketsWithIterationsMeta.emp_tribe_id} NOT IN ('qwe'))",
+        ),
+    ]
+)
+def test_generate_emp_tribes_filter(
+    input: MockFilterParametersNode,
+    output: str,
+):
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_emp_tribes_filter(
+        params=input
+    ) == output

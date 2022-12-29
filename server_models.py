@@ -31,6 +31,7 @@ class TicketsWithIterationsParams(BaseModel):
     platforms: FilterParametersNode
     products: FilterParametersNode
     positions: FilterParametersNode
+    emp_tribes: FilterParametersNode
 
 
 class StatAppState(BaseModel):

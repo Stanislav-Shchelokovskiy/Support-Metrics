@@ -94,6 +94,12 @@ class EmployeesIterationsMeta(TicketTribeMeta):
     pos_name = 'pos_name'
 
 
+class EmployeesMeta(MetaData):
+    tribe_id = EmployeesIterationsMeta.tribe_id
+    pos_id = EmployeesIterationsMeta.pos_id
+    name = EmployeesIterationsMeta.name
+
+
 class TicketsWithIterationsMeta(TicketsWithLicensesMeta):
     emp_post_id = 'emp_post_id'
     emp_scid = 'emp_scid'

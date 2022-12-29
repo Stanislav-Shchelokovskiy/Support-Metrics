@@ -35,6 +35,7 @@ WHERE
     {creation_date} BETWEEN '{range_start}' AND '{range_end}'
     {tribes_filter}
     {positions_filter}
+    {emp_tribes_filter}
     {customer_groups_filter}
     {ticket_types_filter}
     {ticket_tags_filter}

@@ -75,8 +75,13 @@ def customers_activity_get_features(tribe_ids: list[str], component_ids: list[st
         )
 
 
-def customers_activity_get_positions() -> str:
-    repository = RepositoryFactory.customers_activity.local.create_positions_repository()
+def customers_activity_get_emp_positions() -> str:
+    repository = RepositoryFactory.customers_activity.local.create_emp_positions_repository()
+    return repository.get_data_json()
+
+
+def customers_activity_get_emp_tribes() -> str:
+    repository = RepositoryFactory.customers_activity.local.create_emp_tribes_repository()
     return repository.get_data_json()
 
 

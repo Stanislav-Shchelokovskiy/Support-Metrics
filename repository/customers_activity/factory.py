@@ -40,7 +40,10 @@ from repository.customers_activity.local.tickets_with_iterations import (
     TicketsWithIterationsAggregatesRepository as
     SqliteTicketsWithIterationsAggregatesRepository,
 )
-from repository.customers_activity.local.employees import PositionsRepository as SqlitePositionsRepository
+from repository.customers_activity.local.employees import (
+    EmpPositionsRepository as SqliteEmpPositionsRepository,
+    EmpTribesRepository as SqliteEmpTribesRepository
+)
 from repository.customers_activity.local.tables_builder import TablesBuilder
 
 
@@ -116,8 +119,11 @@ class SqliteFactory:
     def create_tickets_with_iterations_aggregates_repository(self, **kwargs) -> SqliteTicketsWithIterationsAggregatesRepository:
         return SqliteTicketsWithIterationsAggregatesRepository()
 
-    def create_positions_repository(self, **kwargs) -> SqlitePositionsRepository:
-        return SqlitePositionsRepository()
+    def create_emp_positions_repository(self, **kwargs) -> SqliteEmpPositionsRepository:
+        return SqliteEmpPositionsRepository()
+
+    def create_emp_tribes_repository(self, **kwargs) -> SqliteEmpTribesRepository:
+        return SqliteEmpTribesRepository()
 # yapf: enable
 
 

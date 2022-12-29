@@ -57,7 +57,8 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
             'conversion_status_filter' : generator.generate_conversion_status_filter(params=kwargs['conversion_statuses']),
             'platforms_filter': generator.generate_platforms_filter(params=kwargs['platforms_ids']),
             'products_filter': generator.generate_products_filter(params=kwargs['products_ids']),
-            'positions_filter': generator.generate_positions_filter(params=kwargs['positions_ids'])
+            'positions_filter': generator.generate_positions_filter(params=kwargs['positions_ids']),
+            'emp_tribes_filter': generator.generate_emp_tribes_filter(params=kwargs['emp_tribe_ids']),
         }
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:

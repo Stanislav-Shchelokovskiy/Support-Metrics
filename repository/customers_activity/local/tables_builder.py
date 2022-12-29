@@ -8,6 +8,9 @@ from sql_queries.customers_activity.meta import (
     TicketsWithIterationsMeta,
     EmployeesIterationsMeta,
     PositionsMeta,
+    TribeMeta,
+    TribesMeta,
+    EmployeesMeta,
 )
 
 
@@ -27,15 +30,40 @@ class TablesBuilder:
         query_executor = SQLitePostQueryExecutor()
         query_executor.execute(query)
 
-    def build_positions(self):
+    def build_emp_positions(self):
         query = SqlQuery(
-            query_file_path=CustomersActivitySqlPathIndex.get_positions_path(),
+            query_file_path=CustomersActivitySqlPathIndex.get_emp_positions_path(),
             format_params={
                 **PositionsMeta.get_attrs(),
                 'EmployeesIterations': CustomersActivityDBIndex.get_employees_iterations_name(),
-                'Positions': CustomersActivityDBIndex.get_positions_name(),
+                'EmpPositions': CustomersActivityDBIndex.get_emp_positions_name(),
                 'pos_id': EmployeesIterationsMeta.pos_id,
                 'pos_name': EmployeesIterationsMeta.pos_name,
+            }
+        )
+        query_executor = SQLitePostQueryExecutor()
+        query_executor.execute(query)
+
+    def build_emp_tribes(self):
+        query = SqlQuery(
+            query_file_path=CustomersActivitySqlPathIndex.get_emp_tribes_path(),
+            format_params={
+                **TribeMeta.get_attrs(),
+                **TribesMeta.get_attrs(),
+                'EmpTribes': CustomersActivityDBIndex.get_emp_tribes_name(),
+                'EmployeesIterations': CustomersActivityDBIndex.get_employees_iterations_name(),
+            }
+        )
+        query_executor = SQLitePostQueryExecutor()
+        query_executor.execute(query)
+
+    def build_employees(self):
+        query = SqlQuery(
+            query_file_path=CustomersActivitySqlPathIndex.get_employees_path(),
+            format_params={
+                **EmployeesMeta.get_attrs(),
+                'Employees': CustomersActivityDBIndex.get_employees_name(),
+                'EmployeesIterations': CustomersActivityDBIndex.get_employees_iterations_name(),
             }
         )
         query_executor = SQLitePostQueryExecutor()

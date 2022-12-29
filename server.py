@@ -148,7 +148,14 @@ def customers_activity_get_conversion_statuses(params: ConversionStatusParams):
 @app.get('/get_positions')
 def customers_activity_get_positions():
     return get_response(
-        json_data=server_repository.customers_activity_get_positions()
+        json_data=server_repository.customers_activity_get_emp_positions()
+    )
+
+
+@app.get('/get_emp_tribes')
+def customers_activity_get_emp_tribes():
+    return get_response(
+        json_data=server_repository.customers_activity_get_emp_tribes()
     )
 
 
@@ -175,6 +182,7 @@ def customers_activity_get_tickets_with_iterations_aggregates(
         platforms_ids=params.platforms,
         products_ids=params.products,
         positions_ids=params.positions,
+        emp_tribe_ids=params.emp_tribes,
     )
     return get_response(json_data=df_json)
 
@@ -200,6 +208,7 @@ def customers_activity_get_tickets_with_iterations_raw(
         platforms_ids=params.platforms,
         products_ids=params.products,
         positions_ids=params.positions,
+        emp_tribe_ids=params.emp_tribes,
     )
     return get_response(json_data=df_json)
 
