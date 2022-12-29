@@ -85,6 +85,14 @@ def customers_activity_get_emp_tribes() -> str:
     return repository.get_data_json()
 
 
+def customers_activity_get_employees(position_ids: list[str], tribe_ids: list[str]) -> str:
+    repository = RepositoryFactory.customers_activity.local.create_employees_repository()
+    return repository.get_data_json(
+            position_ids=position_ids,
+            tribe_ids=tribe_ids,
+        )
+
+
 def customers_activity_get_tickets_with_iterations_aggregates(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_tickets_with_iterations_aggregates_repository()
     return repository.get_data_json(**kwargs)

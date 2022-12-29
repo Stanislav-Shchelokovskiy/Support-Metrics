@@ -13,6 +13,10 @@ class ProductParams(TribeParams):
     platforms: list[str]
 
 
+class EmployeeParams(TribeParams):
+    positions: list[str]
+
+
 class FilterParametersNode(BaseModel):
     include: bool
     values: list[int | str]
@@ -32,6 +36,7 @@ class TicketsWithIterationsParams(BaseModel):
     products: FilterParametersNode
     positions: FilterParametersNode
     emp_tribes: FilterParametersNode
+    employees: FilterParametersNode
 
 
 class StatAppState(BaseModel):

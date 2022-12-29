@@ -37,8 +37,8 @@ class TablesBuilder:
                 **PositionsMeta.get_attrs(),
                 'EmployeesIterations': CustomersActivityDBIndex.get_employees_iterations_name(),
                 'EmpPositions': CustomersActivityDBIndex.get_emp_positions_name(),
-                'pos_id': EmployeesIterationsMeta.pos_id,
-                'pos_name': EmployeesIterationsMeta.pos_name,
+                'position_id': EmployeesIterationsMeta.position_id,
+                'position_name': EmployeesIterationsMeta.position_name,
             }
         )
         query_executor = SQLitePostQueryExecutor()

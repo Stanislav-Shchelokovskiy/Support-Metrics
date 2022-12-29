@@ -28,7 +28,7 @@ SELECT
       LIMIT 1 ) AS {feature},
     t.{emp_post_id},
     t.{emp_name},
-    t.{emp_pos_name},
+    t.{emp_position_name},
     t.{emp_tribe_name}
 FROM {tickets_with_iterations_table} AS t
 WHERE 
@@ -36,6 +36,7 @@ WHERE
     {tribes_filter}
     {positions_filter}
     {emp_tribes_filter}
+    {emps_filter}
     {customer_groups_filter}
     {ticket_types_filter}
     {ticket_tags_filter}

@@ -33,6 +33,7 @@ tickets_with_iterations_common_params = {
     'tribes_filter': 'tribes_filter',
     'positions_filter': 'positions_filter',
     'emp_tribes_filter': 'emp_tribes_filter',
+    'emps_filter': 'emps_filter',
     'customer_groups_filter': 'customer_groups_filter',
     'ticket_types_filter': 'ticket_types_filter',
     'ticket_tags_filter': 'ticket_tags_filter',
@@ -146,8 +147,8 @@ tickets_with_iterations_common_params = {
                 **PositionsMeta.get_attrs(),
                 'EmployeesIterations': 'EmployeesIterations',
                 'EmpPositions': 'EmpPositions',
-                'pos_id': EmployeesIterationsMeta.pos_id,
-                'pos_name': EmployeesIterationsMeta.pos_name
+                'position_id': EmployeesIterationsMeta.position_id,
+                'position_name': EmployeesIterationsMeta.position_name
             },
         ),
         (

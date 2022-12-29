@@ -1,10 +1,10 @@
 DROP TABLE IF EXISTS {EmpPositions};
-CREATE TABLE IF NOT EXISTS {EmpPositions} (
+CREATE TABLE {EmpPositions} (
   "{id}"   TEXT,
   "{name}" TEXT
 );
 
 INSERT INTO {EmpPositions}
-SELECT DISTINCT {pos_id}, {pos_name}
+SELECT DISTINCT {position_id}, {position_name}
 FROM {EmployeesIterations}
-ORDER BY {pos_name};
+ORDER BY {position_name};

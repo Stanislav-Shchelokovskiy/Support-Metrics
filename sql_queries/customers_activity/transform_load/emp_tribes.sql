@@ -1,5 +1,5 @@
- DROP TABLE IF EXISTS {EmpTribes};
-CREATE TABLE IF NOT EXISTS {EmpTribes} (
+DROP TABLE IF EXISTS {EmpTribes};
+CREATE TABLE {EmpTribes} (
   "{id}"   TEXT,
   "{name}" TEXT
 );

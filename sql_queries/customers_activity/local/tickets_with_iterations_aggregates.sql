@@ -13,6 +13,7 @@ WHERE
     {tribes_filter}
     {positions_filter}
     {emp_tribes_filter}
+    {emps_filter}
     {customer_groups_filter}
     {ticket_types_filter}
     {ticket_tags_filter}

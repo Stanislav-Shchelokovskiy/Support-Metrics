@@ -156,7 +156,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithIterationsMeta.emp_pos_id,
+            col=TicketsWithIterationsMeta.emp_position_id,
             values=params.values,
             filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",
@@ -169,6 +169,18 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         )
         return generate_filter(
             col=TicketsWithIterationsMeta.emp_tribe_id,
+            values=params.values,
+            filter_prefix='AND',
+            values_converter=lambda val: f"'{val}'",
+        )
+
+    @staticmethod
+    def generate_employees_filter(params: FilterParametersNode) -> str:
+        generate_filter = TicketsWithIterationsSqlFilterClauseGenerator._generate_in_filter(
+            params
+        )
+        return generate_filter(
+            col=TicketsWithIterationsMeta.emp_crmid,
             values=params.values,
             filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",
