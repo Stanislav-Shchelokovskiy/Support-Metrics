@@ -1,29 +1,38 @@
-from toolbox.sql.generators.filter_clause_generator import SqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import EmployeesMeta
+from repository.customers_activity.local.sql_query_params_generator.sql_filter_clause_generator import (
+    FilterParametersNode,
+    SqlFilterClauseFromFilterParametersGenerator,
+)
 
 
 class EmployeesSqlFilterClauseGenerator:
 
     @staticmethod
-    def generate_positions_filter(position_ids: list[str]) -> str:
-        return SqlFilterClauseGenerator().generate_in_filter(
-            values=position_ids,
+    def generate_positions_filter(params: FilterParametersNode) -> str:
+        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+            params
+        )
+        return generate_filter(
             col=EmployeesMeta.position_id,
+            values=params.values,
             filter_prefix='WHERE',
             values_converter=lambda val: f"'{val}'",
         )
 
     @staticmethod
     def generate_filter(
-        position_ids: list[str],
-        tribe_ids: list[str],
+        position_ids: FilterParametersNode,
+        tribe_ids: FilterParametersNode,
     ) -> str:
         positions_fitler = EmployeesSqlFilterClauseGenerator.generate_positions_filter(
-            position_ids=position_ids
+            params=position_ids
         )
-        tribes_filter = SqlFilterClauseGenerator().generate_in_filter(
-            values=tribe_ids,
+        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+            params=tribe_ids
+        )
+        tribes_filter = generate_filter(
             col=EmployeesMeta.tribe_id,
+            values=tribe_ids.values,
             filter_prefix=' AND' if positions_fitler else 'WHERE',
             values_converter=lambda val: f"'{val}'",
         )
