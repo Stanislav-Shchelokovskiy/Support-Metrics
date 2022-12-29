@@ -87,7 +87,6 @@ class TicketsWithLicensesMeta(TicketTribeMeta):
 
 class EmployeesIterationsMeta(TicketTribeMeta):
     post_id = 'post_id'
-    scid = 'scid'
     crmid = 'crmid'
     pos_id = 'pos_id'
     name = 'name'
@@ -102,7 +101,6 @@ class EmployeesMeta(MetaData):
 
 class TicketsWithIterationsMeta(TicketsWithLicensesMeta):
     emp_post_id = 'emp_post_id'
-    emp_scid = 'emp_scid'
     emp_crmid = 'emp_crmid'
     emp_tribe_id = 'emp_tribe_id'
     emp_pos_id = 'emp_pos_id'

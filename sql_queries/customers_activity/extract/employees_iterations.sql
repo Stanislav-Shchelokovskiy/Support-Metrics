@@ -7,7 +7,6 @@ DECLARE @description	TINYINT = 0
 SELECT
 	ii.TicketId		AS {ticket_id},
 	ii.PostId		AS {post_id},
-	e.scid			AS {scid},
 	e.crmid			AS {crmid},
 	e.tribe_id		AS {tribe_id},
 	e.position_id	AS {pos_id},
