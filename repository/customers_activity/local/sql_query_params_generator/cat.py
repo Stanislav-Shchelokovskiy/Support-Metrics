@@ -1,30 +1,40 @@
-from toolbox.sql.generators.filter_clause_generator import SqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import ComponentsFeaturesMeta
+from repository.customers_activity.local.sql_query_params_generator.sql_filter_clause_generator import (
+    FilterParametersNode,
+    SqlFilterClauseFromFilterParametersGenerator,
+)
 
 
 class CATSqlFilterClauseGenerator:
 
     @staticmethod
-    def generate_components_filter(tribe_ids: list[str]) -> str:
-        return SqlFilterClauseGenerator().generate_in_filter(
-            values=tribe_ids,
+    def generate_components_filter(tribe_ids: FilterParametersNode) -> str:
+        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+            params=tribe_ids
+        )
+        return generate_filter(
             col=ComponentsFeaturesMeta.tribe_id,
+            values=tribe_ids.values,
             filter_prefix='WHERE',
             values_converter=lambda val: f"'{val}'",
         )
 
     @staticmethod
     def generate_features_filter(
-        tribe_ids: list[str],
-        component_ids: list[str],
+        tribe_ids: FilterParametersNode,
+        component_ids: FilterParametersNode,
     ) -> str:
-        tribes_fitler = CATSqlFilterClauseGenerator.generate_components_filter(
+        components_fitler = CATSqlFilterClauseGenerator.generate_components_filter(
             tribe_ids=tribe_ids
         )
-        components_filter = SqlFilterClauseGenerator().generate_in_filter(
-            values=component_ids,
+        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+            params=component_ids
+        )
+        features_filter = generate_filter(
             col=ComponentsFeaturesMeta.component_id,
-            filter_prefix=' AND' if tribes_fitler else 'WHERE',
+            values=component_ids.values,
+            filter_prefix=' AND' if components_fitler else 'WHERE',
             values_converter=lambda val: f"'{val}'",
         )
-        return tribes_fitler + components_filter
+
+        return components_fitler + features_filter

@@ -1,70 +1,173 @@
 import pytest
 from repository.customers_activity.local.sql_query_params_generator.platforms_products import PlatformsProductsSqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import PlatformsProductsMeta
+from repository.customers_activity.local.Tests.mocks import MockFilterParametersNode
 
 
 @pytest.mark.parametrize(
-    'input,output', [
+    'tribes, output', [
         (
-            [],
+            MockFilterParametersNode(include=True, values=[]),
             '',
         ),
         (
-            ['t1'],
+            MockFilterParametersNode(include=False, values=[]),
+            f"WHERE {PlatformsProductsMeta.tribe_id} IS NULL",
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['t1']),
             f"WHERE {PlatformsProductsMeta.tribe_id} IN ('t1')",
         ),
         (
-            ['t1', 't2'],
+            MockFilterParametersNode(include=False, values=['t1']),
+            f"WHERE ({PlatformsProductsMeta.tribe_id} IS NULL OR {PlatformsProductsMeta.tribe_id} NOT IN ('t1'))",
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['t1', 't2']),
             f"WHERE {PlatformsProductsMeta.tribe_id} IN ('t1','t2')",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['t1', 't2']),
+            f"WHERE ({PlatformsProductsMeta.tribe_id} IS NULL OR {PlatformsProductsMeta.tribe_id} NOT IN ('t1','t2'))",
         ),
     ]
 )
 def test_generate_platforms_filter(
-    input: list[str],
+    tribes: MockFilterParametersNode,
     output: str,
 ):
     assert PlatformsProductsSqlFilterClauseGenerator.generate_platforms_filter(
-        tribe_ids=input
+        tribe_ids=tribes
     ) == output
 
 
 @pytest.mark.parametrize(
     'tribes,platforms,output', [
         (
-            [],
-            [],
-            f'WHERE {PlatformsProductsMeta.product_id} IS NOT NULL',
+            MockFilterParametersNode(include=True, values=[]),
+            MockFilterParametersNode(include=True, values=[]),
+            '',
         ),
         (
-            ['t1'],
-            [],
-            f"WHERE {PlatformsProductsMeta.tribe_id} IN ('t1') AND {PlatformsProductsMeta.product_id} IS NOT NULL",
+            MockFilterParametersNode(include=False, values=[]),
+            MockFilterParametersNode(include=True, values=[]),
+            f"WHERE {PlatformsProductsMeta.tribe_id} IS NULL",
         ),
         (
-            [],
-            ['p1'],
-            f"WHERE {PlatformsProductsMeta.platform_id} IN ('p1') AND {PlatformsProductsMeta.product_id} IS NOT NULL",
+            MockFilterParametersNode(include=True, values=[]),
+            MockFilterParametersNode(include=False, values=[]),
+            f"WHERE {PlatformsProductsMeta.platform_id} IS NULL",
         ),
         (
-            ['t1'],
-            ['p1'],
-            f"WHERE {PlatformsProductsMeta.tribe_id} IN ('t1') AND {PlatformsProductsMeta.platform_id} IN ('p1') AND {PlatformsProductsMeta.product_id} IS NOT NULL",
+            MockFilterParametersNode(include=False, values=[]),
+            MockFilterParametersNode(include=False, values=[]),
+            f"WHERE {PlatformsProductsMeta.tribe_id} IS NULL AND {PlatformsProductsMeta.platform_id} IS NULL",
         ),
         (
-            ['t1', 't2'],
-            ['p1', 'p2'],
-            f"WHERE {PlatformsProductsMeta.tribe_id} IN ('t1','t2') AND {PlatformsProductsMeta.platform_id} IN ('p1','p2') AND {PlatformsProductsMeta.product_id} IS NOT NULL",
+            MockFilterParametersNode(include=True, values=['t1']),
+            MockFilterParametersNode(include=True, values=[]),
+            f"WHERE {PlatformsProductsMeta.tribe_id} IN ('t1')",
         ),
         (
-            ['t1', 't2'],
-            ['p1'],
-            f"WHERE {PlatformsProductsMeta.tribe_id} IN ('t1','t2') AND {PlatformsProductsMeta.platform_id} IN ('p1') AND {PlatformsProductsMeta.product_id} IS NOT NULL",
+            MockFilterParametersNode(include=False, values=['t1']),
+            MockFilterParametersNode(include=True, values=[]),
+            f"WHERE ({PlatformsProductsMeta.tribe_id} IS NULL OR {PlatformsProductsMeta.tribe_id} NOT IN ('t1'))",
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['t1']),
+            MockFilterParametersNode(include=False, values=[]),
+            f"WHERE {PlatformsProductsMeta.tribe_id} IN ('t1') AND {PlatformsProductsMeta.platform_id} IS NULL",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['t1']),
+            MockFilterParametersNode(include=False, values=[]),
+            f"WHERE ({PlatformsProductsMeta.tribe_id} IS NULL OR {PlatformsProductsMeta.tribe_id} NOT IN ('t1')) AND {PlatformsProductsMeta.platform_id} IS NULL",
+        ),
+        (
+            MockFilterParametersNode(include=True, values=[]),
+            MockFilterParametersNode(include=True, values=['p1']),
+            f"WHERE {PlatformsProductsMeta.platform_id} IN ('p1')",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[]),
+            MockFilterParametersNode(include=True, values=['p1']),
+            f"WHERE {PlatformsProductsMeta.tribe_id} IS NULL AND {PlatformsProductsMeta.platform_id} IN ('p1')",
+        ),
+        (
+            MockFilterParametersNode(include=True, values=[]),
+            MockFilterParametersNode(include=False, values=['p1']),
+            f"WHERE ({PlatformsProductsMeta.platform_id} IS NULL OR {PlatformsProductsMeta.platform_id} NOT IN ('p1'))",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[]),
+            MockFilterParametersNode(include=False, values=['p1']),
+            f"WHERE {PlatformsProductsMeta.tribe_id} IS NULL AND ({PlatformsProductsMeta.platform_id} IS NULL OR {PlatformsProductsMeta.platform_id} NOT IN ('p1'))",
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['t1']),
+            MockFilterParametersNode(include=True, values=['p1']),
+            f"WHERE {PlatformsProductsMeta.tribe_id} IN ('t1') AND {PlatformsProductsMeta.platform_id} IN ('p1')",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['t1']),
+            MockFilterParametersNode(include=True, values=['p1']),
+            f"WHERE ({PlatformsProductsMeta.tribe_id} IS NULL OR {PlatformsProductsMeta.tribe_id} NOT IN ('t1')) AND {PlatformsProductsMeta.platform_id} IN ('p1')",
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['t1']),
+            MockFilterParametersNode(include=False, values=['p1']),
+            f"WHERE {PlatformsProductsMeta.tribe_id} IN ('t1') AND ({PlatformsProductsMeta.platform_id} IS NULL OR {PlatformsProductsMeta.platform_id} NOT IN ('p1'))",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['t1']),
+            MockFilterParametersNode(include=False, values=['p1']),
+            f"WHERE ({PlatformsProductsMeta.tribe_id} IS NULL OR {PlatformsProductsMeta.tribe_id} NOT IN ('t1')) AND ({PlatformsProductsMeta.platform_id} IS NULL OR {PlatformsProductsMeta.platform_id} NOT IN ('p1'))",
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['t1', 't2']),
+            MockFilterParametersNode(include=True, values=['p1', 'p2']),
+            f"WHERE {PlatformsProductsMeta.tribe_id} IN ('t1','t2') AND {PlatformsProductsMeta.platform_id} IN ('p1','p2')",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['t1', 't2']),
+            MockFilterParametersNode(include=True, values=['p1', 'p2']),
+            f"WHERE ({PlatformsProductsMeta.tribe_id} IS NULL OR {PlatformsProductsMeta.tribe_id} NOT IN ('t1','t2')) AND {PlatformsProductsMeta.platform_id} IN ('p1','p2')",
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['t1', 't2']),
+            MockFilterParametersNode(include=False, values=['p1', 'p2']),
+            f"WHERE {PlatformsProductsMeta.tribe_id} IN ('t1','t2') AND ({PlatformsProductsMeta.platform_id} IS NULL OR {PlatformsProductsMeta.platform_id} NOT IN ('p1','p2'))",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['t1', 't2']),
+            MockFilterParametersNode(include=False, values=['p1', 'p2']),
+            f"WHERE ({PlatformsProductsMeta.tribe_id} IS NULL OR {PlatformsProductsMeta.tribe_id} NOT IN ('t1','t2')) AND ({PlatformsProductsMeta.platform_id} IS NULL OR {PlatformsProductsMeta.platform_id} NOT IN ('p1','p2'))",
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['t1', 't2']),
+            MockFilterParametersNode(include=True, values=['p1']),
+            f"WHERE {PlatformsProductsMeta.tribe_id} IN ('t1','t2') AND {PlatformsProductsMeta.platform_id} IN ('p1')",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['t1', 't2']),
+            MockFilterParametersNode(include=True, values=['p1']),
+            f"WHERE ({PlatformsProductsMeta.tribe_id} IS NULL OR {PlatformsProductsMeta.tribe_id} NOT IN ('t1','t2')) AND {PlatformsProductsMeta.platform_id} IN ('p1')",
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['t1', 't2']),
+            MockFilterParametersNode(include=False, values=['p1']),
+            f"WHERE {PlatformsProductsMeta.tribe_id} IN ('t1','t2') AND ({PlatformsProductsMeta.platform_id} IS NULL OR {PlatformsProductsMeta.platform_id} NOT IN ('p1'))",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['t1', 't2']),
+            MockFilterParametersNode(include=False, values=['p1']),
+            f"WHERE ({PlatformsProductsMeta.tribe_id} IS NULL OR {PlatformsProductsMeta.tribe_id} NOT IN ('t1','t2')) AND ({PlatformsProductsMeta.platform_id} IS NULL OR {PlatformsProductsMeta.platform_id} NOT IN ('p1'))",
         ),
     ]
 )
 def test_generate_products_filter(
-    tribes: list[str],
-    platforms: list[str],
+    tribes: MockFilterParametersNode,
+    platforms: MockFilterParametersNode,
     output: str,
 ):
     assert PlatformsProductsSqlFilterClauseGenerator.generate_products_filter(
