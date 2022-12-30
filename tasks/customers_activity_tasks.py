@@ -71,7 +71,7 @@ def load_tickets_types():
     ).text
     types = json.loads(types_str)['Page']
     df = DataFrame.from_records(data=types)
-    df = df.rename(columns={'displayName': 'name'})
+    df = df.rename(columns={'DisplayName': 'name', 'Id': 'id'})
     df = df.reset_index(drop=True)
     df = df[['name', 'id']]
     _save_tables(tables={CustomersActivityDBIndex.get_tickets_types_name(): df})
