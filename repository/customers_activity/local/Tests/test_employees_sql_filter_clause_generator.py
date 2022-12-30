@@ -36,8 +36,8 @@ def test_generate_positions_filter(
     positions: list[str],
     output: str,
 ):
-    assert EmployeesSqlFilterClauseGenerator.generate_positions_filter(
-        params=positions
+    assert EmployeesSqlFilterClauseGenerator._generate_positions_filter(
+        position_ids=positions
     ) == output
 
 
@@ -165,12 +165,12 @@ def test_generate_positions_filter(
         ),
     ]
 )
-def test_generate_filter(
+def test_generate_positions_tribes_filter(
     positions: list[str],
     tribes: list[str],
     output: str,
 ):
-    assert EmployeesSqlFilterClauseGenerator.generate_filter(
+    assert EmployeesSqlFilterClauseGenerator.generate_positions_tribes_filter(
         position_ids=positions,
         tribe_ids=tribes,
     ) == output

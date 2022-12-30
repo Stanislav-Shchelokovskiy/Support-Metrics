@@ -44,7 +44,7 @@ class ConversionStatusesRepository(SqliteRepository):
             'DISTINCT': '',
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_conversion_statuses_name(),
-            'filter_clause': ConversionStatusesSqlFilterClauseGenerator.generate_filter(
+            'filter_clause': ConversionStatusesSqlFilterClauseGenerator.generate_conversion_filter(
                     license_status_ids=kwargs['license_status_ids']
                 ),
         }

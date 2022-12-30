@@ -1,26 +1,30 @@
 from pydantic import BaseModel
 
 
-class TribeParams(BaseModel):
-    tribes: list[str]
-
-
-class FeatureParams(TribeParams):
-    components: list[str]
-
-
-class ProductParams(TribeParams):
-    platforms: list[str]
-
-
 class FilterParametersNode(BaseModel):
     include: bool
     values: list[int | str]
 
 
+class TribeParams(BaseModel):
+    tribes: FilterParametersNode
+
+
+class FeatureParams(TribeParams):
+    components: FilterParametersNode
+
+
+class ProductParams(TribeParams):
+    platforms: FilterParametersNode
+
+
 class EmployeeParams(BaseModel):
     tribes: FilterParametersNode
     positions: FilterParametersNode
+
+
+class ConversionStatusParams(BaseModel):
+    license_statuses: FilterParametersNode
 
 
 class TicketsWithIterationsParams(BaseModel):
@@ -42,7 +46,3 @@ class TicketsWithIterationsParams(BaseModel):
 
 class StatAppState(BaseModel):
     state: str
-
-
-class ConversionStatusParams(BaseModel):
-    license_statuses: list[int]

@@ -44,35 +44,29 @@ def customers_activity_get_license_statuses() -> str:
     return repository.get_data_json()
 
 
-def customers_activity_get_conversion_statuses(license_status_ids: list[int]) -> str:
+def customers_activity_get_conversion_statuses(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_conversion_statuses_repository()
-    return repository.get_data_json(license_status_ids=license_status_ids)
+    return repository.get_data_json(**kwargs)
 
 
-def customers_activity_get_platforms(tribe_ids: list[str]) -> str:
+def customers_activity_get_platforms(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_platforms_repository()
-    return repository.get_data_json(tribe_ids=tribe_ids,)
+    return repository.get_data_json(**kwargs)
 
 
-def customers_activity_get_products(tribe_ids: list[str], platform_ids: list[str],) -> str:
+def customers_activity_get_products(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_products_repository()
-    return repository.get_data_json(
-            tribe_ids=tribe_ids,
-            platform_ids=platform_ids,
-        )
+    return repository.get_data_json(**kwargs)
 
 
-def customers_activity_get_components(tribe_ids: list[str]) -> str:
+def customers_activity_get_components(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_components_repository()
-    return repository.get_data_json(tribe_ids=tribe_ids,)
+    return repository.get_data_json(**kwargs)
 
 
-def customers_activity_get_features(tribe_ids: list[str], component_ids: list[str]) -> str:
+def customers_activity_get_features(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_features_repository()
-    return repository.get_data_json(
-            tribe_ids=tribe_ids,
-            component_ids=component_ids,
-        )
+    return repository.get_data_json(**kwargs)
 
 
 def customers_activity_get_emp_positions() -> str:
@@ -85,12 +79,9 @@ def customers_activity_get_emp_tribes() -> str:
     return repository.get_data_json()
 
 
-def customers_activity_get_employees(position_ids: list[str], tribe_ids: list[str]) -> str:
+def customers_activity_get_employees(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_employees_repository()
-    return repository.get_data_json(
-            position_ids=position_ids,
-            tribe_ids=tribe_ids,
-        )
+    return repository.get_data_json(**kwargs)
 
 
 def customers_activity_get_tickets_with_iterations_aggregates(**kwargs) -> str:
