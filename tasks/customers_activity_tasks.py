@@ -69,7 +69,7 @@ def load_tickets_types():
         url='https://answerdesk-domain.hosting.devexpress.com/entityTypes?Company=c1f0951c-3885-44cf-accb-1a390f34c342',
         verify=False,
     ).text
-    types = json.loads(types_str)['page']
+    types = json.loads(types_str)['Page']
     df = DataFrame.from_records(data=types)
     df = df.rename(columns={'displayName': 'name'})
     df = df.reset_index(drop=True)
