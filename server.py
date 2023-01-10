@@ -66,14 +66,12 @@ def customers_activity_get_tickets_with_iterations_period():
 
 
 @app.get('/get_customers_groups')
-def customers_activity_get_customers_groups():
-    df_json = server_repository.customers_activity_get_customers_groups()
-    return get_response(json_data=df_json)
-
-
-@app.get('/get_tracked_customers_groups')
-def customers_activity_get_tracked_customers_groups():
-    df_json = server_repository.customers_activity_get_tracked_customers_groups()
+def customers_activity_get_customers_groups(tracked: bool = False):
+    df_json = (
+        server_repository.customers_activity_get_tracked_customers_groups()
+        if tracked else
+        server_repository.customers_activity_get_customers_groups()
+    )
     return get_response(json_data=df_json)
 
 
