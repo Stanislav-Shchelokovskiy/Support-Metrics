@@ -33,6 +33,10 @@ def load_groups():
     df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_customers_groups_name(): df})
 
+def load_tracked_groups(start_date: str):
+    repository = RepositoryFactory.customers_activity.remote.create_tracked_groups_repository()
+    df = repository.get_data(start_date=start_date)
+    _save_tables(tables={CustomersActivityDBIndex.get_tracked_customers_groups_name(): df})
 
 def load_replies_types():
     repository = RepositoryFactory.customers_activity.remote.create_replies_types_repository()

@@ -32,6 +32,13 @@ class CustomersActivitySqlPathIndex:
         return CustomersActivitySqlPathIndex.get_extract_path() + '/groups.sql'
 
     @staticmethod
+    def get_tracked_customers_groups_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_extract_path()
+            + '/tracked_groups.sql'
+        )
+
+    @staticmethod
     def get_ticket_tags_path() -> str:
         return CustomersActivitySqlPathIndex.get_extract_path() + '/tags.sql'
 
@@ -154,6 +161,12 @@ class CustomersActivityDBIndex:
     @staticmethod
     def get_customers_groups_name() -> str:
         return CustomersActivityDBIndex.get_root_name() + 'CustomersGroups'
+
+    @staticmethod
+    def get_tracked_customers_groups_name() -> str:
+        return (
+            CustomersActivityDBIndex.get_root_name() + 'TrackedCustomersGroups'
+        )
 
     @staticmethod
     def get_replies_types_name() -> str:

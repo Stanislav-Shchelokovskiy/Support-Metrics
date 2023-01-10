@@ -22,6 +22,7 @@ from sql_queries.customers_activity.meta import (
     TribeMeta,
     TribesMeta,
     EmployeesMeta,
+    TrackedCustomersGroupsMeta,
 )
 
 
@@ -88,6 +89,13 @@ tickets_with_iterations_common_params = {
             CustomersActivitySqlPathIndex.get_customers_groups_path,
             {
                 **CustomersGroupsMeta.get_attrs(),
+            },
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_tracked_customers_groups_path,
+            {
+                **TrackedCustomersGroupsMeta.get_attrs(),
+                'start_date': 'qwe',
             },
         ),
         (

@@ -70,6 +70,7 @@ class TicketTribeMeta(TribeMeta):
 
 
 class TicketsWithLicensesMeta(TicketTribeMeta):
+    user_crmid = 'user_crmid'
     user_id = 'user_id'
     ticket_scid = 'ticket_scid'
     creation_date = 'creation_date'
@@ -133,3 +134,12 @@ class TicketsWithIterationsRawMeta(MetaData):
     emp_name = TicketsWithIterationsMeta.emp_name
     emp_position_name = TicketsWithIterationsMeta.emp_position_name
     emp_tribe_name = TicketsWithIterationsMeta.emp_tribe_name
+
+
+class TrackedCustomersGroupsMeta(MetaData):
+    user_crmid = TicketsWithLicensesMeta.user_crmid
+    id = 'id'
+    name = 'name'
+    assignment_date = 'assignment_date'
+    removal_date = 'removal_date'
+    offset_in_days = 'offset_in_days'
