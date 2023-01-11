@@ -1,7 +1,7 @@
 from sql_queries.index import CustomersActivityDBIndex
 from sql_queries.customers_activity.meta import (
     ComponentsFeaturesMeta,
-    TicketsWithLicensesMeta,
+    TrackedCustomersGroupsMeta,
     EmployeesIterationsMeta,
     PlatformsProductsMeta,
 )
@@ -16,12 +16,11 @@ class IndexCreationExpressionsRepository:
         CustomersActivityDBIndex.get_components_features_name():
             [
                 _create_index_expression(
-                    tbl=CustomersActivityDBIndex.get_components_features_name(
-                    ),
+                    tbl=CustomersActivityDBIndex.get_components_features_name(),
                     cols=[
                         ComponentsFeaturesMeta.tribe_id,
                         ComponentsFeaturesMeta.component_id,
-                        ComponentsFeaturesMeta.feature_id
+                        ComponentsFeaturesMeta.feature_id,
                     ]
                 ),
             ],
@@ -32,7 +31,7 @@ class IndexCreationExpressionsRepository:
                     cols=[
                         PlatformsProductsMeta.tribe_id,
                         PlatformsProductsMeta.platform_id,
-                        PlatformsProductsMeta.product_id
+                        PlatformsProductsMeta.product_id,
                     ]
                 ),
             ],
@@ -41,6 +40,23 @@ class IndexCreationExpressionsRepository:
                 _create_index_expression(
                     tbl=CustomersActivityDBIndex.get_employees_iterations_name(),
                     cols=[EmployeesIterationsMeta.ticket_id]
+                ),
+            ],
+        CustomersActivityDBIndex.get_tracked_customers_groups_name():
+            [
+                _create_index_expression(
+                    tbl=CustomersActivityDBIndex.get_tracked_customers_groups_name(),
+                    cols=[
+                        TrackedCustomersGroupsMeta.assignment_date,
+                        TrackedCustomersGroupsMeta.id,
+                    ]
+                ),
+                _create_index_expression(
+                    tbl=CustomersActivityDBIndex.get_tracked_customers_groups_name(),
+                    cols=[
+                        TrackedCustomersGroupsMeta.id,
+                        TrackedCustomersGroupsMeta.name,
+                    ]
                 ),
             ],
     }

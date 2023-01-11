@@ -8,6 +8,7 @@ DECLARE @converted_free	TINYINT = 6
 
 
 SELECT
+	{user_crmid},
 	{user_id},
 	{tribe_id},
 	{tribe_name},

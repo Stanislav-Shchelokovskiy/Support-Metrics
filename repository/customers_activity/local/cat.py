@@ -21,10 +21,10 @@ class ReplyTypesRepository(SqliteRepository):
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
-            'DISTINCT': '',
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_replies_types_name(),
             'filter_clause': '',
+            'group_by_clause': '',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
@@ -41,12 +41,12 @@ class ComponentsRepository(SqliteRepository):
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
-            'DISTINCT': 'DISTINCT',
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_components_features_name(),
             'filter_clause': CATSqlFilterClauseGenerator.generate_components_filter(
                     tribe_ids=kwargs['tribe_ids']
-                )
+                ),
+            'group_by_clause': '',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
@@ -67,13 +67,13 @@ class FeaturesRepository(SqliteRepository):
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
-            'DISTINCT': '',
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_components_features_name(),
             'filter_clause': CATSqlFilterClauseGenerator.generate_features_filter(
                     tribe_ids=kwargs['tribe_ids'],
                     component_ids=kwargs['component_ids'],
-                )
+                ),
+            'group_by_clause': '',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:

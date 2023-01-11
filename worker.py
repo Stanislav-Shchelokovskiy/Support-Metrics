@@ -51,6 +51,7 @@ def update_customers_activity(**kwargs):
         [
             customers_activity_load_tags.si(),
             customers_activity_load_groups.si(),
+            customers_activity_load_tracked_groups.si(),
             customers_activity_load_replies_types.si(),
             customers_activity_load_components_features.si(),
             customers_activity_load_platforms_products.si(),
@@ -97,6 +98,14 @@ def customers_activity_load_groups(self, **kwargs):
     return run_retriable_task(
         self,
         customers_activity.load_groups,
+    )
+
+@app.task(name='customers_activity_load_tracked_groups', bind=True)
+def customers_activity_load_tracked_groups(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.load_tracked_groups,
+        start_date=CustomersActivityTasksConfig.get_tickets_with_licenses_period()['start_date'],
     )
 
 

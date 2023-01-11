@@ -23,6 +23,10 @@ def customers_activity_get_customers_groups() -> str:
     repository = RepositoryFactory.customers_activity.local.create_customers_groups_repository()
     return repository.get_data_json()
 
+def customers_activity_get_tracked_customers_groups() -> str:
+    repository = RepositoryFactory.customers_activity.local.create_tracked_customers_groups_repository()
+    return repository.get_data_json()
+
 
 def customers_activity_get_tickets_types() -> str:
     repository = RepositoryFactory.customers_activity.local.create_tickets_types_repository()

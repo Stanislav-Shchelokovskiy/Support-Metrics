@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS {TicketsWithIterations};
 CREATE TABLE {TicketsWithIterations} (
+  "{user_crmid}"         TEXT,
   "{user_id}"            TEXT,
   "{tribe_id}"           TEXT,
   "{tribe_name}"         TEXT,
@@ -26,6 +27,7 @@ CREATE TABLE {TicketsWithIterations} (
 
 INSERT INTO {TicketsWithIterations}
 SELECT
+    t.{user_crmid},
     t.{user_id},
     t.{tribe_id},
     t.{tribe_name},
@@ -53,3 +55,4 @@ FROM
     LEFT JOIN {EmployeesIterations} AS ei ON ei.{ticket_id} = t.{ticket_id};
 
 CREATE INDEX idx_{TicketsWithIterations}_{creation_date} ON {TicketsWithIterations}({creation_date}, {tribe_id}, {emp_position_id});
+CREATE INDEX idx_{TicketsWithIterations}_{user_crmid} ON {TicketsWithIterations}({user_crmid}, {creation_date}, {tribe_id});

@@ -2,9 +2,10 @@ from repository.customers_activity.remote.tickets_with_iterations import (
     TicketsWithLicensesRepository,
     EmployeesIterationsRepository,
 )
-from repository.customers_activity.remote.tickets import (
+from repository.customers_activity.remote.tickets import TicketsTagsRepository
+from repository.customers_activity.remote.customers_groups import (
     CustomersGroupsRepository,
-    TicketsTagsRepository,
+    TrackedCustomersGroupsRepository,
 )
 from repository.customers_activity.remote.cat import (
     RepliesTypesRepository,
@@ -15,8 +16,11 @@ from repository.customers_activity.remote.licenses_conversion import (
     LicenseStatusesRepository,
     ConversionStatusesRepository,
 )
-from repository.customers_activity.local.tickets import (
+from repository.customers_activity.local.customers_groups import (
     CustomersGroupsRepository as SqliteCustomersGroupsRepository,
+    TrackedCustomersGroupsRepository as SqliteTrackedCustomersGroupsRepository
+)
+from repository.customers_activity.local.tickets import (
     TicketsTypesRepository as SqliteTicketsTypesRepository,
     TicketsTagsRepository as SqliteTicketsTagsRepository,
 )
@@ -54,6 +58,9 @@ class SqlServerFactory:
     def create_groups_repository(self, **kwargs) -> CustomersGroupsRepository:
         return CustomersGroupsRepository()
 
+    def create_tracked_groups_repository(self, **kwargs) -> TrackedCustomersGroupsRepository:
+        return TrackedCustomersGroupsRepository()
+
     def create_tags_repository(self, **kwargs) -> TicketsTagsRepository:
         return TicketsTagsRepository()
 
@@ -86,6 +93,9 @@ class SqliteFactory:
 
     def create_customers_groups_repository(self, **kwargs) -> SqliteCustomersGroupsRepository:
         return SqliteCustomersGroupsRepository()
+    
+    def create_tracked_customers_groups_repository(self, **kwargs) -> SqliteTrackedCustomersGroupsRepository:
+        return SqliteTrackedCustomersGroupsRepository()
 
     def create_tickets_types_repository(self, **kwargs) -> SqliteTicketsTypesRepository:
         return SqliteTicketsTypesRepository()
