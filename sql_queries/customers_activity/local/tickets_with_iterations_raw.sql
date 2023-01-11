@@ -30,9 +30,10 @@ SELECT
     t.{emp_name},
     t.{emp_position_name},
     t.{emp_tribe_name}
+    {tracked_customer_groups_mode_fields}
 FROM {tickets_with_iterations_table} AS t
 WHERE 
-    {creation_date} BETWEEN '{range_start}' AND '{range_end}'
+    {creation_date_filter}
     {tribes_filter}
     {positions_filter}
     {emp_tribes_filter}

@@ -21,10 +21,10 @@ class LicenseStatusesRepository(SqliteRepository):
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
-            'DISTINCT': '',
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_license_statuses_name(),
             'filter_clause': '',
+            'group_by_clause': '',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
@@ -41,12 +41,12 @@ class ConversionStatusesRepository(SqliteRepository):
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
-            'DISTINCT': '',
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_conversion_statuses_name(),
             'filter_clause': ConversionStatusesSqlFilterClauseGenerator.generate_conversion_filter(
                     license_status_ids=kwargs['license_status_ids']
                 ),
+            'group_by_clause': '',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:

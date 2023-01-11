@@ -20,10 +20,10 @@ class TicketsTypesRepository(SqliteRepository):
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
-            'DISTINCT': '',
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_tickets_types_name(),
             'filter_clause': '',
+            'group_by_clause': '',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
@@ -40,10 +40,10 @@ class TicketsTagsRepository(SqliteRepository):
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
-            'DISTINCT': '',
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_tickets_tags_name(),
             'filter_clause': '',
+            'group_by_clause': '',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:

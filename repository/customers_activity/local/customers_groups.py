@@ -19,10 +19,10 @@ class CustomersGroupsRepository(SqliteRepository):
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
-            'DISTINCT': '',
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_customers_groups_name(),
             'filter_clause': '',
+            'group_by_clause': '',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
@@ -38,11 +38,12 @@ class TrackedCustomersGroupsRepository(SqliteRepository):
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        cols = ', '.join(self.get_must_have_columns(kwargs))
         return {
-            'DISTINCT': 'DISTINCT',
-            'columns': ', '.join(self.get_must_have_columns(kwargs)),
+            'columns': cols,
             'table_name': CustomersActivityDBIndex.get_tracked_customers_groups_name(),
             'filter_clause': '',
+            'group_by_clause': f'GROUP BY {cols}',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:

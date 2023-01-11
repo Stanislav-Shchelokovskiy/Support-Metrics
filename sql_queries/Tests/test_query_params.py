@@ -29,8 +29,7 @@ from sql_queries.customers_activity.meta import (
 tickets_with_iterations_common_params = {
     'tickets_with_iterations_table': 'table_name',
     'creation_date': 'creation_date',
-    'range_start': 'range_start',
-    'range_end': 'range_end',
+    'creation_date_filter': 'creation_date_filter',
     'tribes_filter': 'tribes_filter',
     'positions_filter': 'positions_filter',
     'emp_tribes_filter': 'emp_tribes_filter',
@@ -66,6 +65,7 @@ tickets_with_iterations_common_params = {
                 'conversion_statuses_table': 'conversion_statuses_table',
                 'replies_types_table': 'replies_types_table',
                 'components_features_table': 'components_features_table',
+                'tracked_customer_groups_mode_fields':'tracked_customer_groups_mode_fields'
             },
         ),
         (
@@ -133,10 +133,10 @@ tickets_with_iterations_common_params = {
         (
             CustomersActivitySqlPathIndex.get_general_select_path,
             {
-                'DISTINCT': 'empty_string | DISTINCT',
                 'columns': 'qwe, asd',
                 'table_name': 'test',
                 'filter_clause': '',
+                'group_by_clause': '',
             },
         ),
         (

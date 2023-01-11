@@ -1,7 +1,53 @@
 import pytest
 from repository.customers_activity.local.sql_query_params_generator.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
-from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
+from sql_queries.customers_activity.meta import TicketsWithIterationsMeta, TrackedCustomersGroupsMeta
 from repository.customers_activity.local.Tests.mocks import MockFilterParametersNode
+
+
+@pytest.mark.parametrize(
+    'kwargs, output', [
+        (
+            {
+                'range_start': 'qwe',
+                'range_end': 'asd',
+            },
+            f"{TicketsWithIterationsMeta.creation_date} BETWEEN 'qwe' AND 'asd'",
+        ),
+        (
+            {
+                'range_start': 'qwe',
+                'range_end': 'asd',
+                'use_tracked_customer_groups': False,
+                'col': 'zxc'
+            },
+            "zxc BETWEEN 'qwe' AND 'asd'",
+        ),
+        (
+            {
+                'range_start': 'qwe',
+                'range_end': 'asd',
+                'use_tracked_customer_groups': True,
+                'col': 'zxc'
+            },
+            f"zxc BETWEEN {TrackedCustomersGroupsMeta.assignment_date} AND {TrackedCustomersGroupsMeta.removal_date}",
+        ),
+        (
+            {
+                'range_start': 'qwe',
+                'range_end': 'asd',
+                'use_tracked_customer_groups': True,
+            },
+            f"{TicketsWithIterationsMeta.creation_date} BETWEEN {TrackedCustomersGroupsMeta.assignment_date} AND {TrackedCustomersGroupsMeta.removal_date}",
+        ),
+    ]
+)
+def test_generate_creation_date_filter(
+    kwargs: dict,
+    output,
+):
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_creation_date_filter(
+        **kwargs
+    ) == output
 
 
 @pytest.mark.parametrize(

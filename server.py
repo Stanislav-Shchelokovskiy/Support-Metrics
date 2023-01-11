@@ -179,6 +179,7 @@ def customers_activity_get_tickets_with_iterations_aggregates(
     group_by_period: str,
     range_start: str,
     range_end: str,
+    tracked_customer_groups_mode_enabled: bool,
     params: TicketsWithIterationsParams,
 ):
     df_json = server_repository.customers_activity_get_tickets_with_iterations_aggregates(
@@ -199,6 +200,7 @@ def customers_activity_get_tickets_with_iterations_aggregates(
         positions_ids=params.positions,
         emp_tribe_ids=params.emp_tribes,
         emp_ids=params.employees,
+        use_tracked_customer_groups=tracked_customer_groups_mode_enabled,
     )
     return get_response(json_data=df_json)
 
@@ -207,6 +209,7 @@ def customers_activity_get_tickets_with_iterations_aggregates(
 def customers_activity_get_tickets_with_iterations_raw(
     range_start: str,
     range_end: str,
+    tracked_customer_groups_mode_enabled: bool,
     params: TicketsWithIterationsParams,
 ):
     df_json = server_repository.customers_activity_get_tickets_with_iterations_raw(
@@ -226,6 +229,7 @@ def customers_activity_get_tickets_with_iterations_raw(
         positions_ids=params.positions,
         emp_tribe_ids=params.emp_tribes,
         emp_ids=params.employees,
+        use_tracked_customer_groups=tracked_customer_groups_mode_enabled,
     )
     return get_response(json_data=df_json)
 

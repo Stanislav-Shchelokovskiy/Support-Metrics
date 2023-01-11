@@ -9,7 +9,7 @@ SELECT
     COUNT({emp_post_id})            AS {iterations}
 FROM {tickets_with_iterations_table}
 WHERE
-    {creation_date} BETWEEN '{range_start}' AND '{range_end}'
+    {creation_date_filter}
     {tribes_filter}
     {positions_filter}
     {emp_tribes_filter}

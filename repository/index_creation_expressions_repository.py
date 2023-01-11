@@ -16,8 +16,7 @@ class IndexCreationExpressionsRepository:
         CustomersActivityDBIndex.get_components_features_name():
             [
                 _create_index_expression(
-                    tbl=CustomersActivityDBIndex.get_components_features_name(
-                    ),
+                    tbl=CustomersActivityDBIndex.get_components_features_name(),
                     cols=[
                         ComponentsFeaturesMeta.tribe_id,
                         ComponentsFeaturesMeta.component_id,
@@ -48,7 +47,7 @@ class IndexCreationExpressionsRepository:
                 _create_index_expression(
                     tbl=CustomersActivityDBIndex.get_tracked_customers_groups_name(),
                     cols=[
-                        TrackedCustomersGroupsMeta.user_crmid,
+                        TrackedCustomersGroupsMeta.assignment_date,
                         TrackedCustomersGroupsMeta.id,
                     ]
                 ),
