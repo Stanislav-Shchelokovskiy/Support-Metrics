@@ -9,7 +9,8 @@ SELECT
 	g.id	                AS {id},
 	g.Name	                AS {name},
 	assigned_ug.group_assign_date   AS {assignment_date},
-	ISNULL(deleted_ug.group_removal_date, @max_date) AS {removal_date},
+	IIF(assigned_ug.group_assign_date >= deleted_ug.group_removal_date, @max_date, 
+		ISNULL(deleted_ug.group_removal_date, @max_date)) AS {removal_date},
 	DATEDIFF(DAY, MIN(assigned_ug.group_assign_date) OVER (PARTITION BY g.id), assigned_ug.group_assign_date) AS {offset_in_days}
 FROM (	SELECT	Id AS id, Name AS name
 		FROM	CRM.dbo.UserGroups
