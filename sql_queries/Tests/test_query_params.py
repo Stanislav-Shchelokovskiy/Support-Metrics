@@ -128,6 +128,7 @@ tickets_with_iterations_common_params = {
             {
                 'table_name': 'test',
                 **TicketsWithIterationsPeriodMeta.get_attrs(),
+                'rank_period_offset': 'rank_period_offset',
             },
         ),
         (

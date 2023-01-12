@@ -31,7 +31,7 @@ SELECT
     t.{emp_position_name},
     t.{emp_tribe_name}
     {tracked_customer_groups_mode_fields}
-FROM {tickets_with_iterations_table} AS t
+FROM ({tickets_with_iterations_table}) AS t
 WHERE 
     {creation_date_filter}
     {tribes_filter}
