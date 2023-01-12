@@ -12,8 +12,8 @@ def get_ranked_tickets_with_iterations_query(
     INNER JOIN ( 
         SELECT {TicketsWithIterationsMeta.user_crmid}
         FROM ( SELECT {TicketsWithIterationsMeta.user_crmid},
-                    CAST(ROUND(PERCENT_RANK() OVER (ORDER BY COUNT(DISTINCT {TicketsWithIterationsMeta.ticket_scid})), 2) * 100 AS INTEGER) AS tickets_rank,
-                    CAST(ROUND(PERCENT_RANK() OVER (ORDER BY COUNT({TicketsWithIterationsMeta.emp_post_id})), 2) * 100 AS INTEGER) AS iterations_rank
+                      NTILE(100) OVER (ORDER BY COUNT(DISTINCT {TicketsWithIterationsMeta.ticket_scid}) DESC) AS tickets_rank,
+                      NTILE(100) OVER (ORDER BY COUNT({TicketsWithIterationsMeta.emp_post_id}) DESC) AS iterations_rank
                 FROM  {CustomersActivityDBIndex.get_tickets_with_iterations_name()}
                 WHERE {filter_generator.generate_creation_date_with_offset_start_filter(range_start=kwargs['range_start'], range_end=kwargs['range_end'])}
                 GROUP BY {TicketsWithIterationsMeta.user_crmid} ) AS rnk
