@@ -510,11 +510,11 @@ def test_generate_products_filter(
         ),
     ]
 )
-def test_generate_positions_filter(
+def test_generate_emp_positions_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_positions_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_emp_positions_filter(
         params=input
     ) == output
 

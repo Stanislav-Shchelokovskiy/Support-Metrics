@@ -11,8 +11,8 @@ from sql_queries.customers_activity.meta import (
     TicketsWithIterationsPeriodMeta,
 )
 from repository.customers_activity.local.sql_query_params_generator.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
-from repository.customers_activity.local.sub_queries.tracked_customer_groups import get_tracked_customers_groups_query
-from repository.customers_activity.local.sub_queries.customers_rank import get_ranked_tickets_with_iterations_query
+from repository.customers_activity.local.query_parts.sub_queries.tickets_with_iterations_table import get_tickets_with_iterations_table
+from repository.customers_activity.local.query_parts.filters import get_creation_date_and_tickets_filters
 from configs.customers_activity_config import CustomersActivityConfig
 
 
@@ -46,36 +46,9 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
     def get_general_format_params(self, kwargs:dict)-> dict[str,str]:
         generator = TicketsWithIterationsSqlFilterClauseGenerator
         return {
-            'tickets_with_iterations_table': self.get_tickets_with_iterations_clause(kwargs=kwargs, filter_generator=generator),
-            TicketsWithIterationsMeta.creation_date: TicketsWithIterationsMeta.creation_date,
-            'creation_date_filter': generator.generate_creation_date_filter(
-                range_start= kwargs['range_start'],
-                range_end=kwargs['range_end'],
-            ),
-            'customer_groups_filter': '' if kwargs['use_tracked_customer_groups'] else generator.generate_customer_groups_filter(params=kwargs['customers_groups']),
-            'ticket_types_filter': generator.generate_ticket_types_filter(params=kwargs['tickets_types']),
-            'ticket_tags_filter': generator.generate_ticket_tags_filter(params=kwargs['tickets_tags']),
-            'tribes_filter': generator.generate_tribes_filter(params=kwargs['tribe_ids']),
-            'reply_types_filter': generator.generate_reply_types_filter(params=kwargs['reply_ids']),
-            'components_filter': generator.generate_components_filter(params=kwargs['components_ids']),
-            'features_filter': generator.generate_features_filter(params=kwargs['feature_ids']),
-            'license_status_filter' : generator.generate_license_status_filter(params=kwargs['license_statuses']),
-            'conversion_status_filter' : generator.generate_conversion_status_filter(params=kwargs['conversion_statuses']),
-            'platforms_filter': generator.generate_platforms_filter(params=kwargs['platforms_ids']),
-            'products_filter': generator.generate_products_filter(params=kwargs['products_ids']),
-            'positions_filter': generator.generate_positions_filter(params=kwargs['positions_ids']),
-            'emp_tribes_filter': generator.generate_emp_tribes_filter(params=kwargs['emp_tribe_ids']),
-            'emps_filter': generator.generate_employees_filter(params=kwargs['emp_ids']),
+            'tickets_with_iterations_table': get_tickets_with_iterations_table(kwargs=kwargs, filter_generator=generator),
+            'tickets_filter': get_creation_date_and_tickets_filters(kwargs=kwargs, filter_generator=generator),
         }
-
-    def get_tickets_with_iterations_clause(
-        self,
-        kwargs: dict,
-        filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
-    ) -> str:
-        if kwargs['use_tracked_customer_groups']:
-            return get_tracked_customers_groups_query(kwargs=kwargs, filter_generator=filter_generator)
-        return get_ranked_tickets_with_iterations_query(kwargs=kwargs, filter_generator=filter_generator)
 
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:

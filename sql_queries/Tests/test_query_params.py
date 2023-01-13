@@ -28,22 +28,7 @@ from sql_queries.customers_activity.meta import (
 
 tickets_with_iterations_common_params = {
     'tickets_with_iterations_table': 'table_name',
-    'creation_date': 'creation_date',
-    'creation_date_filter': 'creation_date_filter',
-    'tribes_filter': 'tribes_filter',
-    'positions_filter': 'positions_filter',
-    'emp_tribes_filter': 'emp_tribes_filter',
-    'emps_filter': 'emps_filter',
-    'customer_groups_filter': 'customer_groups_filter',
-    'ticket_types_filter': 'ticket_types_filter',
-    'ticket_tags_filter': 'ticket_tags_filter',
-    'reply_types_filter': 'reply_types_filter',
-    'components_filter': 'components_filter',
-    'features_filter': 'features_filter',
-    'license_status_filter': 'license_status_filter',
-    'conversion_status_filter': 'conversion_status_filter',
-    'platforms_filter': 'platforms_filter',
-    'products_filter': 'products_filter',
+    'tickets_filter': 'tickets_filter',
 }
 
 

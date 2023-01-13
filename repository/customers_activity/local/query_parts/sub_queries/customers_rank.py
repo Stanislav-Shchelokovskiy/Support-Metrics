@@ -1,6 +1,7 @@
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
 from sql_queries.index import CustomersActivityDBIndex
 from repository.customers_activity.local.sql_query_params_generator.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
+import repository.customers_activity.local.query_parts.filters as filters
 
 
 def get_ranked_tickets_with_iterations_query(
@@ -15,29 +16,10 @@ def get_ranked_tickets_with_iterations_query(
                       NTILE(100) OVER (ORDER BY COUNT(DISTINCT {TicketsWithIterationsMeta.ticket_scid}) DESC) AS tickets_rank,
                       NTILE(100) OVER (ORDER BY COUNT({TicketsWithIterationsMeta.emp_post_id}) DESC) AS iterations_rank
                 FROM  {CustomersActivityDBIndex.get_tickets_with_iterations_name()}
-                WHERE {filter_generator.generate_creation_date_with_offset_start_filter(range_start=kwargs['range_start'], range_end=kwargs['range_end'])}
+                WHERE 
+                    {filters.get_creation_date_with_offset_stars_filter(kwargs=kwargs,filter_generator=filter_generator)}
+                    {filters.get_tickets_filter(kwargs=kwargs,filter_generator=filter_generator)}
                 GROUP BY {TicketsWithIterationsMeta.user_crmid} ) AS rnk
-        WHERE {get_rank_filter(kwargs)}
+        WHERE {filters.get_rank_filter(kwargs)}
     ) AS usr_rnk ON usr_rnk.{TicketsWithIterationsMeta.user_crmid} = ti.{TicketsWithIterationsMeta.user_crmid}"""
     )
-
-
-def get_rank_filter(kwargs: dict) -> str:
-    tickets_rank = kwargs['tickets_rank']
-    if tickets_rank is not None:
-        return f'tickets_rank <= {validate_rank(tickets_rank)}'
-    iterations_rank = kwargs['iterations_rank']
-    if iterations_rank is None:
-        return 'tickets_rank <= 100'
-    return f'iterations_rank <= {validate_rank(iterations_rank)}'
-
-
-def validate_rank(rank: int | None):
-    if rank is not None:
-        if rank < 0:
-            rank = 0
-        if rank > 100:
-            rank = 100
-    else:
-        rank = 100
-    return rank

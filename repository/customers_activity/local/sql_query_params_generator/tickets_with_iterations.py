@@ -154,7 +154,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         )
 
     @staticmethod
-    def generate_positions_filter(params: FilterParametersNode) -> str:
+    def generate_emp_positions_filter(params: FilterParametersNode) -> str:
         generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
             params
         )
