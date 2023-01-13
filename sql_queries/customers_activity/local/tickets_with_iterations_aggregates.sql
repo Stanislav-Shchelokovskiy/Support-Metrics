@@ -17,3 +17,4 @@ GROUP BY
         STRFTIME('%Y-%m-%d', {creation_date}, 'weekday 0', '-6 day'), 
         STRFTIME('{group_by_period}', {creation_date})
     )
+ORDER BY {period}
