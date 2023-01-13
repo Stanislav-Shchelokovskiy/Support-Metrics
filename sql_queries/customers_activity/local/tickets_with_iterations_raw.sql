@@ -31,20 +31,6 @@ SELECT
     t.{emp_position_name},
     t.{emp_tribe_name}
     {tracked_customer_groups_mode_fields}
-FROM {tickets_with_iterations_table} AS t
+FROM ({tickets_with_iterations_table}) AS t
 WHERE 
-    {creation_date_filter}
-    {tribes_filter}
-    {positions_filter}
-    {emp_tribes_filter}
-    {emps_filter}
-    {customer_groups_filter}
-    {ticket_types_filter}
-    {ticket_tags_filter}
-    {reply_types_filter}
-    {components_filter}
-    {features_filter}
-    {license_status_filter}
-    {conversion_status_filter}
-    {platforms_filter}
-    {products_filter}
+    {tickets_filter}

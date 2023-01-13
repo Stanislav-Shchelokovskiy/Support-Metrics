@@ -119,6 +119,7 @@ class TicketsWithIterationsAggregatesMeta(MetaData):
     tickets = 'tickets'
     emp_post_id = TicketsWithIterationsMeta.emp_post_id
     iterations = 'iterations'
+    creation_date = TicketsWithIterationsMeta.creation_date
 
 
 class TicketsWithIterationsRawMeta(MetaData):
@@ -134,6 +135,7 @@ class TicketsWithIterationsRawMeta(MetaData):
     emp_name = TicketsWithIterationsMeta.emp_name
     emp_position_name = TicketsWithIterationsMeta.emp_position_name
     emp_tribe_name = TicketsWithIterationsMeta.emp_tribe_name
+    creation_date = TicketsWithIterationsMeta.creation_date
 
 
 class TrackedCustomersGroupsMeta(MetaData):

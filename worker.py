@@ -6,7 +6,7 @@ from celery.schedules import crontab
 from celery.signals import worker_ready
 
 import tasks.customers_activity_tasks as customers_activity
-from configs.customers_activity_tasks_config import CustomersActivityTasksConfig
+from configs.customers_activity_config import CustomersActivityConfig
 
 
 app = Celery(
@@ -105,7 +105,7 @@ def customers_activity_load_tracked_groups(self, **kwargs):
     return run_retriable_task(
         self,
         customers_activity.load_tracked_groups,
-        start_date=CustomersActivityTasksConfig.get_tickets_with_licenses_period()['start_date'],
+        start_date=CustomersActivityConfig.get_tickets_with_licenses_period()['start_date'],
     )
 
 
@@ -138,7 +138,7 @@ def customers_activity_load_tickets_with_licenses(self, **kwargs):
     return run_retriable_task(
         self,
         customers_activity.load_tickets_with_licenses,
-        **CustomersActivityTasksConfig.get_tickets_with_licenses_period(),
+        **CustomersActivityConfig.get_tickets_with_licenses_period(),
     )
 
 
@@ -147,7 +147,7 @@ def customers_activity_load_employees_iterations(self, **kwargs):
     return run_retriable_task(
         self,
         customers_activity.load_employees_iterations,
-        **CustomersActivityTasksConfig.get_tickets_with_licenses_period(),
+        **CustomersActivityConfig.get_tickets_with_licenses_period(),
     )
 
 

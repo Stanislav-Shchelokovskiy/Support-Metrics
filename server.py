@@ -181,11 +181,17 @@ def customers_activity_get_tickets_with_iterations_aggregates(
     range_end: str,
     tracked_customer_groups_mode_enabled: bool,
     params: TicketsWithIterationsParams,
+    tickets_rank: int | None = None,
+    iterations_rank: int | None = None,
 ):
+
     df_json = server_repository.customers_activity_get_tickets_with_iterations_aggregates(
         group_by_period=group_by_period,
         range_start=range_start,
         range_end=range_end,
+        tickets_rank=tickets_rank,
+        iterations_rank=iterations_rank,
+        use_tracked_customer_groups=tracked_customer_groups_mode_enabled,
         customers_groups=params.customers_groups,
         tickets_types=params.tickets_types,
         tickets_tags=params.tickets_tags,
@@ -200,7 +206,6 @@ def customers_activity_get_tickets_with_iterations_aggregates(
         positions_ids=params.positions,
         emp_tribe_ids=params.emp_tribes,
         emp_ids=params.employees,
-        use_tracked_customer_groups=tracked_customer_groups_mode_enabled,
     )
     return get_response(json_data=df_json)
 
@@ -211,10 +216,15 @@ def customers_activity_get_tickets_with_iterations_raw(
     range_end: str,
     tracked_customer_groups_mode_enabled: bool,
     params: TicketsWithIterationsParams,
+    tickets_rank: int | None = None,
+    iterations_rank: int | None = None,
 ):
     df_json = server_repository.customers_activity_get_tickets_with_iterations_raw(
         range_start=range_start,
         range_end=range_end,
+        tickets_rank=tickets_rank,
+        iterations_rank=iterations_rank,
+        use_tracked_customer_groups=tracked_customer_groups_mode_enabled,
         customers_groups=params.customers_groups,
         tickets_types=params.tickets_types,
         tickets_tags=params.tickets_tags,
@@ -229,7 +239,6 @@ def customers_activity_get_tickets_with_iterations_raw(
         positions_ids=params.positions,
         emp_tribe_ids=params.emp_tribes,
         emp_ids=params.employees,
-        use_tracked_customer_groups=tracked_customer_groups_mode_enabled,
     )
     return get_response(json_data=df_json)
 
