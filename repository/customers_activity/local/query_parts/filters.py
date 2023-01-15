@@ -52,24 +52,3 @@ def get_customer_groups_filter(
             params=kwargs['customers_groups']
         )
     )
-
-
-def get_rank_filter(kwargs: dict) -> str:
-
-    def validate_rank(rank: int | None):
-        if rank is not None:
-            if rank < 0:
-                rank = 0
-            if rank > 100:
-                rank = 100
-        else:
-            rank = 100
-        return rank
-
-    tickets_rank = kwargs['tickets_rank']
-    if tickets_rank is not None:
-        return f'tickets_rank <= {validate_rank(tickets_rank)}'
-    iterations_rank = kwargs['iterations_rank']
-    if iterations_rank is None:
-        return 'tickets_rank <= 100'
-    return f'iterations_rank <= {validate_rank(iterations_rank)}'
