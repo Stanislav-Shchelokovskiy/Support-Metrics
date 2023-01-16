@@ -38,6 +38,10 @@ class ReplyTypesMeta(KnotMeta):
     pass
 
 
+class CustomersMeta(KnotMeta):
+    pass
+
+
 class TicketsWithIterationsPeriodMeta(MetaData):
     period_start = 'period_start'
     period_end = 'period_end'

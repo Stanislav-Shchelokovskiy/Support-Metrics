@@ -121,8 +121,7 @@ tickets_with_iterations_common_params = {
             {
                 'columns': 'qwe, asd',
                 'table_name': 'test',
-                'filter_clause': '',
-                'group_by_clause': '',
+                'filter_group_limit_clause': '',
             },
         ),
         (

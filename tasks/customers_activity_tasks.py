@@ -98,4 +98,5 @@ def build_tables():
     TablesBuilder.customers_activity.build_emp_positions()
     TablesBuilder.customers_activity.build_emp_tribes()
     TablesBuilder.customers_activity.build_employees()
+    TablesBuilder.customers_activity.build_users()
 # yapf: enable

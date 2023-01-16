@@ -21,10 +21,8 @@ class PlatformsRepository(SqliteRepository):
         return {
             'columns': cols,
             'table_name': CustomersActivityDBIndex.get_platforms_products_name(),
-            'filter_clause': PlatformsProductsSqlFilterClauseGenerator.generate_platforms_filter(
-                    tribe_ids=kwargs['tribe_ids']
-                ),
-            'group_by_clause': f'GROUP BY {cols}',
+            'filter_group_limit_clause': 
+            f"{PlatformsProductsSqlFilterClauseGenerator.generate_platforms_filter(tribe_ids=kwargs['tribe_ids'])}\nGROUP BY {cols}",
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
@@ -47,11 +45,10 @@ class ProductsRepository(SqliteRepository):
         return {
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_platforms_products_name(),
-            'filter_clause': PlatformsProductsSqlFilterClauseGenerator.generate_products_filter(
+            'filter_group_limit_clause': PlatformsProductsSqlFilterClauseGenerator.generate_products_filter(
                     tribe_ids=kwargs['tribe_ids'],
                     platform_ids=kwargs['platform_ids'],
                 ),
-            'group_by_clause': '',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:

@@ -1,4 +1,3 @@
 SELECT {columns}
 FROM {table_name}
-{filter_clause}
-{group_by_clause}
+{filter_group_limit_clause}

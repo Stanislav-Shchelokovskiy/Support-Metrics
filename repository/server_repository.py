@@ -87,6 +87,10 @@ def customers_activity_get_employees(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_employees_repository()
     return repository.get_data_json(**kwargs)
 
+def customers_activity_get_customers(**kwargs) -> str:
+    repository = RepositoryFactory.customers_activity.local.create_customers_repository()
+    return repository.get_data_json(**kwargs)
+
 
 def customers_activity_get_tickets_with_iterations_aggregates(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_tickets_with_iterations_aggregates_repository()

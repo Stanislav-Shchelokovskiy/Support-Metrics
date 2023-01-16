@@ -147,6 +147,13 @@ class CustomersActivitySqlPathIndex:
             + '/emps.sql'
         )
 
+    @staticmethod
+    def get_customers_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_transform_load_path()
+            + '/customers.sql'
+        )
+
 
 class CustomersActivityDBIndex:
 
@@ -205,6 +212,10 @@ class CustomersActivityDBIndex:
     @staticmethod
     def get_employees_name() -> str:
         return CustomersActivityDBIndex.get_root_name() + 'Employees'
+
+    @staticmethod
+    def get_customers_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'Customers'
 
     @staticmethod
     def get_tickets_with_licenses_name() -> str:

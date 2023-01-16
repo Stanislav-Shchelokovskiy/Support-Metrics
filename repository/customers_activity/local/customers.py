@@ -4,11 +4,33 @@ from sql_queries.index import (
     CustomersActivityDBIndex,
 )
 from sql_queries.customers_activity.meta import (
-    CustomersGroupsMeta, TrackedCustomersGroupsMeta
+    CustomersGroupsMeta,
+    TrackedCustomersGroupsMeta,
+    CustomersMeta,
 )
 
 
 # yapf: disable
+class CustomersRepository(SqliteRepository):
+    """
+    Interface to a local table storing available customers.
+    """
+
+    def get_main_query_path(self, kwargs: dict) -> str:
+        return CustomersActivitySqlPathIndex.get_general_select_path()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        search_param = kwargs.get('search')
+        return {
+            'columns': ', '.join(self.get_must_have_columns(kwargs)),
+            'table_name': CustomersActivityDBIndex.get_customers_name(),
+            'filter_group_limit_clause': f"WHERE {CustomersMeta.name} LIKE '{search_param}%'\nLIMIT {kwargs['take']} OFFSET {kwargs['skip']}",
+        }
+
+    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+        return [CustomersMeta.id, CustomersMeta.name]
+
+
 class CustomersGroupsRepository(SqliteRepository):
     """
     Interface to a local table storing customers groups.
@@ -21,8 +43,7 @@ class CustomersGroupsRepository(SqliteRepository):
         return {
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_customers_groups_name(),
-            'filter_clause': '',
-            'group_by_clause': '',
+            'filter_group_limit_clause': '',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
@@ -42,8 +63,7 @@ class TrackedCustomersGroupsRepository(SqliteRepository):
         return {
             'columns': cols,
             'table_name': CustomersActivityDBIndex.get_tracked_customers_groups_name(),
-            'filter_clause': '',
-            'group_by_clause': f'GROUP BY {cols}',
+            'filter_group_limit_clause': f'GROUP BY {cols}',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:

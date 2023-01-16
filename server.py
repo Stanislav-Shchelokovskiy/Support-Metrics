@@ -174,6 +174,21 @@ def customers_activity_get_employees(params: EmployeeParams):
     )
 
 
+@app.get('/get_customers')
+def customers_activity_get_customers(
+    search: str = '',
+    skip: int = 0,
+    take: int = 0,
+):
+    return get_response(
+        json_data=server_repository.customers_activity_get_customers(
+            search=search,
+            skip=skip,
+            take=take,
+        )
+    )
+
+
 @app.post('/get_tickets_with_iterations_aggregates')
 def customers_activity_get_tickets_with_iterations_aggregates(
     group_by_period: str,

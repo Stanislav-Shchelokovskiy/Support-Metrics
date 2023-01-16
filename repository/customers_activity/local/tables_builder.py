@@ -11,6 +11,7 @@ from sql_queries.customers_activity.meta import (
     TribeMeta,
     TribesMeta,
     EmployeesMeta,
+    CustomersMeta,
 )
 
 
@@ -64,6 +65,20 @@ class TablesBuilder:
                 **EmployeesMeta.get_attrs(),
                 'Employees': CustomersActivityDBIndex.get_employees_name(),
                 'EmployeesIterations': CustomersActivityDBIndex.get_employees_iterations_name(),
+            }
+        )
+        query_executor = SQLitePostQueryExecutor()
+        query_executor.execute(query)
+
+    def build_users(self):
+        query = SqlQuery(
+            query_file_path=CustomersActivitySqlPathIndex.get_customers_path(),
+            format_params={
+                **CustomersMeta.get_attrs(),
+                TicketsWithIterationsMeta.user_crmid: TicketsWithIterationsMeta.user_crmid,
+                TicketsWithIterationsMeta.user_id: TicketsWithIterationsMeta.user_id,
+                'Users': CustomersActivityDBIndex.get_customers_name(),
+                'TicketsWithLicenses': CustomersActivityDBIndex.get_tickets_with_licenses_name(),
             }
         )
         query_executor = SQLitePostQueryExecutor()
