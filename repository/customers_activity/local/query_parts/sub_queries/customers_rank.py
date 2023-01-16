@@ -9,14 +9,14 @@ def get_ranked_tickets_with_iterations_query(
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
 ):
     return (
-        f"""{CustomersActivityDBIndex.get_tickets_with_iterations_name()} AS ti 
-    INNER JOIN ( 
+        f"""{CustomersActivityDBIndex.get_tickets_with_iterations_name()} AS ti
+    INNER JOIN (
         SELECT {TicketsWithIterationsMeta.user_crmid}
         FROM ( SELECT {TicketsWithIterationsMeta.user_crmid},
-                      ROW_NUMBER() OVER (ORDER BY COUNT(DISTINCT {get_rank_field(kwargs)}) DESC) * 100.0 / COUNT(*) OVER ()) AS percentile,
+                      ROW_NUMBER() OVER (ORDER BY COUNT(DISTINCT {get_rank_field(kwargs)}) DESC) * 100.0 / COUNT(*) OVER () AS percentile
                 FROM  {CustomersActivityDBIndex.get_tickets_with_iterations_name()}
-                WHERE 
-                    {filters.get_creation_date_with_offset_stars_filter(kwargs=kwargs,filter_generator=filter_generator)}
+                WHERE
+                    {filters.get_creation_date_with_offset_start_filter(kwargs=kwargs,filter_generator=filter_generator)}
                     {filters.get_tickets_filter(kwargs=kwargs,filter_generator=filter_generator)}
                 GROUP BY {TicketsWithIterationsMeta.user_crmid} ) AS rnk
         WHERE percentile <= {get_percentile_value(kwargs)}

@@ -1,7 +1,7 @@
 from repository.customers_activity.local.sql_query_params_generator.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
 
 
-def get_creation_date_with_offset_stars_filter(
+def get_creation_date_with_offset_start_filter(
     kwargs: dict,
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
 ) -> str:
