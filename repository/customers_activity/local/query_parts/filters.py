@@ -39,7 +39,8 @@ def get_tickets_filter(
                     {filter_generator.generate_employees_filter(params=kwargs['emp_ids'])}
                     {filter_generator.generate_reply_types_filter(params=kwargs['reply_ids'])}
                     {filter_generator.generate_components_filter(params=kwargs['components_ids'])}
-                    {filter_generator.generate_features_filter(params=kwargs['feature_ids'])}"""
+                    {filter_generator.generate_features_filter(params=kwargs['feature_ids'])}
+                    {filter_generator.generate_customers_filter(params=kwargs['customers_crmids'])}"""
 
 
 def get_customer_groups_filter(

@@ -15,6 +15,7 @@ from server_models import (
     StatAppState,
     ConversionStatusParams,
     EmployeeParams,
+    CustomersParams,
 )
 import hashlib
 
@@ -174,14 +175,16 @@ def customers_activity_get_employees(params: EmployeeParams):
     )
 
 
-@app.get('/get_customers')
+@app.post('/get_customers')
 def customers_activity_get_customers(
+    params: CustomersParams,
     search: str = '',
     skip: int = 0,
     take: int = 0,
 ):
     return get_response(
         json_data=server_repository.customers_activity_get_customers(
+            filter_values=params.filter_values,
             search=search,
             skip=skip,
             take=take,
@@ -221,6 +224,7 @@ def customers_activity_get_tickets_with_iterations_aggregates(
         positions_ids=params.positions,
         emp_tribe_ids=params.emp_tribes,
         emp_ids=params.employees,
+        customers_crmids=params.customers,
     )
     return get_response(json_data=df_json)
 
@@ -254,6 +258,7 @@ def customers_activity_get_tickets_with_iterations_raw(
         positions_ids=params.positions,
         emp_tribe_ids=params.emp_tribes,
         emp_ids=params.employees,
+        customers_crmids=params.customers,
     )
     return get_response(json_data=df_json)
 

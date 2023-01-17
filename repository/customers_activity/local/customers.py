@@ -20,11 +20,14 @@ class CustomersRepository(SqliteRepository):
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
-        search_param = kwargs.get('search')
+        search_param = kwargs['search']
+        filter_values=kwargs['filter_values']
+        print(filter_values)
+        ids_filter = '\nOR '.join([f"{CustomersMeta.id} = '{value}'" for value in filter_values])
         return {
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_customers_name(),
-            'filter_group_limit_clause': f"WHERE {CustomersMeta.name} LIKE '{search_param}%'\nLIMIT {kwargs['take']} OFFSET {kwargs['skip']}",
+            'filter_group_limit_clause': f'WHERE\n{ids_filter}' if ids_filter else f"WHERE {CustomersMeta.name} LIKE '{search_param}%'\nLIMIT {kwargs['take']} OFFSET {kwargs['skip']}",
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:

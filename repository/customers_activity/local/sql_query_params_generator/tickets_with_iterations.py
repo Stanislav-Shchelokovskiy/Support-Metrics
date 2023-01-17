@@ -188,3 +188,15 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",
         )
+    
+    @staticmethod
+    def generate_customers_filter(params: FilterParametersNode) -> str:
+        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+            params
+        )
+        return generate_filter(
+            col=TicketsWithIterationsMeta.user_crmid,
+            values=params.values,
+            filter_prefix='AND',
+            values_converter=lambda val: f"'{val}'",
+        )
