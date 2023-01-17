@@ -184,10 +184,19 @@ def customers_activity_get_customers(
 ):
     return get_response(
         json_data=server_repository.customers_activity_get_customers(
-            filter_values=params.filter_values,
+            filter_values=params.customers,
             search=search,
             skip=skip,
             take=take,
+        )
+    )
+
+
+@app.post('/validate_customers')
+def customers_activity_validate_customers(params: CustomersParams):
+    return get_response(
+        json_data=server_repository.customers_activity_validate_customers(
+            values=params.customers
         )
     )
 

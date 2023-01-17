@@ -9,6 +9,8 @@ from sql_queries.customers_activity.meta import (
     CustomersMeta,
 )
 
+from repository.customers_activity.local.validation_repository import ValidationRepository
+
 
 # yapf: disable
 class CustomersRepository(SqliteRepository):
@@ -33,6 +35,14 @@ class CustomersRepository(SqliteRepository):
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return [CustomersMeta.id, CustomersMeta.name]
 
+    def validate_values(self, **kwargs) -> str:
+        validation_repository = ValidationRepository()
+        return validation_repository.validate_values(
+                kwargs={
+                    'values': ',\n'.join([f"('{value}')" for value in kwargs['values']]),
+                    'field': CustomersMeta.id,
+                    'table': CustomersActivityDBIndex.get_customers_name(),
+            })
 
 class CustomersGroupsRepository(SqliteRepository):
     """

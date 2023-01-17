@@ -154,6 +154,12 @@ class CustomersActivitySqlPathIndex:
             + '/customers.sql'
         )
 
+    @staticmethod
+    def get_validate_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_local_path() + '/validate.sql'
+        )
+
 
 class CustomersActivityDBIndex:
 

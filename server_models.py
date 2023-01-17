@@ -28,7 +28,7 @@ class ConversionStatusParams(BaseModel):
 
 
 class CustomersParams(BaseModel):
-    filter_values: list[str]
+    customers: list[str]
 
 
 class TicketsWithIterationsParams(BaseModel):

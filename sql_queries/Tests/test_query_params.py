@@ -171,6 +171,14 @@ tickets_with_iterations_common_params = {
                 'TicketsWithIterations': 'TicketsWithIterations',
             },
         ),
+        (
+            CustomersActivitySqlPathIndex.get_validate_path,
+            {
+                'values': 'values',
+                'field': 'field',
+                'table': 'table',
+            },
+        ),
     ],
 )
 def test_query_params(
