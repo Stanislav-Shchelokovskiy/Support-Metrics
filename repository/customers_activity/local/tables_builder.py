@@ -17,7 +17,7 @@ from sql_queries.customers_activity.meta import (
 
 class TablesBuilder:
     #yapf: disable
-    def build_tickets_with_iterations(self):
+    def build_tickets_with_iterations(self, rank_period_offset: str):
         query = SqlQuery(
             query_file_path=CustomersActivitySqlPathIndex.get_tickets_with_iterations_path(),
             format_params={
@@ -26,6 +26,7 @@ class TablesBuilder:
                 'TicketsWithIterations': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
                 'TicketsWithLicenses': CustomersActivityDBIndex.get_tickets_with_licenses_name(),
                 'EmployeesIterations': CustomersActivityDBIndex.get_employees_iterations_name(),
+                'rank_period_offset': rank_period_offset,
             }
         )
         query_executor = SQLitePostQueryExecutor()
@@ -75,10 +76,8 @@ class TablesBuilder:
             query_file_path=CustomersActivitySqlPathIndex.get_customers_path(),
             format_params={
                 **CustomersMeta.get_attrs(),
-                TicketsWithIterationsMeta.user_crmid: TicketsWithIterationsMeta.user_crmid,
-                TicketsWithIterationsMeta.user_id: TicketsWithIterationsMeta.user_id,
                 'Users': CustomersActivityDBIndex.get_customers_name(),
-                'TicketsWithLicenses': CustomersActivityDBIndex.get_tickets_with_licenses_name(),
+                'TicketsWithIterations': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
             }
         )
         query_executor = SQLitePostQueryExecutor()

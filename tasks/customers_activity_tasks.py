@@ -93,8 +93,8 @@ def load_conversion_statuses():
     _save_tables(tables={CustomersActivityDBIndex.get_conversion_statuses_name(): df})
 
 
-def build_tables():
-    TablesBuilder.customers_activity.build_tickets_with_iterations()
+def build_tables(rank_period_offset: str):
+    TablesBuilder.customers_activity.build_tickets_with_iterations(rank_period_offset=rank_period_offset)
     TablesBuilder.customers_activity.build_emp_positions()
     TablesBuilder.customers_activity.build_emp_tribes()
     TablesBuilder.customers_activity.build_employees()

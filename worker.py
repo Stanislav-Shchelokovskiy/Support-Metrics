@@ -100,12 +100,14 @@ def customers_activity_load_groups(self, **kwargs):
         customers_activity.load_groups,
     )
 
+
 @app.task(name='customers_activity_load_tracked_groups', bind=True)
 def customers_activity_load_tracked_groups(self, **kwargs):
     return run_retriable_task(
         self,
         customers_activity.load_tracked_groups,
-        start_date=CustomersActivityConfig.get_tickets_with_licenses_period()['start_date'],
+        start_date=CustomersActivityConfig.get_tickets_with_licenses_period()
+        ['start_date'],
     )
 
 
@@ -156,6 +158,7 @@ def customers_activity_build_tables(self, **kwargs):
     return run_retriable_task(
         self,
         customers_activity.build_tables,
+        rank_period_offset=CustomersActivityConfig.get_rank_period_offset(),
     )
 
 

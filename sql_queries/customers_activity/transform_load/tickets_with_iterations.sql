@@ -26,6 +26,11 @@ SELECT
     ei.{tribe_name}    AS {emp_tribe_name}
 FROM
     {TicketsWithLicenses} AS t
+    INNER JOIN (
+        SELECT  DISTINCT {user_crmid} 
+        FROM    {TicketsWithLicenses} 
+        WHERE   {creation_date} >= (SELECT DATE(MIN({creation_date}), '+{rank_period_offset}') FROM {TicketsWithLicenses}) 
+    ) AS actual_t ON actual_t.{user_crmid} = t.{user_crmid}
     LEFT JOIN {EmployeesIterations} AS ei ON ei.{ticket_id} = t.{ticket_id};
 
 CREATE INDEX idx_{TicketsWithIterations}_{creation_date} ON {TicketsWithIterations}({creation_date}, {tribe_id}, {emp_position_id});

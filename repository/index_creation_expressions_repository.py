@@ -4,6 +4,7 @@ from sql_queries.customers_activity.meta import (
     TrackedCustomersGroupsMeta,
     EmployeesIterationsMeta,
     PlatformsProductsMeta,
+    TicketsWithLicensesMeta,
 )
 
 
@@ -13,10 +14,27 @@ def _create_index_expression(tbl: str, cols: list[str]) -> str:
 
 class IndexCreationExpressionsRepository:
     customers_activity_create_index_expressions = {
+        CustomersActivityDBIndex.get_tickets_with_licenses_name():
+            [
+                _create_index_expression(
+                    tbl=CustomersActivityDBIndex.get_tickets_with_licenses_name(),
+                    cols=[
+                        TicketsWithLicensesMeta.creation_date,
+                        TicketsWithLicensesMeta.user_crmid,
+                    ]
+                ),
+                _create_index_expression(
+                    tbl=CustomersActivityDBIndex.get_tickets_with_licenses_name(),
+                    cols=[
+                        TicketsWithLicensesMeta.user_crmid,
+                    ]
+                ),
+            ],
         CustomersActivityDBIndex.get_components_features_name():
             [
                 _create_index_expression(
-                    tbl=CustomersActivityDBIndex.get_components_features_name(),
+                    tbl=CustomersActivityDBIndex.get_components_features_name(
+                    ),
                     cols=[
                         ComponentsFeaturesMeta.tribe_id,
                         ComponentsFeaturesMeta.component_id,

@@ -23,6 +23,7 @@ from sql_queries.customers_activity.meta import (
     TribesMeta,
     EmployeesMeta,
     TrackedCustomersGroupsMeta,
+    CustomersMeta,
 )
 
 
@@ -132,6 +133,7 @@ tickets_with_iterations_common_params = {
                 'TicketsWithIterations': 'TicketsWithIterations',
                 'TicketsWithLicenses': 'TicketsWithLicenses',
                 'EmployeesIterations': 'EmployeesIterations',
+                'rank_period_offset': 'rank_period_offset',
             },
         ),
         (
@@ -159,6 +161,14 @@ tickets_with_iterations_common_params = {
                 **EmployeesMeta.get_attrs(),
                 'Employees': 'Employees',
                 'EmployeesIterations': 'EmployeesIterations',
+            },
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_customers_path,
+            {
+                **CustomersMeta.get_attrs(),
+                 'Users': 'Users',
+                'TicketsWithIterations': 'TicketsWithIterations',
             },
         ),
     ],
