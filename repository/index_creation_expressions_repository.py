@@ -33,8 +33,7 @@ class IndexCreationExpressionsRepository:
         CustomersActivityDBIndex.get_components_features_name():
             [
                 _create_index_expression(
-                    tbl=CustomersActivityDBIndex.get_components_features_name(
-                    ),
+                    tbl=CustomersActivityDBIndex.get_components_features_name(),
                     cols=[
                         ComponentsFeaturesMeta.tribe_id,
                         ComponentsFeaturesMeta.component_id,

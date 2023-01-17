@@ -106,8 +106,7 @@ def customers_activity_load_tracked_groups(self, **kwargs):
     return run_retriable_task(
         self,
         customers_activity.load_tracked_groups,
-        start_date=CustomersActivityConfig.get_tickets_with_licenses_period()
-        ['start_date'],
+        start_date=CustomersActivityConfig.get_tickets_with_licenses_period()['start_date'],
     )
 
 
