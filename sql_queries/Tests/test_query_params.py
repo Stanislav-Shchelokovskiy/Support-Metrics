@@ -40,6 +40,8 @@ tickets_with_iterations_common_params = {
             CustomersActivitySqlPathIndex.get_tickets_with_licenses_path,
             {
                 **TicketsWithLicensesMeta.get_attrs(),
+                'start_date': 'qwe',
+                'end_date': 'asd',
             },
         ),
         (
@@ -61,14 +63,6 @@ tickets_with_iterations_common_params = {
                 **TicketsWithIterationsAggregatesMeta.get_attrs(),
                 **tickets_with_iterations_common_params,
                 'group_by_period': 'group_by_period',
-            },
-        ),
-        (
-            CustomersActivitySqlPathIndex.
-            get_fill_tickets_with_licenses_path,
-            {
-                'start_date': 'qwe',
-                'end_date': 'asd',
             },
         ),
         (

@@ -22,12 +22,6 @@ class CustomersActivitySqlPathIndex:
         return CustomersActivitySqlPathIndex.get_root_path() + '/local'
 
     @staticmethod
-    def get_extract_temp_tables_path() -> str:
-        return (
-            CustomersActivitySqlPathIndex.get_extract_path() + '/temp_tables'
-        )
-
-    @staticmethod
     def get_customers_groups_path() -> str:
         return CustomersActivitySqlPathIndex.get_extract_path() + '/groups.sql'
 
@@ -75,20 +69,6 @@ class CustomersActivitySqlPathIndex:
         return (
             CustomersActivitySqlPathIndex.get_local_path()
             + '/get_tickets_period.sql'
-        )
-
-    @staticmethod
-    def get_create_tickets_with_licenses_temp_table_path() -> str:
-        return (
-            CustomersActivitySqlPathIndex.get_extract_temp_tables_path()
-            + '/TicketsWithLicenses.sql'
-        )
-
-    @staticmethod
-    def get_fill_tickets_with_licenses_path() -> str:
-        return (
-            CustomersActivitySqlPathIndex.get_extract_path()
-            + '/fill_tickets_with_licenses.sql'
         )
 
     @staticmethod
