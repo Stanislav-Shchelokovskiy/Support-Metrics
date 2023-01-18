@@ -11,12 +11,13 @@ from sql_queries.customers_activity.meta import (
     TribeMeta,
     TribesMeta,
     EmployeesMeta,
+    CustomersMeta,
 )
 
 
 class TablesBuilder:
     #yapf: disable
-    def build_tickets_with_iterations(self):
+    def build_tickets_with_iterations(self, rank_period_offset: str):
         query = SqlQuery(
             query_file_path=CustomersActivitySqlPathIndex.get_tickets_with_iterations_path(),
             format_params={
@@ -25,6 +26,7 @@ class TablesBuilder:
                 'TicketsWithIterations': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
                 'TicketsWithLicenses': CustomersActivityDBIndex.get_tickets_with_licenses_name(),
                 'EmployeesIterations': CustomersActivityDBIndex.get_employees_iterations_name(),
+                'rank_period_offset': rank_period_offset,
             }
         )
         query_executor = SQLitePostQueryExecutor()
@@ -64,6 +66,18 @@ class TablesBuilder:
                 **EmployeesMeta.get_attrs(),
                 'Employees': CustomersActivityDBIndex.get_employees_name(),
                 'EmployeesIterations': CustomersActivityDBIndex.get_employees_iterations_name(),
+            }
+        )
+        query_executor = SQLitePostQueryExecutor()
+        query_executor.execute(query)
+
+    def build_users(self):
+        query = SqlQuery(
+            query_file_path=CustomersActivitySqlPathIndex.get_customers_path(),
+            format_params={
+                **CustomersMeta.get_attrs(),
+                'Users': CustomersActivityDBIndex.get_customers_name(),
+                'TicketsWithIterations': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
             }
         )
         query_executor = SQLitePostQueryExecutor()

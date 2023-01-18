@@ -16,9 +16,10 @@ from repository.customers_activity.remote.licenses_conversion import (
     LicenseStatusesRepository,
     ConversionStatusesRepository,
 )
-from repository.customers_activity.local.customers_groups import (
+from repository.customers_activity.local.customers import (
     CustomersGroupsRepository as SqliteCustomersGroupsRepository,
-    TrackedCustomersGroupsRepository as SqliteTrackedCustomersGroupsRepository
+    TrackedCustomersGroupsRepository as SqliteTrackedCustomersGroupsRepository,
+    CustomersRepository as SqliteCustomersRepository,
 )
 from repository.customers_activity.local.tickets import (
     TicketsTypesRepository as SqliteTicketsTypesRepository,
@@ -93,7 +94,7 @@ class SqliteFactory:
 
     def create_customers_groups_repository(self, **kwargs) -> SqliteCustomersGroupsRepository:
         return SqliteCustomersGroupsRepository()
-    
+
     def create_tracked_customers_groups_repository(self, **kwargs) -> SqliteTrackedCustomersGroupsRepository:
         return SqliteTrackedCustomersGroupsRepository()
 
@@ -138,6 +139,9 @@ class SqliteFactory:
 
     def create_employees_repository(self, **kwargs) -> SqliteEmployeesRepository:
         return SqliteEmployeesRepository()
+
+    def create_customers_repository(self, **kwargs) -> SqliteCustomersRepository:
+        return SqliteCustomersRepository()
 # yapf: enable
 
 

@@ -603,3 +603,46 @@ def test_generate_employees_filter(
     assert TicketsWithIterationsSqlFilterClauseGenerator.generate_employees_filter(
         params=input
     ) == output
+
+
+@pytest.mark.parametrize(
+    'input,output', [
+        (
+            MockFilterParametersNode(include=True, values=[]),
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[]),
+            f'AND {TicketsWithIterationsMeta.user_crmid} IS NULL',
+        ),
+        (
+            MockFilterParametersNode(include=True, values=[
+                'qwe',
+                'asd',
+            ]),
+            f"AND {TicketsWithIterationsMeta.user_crmid} IN ('qwe','asd')",
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['qwe']),
+            f"AND {TicketsWithIterationsMeta.user_crmid} IN ('qwe')",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[
+                'qwe',
+                'asd',
+            ]),
+            f"AND ({TicketsWithIterationsMeta.user_crmid} IS NULL OR {TicketsWithIterationsMeta.user_crmid} NOT IN ('qwe','asd'))",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['qwe']),
+            f"AND ({TicketsWithIterationsMeta.user_crmid} IS NULL OR {TicketsWithIterationsMeta.user_crmid} NOT IN ('qwe'))",
+        ),
+    ]
+)
+def test_generate_customers_filter(
+    input: MockFilterParametersNode,
+    output: str,
+):
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_customers_filter(
+        params=input
+    ) == output

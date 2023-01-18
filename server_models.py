@@ -27,6 +27,10 @@ class ConversionStatusParams(BaseModel):
     license_statuses: FilterParametersNode
 
 
+class CustomersParams(BaseModel):
+    customers: list[str]
+
+
 class TicketsWithIterationsParams(BaseModel):
     tribes: FilterParametersNode
     customers_groups: FilterParametersNode
@@ -42,6 +46,7 @@ class TicketsWithIterationsParams(BaseModel):
     positions: FilterParametersNode
     emp_tribes: FilterParametersNode
     employees: FilterParametersNode
+    customers: FilterParametersNode
 
 
 class StatAppState(BaseModel):

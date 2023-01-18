@@ -22,8 +22,7 @@ class TicketsTypesRepository(SqliteRepository):
         return {
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_tickets_types_name(),
-            'filter_clause': '',
-            'group_by_clause': '',
+            'filter_group_limit_clause': '',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
@@ -42,8 +41,7 @@ class TicketsTagsRepository(SqliteRepository):
         return {
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_tickets_tags_name(),
-            'filter_clause': '',
-            'group_by_clause': '',
+            'filter_group_limit_clause': '',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
