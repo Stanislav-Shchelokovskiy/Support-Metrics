@@ -19,7 +19,7 @@ class PlatformsRepository(SqliteRepository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         cols = ', '.join(self.get_must_have_columns(kwargs))
         return {
-            'columns': cols,
+            'columns': f'DISTINCT {cols}',
             'table_name': CustomersActivityDBIndex.get_platforms_products_name(),
             'filter_group_limit_clause': 
             f"{PlatformsProductsSqlFilterClauseGenerator.generate_platforms_filter(tribe_ids=kwargs['tribe_ids'])}\nGROUP BY {cols}",

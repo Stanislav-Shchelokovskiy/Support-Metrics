@@ -40,7 +40,7 @@ class ComponentsRepository(SqliteRepository):
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
-            'columns': ', '.join(self.get_must_have_columns(kwargs)),
+            'columns': f"DISTINCT {', '.join(self.get_must_have_columns(kwargs))}",
             'table_name': CustomersActivityDBIndex.get_components_features_name(),
             'filter_group_limit_clause': CATSqlFilterClauseGenerator.generate_components_filter(
                     tribe_ids=kwargs['tribe_ids']
