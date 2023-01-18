@@ -27,7 +27,7 @@ class TicketsPeriodRepository(SqliteRepository):
         df = self.execute_query(
                 query_file_path=CustomersActivitySqlPathIndex.get_tickets_period_path(),
                 query_format_params={
-                    'table_name': CustomersActivityDBIndex.get_tickets_with_licenses_name(),
+                    'table_name': CustomersActivityDBIndex.get_customers_tickets_name(),
                     **TicketsWithIterationsPeriodMeta.get_attrs(),
                     'rank_period_offset': CustomersActivityConfig.get_rank_period_offset(),
                 }

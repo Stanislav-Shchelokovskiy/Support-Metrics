@@ -72,10 +72,17 @@ class CustomersActivitySqlPathIndex:
         )
 
     @staticmethod
-    def get_tickets_with_licenses_path() -> str:
+    def get_tickets_with_licenses_and_users_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_extract_path()
-            + '/tickets_with_licenses.sql'
+            + '/tickets_with_licenses_and_users.sql'
+        )
+
+    @staticmethod
+    def get_tickets_with_properties_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_extract_path()
+            + '/tickets_with_properties.sql'
         )
 
     @staticmethod
@@ -204,9 +211,9 @@ class CustomersActivityDBIndex:
         return CustomersActivityDBIndex.get_root_name() + 'Customers'
 
     @staticmethod
-    def get_tickets_with_licenses_name() -> str:
+    def get_customers_tickets_name() -> str:
         return (
-            CustomersActivityDBIndex.get_root_name() + 'TicketsWithLicenses'
+            CustomersActivityDBIndex.get_root_name() + 'CustomersTickets'
         )
 
     @staticmethod

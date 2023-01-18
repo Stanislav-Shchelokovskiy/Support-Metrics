@@ -24,7 +24,7 @@ class TablesBuilder:
                 **TicketsWithIterationsMeta.get_attrs(),
                 **EmployeesIterationsMeta.get_attrs(),
                 'TicketsWithIterations': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
-                'TicketsWithLicenses': CustomersActivityDBIndex.get_tickets_with_licenses_name(),
+                'CustomersTickets': CustomersActivityDBIndex.get_customers_tickets_name(),
                 'EmployeesIterations': CustomersActivityDBIndex.get_employees_iterations_name(),
                 'rank_period_offset': rank_period_offset,
             }
