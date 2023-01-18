@@ -49,6 +49,7 @@ class IndexCreationExpressionsRepository:
                         PlatformsProductsMeta.tribe_id,
                         PlatformsProductsMeta.platform_id,
                         PlatformsProductsMeta.product_id,
+                        PlatformsProductsMeta.product_name,
                     ]
                 ),
             ],
