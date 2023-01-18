@@ -36,4 +36,5 @@ class PlatformsProductsSqlFilterClauseGenerator:
             filter_prefix=' AND' if platforms_filter else 'WHERE',
             values_converter=lambda val: f"'{val}'",
         )
-        return platforms_filter + products_filter
+        platform_products_filter = platforms_filter + products_filter
+        return  platform_products_filter + f"{' AND' if platform_products_filter else 'WHERE'} {PlatformsProductsMeta.product_id} IS NOT NULL"

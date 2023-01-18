@@ -10,4 +10,5 @@ FROM
 	LEFT JOIN CRM.dbo.Products AS products ON products.Id = pp.Product_Id
 	INNER JOIN CRM.dbo.Tribes AS t on t.Id = platforms.DefaultTribe
 WHERE
-	products.Name IS NOT NULL
+	products.Name IS NOT NULL OR
+	(products.Name IS NULL AND pp.Product_Id IS NULL)

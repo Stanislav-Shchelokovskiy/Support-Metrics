@@ -37,7 +37,14 @@ tickets_with_iterations_common_params = {
     'get_query_file_path, format_params',
     [
         (
-            CustomersActivitySqlPathIndex.get_tickets_with_licenses_path,
+            CustomersActivitySqlPathIndex.get_tickets_with_licenses_and_users_path,
+            {
+                'start_date': 'qwe',
+                'end_date': 'asd',
+            },
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_tickets_with_properties_path,
             {
                 **TicketsWithLicensesMeta.get_attrs(),
             },
@@ -61,14 +68,6 @@ tickets_with_iterations_common_params = {
                 **TicketsWithIterationsAggregatesMeta.get_attrs(),
                 **tickets_with_iterations_common_params,
                 'group_by_period': 'group_by_period',
-            },
-        ),
-        (
-            CustomersActivitySqlPathIndex.
-            get_fill_tickets_with_licenses_path,
-            {
-                'start_date': 'qwe',
-                'end_date': 'asd',
             },
         ),
         (
@@ -131,7 +130,7 @@ tickets_with_iterations_common_params = {
                 **TicketsWithIterationsMeta.get_attrs(),
                 **EmployeesIterationsMeta.get_attrs(),
                 'TicketsWithIterations': 'TicketsWithIterations',
-                'TicketsWithLicenses': 'TicketsWithLicenses',
+                'CustomersTickets': 'CustomersTickets',
                 'EmployeesIterations': 'EmployeesIterations',
                 'rank_period_offset': 'rank_period_offset',
             },

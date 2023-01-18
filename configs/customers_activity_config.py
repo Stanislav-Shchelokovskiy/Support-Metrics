@@ -5,7 +5,7 @@ from toolbox.utils.converters import DateTimeToSqlString
 class CustomersActivityConfig:
 
     @staticmethod
-    def get_tickets_with_licenses_period() -> dict[str, str]:
+    def get_tickets_period() -> dict[str, str]:
         end = date.today()
         start = datetime(end.year - 5, 7, 1)
         return {

@@ -56,10 +56,10 @@ def load_platforms_products():
     _save_tables(tables={CustomersActivityDBIndex.get_platforms_products_name(): df})
 
 
-def load_tickets_with_licenses(start_date: str, end_date: str):
-    repository = RepositoryFactory.customers_activity.remote.create_tickets_with_licenses_repository()
+def load_customers_tickets(start_date: str, end_date: str):
+    repository = RepositoryFactory.customers_activity.remote.create_customers_tickets_repository()
     df = repository.get_data(start_date=start_date, end_date=end_date)
-    _save_tables(tables={CustomersActivityDBIndex.get_tickets_with_licenses_name(): df})
+    _save_tables(tables={CustomersActivityDBIndex.get_customers_tickets_name(): df})
 
 
 def load_employees_iterations(start_date: str, end_date: str):

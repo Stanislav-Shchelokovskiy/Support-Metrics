@@ -1,8 +1,8 @@
-from repository.customers_activity.remote.tickets_with_iterations import (
-    TicketsWithLicensesRepository,
+from repository.customers_activity.remote.tickets_and_iterations import (
+    CustomersTicketsRepository,
     EmployeesIterationsRepository,
 )
-from repository.customers_activity.remote.tickets import TicketsTagsRepository
+from repository.customers_activity.remote.tickets_tags import TicketsTagsRepository
 from repository.customers_activity.remote.customers_groups import (
     CustomersGroupsRepository,
     TrackedCustomersGroupsRepository,
@@ -71,8 +71,8 @@ class SqlServerFactory:
     def create_components_features_repository(self, **kwargs) -> ComponentsFeaturesRepository:
         return ComponentsFeaturesRepository()
 
-    def create_tickets_with_licenses_repository(self, **kwargs) -> TicketsWithLicensesRepository:
-        return TicketsWithLicensesRepository()
+    def create_customers_tickets_repository(self, **kwargs) -> CustomersTicketsRepository:
+        return CustomersTicketsRepository()
 
     def create_license_statuses_repository(self, **kwargs) -> LicenseStatusesRepository:
         return LicenseStatusesRepository()

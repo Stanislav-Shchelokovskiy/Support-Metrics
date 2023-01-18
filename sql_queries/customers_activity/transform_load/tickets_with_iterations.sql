@@ -25,11 +25,11 @@ SELECT
     ei.{position_name} AS {emp_position_name},
     ei.{tribe_name}    AS {emp_tribe_name}
 FROM
-    {TicketsWithLicenses} AS t
+    {CustomersTickets} AS t
     INNER JOIN (
         SELECT  DISTINCT {user_crmid} 
-        FROM    {TicketsWithLicenses} 
-        WHERE   {creation_date} >= (SELECT DATE(MIN({creation_date}), '+{rank_period_offset}') FROM {TicketsWithLicenses}) 
+        FROM    {CustomersTickets} 
+        WHERE   {creation_date} >= (SELECT DATE(MIN({creation_date}), '+{rank_period_offset}') FROM {CustomersTickets}) 
     ) AS actual_t ON actual_t.{user_crmid} = t.{user_crmid}
     LEFT JOIN {EmployeesIterations} AS ei ON ei.{ticket_id} = t.{ticket_id};
 

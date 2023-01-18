@@ -22,12 +22,6 @@ class CustomersActivitySqlPathIndex:
         return CustomersActivitySqlPathIndex.get_root_path() + '/local'
 
     @staticmethod
-    def get_extract_temp_tables_path() -> str:
-        return (
-            CustomersActivitySqlPathIndex.get_extract_path() + '/temp_tables'
-        )
-
-    @staticmethod
     def get_customers_groups_path() -> str:
         return CustomersActivitySqlPathIndex.get_extract_path() + '/groups.sql'
 
@@ -78,24 +72,17 @@ class CustomersActivitySqlPathIndex:
         )
 
     @staticmethod
-    def get_create_tickets_with_licenses_temp_table_path() -> str:
+    def get_tickets_with_licenses_and_users_path() -> str:
         return (
-            CustomersActivitySqlPathIndex.get_extract_temp_tables_path()
-            + '/TicketsWithLicenses.sql'
+            CustomersActivitySqlPathIndex.get_extract_path()
+            + '/tickets_with_licenses_and_users.sql'
         )
 
     @staticmethod
-    def get_fill_tickets_with_licenses_path() -> str:
+    def get_tickets_with_properties_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_extract_path()
-            + '/fill_tickets_with_licenses.sql'
-        )
-
-    @staticmethod
-    def get_tickets_with_licenses_path() -> str:
-        return (
-            CustomersActivitySqlPathIndex.get_extract_path()
-            + '/tickets_with_licenses.sql'
+            + '/tickets_with_properties.sql'
         )
 
     @staticmethod
@@ -224,9 +211,9 @@ class CustomersActivityDBIndex:
         return CustomersActivityDBIndex.get_root_name() + 'Customers'
 
     @staticmethod
-    def get_tickets_with_licenses_name() -> str:
+    def get_customers_tickets_name() -> str:
         return (
-            CustomersActivityDBIndex.get_root_name() + 'TicketsWithLicenses'
+            CustomersActivityDBIndex.get_root_name() + 'CustomersTickets'
         )
 
     @staticmethod
