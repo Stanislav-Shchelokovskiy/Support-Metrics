@@ -1,3 +1,9 @@
+DECLARE @licensed		TINYINT = 0
+DECLARE @free			TINYINT = 3
+DECLARE @trial			TINYINT = 4
+DECLARE @converted_paid	TINYINT = 5
+DECLARE @converted_free	TINYINT = 6;
+
 WITH ticket_tags AS (
 	SELECT
 		Tickets AS ticket_id,
