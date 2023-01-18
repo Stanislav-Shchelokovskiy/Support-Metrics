@@ -24,7 +24,6 @@ class CustomersRepository(SqliteRepository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         search_param = kwargs['search']
         filter_values=kwargs['filter_values']
-        print(filter_values)
         ids_filter = '\nOR '.join([f"{CustomersMeta.id} = '{value}'" for value in filter_values])
         return {
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
