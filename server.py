@@ -1,11 +1,13 @@
 import os
 import urllib3
 import requests
+import hashlib
+import json
+import repository.server_repository as server_repository
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from toolbox.utils.converters import JSON_to_object
-import repository.server_repository as server_repository
 from server_cache import ServerCache
 from server_models import (
     TicketsWithIterationsParams,
@@ -17,7 +19,8 @@ from server_models import (
     EmployeeParams,
     CustomersParams,
 )
-import hashlib
+from help.index import Index as help_index
+
 
 
 server_cache = ServerCache()
@@ -284,3 +287,7 @@ def push_state(params: StatAppState):
 def pull_state(state_id: str, ):
     state = server_cache.stat_app_state.get(state_id)
     return get_response(json_data=state)
+
+@app.get('/get_customers_activity_help')
+def get_customers_activity_help():
+    return get_response(json_data=json.dumps(help_index.get_customers_activity_descriptions()))
