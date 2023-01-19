@@ -5,7 +5,7 @@ class Index:
 
     @staticmethod
     def get_cwd() -> str:
-        return 'data_description'
+        return 'help'
 
     @staticmethod
     def get_customers_activity() -> str:
