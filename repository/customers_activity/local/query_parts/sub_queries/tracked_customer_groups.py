@@ -11,7 +11,7 @@ def get_tracked_customers_groups_query(
     (   SELECT  {TicketsWithIterationsMeta.user_id},
                 {TicketsWithIterationsMeta.ticket_scid},
                 {TicketsWithIterationsMeta.creation_date} AS original_{TicketsWithIterationsMeta.creation_date},
-                DATE({TicketsWithIterationsMeta.creation_date}, '-'||{TrackedCustomersGroupsMeta.offset_in_days}||' DAYS') AS {TicketsWithIterationsMeta.creation_date},
+                DATE({TicketsWithIterationsMeta.creation_date}, '-'||CAST(JULIANDAY(MIN({TicketsWithIterationsMeta.creation_date}) OVER (PARTITION BY {TicketsWithIterationsMeta.user_id}))-JULIANDAY(MIN({TicketsWithIterationsMeta.creation_date}) OVER ()) AS INTEGER)||' DAYS') AS {TicketsWithIterationsMeta.creation_date},
                 {TicketsWithIterationsMeta.tribe_id},
                 {TicketsWithIterationsMeta.tribe_name},
                 {TicketsWithIterationsMeta.user_groups},
@@ -35,8 +35,7 @@ def get_tracked_customers_groups_query(
         INNER JOIN (
             SELECT  {TrackedCustomersGroupsMeta.user_crmid}, 
                     {TrackedCustomersGroupsMeta.assignment_date}, 
-                    {TrackedCustomersGroupsMeta.removal_date}, 
-                    {TrackedCustomersGroupsMeta.offset_in_days}
+                    {TrackedCustomersGroupsMeta.removal_date}
             FROM    {CustomersActivityDBIndex.get_tracked_customers_groups_name()}
             WHERE   {TrackedCustomersGroupsMeta.assignment_date} BETWEEN '{kwargs['range_start']}' AND '{kwargs['range_end']}'
                     {filter_generator.generate_customer_groups_filter(

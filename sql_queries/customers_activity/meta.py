@@ -148,4 +148,3 @@ class TrackedCustomersGroupsMeta(MetaData):
     name = 'name'
     assignment_date = 'assignment_date'
     removal_date = 'removal_date'
-    offset_in_days = 'offset_in_days'
