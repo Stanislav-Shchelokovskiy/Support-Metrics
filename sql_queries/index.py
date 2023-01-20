@@ -199,6 +199,10 @@ class CustomersActivityDBIndex:
         return CustomersActivityDBIndex.get_root_name() + 'EmpPositions'
 
     @staticmethod
+    def get_tribes_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'AvailableTribes'
+
+    @staticmethod
     def get_emp_tribes_name() -> str:
         return CustomersActivityDBIndex.get_root_name() + 'EmpTribes'
 
@@ -212,9 +216,7 @@ class CustomersActivityDBIndex:
 
     @staticmethod
     def get_customers_tickets_name() -> str:
-        return (
-            CustomersActivityDBIndex.get_root_name() + 'CustomersTickets'
-        )
+        return (CustomersActivityDBIndex.get_root_name() + 'CustomersTickets')
 
     @staticmethod
     def get_employees_iterations_name() -> str:

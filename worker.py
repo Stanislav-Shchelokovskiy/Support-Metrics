@@ -22,6 +22,7 @@ def on_startup(sender, **kwargs):
         'customers_activity_load_tickets_types',
         'customers_activity_load_license_statuses',
         'customers_activity_load_conversion_statuses',
+        'customers_activity_load_tribes',
         'update_customers_activity',
     ]
     sender_app: Celery = sender.app
@@ -66,6 +67,13 @@ def customers_activity_load_tickets_types(self, **kwargs):
     return run_retriable_task(
         self,
         customers_activity.load_tickets_types,
+    )
+
+@app.task(name='customers_activity_load_tribes', bind=True)
+def customers_activity_load_tribes(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.load_tribes(),
     )
 
 

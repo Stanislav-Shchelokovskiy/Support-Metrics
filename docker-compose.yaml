@@ -12,7 +12,7 @@ x-support_analytics_service:
     - SERVER_PORT
     - FLOWER_PORT
     - CORS_ORIGINS
-    - QUERY_SERVICE_NAME
+    - QUERY_SERVICE
     - REDIS_SERVICE
     - REDIS_PORT
     - CELERY_BROKER_URL=redis://${REDIS_SERVICE}:${REDIS_PORT}/1

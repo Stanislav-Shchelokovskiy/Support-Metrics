@@ -1,5 +1,5 @@
 import pytest
-from repository.customers_activity.local.sql_query_params_generator.conversion_statuses import ConversionStatusesSqlFilterClauseGenerator
+from repository.customers_activity.local.sql_filters_generator.conversion_statuses import ConversionStatusesSqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import ConversionStatusesMeta
 from repository.customers_activity.local.Tests.mocks import MockFilterParametersNode
 

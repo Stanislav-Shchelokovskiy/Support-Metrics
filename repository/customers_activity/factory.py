@@ -50,6 +50,7 @@ from repository.customers_activity.local.employees import (
     EmpTribesRepository as SqliteEmpTribesRepository,
     EmployeesRepository as SqliteEmployeesRepository,
 )
+from repository.customers_activity.local.display_filter_repository import DisplayFilterRepository as SqliteDisplayFilterRepository
 from repository.customers_activity.local.tables_builder import TablesBuilder
 
 
@@ -142,6 +143,9 @@ class SqliteFactory:
 
     def create_customers_repository(self, **kwargs) -> SqliteCustomersRepository:
         return SqliteCustomersRepository()
+
+    def create_display_filter_repository(self, **kwargs) -> SqliteDisplayFilterRepository:
+        return SqliteDisplayFilterRepository()
 # yapf: enable
 
 

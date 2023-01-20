@@ -1,3 +1,4 @@
+import os
 import requests
 import json
 import urllib3
@@ -79,6 +80,16 @@ def load_tickets_types():
     df = df.reset_index(drop=True)
     df = df[['name', 'id']]
     _save_tables(tables={CustomersActivityDBIndex.get_tickets_types_name(): df})
+
+def load_tribes():
+    tribes_str = requests.get(
+        url= f'{os.environ["QUERY_SERVICE"]}/get_available_tribes',
+        verify=False,
+    ).text
+    tribes = json.loads(tribes_str)
+    df = DataFrame.from_records(data=tribes)
+    df = df.reset_index(drop=True)
+    _save_tables(tables={CustomersActivityDBIndex.get_tribes_name(): df})
 
 
 def load_license_statuses():

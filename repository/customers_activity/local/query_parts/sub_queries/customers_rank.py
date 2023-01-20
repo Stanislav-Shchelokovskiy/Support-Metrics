@@ -1,6 +1,6 @@
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
 from sql_queries.index import CustomersActivityDBIndex
-from repository.customers_activity.local.sql_query_params_generator.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
+from repository.customers_activity.local.sql_filters_generator.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
 import repository.customers_activity.local.query_parts.filters as filters
 
 

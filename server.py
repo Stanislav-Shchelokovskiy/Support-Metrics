@@ -22,7 +22,6 @@ from server_models import (
 from help.index import Index as help_index
 
 
-
 server_cache = ServerCache()
 
 urllib3.disable_warnings()
@@ -210,11 +209,11 @@ def customers_activity_get_tickets_with_iterations_aggregates(
     range_start: str,
     range_end: str,
     tracked_customer_groups_mode_enabled: bool,
-    params: TicketsWithIterationsParams,
+    body: TicketsWithIterationsParams,
     tickets_percentile: int | None = None,
     iterations_percentile: int | None = None,
 ):
-
+    print(body.__fields__)
     df_json = server_repository.customers_activity_get_tickets_with_iterations_aggregates(
         group_by_period=group_by_period,
         range_start=range_start,
@@ -222,21 +221,7 @@ def customers_activity_get_tickets_with_iterations_aggregates(
         tickets_percentile=tickets_percentile,
         iterations_percentile=iterations_percentile,
         use_tracked_customer_groups=tracked_customer_groups_mode_enabled,
-        customers_groups=params.customers_groups,
-        tickets_types=params.tickets_types,
-        tickets_tags=params.tickets_tags,
-        tribe_ids=params.tribes,
-        reply_ids=params.replies_types,
-        components_ids=params.components,
-        feature_ids=params.features,
-        license_statuses=params.license_statuses,
-        conversion_statuses=params.conversion_statuses,
-        platforms_ids=params.platforms,
-        products_ids=params.products,
-        positions_ids=params.positions,
-        emp_tribe_ids=params.emp_tribes,
-        emp_ids=params.employees,
-        customers_crmids=params.customers,
+        **body.__dict__,
     )
     return get_response(json_data=df_json)
 
@@ -246,7 +231,7 @@ def customers_activity_get_tickets_with_iterations_raw(
     range_start: str,
     range_end: str,
     tracked_customer_groups_mode_enabled: bool,
-    params: TicketsWithIterationsParams,
+    body: TicketsWithIterationsParams,
     tickets_percentile: int | None = None,
     iterations_percentile: int | None = None,
 ):
@@ -256,21 +241,7 @@ def customers_activity_get_tickets_with_iterations_raw(
         tickets_percentile=tickets_percentile,
         iterations_percentile=iterations_percentile,
         use_tracked_customer_groups=tracked_customer_groups_mode_enabled,
-        customers_groups=params.customers_groups,
-        tickets_types=params.tickets_types,
-        tickets_tags=params.tickets_tags,
-        tribe_ids=params.tribes,
-        reply_ids=params.replies_types,
-        components_ids=params.components,
-        feature_ids=params.features,
-        license_statuses=params.license_statuses,
-        conversion_statuses=params.conversion_statuses,
-        platforms_ids=params.platforms,
-        products_ids=params.products,
-        positions_ids=params.positions,
-        emp_tribe_ids=params.emp_tribes,
-        emp_ids=params.employees,
-        customers_crmids=params.customers,
+        **body.__dict__,
     )
     return get_response(json_data=df_json)
 
@@ -288,6 +259,18 @@ def pull_state(state_id: str, ):
     state = server_cache.stat_app_state.get(state_id)
     return get_response(json_data=state)
 
+
 @app.get('/get_customers_activity_help')
 def get_customers_activity_help():
-    return get_response(json_data=json.dumps(help_index.get_customers_activity_descriptions()))
+    return get_response(
+        json_data=json.dumps(help_index.get_customers_activity_descriptions())
+    )
+
+
+@app.post('/get_customers_activity_display_filter')
+def get_customers_activity_display_filter(body: TicketsWithIterationsParams):
+    #__fields__[field_key].alias
+    filters = server_repository.customers_activity_get_display_filter(**body.__dict__)
+    return get_response(
+        json_data=json.dumps(filters)
+    )

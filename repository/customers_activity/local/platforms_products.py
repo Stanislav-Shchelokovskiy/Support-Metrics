@@ -4,7 +4,7 @@ from sql_queries.index import (
     CustomersActivityDBIndex,
 )
 from sql_queries.customers_activity.meta import PlatformsProductsMeta
-from repository.customers_activity.local.sql_query_params_generator.platforms_products import PlatformsProductsSqlFilterClauseGenerator
+from repository.customers_activity.local.sql_filters_generator.platforms_products import PlatformsProductsSqlFilterClauseGenerator
 
 
 #yapf: disable
