@@ -1,6 +1,5 @@
 from toolbox.sql.repository import SqliteRepository
-from toolbox.utils.converters import DF_to_JSON
-from repository.customers_activity.local.sql_filters_generator.sql_filter_clause_generator import FilterParametersNode
+from repository.customers_activity.local.query_parts.sub_queries.customers_rank import get_percentile_filter
 from sql_queries.index import CustomersActivityDBIndex, CustomersActivitySqlPathIndex
 from sql_queries.customers_activity.meta import (
     PlatformsProductsMeta,
@@ -126,22 +125,31 @@ query_params_store = {
 
 
 class DisplayFilterRepository(SqliteRepository):
-
-    def get_display_filter(self, **kwargs) -> list[list]:
+    # yapf: disable
+    def get_display_filter(
+        self,
+        aliases: dict[str, str],
+        **kwargs,
+    ) -> list[list]:
         filters = []
         for k, v in kwargs.items():
-            print(k)
-            print(v)
-            print()
-            qp = query_params_store[k]
-            values = ', '.join([f"'{value}'" for value in v.values])
-            display_values = self.execute_query(
-                query_file_path=CustomersActivitySqlPathIndex.get_general_select_path(),
-                query_format_params={
-                        'columns': f'{qp.display_field} AS qwe',#{alias}',
+            display_field_alias = aliases[k]
+            if qp:= query_params_store.get(k):
+                values = ', '.join([f"'{value}'" for value in v.values])
+                display_values = self.execute_query(
+                    query_file_path=CustomersActivitySqlPathIndex.
+                    get_general_select_path(),
+                    query_format_params={
+                        'columns': f'DISTINCT {qp.display_field}',
                         'table_name': qp.table,
                         'filter_group_limit_clause': f'WHERE {qp.value_field} IN ({values})',
                     }
-            ).reset_index(drop=True)[qp.display_field].values.tolist()
-            filters.append(['alias', 'in', display_values])
+                ).reset_index(drop=True)[qp.display_field].values.tolist()
+                filters.append([display_field_alias, 'in', display_values])
+            else:
+                percentile_filter = get_percentile_filter(
+                        alias = display_field_alias, 
+                        percentile=kwargs['percentile'],
+                )
+                filters.append(percentile_filter.split(' '))
         return filters

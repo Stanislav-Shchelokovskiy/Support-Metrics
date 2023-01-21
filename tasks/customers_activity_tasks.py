@@ -25,8 +25,7 @@ def _save_tables(tables: dict[str, DataFrame]):
 def load_tags():
     repository = RepositoryFactory.customers_activity.remote.create_tags_repository()
     df = repository.get_data()
-    tbl_name = CustomersActivityDBIndex.get_tickets_tags_name()
-    _save_tables(tables={tbl_name: df})
+    _save_tables(tables={CustomersActivityDBIndex.get_tickets_tags_name(): df})
 
 
 def load_groups():
@@ -82,10 +81,7 @@ def load_tickets_types():
     _save_tables(tables={CustomersActivityDBIndex.get_tickets_types_name(): df})
 
 def load_tribes():
-    tribes_str = requests.get(
-        url= f'{os.environ["QUERY_SERVICE"]}/get_available_tribes',
-        verify=False,
-    ).text
+    tribes_str = requests.get(url= f'http://{os.environ["QUERY_SERVICE"]}/get_available_tribes').text
     tribes = json.loads(tribes_str)
     df = DataFrame.from_records(data=tribes)
     df = df.reset_index(drop=True)

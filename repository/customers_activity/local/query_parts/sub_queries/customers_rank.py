@@ -1,7 +1,18 @@
+from typing import Protocol, Literal
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
 from sql_queries.index import CustomersActivityDBIndex
 from repository.customers_activity.local.sql_filters_generator.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
 import repository.customers_activity.local.query_parts.filters as filters
+
+
+class FilterParameterNode(Protocol):
+    include: bool
+    value: int
+
+
+class Percentile(Protocol):
+    metric: Literal['tickets', 'iterations']
+    value: FilterParameterNode
 
 
 def get_ranked_tickets_with_iterations_query(
@@ -19,18 +30,19 @@ def get_ranked_tickets_with_iterations_query(
                     {filters.get_creation_date_with_offset_start_filter(kwargs=kwargs,filter_generator=filter_generator)}
                     {filters.get_tickets_filter(kwargs=kwargs,filter_generator=filter_generator)}
                 GROUP BY {TicketsWithIterationsMeta.user_crmid} ) AS rnk
-        WHERE percentile <= {get_percentile_value(kwargs)}
+        WHERE {get_percentile_filter('percentile', kwargs['percentile'])}
     ) AS usr_rnk ON usr_rnk.{TicketsWithIterationsMeta.user_crmid} = ti.{TicketsWithIterationsMeta.user_crmid}"""
     )
 
 
 def get_rank_field(kwargs: dict):
-    if kwargs.get('tickets_percentile') is not None:
+    percentile: Percentile = kwargs['percentile']
+    if percentile.metric == 'tickets':
         return TicketsWithIterationsMeta.ticket_scid
     return TicketsWithIterationsMeta.emp_post_id
 
 
-def get_percentile_value(kwargs: dict) -> int:
+def get_percentile_filter(alias: str, percentile: Percentile) -> str:
 
     def validate_percentile(val: int | None):
         if val is not None:
@@ -42,10 +54,7 @@ def get_percentile_value(kwargs: dict) -> int:
             val = 100
         return val
 
-    tickets_percentile = kwargs.get('tickets_percentile')
-    if tickets_percentile is not None:
-        return validate_percentile(tickets_percentile)
-    iterations_percentile = kwargs.get('iterations_percentile')
-    if iterations_percentile is None:
-        return 100
-    return validate_percentile(iterations_percentile)
+    value = percentile.value
+    if value.include:
+        return f'{alias} <= {validate_percentile(value.value)}'
+    return f'{alias} > {validate_percentile(value.value)}'

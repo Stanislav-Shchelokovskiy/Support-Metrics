@@ -1,8 +1,16 @@
+from typing import Literal
 from pydantic import BaseModel, Field
 
 
-class FilterParametersNode(BaseModel):
+class FilterNode(BaseModel):
     include: bool
+
+
+class FilterParameterNode(FilterNode):
+    value: int | str
+
+
+class FilterParametersNode(FilterNode):
     values: list[int | str]
 
 
@@ -31,8 +39,14 @@ class CustomersParams(BaseModel):
     customers: list[str]
 
 
+class Percentile(BaseModel):
+    metric: Literal['tickets', 'iterations']
+    value: FilterParameterNode
+
+
 # yapf: disable
 class TicketsWithIterationsParams(BaseModel):
+    percentile: Percentile = Field(alias='Percentile')
     tribe_ids: FilterParametersNode = Field(alias='Tribes')
     platforms_ids: FilterParametersNode = Field(alias='Platforms')
     products_ids: FilterParametersNode = Field(alias='Products')

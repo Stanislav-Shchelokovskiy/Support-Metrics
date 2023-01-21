@@ -73,7 +73,7 @@ def customers_activity_load_tickets_types(self, **kwargs):
 def customers_activity_load_tribes(self, **kwargs):
     return run_retriable_task(
         self,
-        customers_activity.load_tribes(),
+        customers_activity.load_tribes,
     )
 
 

@@ -108,7 +108,7 @@ def customers_activity_get_tickets_with_iterations_raw(**kwargs) -> str:
     return repository.get_data_json(**kwargs)
 
 
-def customers_activity_get_display_filter(**kwargs) -> str:
+def customers_activity_get_display_filter(aliases: dict[str,str], **kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_display_filter_repository()
-    return repository.get_display_filter(**kwargs)
+    return repository.get_display_filter(aliases=aliases, **kwargs)
 # yapf: enable

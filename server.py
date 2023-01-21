@@ -210,16 +210,11 @@ def customers_activity_get_tickets_with_iterations_aggregates(
     range_end: str,
     tracked_customer_groups_mode_enabled: bool,
     body: TicketsWithIterationsParams,
-    tickets_percentile: int | None = None,
-    iterations_percentile: int | None = None,
 ):
-    print(body.__fields__)
     df_json = server_repository.customers_activity_get_tickets_with_iterations_aggregates(
         group_by_period=group_by_period,
         range_start=range_start,
         range_end=range_end,
-        tickets_percentile=tickets_percentile,
-        iterations_percentile=iterations_percentile,
         use_tracked_customer_groups=tracked_customer_groups_mode_enabled,
         **body.__dict__,
     )
@@ -232,14 +227,10 @@ def customers_activity_get_tickets_with_iterations_raw(
     range_end: str,
     tracked_customer_groups_mode_enabled: bool,
     body: TicketsWithIterationsParams,
-    tickets_percentile: int | None = None,
-    iterations_percentile: int | None = None,
 ):
     df_json = server_repository.customers_activity_get_tickets_with_iterations_raw(
         range_start=range_start,
         range_end=range_end,
-        tickets_percentile=tickets_percentile,
-        iterations_percentile=iterations_percentile,
         use_tracked_customer_groups=tracked_customer_groups_mode_enabled,
         **body.__dict__,
     )
@@ -269,8 +260,9 @@ def get_customers_activity_help():
 
 @app.post('/get_customers_activity_display_filter')
 def get_customers_activity_display_filter(body: TicketsWithIterationsParams):
-    #__fields__[field_key].alias
-    filters = server_repository.customers_activity_get_display_filter(**body.__dict__)
-    return get_response(
-        json_data=json.dumps(filters)
+    print(body)
+    filters = server_repository.customers_activity_get_display_filter(
+        aliases={k: v.alias for k, v in body.__fields__.items()},
+        **body.__dict__,
     )
+    return get_response(json_data=json.dumps(filters))
