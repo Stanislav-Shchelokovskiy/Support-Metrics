@@ -55,12 +55,12 @@ class MockSqliteRepository:
                 'license_statuses': MockFilterParametersNode(include=True, values=[0, 1]),
             },
             [
-                ['Percentile', '<=', '40'],
+                ['Percentile', '<=', 40],
                 'and',
                 ['Tribes', 'in', ['XAML United Team']],
                 'and',
                 [
-                    ['Ticket types', '=', 'null'], 'or',
+                    ['Ticket types', '=', 'NULL'], 'or',
                     ['Ticket types', 'notin', ['Question']]
                 ], 
                 'and',

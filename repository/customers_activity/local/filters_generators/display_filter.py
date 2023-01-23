@@ -157,7 +157,7 @@ class DisplayFilterGenerator:
                     DisplayFilterGenerator.append_filter(filters, [display_field_alias, 'in', display_values])
                 else:
                     filter = []
-                    filter.append([display_field_alias, '=', 'null'])
+                    filter.append([display_field_alias, '=', 'NULL'])
                     filter.append('or')
                     filter.append([display_field_alias, 'notin', display_values])
                     DisplayFilterGenerator.append_filter(filters, filter)
@@ -167,7 +167,7 @@ class DisplayFilterGenerator:
                         alias = display_field_alias,
                         percentile=percentile.value,
                 )
-                filters.append(percentile_filter.split(' '))
+                filters.append([ int(clause) if clause.isdigit() else clause for clause in percentile_filter.split(' ')])
         return filters
 
     @staticmethod
