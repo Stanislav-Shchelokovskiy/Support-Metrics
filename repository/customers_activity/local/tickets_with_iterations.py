@@ -10,9 +10,9 @@ from sql_queries.customers_activity.meta import (
     TicketsWithIterationsMeta,
     TicketsWithIterationsPeriodMeta,
 )
-from repository.customers_activity.local.sql_filters_generator.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
-from repository.customers_activity.local.query_parts.sub_queries.tickets_with_iterations_table import get_tickets_with_iterations_table
-from repository.customers_activity.local.query_parts.filters import get_creation_date_and_tickets_filters
+from repository.customers_activity.local.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
+from repository.customers_activity.local.core.tickets_with_iterations_table import get_tickets_with_iterations_table
+from repository.customers_activity.local.core.filters import get_creation_date_and_tickets_filters
 from configs.customers_activity_config import CustomersActivityConfig
 
 

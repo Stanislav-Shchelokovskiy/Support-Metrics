@@ -1,6 +1,7 @@
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
-from repository.customers_activity.local.sql_filters_generator.sql_filter_clause_generator import (
+from repository.customers_activity.local.filters_generators.sql_filter_clause_generator import (
     FilterParametersNode,
+    FilterParameterNode,
     SqlFilterClauseFromFilterParametersGenerator,
 )
 from configs.customers_activity_config import CustomersActivityConfig
@@ -188,7 +189,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",
         )
-    
+
     @staticmethod
     def generate_customers_filter(params: FilterParametersNode) -> str:
         generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
@@ -200,3 +201,23 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",
         )
+
+    @staticmethod
+    def get_percentile_filter(
+        alias: str,
+        percentile: FilterParameterNode,
+    ) -> str:
+
+        def validate_percentile(val: int | None):
+            if val is not None:
+                if val < 0:
+                    val = 0
+                if val > 100:
+                    val = 100
+            else:
+                val = 100
+            return val
+
+        if percentile.include:
+            return f'{alias} <= {validate_percentile(percentile.value)}'
+        return f'{alias} > {validate_percentile(percentile.value)}'

@@ -1,15 +1,11 @@
 import os
-import requests
 import json
-import urllib3
+from toolbox.utils.network import Network
 from pandas import DataFrame
 from toolbox.sql.sqlite_db import get_or_create_db
 from sql_queries.index import CustomersActivityDBIndex
 from repository.factory import RepositoryFactory, TablesBuilder
 from repository.index_creation_expressions_repository import IndexCreationExpressionsRepository
-
-
-urllib3.disable_warnings()
 
 
 def _save_tables(tables: dict[str, DataFrame]):
@@ -69,10 +65,9 @@ def load_employees_iterations(start_date: str, end_date: str):
 
 
 def load_tickets_types():
-    types_str = requests.get(
+    types_str = Network.get_data(
         url='https://answerdesk-domain.hosting.devexpress.com/entityTypes?Company=c1f0951c-3885-44cf-accb-1a390f34c342',
-        verify=False,
-    ).text
+    )
     types = json.loads(types_str)['Page']
     df = DataFrame.from_records(data=types)
     df = df.rename(columns={'DisplayName': 'name', 'Id': 'id'})
@@ -81,7 +76,7 @@ def load_tickets_types():
     _save_tables(tables={CustomersActivityDBIndex.get_tickets_types_name(): df})
 
 def load_tribes():
-    tribes_str = requests.get(url= f'http://{os.environ["QUERY_SERVICE"]}/get_available_tribes').text
+    tribes_str = Network.get_data(url= f'http://{os.environ["QUERY_SERVICE"]}/get_available_tribes')
     tribes = json.loads(tribes_str)
     df = DataFrame.from_records(data=tribes)
     df = df.reset_index(drop=True)

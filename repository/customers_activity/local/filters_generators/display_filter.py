@@ -1,6 +1,11 @@
-from toolbox.sql.repository import SqliteRepository
-from repository.customers_activity.local.query_parts.sub_queries.customers_rank import get_percentile_filter
-from sql_queries.index import CustomersActivityDBIndex, CustomersActivitySqlPathIndex
+from toolbox.sql.repository import SqliteRepository, Repository
+from repository.customers_activity.local.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
+from repository.customers_activity.local.filters_generators.sql_filter_clause_generator import FilterParametersNode
+from repository.customers_activity.local.core.customers_rank import Percentile
+from sql_queries.index import (
+    CustomersActivityDBIndex,
+    CustomersActivitySqlPathIndex,
+)
 from sql_queries.customers_activity.meta import (
     PlatformsProductsMeta,
     TicketsTagsMeta,
@@ -124,32 +129,49 @@ query_params_store = {
 }
 
 
-class DisplayFilterRepository(SqliteRepository):
+class DisplayFilterGenerator:
     # yapf: disable
-    def get_display_filter(
-        self,
+    @staticmethod
+    def generate_display_filter(
         aliases: dict[str, str],
+        repository: Repository = SqliteRepository(),
         **kwargs,
     ) -> list[list]:
         filters = []
+        v: FilterParametersNode
         for k, v in kwargs.items():
             display_field_alias = aliases[k]
             if qp:= query_params_store.get(k):
+                if not v.values:
+                    continue
                 values = ', '.join([f"'{value}'" for value in v.values])
-                display_values = self.execute_query(
-                    query_file_path=CustomersActivitySqlPathIndex.
-                    get_general_select_path(),
+                display_values =repository.execute_query(
+                    query_file_path=CustomersActivitySqlPathIndex.get_general_select_path(),
                     query_format_params={
                         'columns': f'DISTINCT {qp.display_field}',
                         'table_name': qp.table,
                         'filter_group_limit_clause': f'WHERE {qp.value_field} IN ({values})',
                     }
                 ).reset_index(drop=True)[qp.display_field].values.tolist()
-                filters.append([display_field_alias, 'in', display_values])
+                if v.include:
+                    DisplayFilterGenerator.append_filter(filters, [display_field_alias, 'in', display_values])
+                else:
+                    filter = []
+                    filter.append([display_field_alias, '=', 'null'])
+                    filter.append('or')
+                    filter.append([display_field_alias, 'notin', display_values])
+                    DisplayFilterGenerator.append_filter(filters, filter)
             else:
-                percentile_filter = get_percentile_filter(
-                        alias = display_field_alias, 
-                        percentile=kwargs['percentile'],
+                percentile: Percentile = kwargs['percentile']
+                percentile_filter = TicketsWithIterationsSqlFilterClauseGenerator.get_percentile_filter(
+                        alias = display_field_alias,
+                        percentile=percentile.value,
                 )
                 filters.append(percentile_filter.split(' '))
         return filters
+
+    @staticmethod
+    def append_filter(filters: list, filter):
+        if filters:
+            filters.append('and')
+        filters.append(filter)

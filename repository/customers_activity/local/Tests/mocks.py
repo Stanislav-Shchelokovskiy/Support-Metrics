@@ -5,15 +5,15 @@ class MockFilterParametersNode:
         self.values = values
 
 
-class FilterParameterNode:
+class MockFilterParameterNode:
 
     def __init__(self, include: bool, value: str | int) -> None:
         self.include = include
         self.value = value
 
 
-class Percentile:
+class MockPercentile:
 
-    def __init__(self, metric: str, value: FilterParameterNode) -> None:
+    def __init__(self, metric: str, value: MockFilterParameterNode) -> None:
         self.metric = metric
         self.value = value

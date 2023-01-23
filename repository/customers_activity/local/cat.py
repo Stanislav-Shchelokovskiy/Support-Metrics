@@ -7,7 +7,7 @@ from sql_queries.customers_activity.meta import (
     ReplyTypesMeta,
     ComponentsFeaturesMeta,
 )
-from repository.customers_activity.local.sql_filters_generator.cat import CATSqlFilterClauseGenerator
+from repository.customers_activity.local.filters_generators.cat import CATSqlFilterClauseGenerator
 
 
 # yapf: disable

@@ -260,7 +260,6 @@ def get_customers_activity_help():
 
 @app.post('/get_customers_activity_display_filter')
 def get_customers_activity_display_filter(body: TicketsWithIterationsParams):
-    print(body)
     filters = server_repository.customers_activity_get_display_filter(
         aliases={k: v.alias for k, v in body.__fields__.items()},
         **body.__dict__,

@@ -7,7 +7,7 @@ from sql_queries.customers_activity.meta import (
     LicenseStatusesMeta,
     ConversionStatusesMeta,
 )
-from repository.customers_activity.local.sql_filters_generator.conversion_statuses import ConversionStatusesSqlFilterClauseGenerator
+from repository.customers_activity.local.filters_generators.conversion_statuses import ConversionStatusesSqlFilterClauseGenerator
 
 
 #yapf: disable
