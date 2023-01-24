@@ -39,7 +39,8 @@ class MockSqliteRepository:
                 'tribe_ids': 'Tribes',
                 'platforms_ids': 'Platforms',
                 'tickets_types': 'Ticket types',
-                'license_statuses': 'User types'
+                'license_statuses': 'User types',
+                'tickets_tags': 'Ticket tags',
             },
             {
                 'percentile': MockPercentile(
@@ -53,6 +54,7 @@ class MockSqliteRepository:
                 'platforms_ids': MockFilterParametersNode(include=True, values=[]),
                 'tickets_types': MockFilterParametersNode(include=False, values=[1]),
                 'license_statuses': MockFilterParametersNode(include=True, values=[0, 1]),
+                'tickets_tags' : MockFilterParametersNode(include=False, values=[]),
             },
             [
                 ['Percentile', '<=', 40],
@@ -62,9 +64,11 @@ class MockSqliteRepository:
                 [
                     ['Ticket types', '=', 'NULL'], 'or',
                     ['Ticket types', 'notin', ['Question']]
-                ], 
+                ],
                 'and',
-                ['User types', 'in', ['Licensed', 'Free']]
+                ['User types', 'in', ['Licensed', 'Free']],
+                'and',
+                ['Ticket tags', '=', 'NULL']
             ],
         ),
     ]

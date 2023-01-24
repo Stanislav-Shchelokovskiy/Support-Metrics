@@ -143,6 +143,8 @@ class DisplayFilterGenerator:
             display_field_alias = aliases[k]
             if qp:= query_params_store.get(k):
                 if not v.values:
+                    if not v.include:
+                        DisplayFilterGenerator.append_filter(filters, [display_field_alias, '=', 'NULL'])
                     continue
                 values = ', '.join([f"'{value}'" for value in v.values])
                 display_values =repository.execute_query(
