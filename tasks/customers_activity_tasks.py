@@ -102,4 +102,4 @@ def build_tables(rank_period_offset: str):
     TablesBuilder.customers_activity.build_emp_tribes()
     TablesBuilder.customers_activity.build_employees()
     TablesBuilder.customers_activity.build_users()
-# yapf: enable
+    TablesBuilder.customers_activity.run_analyze()
