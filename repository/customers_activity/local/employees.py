@@ -8,7 +8,7 @@ from sql_queries.customers_activity.meta import (
     TribesMeta,
     EmployeesMeta,
 )
-from repository.customers_activity.local.sql_query_params_generator.employees import EmployeesSqlFilterClauseGenerator
+from repository.customers_activity.local.filters_generators.employees import EmployeesSqlFilterClauseGenerator
 
 
 # yapf: disable
@@ -24,7 +24,7 @@ class EmpPositionsRepository(SqliteRepository):
         return {
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_emp_positions_name(),
-            'filter_group_limit_clause': '',
+            'filter_group_limit_clause': f'ORDER BY {PositionsMeta.name}',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
@@ -43,7 +43,7 @@ class EmpTribesRepository(SqliteRepository):
         return {
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_emp_tribes_name(),
-            'filter_group_limit_clause': '',
+            'filter_group_limit_clause': f'ORDER BY {TribesMeta.name}',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
@@ -59,13 +59,14 @@ class EmployeesRepository(SqliteRepository):
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        filter = EmployeesSqlFilterClauseGenerator.generate_positions_tribes_filter(
+                    position_ids=kwargs['position_ids'],
+                    tribe_ids=kwargs['tribe_ids'],
+                )
         return {
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_employees_name(),
-            'filter_group_limit_clause': EmployeesSqlFilterClauseGenerator.generate_positions_tribes_filter(
-                    position_ids=kwargs['position_ids'],
-                    tribe_ids=kwargs['tribe_ids'],
-                ),
+            'filter_group_limit_clause': f'{filter}\nORDER BY {EmployeesMeta.name}',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:

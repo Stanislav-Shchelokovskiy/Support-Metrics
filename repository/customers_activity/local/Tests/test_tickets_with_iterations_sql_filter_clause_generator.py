@@ -1,7 +1,11 @@
 import pytest
-from repository.customers_activity.local.sql_query_params_generator.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
+from repository.customers_activity.local.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
-from repository.customers_activity.local.Tests.mocks import MockFilterParametersNode
+from repository.customers_activity.local.Tests.mocks import (
+    MockFilterParametersNode,
+    MockFilterParameterNode,
+    MockPercentile,
+)
 from configs.customers_activity_config import CustomersActivityConfig
 
 
@@ -645,4 +649,39 @@ def test_generate_customers_filter(
 ):
     assert TicketsWithIterationsSqlFilterClauseGenerator.generate_customers_filter(
         params=input
+    ) == output
+
+
+@pytest.mark.parametrize(
+    'alias, percentile, output', [
+        (
+            'alias',
+            MockFilterParameterNode(include=True, value=100),
+            'alias <= 100',
+        ),
+        (
+            'alias',
+            MockFilterParameterNode(include=False, value=100),
+            'alias > 100',
+        ),
+        (
+            'alias',
+            MockFilterParameterNode(include=True, value=50),
+            'alias <= 50',
+        ),
+        (
+            'alias',
+            MockFilterParameterNode(include=False, value=50),
+            'alias > 50',
+        ),
+    ]
+)
+def test_get_percentile_filter(
+    alias: str,
+    percentile: MockPercentile,
+    output: str,
+):
+    assert TicketsWithIterationsSqlFilterClauseGenerator.get_percentile_filter(
+        alias=alias,
+        percentile=percentile,
     ) == output

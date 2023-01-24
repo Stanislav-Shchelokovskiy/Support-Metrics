@@ -7,6 +7,11 @@ class FilterParametersNode(Protocol):
     values: list
 
 
+class FilterParameterNode(Protocol):
+    include: bool
+    value: int
+
+
 class SqlFilterClauseFromFilterParametersGenerator:
 
     @staticmethod

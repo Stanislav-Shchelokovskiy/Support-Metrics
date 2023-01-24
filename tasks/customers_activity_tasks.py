@@ -1,31 +1,28 @@
-import requests
+import os
 import json
-import urllib3
+from toolbox.utils.network import Network
 from pandas import DataFrame
 from toolbox.sql.sqlite_db import get_or_create_db
 from sql_queries.index import CustomersActivityDBIndex
 from repository.factory import RepositoryFactory, TablesBuilder
-from repository.index_creation_expressions_repository import IndexCreationExpressionsRepository
+from repository.customers_activity.local.db_statements.indexes import get_create_index_statements
+from repository.customers_activity.local.db_statements.table_defs import get_create_table_statements
 
 
-urllib3.disable_warnings()
-
-
+# yapf: disable
 def _save_tables(tables: dict[str, DataFrame]):
     sqlitedb = get_or_create_db()
     sqlitedb.save_tables(
         tables=tables,
-        create_index_expressions=IndexCreationExpressionsRepository.
-        customers_activity_create_index_expressions,
+        tables_defs=get_create_table_statements(),
+        create_index_statements=get_create_index_statements(),
     )
 
 
-# yapf: disable
 def load_tags():
     repository = RepositoryFactory.customers_activity.remote.create_tags_repository()
     df = repository.get_data()
-    tbl_name = CustomersActivityDBIndex.get_tickets_tags_name()
-    _save_tables(tables={tbl_name: df})
+    _save_tables(tables={CustomersActivityDBIndex.get_tickets_tags_name(): df})
 
 
 def load_groups():
@@ -41,13 +38,13 @@ def load_tracked_groups(start_date: str):
 def load_replies_types():
     repository = RepositoryFactory.customers_activity.remote.create_replies_types_repository()
     df = repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_replies_types_name(): df})
+    _save_tables(tables={CustomersActivityDBIndex.get_cat_replies_types_name(): df})
 
 
 def load_components_features():
     repository = RepositoryFactory.customers_activity.remote.create_components_features_repository()
     df = repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_components_features_name(): df})
+    _save_tables(tables={CustomersActivityDBIndex.get_cat_components_features_name(): df})
 
 
 def load_platforms_products():
@@ -69,16 +66,22 @@ def load_employees_iterations(start_date: str, end_date: str):
 
 
 def load_tickets_types():
-    types_str = requests.get(
-        url='https://answerdesk-domain.hosting.devexpress.com/entityTypes?Company=c1f0951c-3885-44cf-accb-1a390f34c342',
-        verify=False,
-    ).text
+    types_str = Network.get_data(
+        end_point='https://answerdesk-domain.hosting.devexpress.com/entityTypes?Company=c1f0951c-3885-44cf-accb-1a390f34c342',
+    )
     types = json.loads(types_str)['Page']
     df = DataFrame.from_records(data=types)
     df = df.rename(columns={'DisplayName': 'name', 'Id': 'id'})
     df = df.reset_index(drop=True)
     df = df[['name', 'id']]
     _save_tables(tables={CustomersActivityDBIndex.get_tickets_types_name(): df})
+
+def load_tribes():
+    tribes_str = Network.get_data(end_point= f'http://{os.environ["QUERY_SERVICE"]}/get_available_tribes')
+    tribes = json.loads(tribes_str)
+    df = DataFrame.from_records(data=tribes)
+    df = df.reset_index(drop=True)
+    _save_tables(tables={CustomersActivityDBIndex.get_tribes_name(): df})
 
 
 def load_license_statuses():

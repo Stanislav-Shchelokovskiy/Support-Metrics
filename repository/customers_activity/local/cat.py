@@ -4,14 +4,14 @@ from sql_queries.index import (
     CustomersActivityDBIndex,
 )
 from sql_queries.customers_activity.meta import (
-    ReplyTypesMeta,
-    ComponentsFeaturesMeta,
+    CATRepliesTypesMeta,
+    CATComponentsFeaturesMeta,
 )
-from repository.customers_activity.local.sql_query_params_generator.cat import CATSqlFilterClauseGenerator
+from repository.customers_activity.local.filters_generators.cat import CATSqlFilterClauseGenerator
 
 
 # yapf: disable
-class ReplyTypesRepository(SqliteRepository):
+class CATRepliesTypesRepository(SqliteRepository):
     """
     Interface to a local table storing CAT reply types.
     """
@@ -22,15 +22,15 @@ class ReplyTypesRepository(SqliteRepository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
-            'table_name': CustomersActivityDBIndex.get_replies_types_name(),
-            'filter_group_limit_clause': '',
+            'table_name': CustomersActivityDBIndex.get_cat_replies_types_name(),
+            'filter_group_limit_clause': f'ORDER BY {CATRepliesTypesMeta.name}',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return ReplyTypesMeta.get_values()
+        return CATRepliesTypesMeta.get_values()
 
 
-class ComponentsRepository(SqliteRepository):
+class CATComponentsRepository(SqliteRepository):
     """
     Interface to a local table storing CAT components.
     """
@@ -39,22 +39,22 @@ class ComponentsRepository(SqliteRepository):
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        filter = CATSqlFilterClauseGenerator.generate_components_filter(tribe_ids=kwargs['tribe_ids'])
+        cols = ', '.join(self.get_must_have_columns(kwargs))
         return {
-            'columns': f"DISTINCT {', '.join(self.get_must_have_columns(kwargs))}",
-            'table_name': CustomersActivityDBIndex.get_components_features_name(),
-            'filter_group_limit_clause': CATSqlFilterClauseGenerator.generate_components_filter(
-                    tribe_ids=kwargs['tribe_ids']
-                ),
+            'columns': cols,
+            'table_name': CustomersActivityDBIndex.get_cat_components_features_name(),
+            'filter_group_limit_clause': f'{filter}\nGROUP BY {cols}\nORDER BY {CATComponentsFeaturesMeta.component_name}',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return [
-            ComponentsFeaturesMeta.component_id,
-            ComponentsFeaturesMeta.component_name,
+            CATComponentsFeaturesMeta.component_id,
+            CATComponentsFeaturesMeta.component_name,
         ]
 
 
-class FeaturesRepository(SqliteRepository):
+class CATFeaturesRepository(SqliteRepository):
     """
     Interface to a local table storing CAT features
     available for the specified components.
@@ -64,18 +64,18 @@ class FeaturesRepository(SqliteRepository):
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
-        return {
-            'columns': ', '.join(self.get_must_have_columns(kwargs)),
-            'table_name': CustomersActivityDBIndex.get_components_features_name(),
-            'filter_group_limit_clause': CATSqlFilterClauseGenerator.generate_features_filter(
+        filter = CATSqlFilterClauseGenerator.generate_features_filter(
                     tribe_ids=kwargs['tribe_ids'],
                     component_ids=kwargs['component_ids'],
-                ),
+                )
+        return {
+            'columns': ', '.join(self.get_must_have_columns(kwargs)),
+            'table_name': CustomersActivityDBIndex.get_cat_components_features_name(),
+            'filter_group_limit_clause': f'{filter}\nORDER BY {CATComponentsFeaturesMeta.feature_name}',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return [
-            ComponentsFeaturesMeta.feature_id,
-            ComponentsFeaturesMeta.feature_name,
+            CATComponentsFeaturesMeta.feature_id,
+            CATComponentsFeaturesMeta.feature_name,
         ]
-# yapf: enable

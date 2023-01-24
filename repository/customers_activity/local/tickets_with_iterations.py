@@ -10,9 +10,9 @@ from sql_queries.customers_activity.meta import (
     TicketsWithIterationsMeta,
     TicketsWithIterationsPeriodMeta,
 )
-from repository.customers_activity.local.sql_query_params_generator.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
-from repository.customers_activity.local.query_parts.sub_queries.tickets_with_iterations_table import get_tickets_with_iterations_table
-from repository.customers_activity.local.query_parts.filters import get_creation_date_and_tickets_filters
+from repository.customers_activity.local.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
+from repository.customers_activity.local.core.tickets_with_iterations_table import get_tickets_with_iterations_table
+from repository.customers_activity.local.core.filters import get_creation_date_and_tickets_filters
 from configs.customers_activity_config import CustomersActivityConfig
 
 
@@ -53,8 +53,8 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
-            'replies_types_table': CustomersActivityDBIndex.get_replies_types_name(),
-            'components_features_table': CustomersActivityDBIndex.get_components_features_name(),
+            'replies_types_table': CustomersActivityDBIndex.get_cat_replies_types_name(),
+            'components_features_table': CustomersActivityDBIndex.get_cat_components_features_name(),
             'license_statuses_table': CustomersActivityDBIndex.get_license_statuses_name(),
             'conversion_statuses_table': CustomersActivityDBIndex.get_conversion_statuses_name(),
             **TicketsWithIterationsRawMeta.get_attrs(),

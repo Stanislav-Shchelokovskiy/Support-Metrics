@@ -34,7 +34,7 @@ class TicketsTypesMeta(KnotMeta):
     pass
 
 
-class ReplyTypesMeta(KnotMeta):
+class CATRepliesTypesMeta(KnotMeta):
     pass
 
 
@@ -51,7 +51,7 @@ class TribeIdMeta(MetaData):
     tribe_id = 'tribe_id'
 
 
-class ComponentsFeaturesMeta(TribeIdMeta):
+class CATComponentsFeaturesMeta(TribeIdMeta):
     component_id = 'component_id'
     feature_id = 'feature_id'
     component_name = 'component_name'

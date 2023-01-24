@@ -55,7 +55,7 @@ class CustomersGroupsRepository(SqliteRepository):
         return {
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_customers_groups_name(),
-            'filter_group_limit_clause': '',
+            'filter_group_limit_clause': f'ORDER BY {CustomersGroupsMeta.name}',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
@@ -75,7 +75,7 @@ class TrackedCustomersGroupsRepository(SqliteRepository):
         return {
             'columns': cols,
             'table_name': CustomersActivityDBIndex.get_tracked_customers_groups_name(),
-            'filter_group_limit_clause': f'GROUP BY {cols}',
+            'filter_group_limit_clause': f'GROUP BY {cols}\nORDER BY {TrackedCustomersGroupsMeta.name}',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:

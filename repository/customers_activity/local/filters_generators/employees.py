@@ -1,5 +1,5 @@
 from sql_queries.customers_activity.meta import EmployeesMeta
-from repository.customers_activity.local.sql_query_params_generator.sql_filter_clause_generator import (
+from repository.customers_activity.local.filters_generators.sql_filter_clause_generator import (
     FilterParametersNode,
     SqlFilterClauseFromFilterParametersGenerator,
 )

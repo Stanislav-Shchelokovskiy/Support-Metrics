@@ -1,5 +1,5 @@
-from sql_queries.customers_activity.meta import ComponentsFeaturesMeta
-from repository.customers_activity.local.sql_query_params_generator.sql_filter_clause_generator import (
+from sql_queries.customers_activity.meta import CATComponentsFeaturesMeta
+from repository.customers_activity.local.filters_generators.sql_filter_clause_generator import (
     FilterParametersNode,
     SqlFilterClauseFromFilterParametersGenerator,
 )
@@ -13,7 +13,7 @@ class CATSqlFilterClauseGenerator:
             params=tribe_ids
         )
         return generate_filter(
-            col=ComponentsFeaturesMeta.tribe_id,
+            col=CATComponentsFeaturesMeta.tribe_id,
             values=tribe_ids.values,
             filter_prefix='WHERE',
             values_converter=lambda val: f"'{val}'",
@@ -31,7 +31,7 @@ class CATSqlFilterClauseGenerator:
             params=component_ids
         )
         features_filter = generate_filter(
-            col=ComponentsFeaturesMeta.component_id,
+            col=CATComponentsFeaturesMeta.component_id,
             values=component_ids.values,
             filter_prefix=' AND' if components_fitler else 'WHERE',
             values_converter=lambda val: f"'{val}'",

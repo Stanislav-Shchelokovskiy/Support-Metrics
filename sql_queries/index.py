@@ -107,6 +107,13 @@ class CustomersActivitySqlPathIndex:
         )
 
     @staticmethod
+    def get_knot_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_transform_load_path()
+            + '/knot.sql'
+        )
+
+    @staticmethod
     def get_tickets_with_iterations_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_transform_load_path()
@@ -169,11 +176,11 @@ class CustomersActivityDBIndex:
         )
 
     @staticmethod
-    def get_replies_types_name() -> str:
+    def get_cat_replies_types_name() -> str:
         return CustomersActivityDBIndex.get_root_name() + 'CatRepliesTypes'
 
     @staticmethod
-    def get_components_features_name() -> str:
+    def get_cat_components_features_name() -> str:
         return (
             CustomersActivityDBIndex.get_root_name() + 'CatComponentsFeatures'
         )
@@ -199,6 +206,10 @@ class CustomersActivityDBIndex:
         return CustomersActivityDBIndex.get_root_name() + 'EmpPositions'
 
     @staticmethod
+    def get_tribes_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'AvailableTribes'
+
+    @staticmethod
     def get_emp_tribes_name() -> str:
         return CustomersActivityDBIndex.get_root_name() + 'EmpTribes'
 
@@ -212,9 +223,7 @@ class CustomersActivityDBIndex:
 
     @staticmethod
     def get_customers_tickets_name() -> str:
-        return (
-            CustomersActivityDBIndex.get_root_name() + 'CustomersTickets'
-        )
+        return (CustomersActivityDBIndex.get_root_name() + 'CustomersTickets')
 
     @staticmethod
     def get_employees_iterations_name() -> str:

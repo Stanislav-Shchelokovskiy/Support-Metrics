@@ -11,8 +11,8 @@ from sql_queries.customers_activity.meta import (
     CustomersGroupsMeta,
     TicketsTagsMeta,
     TicketsWithIterationsPeriodMeta,
-    ReplyTypesMeta,
-    ComponentsFeaturesMeta,
+    CATRepliesTypesMeta,
+    CATComponentsFeaturesMeta,
     TicketsWithIterationsAggregatesMeta,
     TicketsWithIterationsRawMeta,
     PlatformsProductsMeta,
@@ -24,6 +24,7 @@ from sql_queries.customers_activity.meta import (
     EmployeesMeta,
     TrackedCustomersGroupsMeta,
     CustomersMeta,
+    KnotMeta,
 )
 
 
@@ -92,13 +93,13 @@ tickets_with_iterations_common_params = {
         (
             CustomersActivitySqlPathIndex.get_replies_types_path,
             {
-                **ReplyTypesMeta.get_attrs(),
+                **CATRepliesTypesMeta.get_attrs(),
             },
         ),
         (
             CustomersActivitySqlPathIndex.get_components_features_path,
             {
-                **ComponentsFeaturesMeta.get_attrs(),
+                **CATComponentsFeaturesMeta.get_attrs(),
             },
         ),
         (
@@ -175,6 +176,13 @@ tickets_with_iterations_common_params = {
             {
                 'values': 'values',
                 'field': 'field',
+                'table': 'table',
+            },
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_knot_path,
+            {
+                **KnotMeta.get_attrs(),
                 'table': 'table',
             },
         ),

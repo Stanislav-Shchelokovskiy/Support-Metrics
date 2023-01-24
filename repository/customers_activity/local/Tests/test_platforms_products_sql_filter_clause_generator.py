@@ -1,5 +1,5 @@
 import pytest
-from repository.customers_activity.local.sql_query_params_generator.platforms_products import PlatformsProductsSqlFilterClauseGenerator
+from repository.customers_activity.local.filters_generators.platforms_products import PlatformsProductsSqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import PlatformsProductsMeta
 from repository.customers_activity.local.Tests.mocks import MockFilterParametersNode
 

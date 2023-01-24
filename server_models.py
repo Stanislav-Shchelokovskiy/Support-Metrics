@@ -1,8 +1,16 @@
-from pydantic import BaseModel
+from typing import Literal
+from pydantic import BaseModel, Field
 
 
-class FilterParametersNode(BaseModel):
+class FilterNode(BaseModel):
     include: bool
+
+
+class FilterParameterNode(FilterNode):
+    value: int | str
+
+
+class FilterParametersNode(FilterNode):
     values: list[int | str]
 
 
@@ -31,22 +39,30 @@ class CustomersParams(BaseModel):
     customers: list[str]
 
 
+class Percentile(BaseModel):
+    metric: Literal['tickets', 'iterations']
+    value: FilterParameterNode
+
+
+# yapf: disable
 class TicketsWithIterationsParams(BaseModel):
-    tribes: FilterParametersNode
-    customers_groups: FilterParametersNode
-    tickets_types: FilterParametersNode
-    tickets_tags: FilterParametersNode
-    replies_types: FilterParametersNode
-    components: FilterParametersNode
-    features: FilterParametersNode
-    license_statuses: FilterParametersNode
-    conversion_statuses: FilterParametersNode
-    platforms: FilterParametersNode
-    products: FilterParametersNode
-    positions: FilterParametersNode
-    emp_tribes: FilterParametersNode
-    employees: FilterParametersNode
-    customers: FilterParametersNode
+    percentile: Percentile = Field(alias='Percentile')
+    tribe_ids: FilterParametersNode = Field(alias='Tribes')
+    platforms_ids: FilterParametersNode = Field(alias='Platforms')
+    products_ids: FilterParametersNode = Field(alias='Products')
+    tickets_tags: FilterParametersNode = Field(alias='Ticket tags')
+    tickets_types: FilterParametersNode = Field(alias='Ticket types')
+    customers_groups: FilterParametersNode = Field(alias='User groups')
+    license_statuses: FilterParametersNode = Field(alias='User types')
+    conversion_statuses: FilterParametersNode = Field(alias='User conversion types')
+    positions_ids: FilterParametersNode = Field(alias='Employees positions')
+    emp_tribe_ids: FilterParametersNode = Field(alias='Employees tribes')
+    emp_ids: FilterParametersNode = Field(alias='Employees')
+    reply_ids: FilterParametersNode = Field(alias='CAT replies types')
+    components_ids: FilterParametersNode = Field(alias='CAT components')
+    feature_ids: FilterParametersNode = Field(alias='CAT features')
+    customers_crmids: FilterParametersNode = Field(alias='Customers')
+# yapf: enable
 
 
 class StatAppState(BaseModel):

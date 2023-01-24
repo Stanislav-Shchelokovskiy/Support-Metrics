@@ -1,12 +1,12 @@
 from toolbox.sql.repository import Repository
 from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.customers_activity.meta import (
-    ReplyTypesMeta,
-    ComponentsFeaturesMeta,
+    CATRepliesTypesMeta,
+    CATComponentsFeaturesMeta,
 )
 
 
-class RepliesTypesRepository(Repository):
+class CATRepliesTypesRepository(Repository):
     """
     Loads CAT reply types.
     """
@@ -15,13 +15,13 @@ class RepliesTypesRepository(Repository):
         return CustomersActivitySqlPathIndex.get_replies_types_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
-        return {**kwargs, **ReplyTypesMeta.get_attrs()}
+        return {**kwargs, **CATRepliesTypesMeta.get_attrs()}
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return ReplyTypesMeta.get_values()
+        return CATRepliesTypesMeta.get_values()
 
 
-class ComponentsFeaturesRepository(Repository):
+class CATComponentsFeaturesRepository(Repository):
     """
     Loads CAT components and features.
     """
@@ -30,7 +30,7 @@ class ComponentsFeaturesRepository(Repository):
         return CustomersActivitySqlPathIndex.get_components_features_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
-        return {**kwargs, **ComponentsFeaturesMeta.get_attrs()}
+        return {**kwargs, **CATComponentsFeaturesMeta.get_attrs()}
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return ComponentsFeaturesMeta.get_values()
+        return CATComponentsFeaturesMeta.get_values()

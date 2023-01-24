@@ -1,0 +1,126 @@
+from sql_queries.index import CustomersActivityDBIndex
+from sql_queries.customers_activity.meta import (
+    CATComponentsFeaturesMeta,
+    TrackedCustomersGroupsMeta,
+    EmployeesIterationsMeta,
+    PlatformsProductsMeta,
+    TicketsWithLicensesMeta,
+)
+
+
+def _create_index_statement(tbl: str, cols: list[str]) -> str:
+    return f'CREATE INDEX idx_{tbl}_{"_".join(cols)} ON {tbl}({",".join(cols)});'
+
+
+# yapf: disable
+def get_create_index_statements():
+    return {
+        CustomersActivityDBIndex.get_customers_tickets_name():
+            [
+                _create_index_statement(
+                    tbl=CustomersActivityDBIndex.get_customers_tickets_name(),
+                    cols=[
+                        TicketsWithLicensesMeta.creation_date,
+                        TicketsWithLicensesMeta.user_crmid,
+                    ]
+                ),
+                _create_index_statement(
+                    tbl=CustomersActivityDBIndex.get_customers_tickets_name(),
+                    cols=[
+                        TicketsWithLicensesMeta.user_crmid,
+                    ]
+                ),
+            ],
+        CustomersActivityDBIndex.get_cat_components_features_name():
+            [
+                _create_index_statement(
+                    tbl=CustomersActivityDBIndex.get_cat_components_features_name(),
+                    cols=[
+                        CATComponentsFeaturesMeta.tribe_id,
+                        CATComponentsFeaturesMeta.component_id,
+                        CATComponentsFeaturesMeta.component_name,
+                    ]
+                ),
+                _create_index_statement(
+                    tbl=CustomersActivityDBIndex.get_cat_components_features_name(),
+                    cols=[
+                        CATComponentsFeaturesMeta.tribe_id,
+                        CATComponentsFeaturesMeta.component_id,
+                        CATComponentsFeaturesMeta.feature_id,
+                        CATComponentsFeaturesMeta.feature_name,
+                    ]
+                ),
+                _create_index_statement(
+                    tbl=CustomersActivityDBIndex.get_cat_components_features_name(),
+                    cols=[
+                        CATComponentsFeaturesMeta.component_id,
+                        CATComponentsFeaturesMeta.component_name,
+                    ]
+                ),
+                _create_index_statement(
+                    tbl=CustomersActivityDBIndex.get_cat_components_features_name(),
+                    cols=[
+                        CATComponentsFeaturesMeta.feature_id,
+                        CATComponentsFeaturesMeta.feature_name,
+                    ]
+                ),
+            ],
+        CustomersActivityDBIndex.get_platforms_products_name():
+            [
+                _create_index_statement(
+                    tbl=CustomersActivityDBIndex.get_platforms_products_name(),
+                    cols=[
+                        PlatformsProductsMeta.tribe_id,
+                        PlatformsProductsMeta.platform_id,
+                        PlatformsProductsMeta.product_id,
+                        PlatformsProductsMeta.product_name,
+                    ]
+                ),
+                _create_index_statement(
+                    tbl=CustomersActivityDBIndex.get_platforms_products_name(),
+                    cols=[
+                        PlatformsProductsMeta.tribe_id,
+                        PlatformsProductsMeta.platform_id,
+                        PlatformsProductsMeta.platform_name,
+                    ]
+                ),
+                _create_index_statement(
+                    tbl=CustomersActivityDBIndex.get_platforms_products_name(),
+                    cols=[
+                        PlatformsProductsMeta.platform_id,
+                        PlatformsProductsMeta.platform_name,
+                    ]
+                ),
+                _create_index_statement(
+                    tbl=CustomersActivityDBIndex.get_platforms_products_name(),
+                    cols=[
+                        PlatformsProductsMeta.product_id,
+                        PlatformsProductsMeta.product_name,
+                    ]
+                ),
+            ],
+        CustomersActivityDBIndex.get_employees_iterations_name():
+            [
+                _create_index_statement(
+                    tbl=CustomersActivityDBIndex.get_employees_iterations_name(),
+                    cols=[EmployeesIterationsMeta.ticket_id]
+                ),
+            ],
+        CustomersActivityDBIndex.get_tracked_customers_groups_name():
+            [
+                _create_index_statement(
+                    tbl=CustomersActivityDBIndex.get_tracked_customers_groups_name(),
+                    cols=[
+                        TrackedCustomersGroupsMeta.assignment_date,
+                        TrackedCustomersGroupsMeta.id,
+                    ]
+                ),
+                _create_index_statement(
+                    tbl=CustomersActivityDBIndex.get_tracked_customers_groups_name(),
+                    cols=[
+                        TrackedCustomersGroupsMeta.id,
+                        TrackedCustomersGroupsMeta.name,
+                    ]
+                ),
+            ],
+    }
