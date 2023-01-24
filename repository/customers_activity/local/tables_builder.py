@@ -82,3 +82,7 @@ class TablesBuilder:
         )
         query_executor = SQLiteNonQueryExecutor()
         query_executor.execute_non_query(query)
+
+    def run_analyze(self):
+        query_executor = SQLiteNonQueryExecutor()
+        query_executor.execute_script_non_query('pragma optimize;')
