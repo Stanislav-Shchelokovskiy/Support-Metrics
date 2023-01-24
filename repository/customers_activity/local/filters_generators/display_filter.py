@@ -16,8 +16,8 @@ from sql_queries.customers_activity.meta import (
     PositionsMeta,
     TribesMeta,
     EmployeesIterationsMeta,
-    ReplyTypesMeta,
-    ComponentsFeaturesMeta,
+    CATRepliesTypesMeta,
+    CATComponentsFeaturesMeta,
     CustomersMeta,
 )
 
@@ -104,21 +104,21 @@ query_params_store = {
         ),
     'reply_ids':
         QueryParams(
-            table=CustomersActivityDBIndex.get_replies_types_name(),
-            value_field=ReplyTypesMeta.id,
-            display_field=ReplyTypesMeta.name,
+            table=CustomersActivityDBIndex.get_cat_replies_types_name(),
+            value_field=CATRepliesTypesMeta.id,
+            display_field=CATRepliesTypesMeta.name,
         ),
     'components_ids':
         QueryParams(
-            table=CustomersActivityDBIndex.get_components_features_name(),
-            value_field=ComponentsFeaturesMeta.component_id,
-            display_field=ComponentsFeaturesMeta.component_name,
+            table=CustomersActivityDBIndex.get_cat_components_features_name(),
+            value_field=CATComponentsFeaturesMeta.component_id,
+            display_field=CATComponentsFeaturesMeta.component_name,
         ),
     'feature_ids':
         QueryParams(
-            table=CustomersActivityDBIndex.get_components_features_name(),
-            value_field=ComponentsFeaturesMeta.feature_id,
-            display_field=ComponentsFeaturesMeta.feature_name,
+            table=CustomersActivityDBIndex.get_cat_components_features_name(),
+            value_field=CATComponentsFeaturesMeta.feature_id,
+            display_field=CATComponentsFeaturesMeta.feature_name,
         ),
     'customers_crmids':
         QueryParams(

@@ -41,7 +41,7 @@ class TicketsTagsRepository(SqliteRepository):
         return {
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_tickets_tags_name(),
-            'filter_group_limit_clause': '',
+            'filter_group_limit_clause': f'ORDER BY {TicketsTagsMeta.name}',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:

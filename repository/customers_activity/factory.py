@@ -8,8 +8,8 @@ from repository.customers_activity.remote.customers_groups import (
     TrackedCustomersGroupsRepository,
 )
 from repository.customers_activity.remote.cat import (
-    RepliesTypesRepository,
-    ComponentsFeaturesRepository,
+    CATRepliesTypesRepository,
+    CATComponentsFeaturesRepository,
 )
 from repository.customers_activity.remote.platforms_products import PlatformsProductsRepository
 from repository.customers_activity.remote.licenses_conversion import (
@@ -34,9 +34,9 @@ from repository.customers_activity.local.platforms_products import (
     ProductsRepository as SqliteProductsRepository,
 )
 from repository.customers_activity.local.cat import (
-    ReplyTypesRepository as SqliteReplyTypesRepository,
-    ComponentsRepository as SqliteComponentsRepository,
-    FeaturesRepository as SqliteFeaturesRepository,
+    CATRepliesTypesRepository as SqliteReplyTypesRepository,
+    CATComponentsRepository as SqliteComponentsRepository,
+    CATFeaturesRepository as SqliteFeaturesRepository,
 )
 from repository.customers_activity.local.tickets_with_iterations import (
     TicketsPeriodRepository as SqliteTicketsWithIterationsPeriodRepository,
@@ -66,11 +66,11 @@ class SqlServerFactory:
     def create_tags_repository(self, **kwargs) -> TicketsTagsRepository:
         return TicketsTagsRepository()
 
-    def create_replies_types_repository(self, **kwargs) -> RepliesTypesRepository:
-        return RepliesTypesRepository()
+    def create_replies_types_repository(self, **kwargs) -> CATRepliesTypesRepository:
+        return CATRepliesTypesRepository()
 
-    def create_components_features_repository(self, **kwargs) -> ComponentsFeaturesRepository:
-        return ComponentsFeaturesRepository()
+    def create_components_features_repository(self, **kwargs) -> CATComponentsFeaturesRepository:
+        return CATComponentsFeaturesRepository()
 
     def create_customers_tickets_repository(self, **kwargs) -> CustomersTicketsRepository:
         return CustomersTicketsRepository()

@@ -1,5 +1,5 @@
 from toolbox.sql.sql_query import SqlQuery
-from toolbox.sql.query_executors.sqlite_query_executor import SQLitePostQueryExecutor
+from toolbox.sql.query_executors.sqlite_query_executor import SQLiteNonQueryExecutor
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
     CustomersActivityDBIndex,
@@ -29,8 +29,8 @@ class TablesBuilder:
                 'rank_period_offset': rank_period_offset,
             }
         )
-        query_executor = SQLitePostQueryExecutor()
-        query_executor.execute(query)
+        query_executor = SQLiteNonQueryExecutor()
+        query_executor.execute_non_query(query)
 
     def build_emp_positions(self):
         query = SqlQuery(
@@ -43,8 +43,8 @@ class TablesBuilder:
                 'position_name': EmployeesIterationsMeta.position_name,
             }
         )
-        query_executor = SQLitePostQueryExecutor()
-        query_executor.execute(query)
+        query_executor = SQLiteNonQueryExecutor()
+        query_executor.execute_non_query(query)
 
     def build_emp_tribes(self):
         query = SqlQuery(
@@ -56,8 +56,8 @@ class TablesBuilder:
                 'EmployeesIterations': CustomersActivityDBIndex.get_employees_iterations_name(),
             }
         )
-        query_executor = SQLitePostQueryExecutor()
-        query_executor.execute(query)
+        query_executor = SQLiteNonQueryExecutor()
+        query_executor.execute_non_query(query)
 
     def build_employees(self):
         query = SqlQuery(
@@ -68,8 +68,8 @@ class TablesBuilder:
                 'EmployeesIterations': CustomersActivityDBIndex.get_employees_iterations_name(),
             }
         )
-        query_executor = SQLitePostQueryExecutor()
-        query_executor.execute(query)
+        query_executor = SQLiteNonQueryExecutor()
+        query_executor.execute_non_query(query)
 
     def build_users(self):
         query = SqlQuery(
@@ -80,5 +80,5 @@ class TablesBuilder:
                 'TicketsWithIterations': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
             }
         )
-        query_executor = SQLitePostQueryExecutor()
-        query_executor.execute(query)
+        query_executor = SQLiteNonQueryExecutor()
+        query_executor.execute_non_query(query)

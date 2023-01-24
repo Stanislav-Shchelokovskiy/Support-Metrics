@@ -53,8 +53,8 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
-            'replies_types_table': CustomersActivityDBIndex.get_replies_types_name(),
-            'components_features_table': CustomersActivityDBIndex.get_components_features_name(),
+            'replies_types_table': CustomersActivityDBIndex.get_cat_replies_types_name(),
+            'components_features_table': CustomersActivityDBIndex.get_cat_components_features_name(),
             'license_statuses_table': CustomersActivityDBIndex.get_license_statuses_name(),
             'conversion_statuses_table': CustomersActivityDBIndex.get_conversion_statuses_name(),
             **TicketsWithIterationsRawMeta.get_attrs(),

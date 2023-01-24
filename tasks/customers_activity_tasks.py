@@ -5,19 +5,20 @@ from pandas import DataFrame
 from toolbox.sql.sqlite_db import get_or_create_db
 from sql_queries.index import CustomersActivityDBIndex
 from repository.factory import RepositoryFactory, TablesBuilder
-from repository.index_creation_expressions_repository import IndexCreationExpressionsRepository
+from repository.customers_activity.local.db_statements.indexes import get_create_index_statements
+from repository.customers_activity.local.db_statements.table_defs import get_create_table_statements
 
 
+# yapf: disable
 def _save_tables(tables: dict[str, DataFrame]):
     sqlitedb = get_or_create_db()
     sqlitedb.save_tables(
         tables=tables,
-        create_index_expressions=IndexCreationExpressionsRepository.
-        customers_activity_create_index_expressions,
+        tables_defs=get_create_table_statements(),
+        create_index_statements=get_create_index_statements(),
     )
 
 
-# yapf: disable
 def load_tags():
     repository = RepositoryFactory.customers_activity.remote.create_tags_repository()
     df = repository.get_data()
@@ -37,13 +38,13 @@ def load_tracked_groups(start_date: str):
 def load_replies_types():
     repository = RepositoryFactory.customers_activity.remote.create_replies_types_repository()
     df = repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_replies_types_name(): df})
+    _save_tables(tables={CustomersActivityDBIndex.get_cat_replies_types_name(): df})
 
 
 def load_components_features():
     repository = RepositoryFactory.customers_activity.remote.create_components_features_repository()
     df = repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_components_features_name(): df})
+    _save_tables(tables={CustomersActivityDBIndex.get_cat_components_features_name(): df})
 
 
 def load_platforms_products():
