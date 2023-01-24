@@ -152,7 +152,7 @@ class DisplayFilterGenerator:
                     query_format_params={
                         'columns': qp.display_field,
                         'table_name': qp.table,
-                        'filter_group_limit_clause': f'WHERE {qp.value_field} IN ({values})',
+                        'filter_group_limit_clause': f'WHERE {qp.value_field} IN ({values})\nGROUP BY {qp.display_field}',
                     }
                 ).reset_index(drop=True)[qp.display_field].values.tolist()
                 if v.include:
