@@ -20,7 +20,7 @@ class PlatformsRepository(SqliteRepository):
         cols = ', '.join(self.get_must_have_columns(kwargs))
         filter = PlatformsProductsSqlFilterClauseGenerator.generate_platforms_filter(tribe_ids=kwargs['tribe_ids'])
         return {
-            'columns': {cols},
+            'columns': cols,
             'table_name': CustomersActivityDBIndex.get_platforms_products_name(),
             'filter_group_limit_clause': f'{filter}\nGROUP BY {cols}\nORDER BY {PlatformsProductsMeta.platform_name}',
         }

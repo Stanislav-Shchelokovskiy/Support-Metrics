@@ -72,12 +72,4 @@ def get_create_table_statements() -> dict[str, str]:
                     'table': CustomersActivityDBIndex.get_cat_replies_types_name(),
                 }
             ),
-        CustomersActivityDBIndex.get_tracked_customers_groups_name():
-            _knot_table_def(
-                format_params={
-                    'id' : TrackedCustomersGroupsMeta.id,
-                    'name': TrackedCustomersGroupsMeta.name,
-                    'table': CustomersActivityDBIndex.get_tracked_customers_groups_name(),
-                }
-            ),
     }

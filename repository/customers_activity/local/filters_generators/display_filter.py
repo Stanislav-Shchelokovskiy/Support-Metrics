@@ -148,9 +148,9 @@ class DisplayFilterGenerator:
                 display_values =repository.execute_query(
                     query_file_path=CustomersActivitySqlPathIndex.get_general_select_path(),
                     query_format_params={
-                        'columns': f'DISTINCT {qp.display_field}',
+                        'columns': qp.display_field,
                         'table_name': qp.table,
-                        'filter_group_limit_clause': f'WHERE {qp.value_field} IN ({values})',
+                        'filter_group_limit_clause': f'WHERE {qp.value_field} IN ({values})\n GROUP BY {qp.display_field}',
                     }
                 ).reset_index(drop=True)[qp.display_field].values.tolist()
                 if v.include:

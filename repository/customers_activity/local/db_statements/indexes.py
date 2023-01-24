@@ -115,5 +115,12 @@ def get_create_index_statements():
                         TrackedCustomersGroupsMeta.id,
                     ]
                 ),
+                _create_index_statement(
+                    tbl=CustomersActivityDBIndex.get_tracked_customers_groups_name(),
+                    cols=[
+                        TrackedCustomersGroupsMeta.id,
+                        TrackedCustomersGroupsMeta.name,
+                    ]
+                ),
             ],
     }

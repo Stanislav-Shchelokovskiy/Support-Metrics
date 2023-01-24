@@ -40,10 +40,11 @@ class CATComponentsRepository(SqliteRepository):
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         filter = CATSqlFilterClauseGenerator.generate_components_filter(tribe_ids=kwargs['tribe_ids'])
+        cols = ', '.join(self.get_must_have_columns(kwargs))
         return {
-            'columns': f"DISTINCT {', '.join(self.get_must_have_columns(kwargs))}",
+            'columns': cols,
             'table_name': CustomersActivityDBIndex.get_cat_components_features_name(),
-            'filter_group_limit_clause': f"{filter}\nORDER BY{f'ORDER BY {CATComponentsFeaturesMeta.component_name}'}",
+            'filter_group_limit_clause': f'{filter}\nGROUP BY {cols}\nORDER BY {CATComponentsFeaturesMeta.component_name}',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
@@ -70,7 +71,7 @@ class CATFeaturesRepository(SqliteRepository):
         return {
             'columns': ', '.join(self.get_must_have_columns(kwargs)),
             'table_name': CustomersActivityDBIndex.get_cat_components_features_name(),
-            'filter_group_limit_clause': f"{filter}\nORDER BY{f'ORDER BY {CATComponentsFeaturesMeta.feature_name}'}",
+            'filter_group_limit_clause': f'{filter}\nORDER BY {CATComponentsFeaturesMeta.feature_name}',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
