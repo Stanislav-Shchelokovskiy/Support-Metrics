@@ -19,7 +19,7 @@ def get_creation_date_and_tickets_filters(
                 range_start= kwargs['range_start'],
                 range_end=kwargs['range_end'],
             )}
-            {get_tickets_filter(kwargs=kwargs,filter_generator=filter_generator) if kwargs['use_baseline_aligned_mode'] else ''}"""
+            {get_tickets_filter(kwargs=kwargs,filter_generator=filter_generator)}"""
 
 
 def get_tickets_filter(
