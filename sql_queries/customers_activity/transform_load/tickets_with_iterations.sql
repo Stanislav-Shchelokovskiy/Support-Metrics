@@ -47,6 +47,7 @@ CREATE INDEX idx_{TicketsWithIterations}_inner ON {TicketsWithIterations}(
 CREATE INDEX idx_{TicketsWithIterations}_outer ON {TicketsWithIterations}(
     {user_crmid},
     {creation_date},
+    {tribe_id},
     {user_id},
     {ticket_scid},
     {emp_post_id}
