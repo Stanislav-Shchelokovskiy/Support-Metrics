@@ -25,6 +25,7 @@ from sql_queries.customers_activity.meta import (
     BaselineAlignedCustomersGroupsMeta,
     CustomersMeta,
     KnotMeta,
+    TicketsTypesMeta,
 )
 
 
@@ -184,6 +185,12 @@ tickets_with_iterations_common_params = {
             {
                 **KnotMeta.get_attrs(),
                 'table': 'table',
+            },
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_tickets_types_path,
+            {
+                **TicketsTypesMeta.get_attrs(),
             },
         ),
     ],

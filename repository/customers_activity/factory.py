@@ -2,7 +2,10 @@ from repository.customers_activity.remote.tickets_and_iterations import (
     CustomersTicketsRepository,
     EmployeesIterationsRepository,
 )
-from repository.customers_activity.remote.tickets_tags import TicketsTagsRepository
+from repository.customers_activity.remote.tickets import (
+    TicketsTagsRepository,
+    TicketsTypesRepository,
+)
 from repository.customers_activity.remote.customers_groups import (
     CustomersGroupsRepository,
     TrackedCustomersGroupsRepository,
@@ -86,6 +89,9 @@ class SqlServerFactory:
 
     def create_employees_iterations_repository(self, **kwargs)-> EmployeesIterationsRepository:
         return EmployeesIterationsRepository()
+
+    def creaate_tickets_types_repository(self, **kwargs)->TicketsTypesRepository:
+        return TicketsTypesRepository()
 
 
 class SqliteFactory:

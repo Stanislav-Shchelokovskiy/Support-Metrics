@@ -66,14 +66,8 @@ def load_employees_iterations(start_date: str, end_date: str):
 
 
 def load_tickets_types():
-    types_str = Network.get_data(
-        end_point='https://answerdesk-domain.hosting.devexpress.com/entityTypes?Company=c1f0951c-3885-44cf-accb-1a390f34c342',
-    )
-    types = json.loads(types_str)['Page']
-    df = DataFrame.from_records(data=types)
-    df = df.rename(columns={'DisplayName': 'name', 'Id': 'id'})
-    df = df.reset_index(drop=True)
-    df = df[['name', 'id']]
+    repository = RepositoryFactory.customers_activity.remote.creaate_tickets_types_repository()
+    df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_tickets_types_name(): df})
 
 def load_tribes():

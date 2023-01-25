@@ -7,7 +7,7 @@ DECLARE @converted_free	TINYINT = 6;
 WITH ticket_tags AS (
 	SELECT
 		Tickets AS ticket_id,
-		STRING_AGG(CONVERT(NVARCHAR(MAX), Tags), ' ') AS tags
+		STRING_AGG(CONVERT(NVARCHAR(MAX), Tags), ' ') WITHIN GROUP (ORDER BY Tags ASC) AS tags
 	FROM
 		SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketTags
 	GROUP BY
@@ -68,15 +68,15 @@ FROM tickets_with_licenses_and_conversion AS ti
 				WHERE Name IN ('ReplyId', 'ControlId', 'FeatureId') AND Ticket_Id = ti.ticket_id) AS tp
 		PIVOT(MIN(Value) FOR Name IN ([ReplyId], [ControlId], [FeatureId])) AS value ) AS cat
 	OUTER APPLY (
-		SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), UserGroup_Id), ' ') AS groups
+		SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), UserGroup_Id), ' ') WITHIN GROUP (ORDER BY UserGroup_Id ASC) AS groups
 		FROM 	CRM.dbo.Customer_UserGroup
 		WHERE 	Customer_Id = ti.user_crmid ) AS ug
 	OUTER APPLY (
 		SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), CAST(Value AS UNIQUEIDENTIFIER)), ' ') AS ids
 		FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
-		WHERE	Name = 'PlatformedProductId' AND Ticket_Id = ti.ticket_id AND Value NOT LIKE '%:%') AS platforms
+		WHERE	Name = 'PlatformedProductId' AND Ticket_Id = ti.ticket_id AND Value NOT LIKE '%:%') WITHIN GROUP (ORDER BY Value ASC) AS platforms
 	OUTER APPLY (
-		SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), CAST(Value AS UNIQUEIDENTIFIER)), ' ') AS ids
+		SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), CAST(Value AS UNIQUEIDENTIFIER)), ' ') WITHIN GROUP (ORDER BY Value ASC) AS ids
 		FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
 		WHERE	Name = 'ProductId' AND Ticket_Id = ti.ticket_id) AS products
 	OUTER APPLY (

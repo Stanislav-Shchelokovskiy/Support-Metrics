@@ -37,6 +37,13 @@ class CustomersActivitySqlPathIndex:
         return CustomersActivitySqlPathIndex.get_extract_path() + '/tags.sql'
 
     @staticmethod
+    def get_tickets_types_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_extract_path()
+            + '/tickets_types.sql'
+        )
+
+    @staticmethod
     def get_replies_types_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_extract_path()
