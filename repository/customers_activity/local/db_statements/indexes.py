@@ -113,6 +113,8 @@ def get_create_index_statements():
                     cols=[
                         TrackedCustomersGroupsMeta.assignment_date,
                         TrackedCustomersGroupsMeta.id,
+                        TrackedCustomersGroupsMeta.user_crmid,
+                        TrackedCustomersGroupsMeta.removal_date,
                     ]
                 ),
                 _create_index_statement(
