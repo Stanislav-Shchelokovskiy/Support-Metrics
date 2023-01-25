@@ -1,4 +1,5 @@
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
+from sql_queries.index import CustomersActivityDBIndex
 from repository.customers_activity.local.filters_generators.sql_filter_clause_generator import (
     FilterParametersNode,
     FilterParameterNode,
@@ -196,7 +197,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             params
         )
         return generate_filter(
-            col=TicketsWithIterationsMeta.user_crmid,
+            col=f'{CustomersActivityDBIndex.get_tickets_with_iterations_name()}.{TicketsWithIterationsMeta.user_crmid}',
             values=params.values,
             filter_prefix='AND',
             values_converter=lambda val: f"'{val}'",

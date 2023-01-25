@@ -18,7 +18,7 @@ def get_ranked_tickets_with_iterations_query(
     percentile: Percentile = kwargs['percentile']
     tbl = CustomersActivityDBIndex.get_tickets_with_iterations_name()
     return (
-        f"""{tbl} AS ti
+        f"""{tbl}
     INNER JOIN (
         SELECT {TicketsWithIterationsMeta.user_crmid}
         FROM ( SELECT {TicketsWithIterationsMeta.user_crmid},
@@ -30,7 +30,7 @@ def get_ranked_tickets_with_iterations_query(
                     {filters.get_tickets_filter(kwargs=kwargs,filter_generator=filter_generator)}
                 GROUP BY {TicketsWithIterationsMeta.user_crmid} ) AS rnk
         WHERE {filter_generator.get_percentile_filter('percentile', percentile.value)}
-    ) AS usr_rnk ON usr_rnk.{TicketsWithIterationsMeta.user_crmid} = ti.{TicketsWithIterationsMeta.user_crmid}"""
+    ) AS usr_rnk ON usr_rnk.{TicketsWithIterationsMeta.user_crmid} = {tbl}.{TicketsWithIterationsMeta.user_crmid}"""
     )
 
 
