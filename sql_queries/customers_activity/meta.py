@@ -141,7 +141,7 @@ class TicketsWithIterationsRawMeta(MetaData):
     creation_date = TicketsWithIterationsMeta.creation_date
 
 
-class TrackedCustomersGroupsMeta(MetaData):
+class BaselineAlignedCustomersGroupsMeta(MetaData):
     user_crmid = TicketsWithLicensesMeta.user_crmid
     id = 'id'
     name = 'name'

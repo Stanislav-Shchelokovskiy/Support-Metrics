@@ -19,7 +19,7 @@ def get_creation_date_and_tickets_filters(
                 range_start= kwargs['range_start'],
                 range_end=kwargs['range_end'],
             )}
-            {get_tickets_filter(kwargs=kwargs,filter_generator=filter_generator) if kwargs['use_tracked_customer_groups'] else ''}"""
+            {get_tickets_filter(kwargs=kwargs,filter_generator=filter_generator) if kwargs['use_baseline_aligned_mode'] else ''}"""
 
 
 def get_tickets_filter(
@@ -48,7 +48,7 @@ def get_customer_groups_filter(
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
 ) -> str:
     return (
-        '' if kwargs['use_tracked_customer_groups'] else
+        '' if kwargs['use_baseline_aligned_mode'] else
         filter_generator.generate_customer_groups_filter(
             params=kwargs['customers_groups']
         )

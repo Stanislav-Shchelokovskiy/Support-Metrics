@@ -16,13 +16,15 @@ def get_ranked_tickets_with_iterations_query(
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
 ):
     percentile: Percentile = kwargs['percentile']
+    tbl = CustomersActivityDBIndex.get_tickets_with_iterations_name()
     return (
-        f"""{CustomersActivityDBIndex.get_tickets_with_iterations_name()} AS ti
+        f"""{tbl} AS ti
     INNER JOIN (
         SELECT {TicketsWithIterationsMeta.user_crmid}
         FROM ( SELECT {TicketsWithIterationsMeta.user_crmid},
                       ROW_NUMBER() OVER (ORDER BY COUNT(DISTINCT {get_rank_field(percentile)}) DESC) * 100.0 / COUNT(*) OVER () AS percentile
-                FROM  {CustomersActivityDBIndex.get_tickets_with_iterations_name()}
+                FROM  {tbl}
+                INDEXED BY idx_{tbl}_inner
                 WHERE
                     {filters.get_creation_date_with_offset_start_filter(kwargs=kwargs,filter_generator=filter_generator)}
                     {filters.get_tickets_filter(kwargs=kwargs,filter_generator=filter_generator)}

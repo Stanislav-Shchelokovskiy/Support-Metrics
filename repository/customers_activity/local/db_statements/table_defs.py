@@ -7,7 +7,6 @@ from sql_queries.customers_activity.meta import (
     CustomersGroupsMeta,
     LicenseStatusesMeta,
     CATRepliesTypesMeta,
-    TrackedCustomersGroupsMeta,
 )
 
 

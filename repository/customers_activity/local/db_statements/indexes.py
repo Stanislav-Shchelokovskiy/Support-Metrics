@@ -1,7 +1,7 @@
 from sql_queries.index import CustomersActivityDBIndex
 from sql_queries.customers_activity.meta import (
     CATComponentsFeaturesMeta,
-    TrackedCustomersGroupsMeta,
+    BaselineAlignedCustomersGroupsMeta,
     EmployeesIterationsMeta,
     PlatformsProductsMeta,
     TicketsWithLicensesMeta,
@@ -111,17 +111,25 @@ def get_create_index_statements():
                 _create_index_statement(
                     tbl=CustomersActivityDBIndex.get_tracked_customers_groups_name(),
                     cols=[
-                        TrackedCustomersGroupsMeta.assignment_date,
-                        TrackedCustomersGroupsMeta.id,
-                        TrackedCustomersGroupsMeta.user_crmid,
-                        TrackedCustomersGroupsMeta.removal_date,
+                        BaselineAlignedCustomersGroupsMeta.assignment_date,
+                        BaselineAlignedCustomersGroupsMeta.id,
+                        BaselineAlignedCustomersGroupsMeta.user_crmid,
+                        BaselineAlignedCustomersGroupsMeta.removal_date,
                     ]
                 ),
                 _create_index_statement(
                     tbl=CustomersActivityDBIndex.get_tracked_customers_groups_name(),
                     cols=[
-                        TrackedCustomersGroupsMeta.id,
-                        TrackedCustomersGroupsMeta.name,
+                        BaselineAlignedCustomersGroupsMeta.user_crmid,
+                        BaselineAlignedCustomersGroupsMeta.assignment_date,
+                        BaselineAlignedCustomersGroupsMeta.id,
+                    ]
+                ),
+                _create_index_statement(
+                    tbl=CustomersActivityDBIndex.get_tracked_customers_groups_name(),
+                    cols=[
+                        BaselineAlignedCustomersGroupsMeta.id,
+                        BaselineAlignedCustomersGroupsMeta.name,
                     ]
                 ),
             ],

@@ -58,7 +58,7 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
             'license_statuses_table': CustomersActivityDBIndex.get_license_statuses_name(),
             'conversion_statuses_table': CustomersActivityDBIndex.get_conversion_statuses_name(),
             **TicketsWithIterationsRawMeta.get_attrs(),
-            'tracked_customer_groups_mode_fields': f', original_{TicketsWithIterationsMeta.creation_date}' if kwargs['use_tracked_customer_groups'] else '',
+            'tracked_customer_groups_mode_fields': f', original_{TicketsWithIterationsMeta.creation_date}' if kwargs['use_baseline_aligned_mode'] else '',
             **self.get_general_format_params(kwargs)
         }
 
