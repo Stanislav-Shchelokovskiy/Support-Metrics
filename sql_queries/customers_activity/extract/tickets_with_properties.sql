@@ -72,9 +72,9 @@ FROM tickets_with_licenses_and_conversion AS ti
 		FROM 	CRM.dbo.Customer_UserGroup
 		WHERE 	Customer_Id = ti.user_crmid ) AS ug
 	OUTER APPLY (
-		SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), CAST(Value AS UNIQUEIDENTIFIER)), ' ') AS ids
+		SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), CAST(Value AS UNIQUEIDENTIFIER)), ' ') WITHIN GROUP (ORDER BY Value ASC) AS ids
 		FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
-		WHERE	Name = 'PlatformedProductId' AND Ticket_Id = ti.ticket_id AND Value NOT LIKE '%:%') WITHIN GROUP (ORDER BY Value ASC) AS platforms
+		WHERE	Name = 'PlatformedProductId' AND Ticket_Id = ti.ticket_id AND Value NOT LIKE '%:%') AS platforms
 	OUTER APPLY (
 		SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), CAST(Value AS UNIQUEIDENTIFIER)), ' ') WITHIN GROUP (ORDER BY Value ASC) AS ids
 		FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
