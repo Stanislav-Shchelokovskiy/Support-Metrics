@@ -123,7 +123,6 @@ class TicketsWithIterationsAggregatesMeta(MetaData):
     tickets = 'tickets'
     emp_post_id = TicketsWithIterationsMeta.emp_post_id
     iterations = 'iterations'
-    creation_date = TicketsWithIterationsMeta.creation_date
 
 
 class TicketsWithIterationsRawMeta(MetaData):

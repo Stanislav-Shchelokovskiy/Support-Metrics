@@ -33,5 +33,21 @@ FROM
     ) AS actual_t ON actual_t.{user_crmid} = t.{user_crmid}
     LEFT JOIN {EmployeesIterations} AS ei ON ei.{ticket_id} = t.{ticket_id};
 
-CREATE INDEX idx_{TicketsWithIterations}_{creation_date} ON {TicketsWithIterations}({creation_date}, {tribe_id}, {ticket_type}, {license_status}, {emp_position_id});
-CREATE INDEX idx_{TicketsWithIterations}_{user_crmid} ON {TicketsWithIterations}({user_crmid}, {creation_date}, {tribe_id});
+
+CREATE INDEX idx_{TicketsWithIterations}_inner ON CustomersActivity_TicketsWithIterations(
+    {user_crmid}, 
+    {emp_post_id},
+    {creation_date},
+    {tribe_id},
+    {ticket_type},
+    {license_status},
+    {emp_position_id}
+);
+
+CREATE INDEX idx_{TicketsWithIterations}_outer ON CustomersActivity_TicketsWithIterations(
+    {user_crmid},
+    {creation_date},
+    {user_id},
+    {ticket_scid},
+    {emp_post_id}
+);
