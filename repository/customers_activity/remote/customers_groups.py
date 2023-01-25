@@ -2,7 +2,7 @@ from toolbox.sql.repository import Repository
 from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.customers_activity.meta import (
     CustomersGroupsMeta,
-    TrackedCustomersGroupsMeta,
+    BaselineAlignedCustomersGroupsMeta,
 )
 
 
@@ -33,8 +33,8 @@ class TrackedCustomersGroupsRepository(Repository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
             **kwargs,
-            **TrackedCustomersGroupsMeta.get_attrs(),
+            **BaselineAlignedCustomersGroupsMeta.get_attrs(),
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return TrackedCustomersGroupsMeta.get_values()
+        return BaselineAlignedCustomersGroupsMeta.get_values()

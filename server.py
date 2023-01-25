@@ -208,14 +208,14 @@ def customers_activity_get_tickets_with_iterations_aggregates(
     group_by_period: str,
     range_start: str,
     range_end: str,
-    tracked_customer_groups_mode_enabled: bool,
+    baseline_aligned_mode_enabled: bool,
     body: TicketsWithIterationsParams,
 ):
     df_json = server_repository.customers_activity_get_tickets_with_iterations_aggregates(
         group_by_period=group_by_period,
         range_start=range_start,
         range_end=range_end,
-        use_tracked_customer_groups=tracked_customer_groups_mode_enabled,
+        use_baseline_aligned_mode=baseline_aligned_mode_enabled,
         **body.__dict__,
     )
     return get_response(json_data=df_json)
@@ -225,13 +225,13 @@ def customers_activity_get_tickets_with_iterations_aggregates(
 def customers_activity_get_tickets_with_iterations_raw(
     range_start: str,
     range_end: str,
-    tracked_customer_groups_mode_enabled: bool,
+    baseline_aligned_mode_enabled: bool,
     body: TicketsWithIterationsParams,
 ):
     df_json = server_repository.customers_activity_get_tickets_with_iterations_raw(
         range_start=range_start,
         range_end=range_end,
-        use_tracked_customer_groups=tracked_customer_groups_mode_enabled,
+        use_baseline_aligned_mode=baseline_aligned_mode_enabled,
         **body.__dict__,
     )
     return get_response(json_data=df_json)

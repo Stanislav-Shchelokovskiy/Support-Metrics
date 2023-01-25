@@ -28,13 +28,12 @@ FROM
     {CustomersTickets} AS t
     INNER JOIN (
         SELECT  DISTINCT {user_crmid} 
-        FROM    {CustomersTickets} 
+        FROM    {CustomersTickets}
         WHERE   {creation_date} >= (SELECT DATE(MIN({creation_date}), '+{rank_period_offset}') FROM {CustomersTickets}) 
     ) AS actual_t ON actual_t.{user_crmid} = t.{user_crmid}
     LEFT JOIN {EmployeesIterations} AS ei ON ei.{ticket_id} = t.{ticket_id};
 
-
-CREATE INDEX idx_{TicketsWithIterations}_inner ON CustomersActivity_TicketsWithIterations(
+CREATE INDEX idx_{TicketsWithIterations}_inner ON {TicketsWithIterations}(
     {user_crmid}, 
     {emp_post_id},
     {creation_date},
@@ -44,10 +43,12 @@ CREATE INDEX idx_{TicketsWithIterations}_inner ON CustomersActivity_TicketsWithI
     {emp_position_id}
 );
 
-CREATE INDEX idx_{TicketsWithIterations}_outer ON CustomersActivity_TicketsWithIterations(
+CREATE INDEX idx_{TicketsWithIterations}_outer ON {TicketsWithIterations}(
     {user_crmid},
     {creation_date},
     {user_id},
     {ticket_scid},
     {emp_post_id}
 );
+
+

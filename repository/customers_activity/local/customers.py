@@ -5,7 +5,7 @@ from sql_queries.index import (
 )
 from sql_queries.customers_activity.meta import (
     CustomersGroupsMeta,
-    TrackedCustomersGroupsMeta,
+    BaselineAlignedCustomersGroupsMeta,
     CustomersMeta,
 )
 
@@ -75,11 +75,11 @@ class TrackedCustomersGroupsRepository(SqliteRepository):
         return {
             'columns': cols,
             'table_name': CustomersActivityDBIndex.get_tracked_customers_groups_name(),
-            'filter_group_limit_clause': f'GROUP BY {cols}\nORDER BY {TrackedCustomersGroupsMeta.name}',
+            'filter_group_limit_clause': f'GROUP BY {cols}\nORDER BY {BaselineAlignedCustomersGroupsMeta.name}',
         }
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return [
-            TrackedCustomersGroupsMeta.id,
-            TrackedCustomersGroupsMeta.name,
+            BaselineAlignedCustomersGroupsMeta.id,
+            BaselineAlignedCustomersGroupsMeta.name,
         ]
