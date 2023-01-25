@@ -1,6 +1,7 @@
 import pytest
 from repository.customers_activity.local.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
+from sql_queries.index import CustomersActivityDBIndex
 from repository.customers_activity.local.Tests.mocks import (
     MockFilterParametersNode,
     MockFilterParameterNode,
@@ -617,29 +618,29 @@ def test_generate_employees_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.user_crmid} IS NULL',
+            f'AND {CustomersActivityDBIndex.get_tickets_with_iterations_name()}.{TicketsWithIterationsMeta.user_crmid} IS NULL',
         ),
         (
             MockFilterParametersNode(include=True, values=[
                 'qwe',
                 'asd',
             ]),
-            f"AND {TicketsWithIterationsMeta.user_crmid} IN ('qwe','asd')",
+            f"AND {CustomersActivityDBIndex.get_tickets_with_iterations_name()}.{TicketsWithIterationsMeta.user_crmid} IN ('qwe','asd')",
         ),
         (
             MockFilterParametersNode(include=True, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.user_crmid} IN ('qwe')",
+            f"AND {CustomersActivityDBIndex.get_tickets_with_iterations_name()}.{TicketsWithIterationsMeta.user_crmid} IN ('qwe')",
         ),
         (
             MockFilterParametersNode(include=False, values=[
                 'qwe',
                 'asd',
             ]),
-            f"AND ({TicketsWithIterationsMeta.user_crmid} IS NULL OR {TicketsWithIterationsMeta.user_crmid} NOT IN ('qwe','asd'))",
+            f"AND ({CustomersActivityDBIndex.get_tickets_with_iterations_name()}.{TicketsWithIterationsMeta.user_crmid} IS NULL OR {CustomersActivityDBIndex.get_tickets_with_iterations_name()}.{TicketsWithIterationsMeta.user_crmid} NOT IN ('qwe','asd'))",
         ),
         (
             MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND ({TicketsWithIterationsMeta.user_crmid} IS NULL OR {TicketsWithIterationsMeta.user_crmid} NOT IN ('qwe'))",
+            f"AND ({CustomersActivityDBIndex.get_tickets_with_iterations_name()}.{TicketsWithIterationsMeta.user_crmid} IS NULL OR {CustomersActivityDBIndex.get_tickets_with_iterations_name()}.{TicketsWithIterationsMeta.user_crmid} NOT IN ('qwe'))",
         ),
     ]
 )
