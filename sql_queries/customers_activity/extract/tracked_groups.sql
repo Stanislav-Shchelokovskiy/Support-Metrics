@@ -1,4 +1,5 @@
 DECLARE @start_date DATE = '{start_date}'
+DECLARE @end_date DATE = '{end_date}'
 
 DECLARE @max_date DATE = '9999-12-31'
 DECLARE @insert SMALLINT = 0
@@ -18,7 +19,7 @@ FROM (	SELECT	Id AS id, Name AS name
 		SELECT	Customer_Id,
 				MAX(CONVERT(DATE, EntityModified)) AS group_assign_date
 		FROM	CRMAudit.dxcrm.Customer_UserGroup
-		WHERE	EntityModified > @start_date AND
+		WHERE	EntityModified BETWEEN @start_date AND @end_date AND
 				UserGroup_Id = g.id AND
 				AuditAction = @insert
 		GROUP BY Customer_Id,
@@ -26,7 +27,7 @@ FROM (	SELECT	Id AS id, Name AS name
 	OUTER APPLY (
 		SELECT	MAX(CONVERT(DATE, EntityModified)) AS group_removal_date
 		FROM	CRMAudit.dxcrm.Customer_UserGroup
-		WHERE	EntityModified > @start_date AND
+		WHERE	EntityModified BETWEEN @start_date AND @end_date AND
 				UserGroup_Id = g.id AND
 				AuditAction = @delete AND
 				Customer_Id = assigned_ug.Customer_Id

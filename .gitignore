@@ -5,3 +5,6 @@
 **.env
 **celerybeat-schedule
 **data
+**Tests/test_db
+**Tests/params
+**Tests/responses

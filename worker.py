@@ -115,6 +115,7 @@ def customers_activity_load_tracked_groups(self, **kwargs):
         self,
         customers_activity.load_tracked_groups,
         start_date=CustomersActivityConfig.get_tickets_period()['start_date'],
+        end_date='9999-12-31',
     )
 
 

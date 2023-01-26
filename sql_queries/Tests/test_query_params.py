@@ -83,6 +83,7 @@ tickets_with_iterations_common_params = {
             {
                 **BaselineAlignedCustomersGroupsMeta.get_attrs(),
                 'start_date': 'qwe',
+                'end_date':'asd',
             },
         ),
         (
