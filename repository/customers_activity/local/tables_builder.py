@@ -29,8 +29,7 @@ class TablesBuilder:
                 'rank_period_offset': rank_period_offset,
             }
         )
-        query_executor = SQLiteNonQueryExecutor()
-        query_executor.execute_non_query(query)
+        SQLiteNonQueryExecutor().execute_non_query(query)
 
     def build_emp_positions(self):
         query = SqlQuery(
@@ -43,8 +42,7 @@ class TablesBuilder:
                 'position_name': EmployeesIterationsMeta.position_name,
             }
         )
-        query_executor = SQLiteNonQueryExecutor()
-        query_executor.execute_non_query(query)
+        SQLiteNonQueryExecutor().execute_non_query(query)
 
     def build_emp_tribes(self):
         query = SqlQuery(
@@ -56,8 +54,7 @@ class TablesBuilder:
                 'EmployeesIterations': CustomersActivityDBIndex.get_employees_iterations_name(),
             }
         )
-        query_executor = SQLiteNonQueryExecutor()
-        query_executor.execute_non_query(query)
+        SQLiteNonQueryExecutor().execute_non_query(query)
 
     def build_employees(self):
         query = SqlQuery(
@@ -68,8 +65,7 @@ class TablesBuilder:
                 'EmployeesIterations': CustomersActivityDBIndex.get_employees_iterations_name(),
             }
         )
-        query_executor = SQLiteNonQueryExecutor()
-        query_executor.execute_non_query(query)
+        SQLiteNonQueryExecutor().execute_non_query(query)
 
     def build_users(self):
         query = SqlQuery(
@@ -80,9 +76,10 @@ class TablesBuilder:
                 'TicketsWithIterations': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
             }
         )
-        query_executor = SQLiteNonQueryExecutor()
-        query_executor.execute_non_query(query)
+        SQLiteNonQueryExecutor().execute_non_query(query)
+
+    def vacuum(self):
+        SQLiteNonQueryExecutor().execute_script_non_query('vacuum;')
 
     def run_analyze(self):
-        query_executor = SQLiteNonQueryExecutor()
-        query_executor.execute_script_non_query('pragma optimize;')
+        SQLiteNonQueryExecutor().execute_script_non_query('pragma optimize;')
