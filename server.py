@@ -1,6 +1,4 @@
 import os
-import urllib3
-import requests
 import hashlib
 import json
 import repository.server_repository as server_repository
@@ -23,22 +21,6 @@ from help.index import Index as help_index
 
 
 server_cache = ServerCache()
-
-urllib3.disable_warnings()
-
-
-def query_query_service(
-    method: str,
-    params: dict[str, str],
-) -> str:
-    headers = {}
-    return requests.get(
-        url=os.environ['QUERY_SERVICE_NAME'] + method,
-        headers=headers,
-        params=params,
-        verify=False,
-    ).text
-
 
 app = FastAPI()
 

@@ -29,4 +29,4 @@ jobs:
       - name: Install dependencies
         run: poetry install
       - name: Test
-        run: poetry run pytest --disable-warnings -v
+        run: poetry run pytest --disable-warnings -v -m "not e2e"

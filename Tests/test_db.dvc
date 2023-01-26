@@ -1,0 +1,4 @@
+outs:
+- md5: 5914e9e8c6c02a54b2ce2ed2953cc24d
+  size: 421474304
+  path: test_db
