@@ -24,6 +24,7 @@ def get_create_table_statements() -> dict[str, str]:
             _knot_table_def(
                 format_params={
                     'id' : TribesMeta.id,
+                    'id_type': 'TEXT',
                     'name': TribesMeta.name,
                     'table': CustomersActivityDBIndex.get_tribes_name(),
                 }
@@ -32,6 +33,7 @@ def get_create_table_statements() -> dict[str, str]:
             _knot_table_def(
                 format_params={
                     'id' : TicketsTagsMeta.id,
+                    'id_type': 'TEXT',
                     'name': TicketsTagsMeta.name,
                     'table': CustomersActivityDBIndex.get_tickets_tags_name(),
                 }
@@ -41,6 +43,7 @@ def get_create_table_statements() -> dict[str, str]:
             _knot_table_def(
                 format_params={
                     'id' : TicketsTypesMeta.id,
+                    'id_type': 'INT',
                     'name': TicketsTypesMeta.name,
                     'table': CustomersActivityDBIndex.get_tickets_types_name(),
                 }
@@ -50,6 +53,7 @@ def get_create_table_statements() -> dict[str, str]:
             _knot_table_def(
                 format_params={
                     'id' : CustomersGroupsMeta.id,
+                    'id_type': 'TEXT',
                     'name': CustomersGroupsMeta.name,
                     'table': CustomersActivityDBIndex.get_customers_groups_name(),
                 }
@@ -59,6 +63,7 @@ def get_create_table_statements() -> dict[str, str]:
             _knot_table_def(
                 format_params={
                     'id' : LicenseStatusesMeta.id,
+                    'id_type': 'INT',
                     'name': LicenseStatusesMeta.name,
                     'table': CustomersActivityDBIndex.get_license_statuses_name(),
                 }
@@ -67,6 +72,7 @@ def get_create_table_statements() -> dict[str, str]:
             _knot_table_def(
                 format_params={
                     'id' : CATRepliesTypesMeta.id,
+                    'id_type': 'TEXT',
                     'name': CATRepliesTypesMeta.name,
                     'table': CustomersActivityDBIndex.get_cat_replies_types_name(),
                 }

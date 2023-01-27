@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS {table};
 CREATE TABLE {table} (
-    {id}    TEXT PRIMARY KEY, 
+    {id}    {id_type} PRIMARY KEY, 
     {name}  TEXT
 ) WITHOUT ROWID;
