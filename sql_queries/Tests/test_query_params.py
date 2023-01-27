@@ -186,6 +186,7 @@ tickets_with_iterations_common_params = {
             {
                 **KnotMeta.get_attrs(),
                 'table': 'table',
+                'id_type': 'type',
             },
         ),
         (
