@@ -16,7 +16,7 @@ SELECT
     t.{component_id},
     t.{feature_id},
     t.{license_status},
-    t.{conversion_status},
+    CAST(t.{conversion_status} AS INT) AS {conversion_status},
     ei.{post_id}       AS {emp_post_id},
     ei.{crmid}         AS {emp_crmid},
     ei.{tribe_id}      AS {emp_tribe_id},
@@ -27,14 +27,25 @@ SELECT
 FROM
     {CustomersTickets} AS t
     INNER JOIN (
-        SELECT  DISTINCT {user_crmid} 
-        FROM    {CustomersTickets}
-        WHERE   {creation_date} >= (SELECT DATE(MIN({creation_date}), '+{rank_period_offset}') FROM {CustomersTickets}) 
+        SELECT   {user_crmid} 
+        FROM     {CustomersTickets}
+        WHERE    {creation_date} >= (SELECT DATE(MIN({creation_date}), '+{rank_period_offset}') FROM {CustomersTickets})
+        GROUP BY {user_crmid}
     ) AS actual_t ON actual_t.{user_crmid} = t.{user_crmid}
     LEFT JOIN {EmployeesIterations} AS ei ON ei.{ticket_id} = t.{ticket_id};
 
 
-CREATE INDEX idx_{TicketsWithIterations}_inner ON {TicketsWithIterations}(
+CREATE INDEX idx_{TicketsWithIterations}_tickets_inner ON {TicketsWithIterations}(
+    {user_crmid}, 
+    {ticket_scid},
+    {creation_date},
+    {tribe_id},
+    {ticket_type},
+    {license_status},
+    {emp_position_id}
+);
+
+CREATE INDEX idx_{TicketsWithIterations}_iterations_inner ON {TicketsWithIterations}(
     {user_crmid}, 
     {emp_post_id},
     {creation_date},
