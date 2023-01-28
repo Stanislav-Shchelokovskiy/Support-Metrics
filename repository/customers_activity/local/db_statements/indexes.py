@@ -20,15 +20,16 @@ def get_create_index_statements():
                 _create_index_statement(
                     tbl=CustomersActivityDBIndex.get_customers_tickets_name(),
                     cols=[
-                        TicketsWithLicensesMeta.creation_date,
                         TicketsWithLicensesMeta.user_crmid,
+                        TicketsWithLicensesMeta.creation_date
                     ]
                 ),
+            ],
+        CustomersActivityDBIndex.get_employees_iterations_name():
+            [
                 _create_index_statement(
-                    tbl=CustomersActivityDBIndex.get_customers_tickets_name(),
-                    cols=[
-                        TicketsWithLicensesMeta.user_crmid,
-                    ]
+                    tbl=CustomersActivityDBIndex.get_employees_iterations_name(),
+                    cols=[EmployeesIterationsMeta.ticket_id]
                 ),
             ],
         CustomersActivityDBIndex.get_cat_components_features_name():
@@ -97,13 +98,6 @@ def get_create_index_statements():
                         PlatformsProductsMeta.product_id,
                         PlatformsProductsMeta.product_name,
                     ]
-                ),
-            ],
-        CustomersActivityDBIndex.get_employees_iterations_name():
-            [
-                _create_index_statement(
-                    tbl=CustomersActivityDBIndex.get_employees_iterations_name(),
-                    cols=[EmployeesIterationsMeta.ticket_id]
                 ),
             ],
         CustomersActivityDBIndex.get_tracked_customers_groups_name():

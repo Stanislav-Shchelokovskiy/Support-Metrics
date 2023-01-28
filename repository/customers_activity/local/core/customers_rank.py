@@ -24,7 +24,7 @@ def get_ranked_tickets_with_iterations_query(
         FROM ( SELECT {TicketsWithIterationsMeta.user_crmid},
                       ROW_NUMBER() OVER (ORDER BY COUNT(DISTINCT {get_rank_field(percentile)}) DESC) * 100.0 / COUNT(*) OVER () AS percentile
                 FROM  {tbl}
-                INDEXED BY idx_{tbl}_inner
+                INDEXED BY idx_{tbl}_{percentile.metric}_inner
                 WHERE
                     {filters.get_creation_date_with_offset_start_filter(kwargs=kwargs,filter_generator=filter_generator)}
                     {filters.get_tickets_filter(kwargs=kwargs,filter_generator=filter_generator)}
