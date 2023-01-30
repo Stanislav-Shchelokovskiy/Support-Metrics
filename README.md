@@ -5,14 +5,13 @@ Add **.env** file containing the following env vars:
 - SQL_DATABASE=..
 - SQL_USER=..
 - SQL_PASSWORD=..
-- APP_SERVER_PORT=11002
-- FLOWER_PORT=11003
-- CELERY_BROKER_URL=redis://redis_service:6379/1
-- CELERY_RESULT_BACKEND=redis://redis_service:6379/0
-- DB_HOME=/root/app/user_posts_data
-- SQLITE_DATABASE=/root/app/user_posts_data/db
-- USER_POSTS_SQL=sql_queries/user_posts_by_tribes.sql
-- USER_POSTS_TABLE_NAME=user_posts_by_tribe
+- SERVER_PORT=11003
+- FLOWER_PORT=11004
+- REDIS_SERVICE=redis_service
+- REDIS_PORT=6379
+- DB_HOME=/root/app/data
+- CORS_ORIGINS=["http://ubuntu-support.corp.devexpress.com","http://localhost:3000"]
+- QUERY_SERVICE=query_service_server:11005
 
 Make sure:
 1. <b>support_analytics</b> network is created<br>
