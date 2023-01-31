@@ -1,6 +1,6 @@
 import pytest
 from pandas import DataFrame
-from repository.customers_activity.local.filters_generators.display_filter import DisplayFilterGenerator
+from repository.customers_activity.local.generators.filters_generators.display_filter import DisplayFilterGenerator
 from sql_queries.index import CustomersActivityDBIndex
 from repository.customers_activity.local.Tests.mocks import (
     MockFilterParametersNode,

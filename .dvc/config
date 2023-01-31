@@ -1,6 +1,7 @@
 [core]
     analytics = false
     remote = tests
+    autostage = true
 ['remote "tests"']
     url = gdrive://19n0hJXRt9qLTD0kMkVTTHykx39xsitn4
     gdrive_acknowledge_abuse = true

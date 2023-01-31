@@ -114,6 +114,13 @@ class CustomersActivitySqlPathIndex:
         )
 
     @staticmethod
+    def get_periods_array_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_local_path()
+            + '/get_periods_array.sql'
+        )
+
+    @staticmethod
     def get_knot_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_transform_load_path()

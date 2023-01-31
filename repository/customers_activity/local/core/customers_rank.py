@@ -1,8 +1,8 @@
 from typing import Protocol, Literal
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
 from sql_queries.index import CustomersActivityDBIndex
-from repository.customers_activity.local.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
-from repository.customers_activity.local.filters_generators.sql_filter_clause_generator import FilterParameterNode
+from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator import FilterParameterNode
 import repository.customers_activity.local.core.filters as filters
 
 

@@ -147,3 +147,8 @@ class BaselineAlignedCustomersGroupsMeta(MetaData):
     name = 'name'
     assignment_date = 'assignment_date'
     removal_date = 'removal_date'
+
+
+class PeriodsMeta(MetaData):
+    start = 'start'
+    period = 'period'

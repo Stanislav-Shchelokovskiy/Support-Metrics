@@ -1,6 +1,6 @@
 from toolbox.sql.repository import SqliteRepository, Repository
-from repository.customers_activity.local.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
-from repository.customers_activity.local.filters_generators.sql_filter_clause_generator import FilterParametersNode
+from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator import FilterParametersNode
 from repository.customers_activity.local.core.customers_rank import Percentile
 from sql_queries.index import (
     CustomersActivityDBIndex,

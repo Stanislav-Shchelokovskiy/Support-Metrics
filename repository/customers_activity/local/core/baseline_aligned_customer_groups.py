@@ -1,6 +1,6 @@
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta, BaselineAlignedCustomersGroupsMeta
 from sql_queries.index import CustomersActivityDBIndex
-from repository.customers_activity.local.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
 
 
 def get_baseline_aligned_mode_query(

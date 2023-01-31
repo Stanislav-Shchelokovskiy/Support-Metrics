@@ -10,7 +10,8 @@ from sql_queries.customers_activity.meta import (
     TicketsWithIterationsMeta,
     TicketsWithIterationsPeriodMeta,
 )
-from repository.customers_activity.local.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.periods import PeriodsGenerator
 from repository.customers_activity.local.core.tickets_with_iterations_table import get_tickets_with_iterations_table
 from repository.customers_activity.local.core.filters import get_creation_date_and_tickets_filters
 from configs.customers_activity_config import CustomersActivityConfig
@@ -76,11 +77,10 @@ class TicketsWithIterationsAggregatesRepository(TicketsWithIterationsRawReposito
         return CustomersActivitySqlPathIndex.get_tickets_with_iterations_aggregates_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
-        if (period:=kwargs['group_by_period']) == '%Y-%W':
-            group_by_period = f"STRFTIME('%Y-%m-%d', {TicketsWithIterationsMeta.creation_date}, 'WEEKDAY 0', '-6 DAYS')"
-        else:
-            group_by_period = f"STRFTIME('{period}', {TicketsWithIterationsMeta.creation_date})"
-
+        group_by_period = PeriodsGenerator.generate_group_by_period(
+            format=kwargs['group_by_period'],
+            field=TicketsWithIterationsMeta.creation_date,
+        )
         return {
             **TicketsWithIterationsAggregatesMeta.get_attrs(),
             'group_by_period': group_by_period,
