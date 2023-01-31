@@ -55,7 +55,9 @@ SELECT
 	CAST(cat.ControlId	AS UNIQUEIDENTIFIER) AS {component_id},
 	CAST(cat.FeatureId	AS UNIQUEIDENTIFIER) AS {feature_id},
 	ti.license_status			AS {license_status},
-	ti.conversion_status		AS {conversion_status}
+	ti.conversion_status		AS {conversion_status},
+	dups.ticket_type			AS {reffered_ticket_type},
+	dups.ticket_scid			AS {reffered_ticket_scid}
 FROM tickets_with_licenses_and_conversion AS ti
 	OUTER APPLY (
 		SELECT
@@ -79,6 +81,12 @@ FROM tickets_with_licenses_and_conversion AS ti
 		SELECT 	STRING_AGG(CONVERT(NVARCHAR(MAX), CAST(Value AS UNIQUEIDENTIFIER)), ' ') WITHIN GROUP (ORDER BY Value ASC) AS ids
 		FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
 		WHERE	Name = 'ProductId' AND Ticket_Id = ti.ticket_id) AS products
+	OUTER APPLY (
+		SELECT ticket_scid, ticket_type 
+		FROM #TicketsWithLicenses AS twl
+		WHERE ticket_id = (SELECT	Value 
+						   FROM		SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
+						   WHERE	Name = 'Duplicate' AND Ticket_Id = ti.ticket_id)) AS dups
 	OUTER APPLY (
 		SELECT  TOP 1 t.Id, t.Name
 		FROM	DXStatisticsV2.dbo.TribeTeamMapping AS ttm

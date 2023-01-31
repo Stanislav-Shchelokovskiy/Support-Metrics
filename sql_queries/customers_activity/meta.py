@@ -77,10 +77,8 @@ class TicketsWithLicensesMeta(TicketTribeMeta):
     user_crmid = 'user_crmid'
     user_id = 'user_id'
     ticket_scid = 'ticket_scid'
-    creation_date = 'creation_date'
-    license_status = 'license_status'
-    conversion_status = 'conversion_status'
     ticket_type = 'ticket_type'
+    creation_date = 'creation_date'
     user_groups = 'user_groups'
     ticket_tags = 'ticket_tags'
     platforms = 'platforms'
@@ -88,6 +86,10 @@ class TicketsWithLicensesMeta(TicketTribeMeta):
     reply_id = 'reply_id'
     component_id = 'component_id'
     feature_id = 'feature_id'
+    license_status = 'license_status'
+    conversion_status = 'conversion_status'
+    reffered_ticket_type = 'reffered_ticket_type'
+    reffered_ticket_scid = 'reffered_ticket_scid'
 
 
 class EmployeesIterationsMeta(TicketTribeMeta):

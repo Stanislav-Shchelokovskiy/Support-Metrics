@@ -52,6 +52,7 @@ class TicketsWithIterationsParams(BaseModel):
     products_ids: FilterParametersNode = Field(alias='Products')
     tickets_tags: FilterParametersNode = Field(alias='Ticket tags')
     tickets_types: FilterParametersNode = Field(alias='Ticket types')
+    reffered_ticket_types: FilterParametersNode = Field(alias='Reffered ticket types')
     customers_groups: FilterParametersNode = Field(alias='User groups')
     license_statuses: FilterParametersNode = Field(alias='User types')
     conversion_statuses: FilterParametersNode = Field(alias='User conversion types')

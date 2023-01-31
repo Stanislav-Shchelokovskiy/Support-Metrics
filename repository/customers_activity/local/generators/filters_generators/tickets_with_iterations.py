@@ -51,6 +51,20 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         )
 
     @staticmethod
+    def generate_reffered_ticket_types_filter(
+        params: FilterParametersNode
+    ) -> str:
+        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+            params
+        )
+        return generate_filter(
+            col=TicketsWithIterationsMeta.reffered_ticket_type,
+            values=params.values,
+            filter_prefix='AND',
+            values_converter=str,
+        )
+
+    @staticmethod
     def generate_ticket_tags_filter(params: FilterParametersNode) -> str:
         generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_like_filter(
             params

@@ -30,6 +30,7 @@ def get_tickets_filter(
                     {filter_generator.generate_platforms_filter(params=kwargs['platforms_ids'])}
                     {filter_generator.generate_products_filter(params=kwargs['products_ids'])}
                     {filter_generator.generate_ticket_types_filter(params=kwargs['tickets_types'])}
+                    {filter_generator.generate_reffered_ticket_types_filter(params=kwargs['reffered_ticket_types'])}
                     {filter_generator.generate_ticket_tags_filter(params=kwargs['tickets_tags'])}
                     {get_customer_groups_filter(kwargs=kwargs,filter_generator=filter_generator)}
                     {filter_generator.generate_license_status_filter(params=kwargs['license_statuses'])}

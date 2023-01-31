@@ -129,3 +129,4 @@ FROM (
 		) AS c
 
 CREATE NONCLUSTERED INDEX idx_user_id ON #TicketsWithLicenses(user_id, license_status);
+CREATE NONCLUSTERED INDEX idx_ticket_id ON #TicketsWithLicenses(ticket_id) INCLUDE (ticket_type, ticket_scid);
