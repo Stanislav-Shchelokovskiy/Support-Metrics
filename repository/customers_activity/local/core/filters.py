@@ -29,10 +29,9 @@ def get_tickets_filter(
     return f"""{filter_generator.generate_tribes_filter(params=kwargs['tribe_ids'])}
                     {filter_generator.generate_platforms_filter(params=kwargs['platforms_ids'])}
                     {filter_generator.generate_products_filter(params=kwargs['products_ids'])}
-                    {filter_generator.generate_ticket_types_filter(params=kwargs['tickets_types'])}
-                    {filter_generator.generate_reffered_ticket_types_filter(params=kwargs['reffered_ticket_types'])}
+                    {filter_generator.generate_ticket_types_filter(ticket_types=kwargs['tickets_types'], reffered_ticket_types=kwargs['reffered_ticket_types'])}
                     {filter_generator.generate_ticket_tags_filter(params=kwargs['tickets_tags'])}
-                    {get_customer_groups_filter(kwargs=kwargs,filter_generator=filter_generator)}
+                    {get_customer_groups_filter(kwargs=kwargs, filter_generator=filter_generator)}
                     {filter_generator.generate_license_status_filter(params=kwargs['license_statuses'])}
                     {filter_generator.generate_conversion_status_filter(params=kwargs['conversion_statuses'])}
                     {filter_generator.generate_emp_positions_filter(params=kwargs['positions_ids'])}

@@ -39,16 +39,37 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         )
 
     @staticmethod
-    def generate_ticket_types_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
-            params
+    def generate_ticket_types_filter(
+        ticket_types: FilterParametersNode,
+        reffered_ticket_types: FilterParametersNode
+    ) -> str:
+        generate_ticket_types_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+            ticket_types
         )
-        return generate_filter(
+        filter = 'AND'
+        ticket_types_filter = generate_ticket_types_filter(
             col=TicketsWithIterationsMeta.ticket_type,
-            values=params.values,
-            filter_prefix='AND',
+            values=ticket_types.values,
+            filter_prefix='',
             values_converter=str,
         )
+        if reffered_ticket_types.values:
+            generate_reffered_ticket_types_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+                reffered_ticket_types
+            )
+            filter += ' ('
+            filter += ticket_types_filter
+            filter += generate_reffered_ticket_types_filter(
+                col=TicketsWithIterationsMeta.reffered_ticket_type,
+                values=reffered_ticket_types.values,
+                filter_prefix=' OR'
+                if reffered_ticket_types.include else ' AND',
+                values_converter=str,
+            )
+            filter += ')'
+            return filter
+
+        return filter + ' ' + ticket_types_filter
 
     @staticmethod
     def generate_reffered_ticket_types_filter(
@@ -60,7 +81,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         return generate_filter(
             col=TicketsWithIterationsMeta.reffered_ticket_type,
             values=params.values,
-            filter_prefix='AND',
+            filter_prefix='OR',
             values_converter=str,
         )
 
