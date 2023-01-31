@@ -53,7 +53,8 @@ from repository.customers_activity.local.employees import (
     EmpTribesRepository as SqliteEmpTribesRepository,
     EmployeesRepository as SqliteEmployeesRepository,
 )
-from repository.customers_activity.local.filters_generators.display_filter import DisplayFilterGenerator
+from repository.customers_activity.local.generators.filters_generators.display_filter import DisplayFilterGenerator
+from repository.customers_activity.local.generators.periods import PeriodsGenerator
 from repository.customers_activity.local.tables_builder import TablesBuilder
 
 
@@ -152,6 +153,9 @@ class SqliteFactory:
 
     def create_display_filter_generator(self, **kwargs) -> DisplayFilterGenerator:
         return DisplayFilterGenerator
+
+    def create_periods_generator(self, **kwargs) -> PeriodsGenerator:
+        return PeriodsGenerator
 # yapf: enable
 
 

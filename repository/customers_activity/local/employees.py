@@ -8,7 +8,7 @@ from sql_queries.customers_activity.meta import (
     TribesMeta,
     EmployeesMeta,
 )
-from repository.customers_activity.local.filters_generators.employees import EmployeesSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.employees import EmployeesSqlFilterClauseGenerator
 
 
 # yapf: disable

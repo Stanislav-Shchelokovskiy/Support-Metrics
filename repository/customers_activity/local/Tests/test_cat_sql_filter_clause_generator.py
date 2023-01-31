@@ -1,5 +1,5 @@
 import pytest
-from repository.customers_activity.local.filters_generators.cat import CATSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.cat import CATSqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import CATComponentsFeaturesMeta
 from repository.customers_activity.local.Tests.mocks import MockFilterParametersNode
 

@@ -82,3 +82,22 @@ def test_get_tickets_with_iterations_raw(file_name):
         check_file=f'tickets_with_iterations_raw/{file_name}',
         response=response,
     )
+
+
+@pytest.mark.e2e
+@pytest.mark.parametrize('file_name', [
+    'y',
+    'ym',
+    'ymd',
+    'yw',
+])
+def test_get_periods_array(file_name):
+    response = network_get(
+        url='get_periods_array',
+        params=f'periods_array/{file_name}',
+    )
+    assert response_is_valid(
+        file=file_name,
+        check_file=f'periods_array/{file_name}',
+        response=response,
+    )

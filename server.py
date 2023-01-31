@@ -119,6 +119,17 @@ def customers_activity_get_group_by_periods():
     )
 
 
+@app.get('/get_periods_array')
+def customers_activity_get_periods_array(start: str, end: str, format: str):
+    return get_response(
+        json_data=server_repository.customers_activity_get_periods_array(
+            start=start,
+            end=end,
+            format=format,
+        )
+    )
+
+
 @app.get('/get_license_statuses')
 def customers_activity_get_license_statuses():
     return get_response(

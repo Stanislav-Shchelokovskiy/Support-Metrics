@@ -3,15 +3,8 @@ from repository.factory import RepositoryFactory
 
 # yapf: disable
 def customers_activity_get_group_by_periods() -> str:
-    # format should contain a valid strftime string.
-    # https://sqlite.org/lang_datefunc.html
-    return '''[
-        { "name": "Day",        "format": "%Y-%m-%d" },
-        { "name": "Week-Year",  "format": "%Y-%W" },
-        { "name": "Month-Year", "format": "%Y-%m" },
-        { "name": "Year",       "format": "%Y" }
-    ]
-    '''
+    generator = RepositoryFactory.customers_activity.local.create_periods_generator()
+    return generator.get_group_by_periods_json()
 
 
 def customers_activity_get_tickets_with_iterations_period() -> str:
@@ -111,4 +104,8 @@ def customers_activity_get_tickets_with_iterations_raw(**kwargs) -> str:
 def customers_activity_get_display_filter(aliases: dict[str,str], **kwargs) -> str:
     generator = RepositoryFactory.customers_activity.local.create_display_filter_generator()
     return generator.generate_display_filter(aliases=aliases, **kwargs)
+
+def customers_activity_get_periods_array(**kwargs) -> str:
+    generator = RepositoryFactory.customers_activity.local.create_periods_generator()
+    return generator.generate_periods(**kwargs)
 # yapf: enable
