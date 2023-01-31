@@ -5,6 +5,4 @@ WITH RECURSIVE periods({start}, {period}) AS (
   FROM periods
   WHERE {recursion_cond_expr}
 )
-
-SELECT *
-FROM periods
+SELECT * FROM periods
