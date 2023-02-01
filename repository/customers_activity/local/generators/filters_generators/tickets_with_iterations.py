@@ -41,7 +41,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
     @staticmethod
     def generate_ticket_types_filter(
         ticket_types: FilterParametersNode,
-        reffered_ticket_types: FilterParametersNode
+        reffered_ticket_types: FilterParametersNode | None = None
     ) -> str:
         generate_ticket_types_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
             ticket_types
@@ -53,23 +53,29 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             filter_prefix='',
             values_converter=str,
         )
-        if reffered_ticket_types.values:
+
+        if reffered_ticket_types:
             generate_reffered_ticket_types_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
                 reffered_ticket_types
             )
-            filter += ' ('
-            filter += ticket_types_filter
-            filter += generate_reffered_ticket_types_filter(
+            filter_prefix = ''
+            if ticket_types_filter:
+                filter_prefix = ' OR' if reffered_ticket_types.include else ' AND'
+
+            reffered_ticket_types_filter = generate_reffered_ticket_types_filter(
                 col=TicketsWithIterationsMeta.reffered_ticket_type,
                 values=reffered_ticket_types.values,
-                filter_prefix=' OR'
-                if reffered_ticket_types.include else ' AND',
+                filter_prefix=filter_prefix,
                 values_converter=str,
             )
-            filter += ')'
-            return filter
-
-        return filter + ' ' + ticket_types_filter
+            if reffered_ticket_types_filter:
+                return filter + (
+                    f' ({ticket_types_filter}{reffered_ticket_types_filter})'
+                    if filter_prefix else f' {reffered_ticket_types_filter}'
+                )
+        if ticket_types_filter:
+            return filter + ' ' + ticket_types_filter
+        return ticket_types_filter
 
     @staticmethod
     def generate_reffered_ticket_types_filter(
