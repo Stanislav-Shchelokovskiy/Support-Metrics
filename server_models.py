@@ -10,6 +10,9 @@ class ServerModel(BaseModel):
     def get_field_values(self) -> dict[str, Any]:
         return self.__dict__
 
+    def get_append_operator(self) -> str:
+        return 'and'
+
 
 class FilterNode(ServerModel):
     include: bool
@@ -55,7 +58,10 @@ class Percentile(ServerModel):
 
 class TicketsTypes(ServerModel):
     tickets_types: FilterParametersNode = Field(alias='Ticket types')
-    reffered_tickets_types: Optional[FilterParametersNode] = Field(alias='Reffered ticket types')
+    referred_tickets_types: Optional[FilterParametersNode] = Field(alias='Referred ticket types')
+
+    def get_append_operator(self) -> str:
+        return 'or' if self.referred_tickets_types.include else 'and'
 
 
 # yapf: disable

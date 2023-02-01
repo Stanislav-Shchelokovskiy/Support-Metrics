@@ -29,7 +29,8 @@ def get_baseline_aligned_mode_query(
             {TicketsWithIterationsMeta.emp_tribe_name},
             {TicketsWithIterationsMeta.emp_position_id},
             {TicketsWithIterationsMeta.emp_tribe_id},
-            {TicketsWithIterationsMeta.emp_crmid}
+            {TicketsWithIterationsMeta.emp_crmid},
+            {TicketsWithIterationsMeta.referred_ticket_type}
 FROM    {CustomersActivityDBIndex.get_tickets_with_iterations_name()} AS twi
 INNER JOIN (
     SELECT  {BaselineAlignedCustomersGroupsMeta.user_crmid},
@@ -67,7 +68,8 @@ SELECT  {TicketsWithIterationsMeta.user_id},
         {TicketsWithIterationsMeta.emp_tribe_name},
         {TicketsWithIterationsMeta.emp_position_id},
         {TicketsWithIterationsMeta.emp_tribe_id},
-        {TicketsWithIterationsMeta.emp_crmid}
+        {TicketsWithIterationsMeta.emp_crmid},
+        {TicketsWithIterationsMeta.referred_ticket_type}
 FROM    {CustomersActivityDBIndex.get_tickets_with_iterations_name()} AS twi
 LEFT JOIN (
     SELECT  {BaselineAlignedCustomersGroupsMeta.user_crmid}

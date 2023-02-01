@@ -10,6 +10,9 @@ class BaseNode(Protocol):
     def get_field_values(self) -> dict[str, Any]:
         ...
 
+    def get_append_operator(self) -> str:
+        ...
+
 
 class FilterParametersNode(BaseNode, Protocol):
     include: bool

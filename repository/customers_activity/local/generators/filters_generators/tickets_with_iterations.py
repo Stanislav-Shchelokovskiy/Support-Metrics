@@ -11,7 +11,7 @@ from configs.customers_activity_config import CustomersActivityConfig
 
 class TicketTypes(Protocol):
     tickets_types: FilterParametersNode
-    reffered_tickets_types: FilterParametersNode | None = None
+    referred_tickets_types: FilterParametersNode | None = None
 
 
 class TicketsWithIterationsSqlFilterClauseGenerator:
@@ -46,7 +46,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
 
     @staticmethod
     def generate_ticket_types_filter(ticket_types: TicketTypes) -> str:
-        reffered_ticket_types = ticket_types.reffered_tickets_types
+        reffered_ticket_types = ticket_types.referred_tickets_types
         ticket_types: FilterParametersNode = ticket_types.tickets_types
 
         generate_ticket_types_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
@@ -69,7 +69,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
                 filter_prefix = ' OR' if reffered_ticket_types.include else ' AND'
 
             reffered_ticket_types_filter = generate_reffered_ticket_types_filter(
-                col=TicketsWithIterationsMeta.reffered_ticket_type,
+                col=TicketsWithIterationsMeta.referred_ticket_type,
                 values=reffered_ticket_types.values,
                 filter_prefix=filter_prefix,
                 values_converter=str,

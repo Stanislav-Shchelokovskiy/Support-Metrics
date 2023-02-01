@@ -253,5 +253,7 @@ def get_customers_activity_help():
 
 @app.post('/get_customers_activity_display_filter')
 def get_customers_activity_display_filter(body: TicketsWithIterationsParams):
+    
     filters = server_repository.customers_activity_get_display_filter(body)
+    print(filters)
     return get_response(json_data=json.dumps(filters))

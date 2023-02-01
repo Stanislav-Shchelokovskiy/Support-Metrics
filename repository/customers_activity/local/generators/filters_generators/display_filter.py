@@ -10,18 +10,10 @@ from sql_queries.index import (
     CustomersActivitySqlPathIndex,
 )
 from sql_queries.customers_activity.meta import (
-    PlatformsProductsMeta,
-    TicketsTagsMeta,
-    TicketsTypesMeta,
-    CustomersGroupsMeta,
-    LicenseStatusesMeta,
-    ConversionStatusesMeta,
-    PositionsMeta,
-    TribesMeta,
-    EmployeesIterationsMeta,
-    CATRepliesTypesMeta,
-    CATComponentsFeaturesMeta,
-    CustomersMeta,
+    PlatformsProductsMeta, TicketsTagsMeta, TicketsTypesMeta,
+    CustomersGroupsMeta, LicenseStatusesMeta, ConversionStatusesMeta,
+    PositionsMeta, TribesMeta, EmployeesIterationsMeta, CATRepliesTypesMeta,
+    CATComponentsFeaturesMeta, CustomersMeta, TicketsWithIterationsMeta
 )
 
 
@@ -69,7 +61,7 @@ query_params_store = {
             value_field=TicketsTypesMeta.id,
             display_field=TicketsTypesMeta.name,
         ),
-    'reffered_tickets_types':
+    'referred_tickets_types':
         QueryParams(
             table=CustomersActivityDBIndex.get_tickets_types_name(),
             value_field=TicketsTypesMeta.id,
@@ -142,16 +134,18 @@ class DisplayFilterGenerator:
     # yapf: disable
     @staticmethod
     def generate_display_filter(
-        raw_values: BaseNode,
+        node: BaseNode,
         repository: Repository = SqliteRepository(),
     ) -> list[list]:
         filters = []
         filter_node: FilterParametersNode | BaseNode
-        aliases = raw_values.get_field_aliases()
-        for field_name, filter_node in raw_values.get_field_values().items():
+        aliases = node.get_field_aliases()
+        for field_name, filter_node in node.get_field_values().items():
             display_field_alias = aliases[field_name]
             if qp:= query_params_store.get(field_name):
+                filter = None
                 if hasattr(filter_node, 'values'):
+                    print(field_name, filter_node)
                     filter = DisplayFilterGenerator.generate_filter_from_filter_parameters(
                         display_field_alias=display_field_alias,
                         query_params = qp,
@@ -160,18 +154,20 @@ class DisplayFilterGenerator:
                     )
                     if not filter:
                         continue
-                else:
-                    filter = DisplayFilterGenerator.generate_display_filter(raw_values=filter_node)
-                DisplayFilterGenerator.append_filter(filters, filter)
+                elif filter_node:
+                    filter = DisplayFilterGenerator.generate_display_filter(node=filter_node, repository=repository)
+                if filter:
+                    DisplayFilterGenerator.append_filter(filters, filter, node)
             else:
-                print(field_name)
                 percentile: Percentile = filter_node
                 percentile_filter = TicketsWithIterationsSqlFilterClauseGenerator.get_percentile_filter(
                         alias = display_field_alias,
                         percentile=percentile.value,
                 )
                 filter = [ int(clause) if clause.isdigit() else clause for clause in percentile_filter.split(' ')]
-                DisplayFilterGenerator.append_filter(filters, filter)
+                DisplayFilterGenerator.append_filter(filters, filter, node)
+        if len(filters) == 1:
+            return filters[0]
         return filters
 
     @staticmethod
@@ -203,7 +199,7 @@ class DisplayFilterGenerator:
         return filter
 
     @staticmethod
-    def append_filter(filters: list, filter):
+    def append_filter(filters: list, filter: list, node: BaseNode):
         if filters:
-            filters.append('and')
+            filters.append(node.get_append_operator())
         filters.append(filter)

@@ -118,58 +118,58 @@ def test_generate_customer_groups_filter(
         (
             MockTicketTypes(
                 tickets_types=MockFilterParametersNode(include=True, values=[]),
-                reffered_tickets_types=MockFilterParametersNode(include=True, values=[])
+                referred_tickets_types=MockFilterParametersNode(include=True, values=[])
             ),
             '',
         ),
         (
             MockTicketTypes(
                 tickets_types=MockFilterParametersNode(include=False, values=[]),
-                reffered_tickets_types=MockFilterParametersNode(include=True, values=[])
+                referred_tickets_types=MockFilterParametersNode(include=True, values=[])
             ),
             f'AND {TicketsWithIterationsMeta.ticket_type} IS NULL',
         ),
         (
             MockTicketTypes(
                 tickets_types=MockFilterParametersNode(include=True, values=[]),
-                reffered_tickets_types=MockFilterParametersNode(include=False, values=[])
+                referred_tickets_types=MockFilterParametersNode(include=False, values=[])
             ),
-            f'AND {TicketsWithIterationsMeta.reffered_ticket_type} IS NULL',
+            f'AND {TicketsWithIterationsMeta.referred_ticket_type} IS NULL',
         ),
         (
             MockTicketTypes(
                 tickets_types=MockFilterParametersNode(include=False, values=[]),
-                reffered_tickets_types=MockFilterParametersNode(include=False, values=[])
+                referred_tickets_types=MockFilterParametersNode(include=False, values=[])
             ),
-            f'AND ({TicketsWithIterationsMeta.ticket_type} IS NULL AND {TicketsWithIterationsMeta.reffered_ticket_type} IS NULL)',
+            f'AND ({TicketsWithIterationsMeta.ticket_type} IS NULL AND {TicketsWithIterationsMeta.referred_ticket_type} IS NULL)',
         ),
         (
             MockTicketTypes(
                 tickets_types=MockFilterParametersNode(include=True, values=[1, 2]),
-                reffered_tickets_types=MockFilterParametersNode(include=True, values=[1, 2])
+                referred_tickets_types=MockFilterParametersNode(include=True, values=[1, 2])
             ),
-            f'AND ({TicketsWithIterationsMeta.ticket_type} IN (1,2) OR {TicketsWithIterationsMeta.reffered_ticket_type} IN (1,2))'
+            f'AND ({TicketsWithIterationsMeta.ticket_type} IN (1,2) OR {TicketsWithIterationsMeta.referred_ticket_type} IN (1,2))'
         ),
         (
             MockTicketTypes(
                 tickets_types=MockFilterParametersNode(include=False, values=[1, 2]),
-                reffered_tickets_types=MockFilterParametersNode(include=True, values=[1, 2])
+                referred_tickets_types=MockFilterParametersNode(include=True, values=[1, 2])
             ),
-            f'AND (({TicketsWithIterationsMeta.ticket_type} IS NULL OR {TicketsWithIterationsMeta.ticket_type} NOT IN (1,2)) OR {TicketsWithIterationsMeta.reffered_ticket_type} IN (1,2))'
+            f'AND (({TicketsWithIterationsMeta.ticket_type} IS NULL OR {TicketsWithIterationsMeta.ticket_type} NOT IN (1,2)) OR {TicketsWithIterationsMeta.referred_ticket_type} IN (1,2))'
         ),
         (
             MockTicketTypes(
                 tickets_types=MockFilterParametersNode(include=True, values=[1, 2]),
-                reffered_tickets_types=MockFilterParametersNode(include=False, values=[1, 2])
+                referred_tickets_types=MockFilterParametersNode(include=False, values=[1, 2])
             ),
-            f'AND ({TicketsWithIterationsMeta.ticket_type} IN (1,2) AND ({TicketsWithIterationsMeta.reffered_ticket_type} IS NULL OR {TicketsWithIterationsMeta.reffered_ticket_type} NOT IN (1,2)))'
+            f'AND ({TicketsWithIterationsMeta.ticket_type} IN (1,2) AND ({TicketsWithIterationsMeta.referred_ticket_type} IS NULL OR {TicketsWithIterationsMeta.referred_ticket_type} NOT IN (1,2)))'
         ),
         (
             MockTicketTypes(
                 tickets_types=MockFilterParametersNode(include=False, values=[1, 2]),
-                reffered_tickets_types=MockFilterParametersNode(include=False, values=[1, 2])
+                referred_tickets_types=MockFilterParametersNode(include=False, values=[1, 2])
             ),
-            f'AND (({TicketsWithIterationsMeta.ticket_type} IS NULL OR {TicketsWithIterationsMeta.ticket_type} NOT IN (1,2)) AND ({TicketsWithIterationsMeta.reffered_ticket_type} IS NULL OR {TicketsWithIterationsMeta.reffered_ticket_type} NOT IN (1,2)))'
+            f'AND (({TicketsWithIterationsMeta.ticket_type} IS NULL OR {TicketsWithIterationsMeta.ticket_type} NOT IN (1,2)) AND ({TicketsWithIterationsMeta.referred_ticket_type} IS NULL OR {TicketsWithIterationsMeta.referred_ticket_type} NOT IN (1,2)))'
         ),
     ]
 )
