@@ -1,3 +1,4 @@
+from typing import Protocol
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
 from sql_queries.index import CustomersActivityDBIndex
 from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator import (
@@ -6,6 +7,11 @@ from repository.customers_activity.local.generators.filters_generators.sql_filte
     SqlFilterClauseFromFilterParametersGenerator,
 )
 from configs.customers_activity_config import CustomersActivityConfig
+
+
+class TicketTypes(Protocol):
+    tickets_types: FilterParametersNode
+    reffered_tickets_types: FilterParametersNode | None = None
 
 
 class TicketsWithIterationsSqlFilterClauseGenerator:
@@ -39,10 +45,10 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         )
 
     @staticmethod
-    def generate_ticket_types_filter(
-        ticket_types: FilterParametersNode,
-        reffered_ticket_types: FilterParametersNode | None = None
-    ) -> str:
+    def generate_ticket_types_filter(ticket_types: TicketTypes) -> str:
+        reffered_ticket_types = ticket_types.reffered_tickets_types
+        ticket_types: FilterParametersNode = ticket_types.tickets_types
+
         generate_ticket_types_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
             ticket_types
         )
@@ -76,20 +82,6 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         if ticket_types_filter:
             return filter + ' ' + ticket_types_filter
         return ticket_types_filter
-
-    @staticmethod
-    def generate_reffered_ticket_types_filter(
-        params: FilterParametersNode
-    ) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
-            params
-        )
-        return generate_filter(
-            col=TicketsWithIterationsMeta.reffered_ticket_type,
-            values=params.values,
-            filter_prefix='OR',
-            values_converter=str,
-        )
 
     @staticmethod
     def generate_ticket_tags_filter(params: FilterParametersNode) -> str:

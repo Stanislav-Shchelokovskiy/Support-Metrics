@@ -209,7 +209,7 @@ def customers_activity_get_tickets_with_iterations_aggregates(
         range_start=range_start,
         range_end=range_end,
         use_baseline_aligned_mode=baseline_aligned_mode_enabled,
-        **body.__dict__,
+        **body.get_field_values(),
     )
     return get_response(json_data=df_json)
 
@@ -225,7 +225,7 @@ def customers_activity_get_tickets_with_iterations_raw(
         range_start=range_start,
         range_end=range_end,
         use_baseline_aligned_mode=baseline_aligned_mode_enabled,
-        **body.__dict__,
+        **body.get_field_values(),
     )
     return get_response(json_data=df_json)
 
@@ -253,8 +253,5 @@ def get_customers_activity_help():
 
 @app.post('/get_customers_activity_display_filter')
 def get_customers_activity_display_filter(body: TicketsWithIterationsParams):
-    filters = server_repository.customers_activity_get_display_filter(
-        aliases={k: v.alias for k, v in body.__fields__.items()},
-        **body.__dict__,
-    )
+    filters = server_repository.customers_activity_get_display_filter(body)
     return get_response(json_data=json.dumps(filters))

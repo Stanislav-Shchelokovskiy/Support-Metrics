@@ -1,13 +1,22 @@
-from typing import Protocol
+from typing import Protocol, Any
 from toolbox.sql.generators.filter_clause_generator import SqlFilterClauseGenerator
 
 
-class FilterParametersNode(Protocol):
+class BaseNode(Protocol):
+
+    def get_field_aliases(self) -> dict[str, str]:
+        ...
+
+    def get_field_values(self) -> dict[str, Any]:
+        ...
+
+
+class FilterParametersNode(BaseNode, Protocol):
     include: bool
     values: list
 
 
-class FilterParameterNode(Protocol):
+class FilterParameterNode(BaseNode, Protocol):
     include: bool
     value: int
 

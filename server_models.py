@@ -1,8 +1,17 @@
-from typing import Literal, Optional
+from typing import Literal, Optional, Any
 from pydantic import BaseModel, Field
 
 
-class FilterNode(BaseModel):
+class ServerModel(BaseModel):
+
+    def get_field_aliases(self) -> dict[str, str]:
+        return {k: v.alias for k, v in self.__fields__.items()}
+
+    def get_field_values(self) -> dict[str, Any]:
+        return self.__dict__
+
+
+class FilterNode(ServerModel):
     include: bool
 
 
@@ -14,7 +23,7 @@ class FilterParametersNode(FilterNode):
     values: list[int | str]
 
 
-class TribeParams(BaseModel):
+class TribeParams(ServerModel):
     tribes: FilterParametersNode
 
 
@@ -26,33 +35,37 @@ class ProductParams(TribeParams):
     platforms: FilterParametersNode
 
 
-class EmployeeParams(BaseModel):
+class EmployeeParams(ServerModel):
     tribes: FilterParametersNode
     positions: FilterParametersNode
 
 
-class ConversionStatusParams(BaseModel):
+class ConversionStatusParams(ServerModel):
     license_statuses: FilterParametersNode
 
 
-class CustomersParams(BaseModel):
+class CustomersParams(ServerModel):
     customers: list[str]
 
 
-class Percentile(BaseModel):
+class Percentile(ServerModel):
     metric: Literal['tickets', 'iterations']
     value: FilterParameterNode
 
 
+class TicketsTypes(ServerModel):
+    tickets_types: FilterParametersNode = Field(alias='Ticket types')
+    reffered_tickets_types: Optional[FilterParametersNode] = Field(alias='Reffered ticket types')
+
+
 # yapf: disable
-class TicketsWithIterationsParams(BaseModel):
+class TicketsWithIterationsParams(ServerModel):
     percentile: Percentile = Field(alias='Percentile')
     tribe_ids: FilterParametersNode = Field(alias='Tribes')
     platforms_ids: FilterParametersNode = Field(alias='Platforms')
     products_ids: FilterParametersNode = Field(alias='Products')
     tickets_tags: FilterParametersNode = Field(alias='Ticket tags')
-    tickets_types: FilterParametersNode = Field(alias='Ticket types')
-    reffered_ticket_types: Optional[FilterParametersNode] = Field(alias='Reffered ticket types')
+    tickets_types: TicketsTypes = Field(alias='Ticket types')
     customers_groups: FilterParametersNode = Field(alias='User groups')
     license_statuses: FilterParametersNode = Field(alias='User types')
     conversion_statuses: FilterParametersNode = Field(alias='User conversion types')
@@ -66,5 +79,5 @@ class TicketsWithIterationsParams(BaseModel):
 # yapf: enable
 
 
-class StatAppState(BaseModel):
+class StatAppState(ServerModel):
     state: str
