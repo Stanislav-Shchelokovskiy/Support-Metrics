@@ -13,6 +13,8 @@ DECLARE @description	TINYINT = 0
 DECLARE @actual_lic_origin		TINYINT = 0
 DECLARE @historical_lic_origin	TINYINT = 1
 
+DECLARE @bug TINYINT = 2
+
 
 DECLARE @licensed		TINYINT = 0
 DECLARE @expired		TINYINT = 1
@@ -118,15 +120,16 @@ FROM (
 			FROM 	DXStatisticsV2.dbo.TicketInfos
 			WHERE 	Created BETWEEN @start_date AND @end_date ) AS ti
 		CROSS APPLY (
-			SELECT 	FriendlyId
+			SELECT 	IsEmployee, FriendlyId
 			FROM 	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].Users
-			WHERE	IsEmployee = 0 AND Id = ti.OwnerGuid AND FriendlyId != 'A2151720'
+			WHERE	Id = ti.OwnerGuid AND FriendlyId != 'A2151720'
 		)  AS u
 		CROSS APPLY (
 			SELECT	Id AS user_crmid
 			FROM	CRM.dbo.Customers
 			WHERE	FriendlyId = u.FriendlyId
 		) AS c
+WHERE IsEmployee = 0 OR TicketType = @bug
 
 CREATE NONCLUSTERED INDEX idx_user_id ON #TicketsWithLicenses(user_id, license_status);
 CREATE NONCLUSTERED INDEX idx_ticket_id ON #TicketsWithLicenses(ticket_id) INCLUDE (ticket_type, ticket_scid);
