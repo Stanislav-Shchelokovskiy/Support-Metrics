@@ -15,32 +15,43 @@ def get_creation_date_and_tickets_filters(
     kwargs: dict,
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
 ):
-    return f"""{filter_generator.generate_creation_date_filter(
-                range_start= kwargs['range_start'],
+    return build_filter_string(
+        [
+            filter_generator.generate_creation_date_filter(
+                range_start=kwargs['range_start'],
                 range_end=kwargs['range_end'],
-            )}
-            {get_tickets_filter(kwargs=kwargs,filter_generator=filter_generator)}"""
+            ),
+            get_tickets_filter(
+                kwargs=kwargs, filter_generator=filter_generator
+            )
+        ]
+    )
 
 
+# yapf: disable
 def get_tickets_filter(
     kwargs: dict,
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
 ) -> str:
-    return f"""{filter_generator.generate_tribes_filter(params=kwargs['tribe_ids'])}
-                    {filter_generator.generate_platforms_filter(params=kwargs['platforms_ids'])}
-                    {filter_generator.generate_products_filter(params=kwargs['products_ids'])}
-                    {filter_generator.generate_ticket_types_filter(params=kwargs['tickets_types'])}
-                    {filter_generator.generate_ticket_tags_filter(params=kwargs['tickets_tags'])}
-                    {get_customer_groups_filter(kwargs=kwargs,filter_generator=filter_generator)}
-                    {filter_generator.generate_license_status_filter(params=kwargs['license_statuses'])}
-                    {filter_generator.generate_conversion_status_filter(params=kwargs['conversion_statuses'])}
-                    {filter_generator.generate_emp_positions_filter(params=kwargs['positions_ids'])}
-                    {filter_generator.generate_emp_tribes_filter(params=kwargs['emp_tribe_ids'])}
-                    {filter_generator.generate_employees_filter(params=kwargs['emp_ids'])}
-                    {filter_generator.generate_reply_types_filter(params=kwargs['reply_ids'])}
-                    {filter_generator.generate_components_filter(params=kwargs['components_ids'])}
-                    {filter_generator.generate_features_filter(params=kwargs['feature_ids'])}
-                    {filter_generator.generate_customers_filter(params=kwargs['customers_crmids'])}"""
+    return build_filter_string([
+            filter_generator.generate_tribes_filter(params=kwargs['tribe_ids']),
+            filter_generator.generate_platforms_filter(params=kwargs['platforms_ids']),
+            filter_generator.generate_products_filter(params=kwargs['products_ids']),
+            filter_generator.generate_ticket_types_filter(params=kwargs['tickets_types']),
+            filter_generator.generate_referred_ticket_types_filter(params=kwargs['referred_tickets_types']),
+            filter_generator.generate_ticket_tags_filter(params=kwargs['tickets_tags']),
+            get_customer_groups_filter(kwargs=kwargs, filter_generator=filter_generator),
+            filter_generator.generate_license_status_filter(params=kwargs['license_statuses']),
+            filter_generator.generate_conversion_status_filter(params=kwargs['conversion_statuses']),
+            filter_generator.generate_emp_positions_filter(params=kwargs['positions_ids']),
+            filter_generator.generate_emp_tribes_filter(params=kwargs['emp_tribe_ids']),
+            filter_generator.generate_employees_filter(params=kwargs['emp_ids']),
+            filter_generator.generate_reply_types_filter(params=kwargs['reply_ids']),
+            filter_generator.generate_components_filter(params=kwargs['components_ids']),
+            filter_generator.generate_features_filter(params=kwargs['feature_ids']),
+            filter_generator.generate_customers_filter(params=kwargs['customers_crmids']),
+        ])
+# yapf: enable
 
 
 def get_customer_groups_filter(
@@ -53,3 +64,7 @@ def get_customer_groups_filter(
             params=kwargs['customers_groups']
         )
     )
+
+
+def build_filter_string(filters: list[str]) -> str:
+    return '\n'.join(filter(None, filters))

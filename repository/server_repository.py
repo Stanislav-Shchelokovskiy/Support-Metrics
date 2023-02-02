@@ -101,9 +101,9 @@ def customers_activity_get_tickets_with_iterations_raw(**kwargs) -> str:
     return repository.get_data_json(**kwargs)
 
 
-def customers_activity_get_display_filter(aliases: dict[str,str], **kwargs) -> str:
+def customers_activity_get_display_filter(*args) -> str:
     generator = RepositoryFactory.customers_activity.local.create_display_filter_generator()
-    return generator.generate_display_filter(aliases=aliases, **kwargs)
+    return generator.generate_display_filter(*args)
 
 def customers_activity_get_periods_array(**kwargs) -> str:
     generator = RepositoryFactory.customers_activity.local.create_periods_generator()

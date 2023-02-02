@@ -17,6 +17,8 @@ SELECT
     t.{feature_id},
     t.{license_status},
     CAST(t.{conversion_status} AS INT) AS {conversion_status},
+    CAST(t.{referred_ticket_type} AS INT) AS {referred_ticket_type},
+	t.{referred_ticket_scid},
     ei.{post_id}       AS {emp_post_id},
     ei.{crmid}         AS {emp_crmid},
     ei.{tribe_id}      AS {emp_tribe_id},

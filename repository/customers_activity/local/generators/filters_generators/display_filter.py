@@ -1,6 +1,9 @@
 from toolbox.sql.repository import SqliteRepository, Repository
 from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
-from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator import FilterParametersNode
+from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import (
+    BaseNode,
+    FilterParametersNode,
+)
 from repository.customers_activity.local.core.customers_rank import Percentile
 from sql_queries.index import (
     CustomersActivityDBIndex,
@@ -61,6 +64,12 @@ query_params_store = {
             display_field=TicketsTagsMeta.name,
         ),
     'tickets_types':
+        QueryParams(
+            table=CustomersActivityDBIndex.get_tickets_types_name(),
+            value_field=TicketsTypesMeta.id,
+            display_field=TicketsTypesMeta.name,
+        ),
+    'referred_tickets_types':
         QueryParams(
             table=CustomersActivityDBIndex.get_tickets_types_name(),
             value_field=TicketsTypesMeta.id,
@@ -133,47 +142,71 @@ class DisplayFilterGenerator:
     # yapf: disable
     @staticmethod
     def generate_display_filter(
-        aliases: dict[str, str],
+        node: BaseNode,
         repository: Repository = SqliteRepository(),
-        **kwargs,
     ) -> list[list]:
         filters = []
-        v: FilterParametersNode
-        for k, v in kwargs.items():
-            display_field_alias = aliases[k]
-            if qp:= query_params_store.get(k):
-                if not v.values:
-                    if not v.include:
-                        DisplayFilterGenerator.append_filter(filters, [display_field_alias, '=', 'NULL'])
-                    continue
-                values = ', '.join([f"'{value}'" for value in v.values])
-                display_values =repository.execute_query(
-                    query_file_path=CustomersActivitySqlPathIndex.get_general_select_path(),
-                    query_format_params={
-                        'columns': qp.display_field,
-                        'table_name': qp.table,
-                        'filter_group_limit_clause': f'WHERE {qp.value_field} IN ({values})\nGROUP BY {qp.display_field}',
-                    }
-                ).reset_index(drop=True)[qp.display_field].values.tolist()
-                if v.include:
-                    DisplayFilterGenerator.append_filter(filters, [display_field_alias, 'in', display_values])
-                else:
-                    filter = []
-                    filter.append([display_field_alias, '=', 'NULL'])
-                    filter.append('or')
-                    filter.append([display_field_alias, 'notin', display_values])
-                    DisplayFilterGenerator.append_filter(filters, filter)
+        filter_node: FilterParametersNode | BaseNode
+        aliases = node.get_field_aliases()
+        for field_name, filter_node in node.get_field_values().items():
+            display_field_alias = aliases[field_name]
+            if qp:= query_params_store.get(field_name):
+                filter = None
+                if hasattr(filter_node, 'values'):
+                    filter = DisplayFilterGenerator.generate_filter_from_filter_parameters(
+                        display_field_alias=display_field_alias,
+                        query_params = qp,
+                        filter_node=filter_node,
+                        repository=repository,
+                    )
+                    if not filter:
+                        continue
+                elif filter_node:
+                    filter = DisplayFilterGenerator.generate_display_filter(node=filter_node, repository=repository)
+                if filter:
+                    DisplayFilterGenerator.append_filter(filters, filter, node)
             else:
-                percentile: Percentile = kwargs['percentile']
+                percentile: Percentile = filter_node
                 percentile_filter = TicketsWithIterationsSqlFilterClauseGenerator.get_percentile_filter(
                         alias = display_field_alias,
                         percentile=percentile.value,
                 )
-                filters.append([ int(clause) if clause.isdigit() else clause for clause in percentile_filter.split(' ')])
+                filter = [ int(clause) if clause.isdigit() else clause for clause in percentile_filter.split(' ')]
+                DisplayFilterGenerator.append_filter(filters, filter, node)
+        if len(filters) == 1:
+            return filters[0]
         return filters
 
     @staticmethod
-    def append_filter(filters: list, filter):
+    def generate_filter_from_filter_parameters(
+        display_field_alias: str,
+        query_params: QueryParams,
+        filter_node: FilterParametersNode,
+        repository: Repository,
+    ):
+        if not filter_node.values:
+            if not filter_node.include:
+                return [display_field_alias, '=', 'NULL']
+            return ''
+        values = ', '.join([f"'{value}'" for value in filter_node.values])
+        display_values =repository.execute_query(
+            query_file_path=CustomersActivitySqlPathIndex.get_general_select_path(),
+            query_format_params={
+                'columns': query_params.display_field,
+                'table_name': query_params.table,
+                'filter_group_limit_clause': f'WHERE {query_params.value_field} IN ({values})\nGROUP BY {query_params.display_field}',
+            }
+        ).reset_index(drop=True)[query_params.display_field].values.tolist()
+        if filter_node.include:
+            return [display_field_alias, 'in', display_values]
+        filter = []
+        filter.append([display_field_alias, '=', 'NULL'])
+        filter.append('or')
+        filter.append([display_field_alias, 'notin', display_values])
+        return filter
+
+    @staticmethod
+    def append_filter(filters: list, filter: list, node: BaseNode):
         if filters:
-            filters.append('and')
+            filters.append(node.get_append_operator())
         filters.append(filter)

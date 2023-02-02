@@ -2,7 +2,7 @@ from typing import Protocol, Literal
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
 from sql_queries.index import CustomersActivityDBIndex
 from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
-from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator import FilterParameterNode
+from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import FilterParameterNode
 import repository.customers_activity.local.core.filters as filters
 
 
@@ -29,7 +29,7 @@ def get_ranked_tickets_with_iterations_query(
                     {filters.get_creation_date_with_offset_start_filter(kwargs=kwargs,filter_generator=filter_generator)}
                     {filters.get_tickets_filter(kwargs=kwargs,filter_generator=filter_generator)}
                 GROUP BY {TicketsWithIterationsMeta.user_crmid} ) AS rnk
-        WHERE {filter_generator.get_percentile_filter('percentile', percentile.value)}
+        WHERE {filter_generator.get_percentile_filter(alias='percentile', percentile=percentile.value)}
     ) AS usr_rnk ON usr_rnk.{TicketsWithIterationsMeta.user_crmid} = {tbl}.{TicketsWithIterationsMeta.user_crmid}"""
     )
 
