@@ -84,7 +84,7 @@ FROM tickets_with_licenses_and_conversion AS ti
 	OUTER APPLY (
 		SELECT ticket_scid, ticket_type 
 		FROM #TicketsWithLicenses AS twl
-		WHERE ticket_id = (SELECT	Value 
+		WHERE ticket_id = (SELECT	TOP 1 Value
 						   FROM		SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
 						   WHERE	Name = 'Duplicate' AND Ticket_Id = ti.ticket_id)) AS dups
 	OUTER APPLY (
