@@ -32,10 +32,9 @@ FROM    {CustomersActivityDBIndex.get_tickets_with_iterations_name()} AS twi
 LEFT JOIN (
     SELECT  {BaselineAlignedCustomersGroupsMeta.user_crmid}
     FROM    {CustomersActivityDBIndex.get_tracked_customers_groups_name()}
-    WHERE   {build_filter_string([
-                f"{BaselineAlignedCustomersGroupsMeta.assignment_date} BETWEEN '{kwargs['range_start']}' AND '{kwargs['range_end']}'",
-                filter_generator.generate_customer_groups_filter(params=kwargs['customers_groups'], col=BaselineAlignedCustomersGroupsMeta.id)
-            ])}
+    {filter_generator.generate_customer_groups_filter(
+        params=kwargs['customers_groups'], 
+        col=BaselineAlignedCustomersGroupsMeta.id, filter_prefix='WHERE')}
 ) AS tcg ON tcg.user_crmid = twi.user_crmid
 WHERE {build_filter_string([
             'tcg.user_crmid IS NULL',

@@ -26,6 +26,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
     def generate_customer_groups_filter(
         params: FilterParametersNode | None,
         col: str = TicketsWithIterationsMeta.user_groups,
+        filter_prefix: str = 'AND'
     ) -> str:
         generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_like_filter_generator(
             params
@@ -33,7 +34,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         return generate_filter(
             col=col,
             values=params.values,
-            filter_prefix='AND',
+            filter_prefix=filter_prefix,
         )
 
     def generate_ticket_types_filter(params: FilterParametersNode) -> str:
