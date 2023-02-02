@@ -145,7 +145,6 @@ class DisplayFilterGenerator:
             if qp:= query_params_store.get(field_name):
                 filter = None
                 if hasattr(filter_node, 'values'):
-                    print(field_name, filter_node)
                     filter = DisplayFilterGenerator.generate_filter_from_filter_parameters(
                         display_field_alias=display_field_alias,
                         query_params = qp,
