@@ -28,24 +28,25 @@ def test_get_customers_activity_display_filter():
 
 @pytest.mark.e2e
 @pytest.mark.parametrize(
-    'file_name', [
-        'conversion_rate',
-        'emp_replies_wpf',
-        'emp_replies_asp',
-        'emp_replies_devextreme',
-        'reply_type_is_missing',
-        'asp_blazor_income',
-        'xaf_support_replies',
-        'xaf_pm_replies',
-        'mau_under_review_devextreme_baseline_alignment',
-        'median',
-        'reports_export_to_pdf',
-        'customer',
+    'file_name, bam', [
+        ('conversion_rate', False),
+        ('emp_replies_wpf', False),
+        ('emp_replies_asp', False),
+        ('emp_replies_devextreme', False),
+        ('reply_type_is_missing', False),
+        ('asp_blazor_income', False),
+        ('xaf_support_replies', False),
+        ('xaf_pm_replies', False),
+        ('mau_under_review_devextreme_baseline_alignment', True),
+        ('median', False),
+        ('reports_export_to_pdf', False),
+        ('customer', False),
     ]
 )
-def test_get_tickets_with_iterations_aggregates(file_name):
+def test_get_tickets_with_iterations_aggregates(file_name, bam):
     response = network_post(
-        url=r'get_tickets_with_iterations_aggregates?group_by_period=%Y-%m&range_start={start_date}&range_end={end_date}&baseline_aligned_mode_enabled=false',
+        url=r'get_tickets_with_iterations_aggregates?group_by_period=%Y-%m&range_start={start_date}&range_end={end_date}&baseline_aligned_mode_enabled='
+        + str(bam),
         body=f'tickets_with_iterations/{file_name}',
     )
     assert response_is_valid(
@@ -57,24 +58,25 @@ def test_get_tickets_with_iterations_aggregates(file_name):
 
 @pytest.mark.e2e
 @pytest.mark.parametrize(
-    'file_name', [
-        'conversion_rate',
-        'emp_replies_wpf',
-        'emp_replies_asp',
-        'emp_replies_devextreme',
-        'reply_type_is_missing',
-        'asp_blazor_income',
-        'xaf_support_replies',
-        'xaf_pm_replies',
-        'mau_under_review_devextreme_baseline_alignment',
-        'median',
-        'reports_export_to_pdf',
-        'customer',
+    'file_name, bam', [
+        ('conversion_rate', False),
+        ('emp_replies_wpf', False),
+        ('emp_replies_asp', False),
+        ('emp_replies_devextreme', False),
+        ('reply_type_is_missing', False),
+        ('asp_blazor_income', False),
+        ('xaf_support_replies', False),
+        ('xaf_pm_replies', False),
+        ('mau_under_review_devextreme_baseline_alignment', True),
+        ('median', False),
+        ('reports_export_to_pdf', False),
+        ('customer', False),
     ]
 )
-def test_get_tickets_with_iterations_raw(file_name):
+def test_get_tickets_with_iterations_raw(file_name, bam):
     response = network_post(
-        url=r'get_tickets_with_iterations_raw?range_start={start_date}&range_end={end_date}&baseline_aligned_mode_enabled=false',
+        url=r'get_tickets_with_iterations_raw?range_start={start_date}&range_end={end_date}&baseline_aligned_mode_enabled='
+        + str(bam),
         body=f'tickets_with_iterations/{file_name}',
     )
     assert response_is_valid(
