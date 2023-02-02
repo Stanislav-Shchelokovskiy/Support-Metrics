@@ -9,7 +9,6 @@ from sql_queries.customers_activity.meta import (
 )
 
 from server_models import (
-    TicketsTypes,
     FilterParametersNode,
     FilterParameterNode,
     TicketsWithIterationsParams,
@@ -38,37 +37,11 @@ class MockSqliteRepository:
     'node, output', [
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(
-                    metric='tickets',
-                    value=FilterParameterNode(include=True, value=40),
-                ),
-                'Tribes': FilterParametersNode(
-                    include=True,
-                    values=['CE832BA0-1D68-421D-8DD5-5E2522462A2F'],
-                ),
-                'Platforms': FilterParametersNode(include=True, values=[]),
-                'Products': FilterParametersNode(include=True, values=[]),
-                'Ticket tags': FilterParametersNode(
-                    include=False,
-                    values=[],
-                ),
-                'Ticket types': TicketsTypes(**{
-                    'Ticket types': FilterParametersNode(include=False, values=[2]),
-                    'Referred ticket types': None
-                    }),
-                'User groups': FilterParametersNode(include=True, values=[]),
-                'User types': FilterParametersNode(
-                    include=True,
-                    values=[0, 1],
-                ),
-                'User conversion types': FilterParametersNode(include=True, values=[]),
-                'Employees positions': FilterParametersNode(include=True, values=[]),
-                'Employees tribes': FilterParametersNode(include=True, values=[]),
-                'Employees': FilterParametersNode(include=True, values=[]),
-                'CAT replies types': FilterParametersNode(include=True, values=[]),
-                'CAT components': FilterParametersNode(include=True, values=[]),
-                'CAT features': FilterParametersNode(include=True, values=[]),
-                'Customers': FilterParametersNode(include=True, values=[]),
+                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=40)),
+                'Tribes': FilterParametersNode(include=True, values=['CE832BA0-1D68-421D-8DD5-5E2522462A2F']),
+                'Ticket tags': FilterParametersNode(include=False, values=[],),
+                'Ticket types': FilterParametersNode(include=False, values=[2]),
+                'User types': FilterParametersNode(include=True, values=[0, 1],),
             }),
             [
                 ['Percentile', '<=', 40],
@@ -88,24 +61,7 @@ class MockSqliteRepository:
         (
             TicketsWithIterationsParams(**{
                 'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
-                'Tribes': FilterParametersNode(include=True, values=[]),
-                'Platforms': FilterParametersNode(include=True, values=[]),
-                'Products': FilterParametersNode(include=True, values=[]),
-                'Ticket tags': FilterParametersNode(include=True, values=[]),
-                'Ticket types': TicketsTypes(**{
-                    'Ticket types': FilterParametersNode(include=True, values=[2]),
-                    'Referred ticket types': None
-                    }),
-                'User groups': FilterParametersNode(include=True, values=[]),
-                'User types': FilterParametersNode(include=True, values=[]),
-                'User conversion types': FilterParametersNode(include=True, values=[]),
-                'Employees positions': FilterParametersNode(include=True, values=[]),
-                'Employees tribes': FilterParametersNode(include=True, values=[]),
-                'Employees': FilterParametersNode(include=True, values=[]),
-                'CAT replies types': FilterParametersNode(include=True, values=[]),
-                'CAT components': FilterParametersNode(include=True, values=[]),
-                'CAT features': FilterParametersNode(include=True, values=[]),
-                'Customers': FilterParametersNode(include=True, values=[]),
+                'Ticket types': FilterParametersNode(include=True, values=[2]),
             }
             ),
             [
@@ -117,105 +73,51 @@ class MockSqliteRepository:
         (
             TicketsWithIterationsParams(**{
                 'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
-                'Tribes': FilterParametersNode(include=True, values=[]),
-                'Platforms': FilterParametersNode(include=True, values=[]),
-                'Products': FilterParametersNode(include=True, values=[]),
-                'Ticket tags': FilterParametersNode(include=True, values=[]),
-                'Ticket types': TicketsTypes(**{
-                    'Ticket types': FilterParametersNode(include=True, values=[2]),
-                    'Referred ticket types': FilterParametersNode(include=True, values=[2]),
-                    }),
-                'User groups': FilterParametersNode(include=True, values=[]),
-                'User types': FilterParametersNode(include=True, values=[]),
-                'User conversion types': FilterParametersNode(include=True, values=[]),
-                'Employees positions': FilterParametersNode(include=True, values=[]),
-                'Employees tribes': FilterParametersNode(include=True, values=[]),
-                'Employees': FilterParametersNode(include=True, values=[]),
-                'CAT replies types': FilterParametersNode(include=True, values=[]),
-                'CAT components': FilterParametersNode(include=True, values=[]),
-                'CAT features': FilterParametersNode(include=True, values=[]),
-                'Customers': FilterParametersNode(include=True, values=[]),
+                'Ticket types': FilterParametersNode(include=True, values=[2]),
+                'Referred ticket types': FilterParametersNode(include=True, values=[2]),
             }),
             [
                 ['Percentile', '<=', 100],
                 'and',
+                ['Ticket types', 'in', ['Question']],
+                'and',
+                ['Referred ticket types', 'in', ['Question']]
+            ]
+        ),
+        (
+            TicketsWithIterationsParams(**{
+                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Ticket types': FilterParametersNode(include=True, values=[2]),
+                'Referred ticket types': FilterParametersNode(include=False, values=[2]),
+            }),
+            [
+                ['Percentile', '<=', 100],
+                'and',
+                ['Ticket types', 'in', ['Question']],
+                'and',
                 [
-                    ['Ticket types', 'in', ['Question']],
-                    'or',
-                    ['Referred ticket types', 'in', ['Question']]
+                    ['Referred ticket types', '=', 'NULL'], 'or',
+                    ['Referred ticket types', 'notin', ['Question']]
                 ]
             ]
         ),
         (
             TicketsWithIterationsParams(**{
                 'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
-                'Tribes': FilterParametersNode(include=True, values=[]),
-                'Platforms': FilterParametersNode(include=True, values=[]),
-                'Products': FilterParametersNode(include=True, values=[]),
-                'Ticket tags': FilterParametersNode(include=True, values=[]),
-                'Ticket types': TicketsTypes(**{
-                    'Ticket types': FilterParametersNode(include=True, values=[2]),
-                    'Referred ticket types': FilterParametersNode(include=False, values=[2]),
-                    }),
-                'User groups': FilterParametersNode(include=True, values=[]),
-                'User types': FilterParametersNode(include=True, values=[]),
-                'User conversion types': FilterParametersNode(include=True, values=[]),
-                'Employees positions': FilterParametersNode(include=True, values=[]),
-                'Employees tribes': FilterParametersNode(include=True, values=[]),
-                'Employees': FilterParametersNode(include=True, values=[]),
-                'CAT replies types': FilterParametersNode(include=True, values=[]),
-                'CAT components': FilterParametersNode(include=True, values=[]),
-                'CAT features': FilterParametersNode(include=True, values=[]),
-                'Customers': FilterParametersNode(include=True, values=[]),
+                'Ticket types': FilterParametersNode(include=False, values=[2]),
+                'Referred ticket types': FilterParametersNode(include=False, values=[2]),
             }),
             [
                 ['Percentile', '<=', 100],
                 'and',
                 [
-                    ['Ticket types', 'in', ['Question']],
-                    'and',
-                    [
-                        ['Referred ticket types', '=', 'NULL'], 'or',
-                        ['Referred ticket types', 'notin', ['Question']]
-                    ]
-                ]
-            ]
-        ),
-        (
-            TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
-                'Tribes': FilterParametersNode(include=True, values=[]),
-                'Platforms': FilterParametersNode(include=True, values=[]),
-                'Products': FilterParametersNode(include=True, values=[]),
-                'Ticket tags': FilterParametersNode(include=True, values=[]),
-                'Ticket types': TicketsTypes(**{
-                    'Ticket types': FilterParametersNode(include=False, values=[2]),
-                    'Referred ticket types': FilterParametersNode(include=False, values=[2]),
-                    }),
-                'User groups': FilterParametersNode(include=True, values=[]),
-                'User types': FilterParametersNode(include=True, values=[]),
-                'User conversion types': FilterParametersNode(include=True, values=[]),
-                'Employees positions': FilterParametersNode(include=True, values=[]),
-                'Employees tribes': FilterParametersNode(include=True, values=[]),
-                'Employees': FilterParametersNode(include=True, values=[]),
-                'CAT replies types': FilterParametersNode(include=True, values=[]),
-                'CAT components': FilterParametersNode(include=True, values=[]),
-                'CAT features': FilterParametersNode(include=True, values=[]),
-                'Customers': FilterParametersNode(include=True, values=[]),
-            }),
-            [
-                ['Percentile', '<=', 100],
+                    ['Ticket types', '=', 'NULL'], 'or',
+                    ['Ticket types', 'notin', ['Question']]
+                ],
                 'and',
                 [
-                    [
-                        ['Ticket types', '=', 'NULL'], 'or',
-                        ['Ticket types', 'notin', ['Question']]
-                    ],
-                    'and',
-                    [
-                        ['Referred ticket types', '=', 'NULL'], 'or',
-                        ['Referred ticket types', 'notin', ['Question']]
-                    ]
+                    ['Referred ticket types', '=', 'NULL'], 'or',
+                    ['Referred ticket types', 'notin', ['Question']]
                 ]
             ]
         )

@@ -1,15 +1,16 @@
 from sql_queries.customers_activity.meta import CATComponentsFeaturesMeta
-from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator import (
+from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import (
     FilterParametersNode,
-    SqlFilterClauseFromFilterParametersGenerator,
+    SqlFilterClauseFromFilterParametersGeneratorFactory,
+    params_guard
 )
 
-
+@params_guard
 class CATSqlFilterClauseGenerator:
 
     @staticmethod
     def generate_components_filter(tribe_ids: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
             params=tribe_ids
         )
         return generate_filter(
@@ -27,7 +28,7 @@ class CATSqlFilterClauseGenerator:
         components_fitler = CATSqlFilterClauseGenerator.generate_components_filter(
             tribe_ids=tribe_ids
         )
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
             params=component_ids
         )
         features_filter = generate_filter(

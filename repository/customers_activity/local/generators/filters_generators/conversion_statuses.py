@@ -1,17 +1,18 @@
 from sql_queries.customers_activity.meta import ConversionStatusesMeta
-from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator import (
+from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import (
     FilterParametersNode,
-    SqlFilterClauseFromFilterParametersGenerator,
+    SqlFilterClauseFromFilterParametersGeneratorFactory,
+    params_guard
 )
 
-
+@params_guard
 class ConversionStatusesSqlFilterClauseGenerator:
 
     @staticmethod
     def generate_conversion_filter(
         license_status_ids: FilterParametersNode
     ) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
             params=license_status_ids
         )
         return generate_filter(

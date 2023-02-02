@@ -1,41 +1,33 @@
-from typing import Protocol
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
 from sql_queries.index import CustomersActivityDBIndex
-from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator import (
+from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import (
     FilterParametersNode,
     FilterParameterNode,
-    SqlFilterClauseFromFilterParametersGenerator,
+    SqlFilterClauseFromFilterParametersGeneratorFactory,
+    params_guard
 )
 from configs.customers_activity_config import CustomersActivityConfig
 
-
-class TicketTypes(Protocol):
-    tickets_types: FilterParametersNode
-    referred_tickets_types: FilterParametersNode | None = None
-
-
+@params_guard
 class TicketsWithIterationsSqlFilterClauseGenerator:
 
-    @staticmethod
     def generate_creation_date_with_offset_start_filter(
         range_start: str,
         range_end: str,
     ) -> str:
         return f"{TicketsWithIterationsMeta.creation_date} BETWEEN DATE('{range_start}', '-{CustomersActivityConfig.get_rank_period_offset()}') AND '{range_end}'"
 
-    @staticmethod
     def generate_creation_date_filter(
         range_start: str,
         range_end: str,
     ) -> str:
         return f"{TicketsWithIterationsMeta.creation_date} BETWEEN '{range_start}' AND '{range_end}'"
 
-    @staticmethod
     def generate_customer_groups_filter(
-        params: FilterParametersNode,
+        params: FilterParametersNode | None,
         col: str = TicketsWithIterationsMeta.user_groups,
     ) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_like_filter(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_like_filter_generator(
             params
         )
         return generate_filter(
@@ -44,48 +36,32 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             filter_prefix='AND',
         )
 
-    @staticmethod
-    def generate_ticket_types_filter(ticket_types: TicketTypes) -> str:
-        reffered_ticket_types = ticket_types.referred_tickets_types
-        ticket_types: FilterParametersNode = ticket_types.tickets_types
-
-        generate_ticket_types_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
-            ticket_types
+    def generate_ticket_types_filter(params: FilterParametersNode) -> str:
+        generate_ticket_types_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
+            params
         )
-        filter = 'AND'
-        ticket_types_filter = generate_ticket_types_filter(
+        return generate_ticket_types_filter(
             col=TicketsWithIterationsMeta.ticket_type,
-            values=ticket_types.values,
-            filter_prefix='',
+            values=params.values,
+            filter_prefix='AND',
             values_converter=str,
         )
 
-        if reffered_ticket_types:
-            generate_reffered_ticket_types_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
-                reffered_ticket_types
-            )
-            filter_prefix = ''
-            if ticket_types_filter:
-                filter_prefix = ' OR' if reffered_ticket_types.include else ' AND'
+    def generate_referred_ticket_types_filter(
+        params: FilterParametersNode
+    ) -> str:
+        generate_ticket_types_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
+            params
+        )
+        return generate_ticket_types_filter(
+            col=TicketsWithIterationsMeta.referred_ticket_type,
+            values=params.values,
+            filter_prefix='AND',
+            values_converter=str,
+        )
 
-            reffered_ticket_types_filter = generate_reffered_ticket_types_filter(
-                col=TicketsWithIterationsMeta.referred_ticket_type,
-                values=reffered_ticket_types.values,
-                filter_prefix=filter_prefix,
-                values_converter=str,
-            )
-            if reffered_ticket_types_filter:
-                return filter + (
-                    f' ({ticket_types_filter}{reffered_ticket_types_filter})'
-                    if filter_prefix else f' {reffered_ticket_types_filter}'
-                )
-        if ticket_types_filter:
-            return filter + ' ' + ticket_types_filter
-        return ticket_types_filter
-
-    @staticmethod
     def generate_ticket_tags_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_like_filter(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_like_filter_generator(
             params
         )
         return generate_filter(
@@ -94,9 +70,8 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             filter_prefix='AND',
         )
 
-    @staticmethod
     def generate_tribes_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
             params
         )
         return generate_filter(
@@ -106,9 +81,8 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             values_converter=lambda val: f"'{val}'",
         )
 
-    @staticmethod
     def generate_reply_types_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
             params
         )
         return generate_filter(
@@ -118,9 +92,8 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             values_converter=lambda val: f"'{val}'",
         )
 
-    @staticmethod
     def generate_components_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
             params
         )
         return generate_filter(
@@ -130,9 +103,8 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             values_converter=lambda val: f"'{val}'",
         )
 
-    @staticmethod
     def generate_features_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
             params
         )
         return generate_filter(
@@ -142,9 +114,8 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             values_converter=lambda val: f"'{val}'",
         )
 
-    @staticmethod
     def generate_license_status_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
             params
         )
         return generate_filter(
@@ -154,9 +125,8 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             values_converter=str,
         )
 
-    @staticmethod
     def generate_conversion_status_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
             params
         )
         return generate_filter(
@@ -166,9 +136,8 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             values_converter=str,
         )
 
-    @staticmethod
     def generate_platforms_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_like_filter(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_like_filter_generator(
             params
         )
         return generate_filter(
@@ -177,9 +146,8 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             filter_prefix='AND',
         )
 
-    @staticmethod
     def generate_products_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_like_filter(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_like_filter_generator(
             params
         )
         return generate_filter(
@@ -188,9 +156,8 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             filter_prefix='AND',
         )
 
-    @staticmethod
     def generate_emp_positions_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
             params
         )
         return generate_filter(
@@ -200,9 +167,8 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             values_converter=lambda val: f"'{val}'",
         )
 
-    @staticmethod
     def generate_emp_tribes_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
             params
         )
         return generate_filter(
@@ -212,9 +178,8 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             values_converter=lambda val: f"'{val}'",
         )
 
-    @staticmethod
     def generate_employees_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
             params
         )
         return generate_filter(
@@ -224,9 +189,8 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             values_converter=lambda val: f"'{val}'",
         )
 
-    @staticmethod
     def generate_customers_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
             params
         )
         return generate_filter(
@@ -236,7 +200,6 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             values_converter=lambda val: f"'{val}'",
         )
 
-    @staticmethod
     def get_percentile_filter(
         alias: str,
         percentile: FilterParameterNode,

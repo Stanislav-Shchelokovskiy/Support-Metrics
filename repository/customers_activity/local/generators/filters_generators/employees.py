@@ -1,15 +1,16 @@
 from sql_queries.customers_activity.meta import EmployeesMeta
-from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator import (
+from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import (
     FilterParametersNode,
-    SqlFilterClauseFromFilterParametersGenerator,
+    SqlFilterClauseFromFilterParametersGeneratorFactory,
+    params_guard
 )
 
-
+@params_guard
 class EmployeesSqlFilterClauseGenerator:
 
     @staticmethod
     def _generate_positions_filter(position_ids: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
             params=position_ids
         )
         return generate_filter(
@@ -27,7 +28,7 @@ class EmployeesSqlFilterClauseGenerator:
         positions_fitler = EmployeesSqlFilterClauseGenerator._generate_positions_filter(
             position_ids=position_ids
         )
-        generate_filter = SqlFilterClauseFromFilterParametersGenerator.generate_in_filter(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
             params=tribe_ids
         )
         tribes_filter = generate_filter(

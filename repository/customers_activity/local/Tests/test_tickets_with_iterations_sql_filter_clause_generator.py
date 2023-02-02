@@ -6,7 +6,6 @@ from repository.customers_activity.local.Tests.mocks import (
     MockFilterParametersNode,
     MockFilterParameterNode,
     MockPercentile,
-    MockTicketTypes,
 )
 from configs.customers_activity_config import CustomersActivityConfig
 
@@ -88,101 +87,80 @@ def test_generate_customer_groups_filter(
     ) == output
 
 
-# yapf: disable
 @pytest.mark.parametrize(
     'ticket_types, output', [
         (
-            MockTicketTypes(tickets_types=MockFilterParametersNode(include=True, values=[])),
+            MockFilterParametersNode(include=True, values=[]),
             '',
         ),
         (
-            MockTicketTypes(tickets_types=MockFilterParametersNode(include=False, values=[])),
+            MockFilterParametersNode(include=False, values=[]),
             f'AND {TicketsWithIterationsMeta.ticket_type} IS NULL',
         ),
         (
-            MockTicketTypes(tickets_types=MockFilterParametersNode(include=True, values=[1, 2])),
+            MockFilterParametersNode(include=True, values=[1, 2]),
             f'AND {TicketsWithIterationsMeta.ticket_type} IN (1,2)'
         ),
         (
-            MockTicketTypes(tickets_types=MockFilterParametersNode(include=True, values=[1])),
+            MockFilterParametersNode(include=True, values=[1]),
             f'AND {TicketsWithIterationsMeta.ticket_type} IN (1)'
         ),
         (
-            MockTicketTypes(tickets_types=MockFilterParametersNode(include=False, values=[1, 2])),
+            MockFilterParametersNode(include=False, values=[1, 2]),
             f'AND ({TicketsWithIterationsMeta.ticket_type} IS NULL OR {TicketsWithIterationsMeta.ticket_type} NOT IN (1,2))'
         ),
         (
-            MockTicketTypes(tickets_types=MockFilterParametersNode(include=False, values=[1])),
+            MockFilterParametersNode(include=False, values=[1]),
             f'AND ({TicketsWithIterationsMeta.ticket_type} IS NULL OR {TicketsWithIterationsMeta.ticket_type} NOT IN (1))'
-        ),
-        (
-            MockTicketTypes(
-                tickets_types=MockFilterParametersNode(include=True, values=[]),
-                referred_tickets_types=MockFilterParametersNode(include=True, values=[])
-            ),
-            '',
-        ),
-        (
-            MockTicketTypes(
-                tickets_types=MockFilterParametersNode(include=False, values=[]),
-                referred_tickets_types=MockFilterParametersNode(include=True, values=[])
-            ),
-            f'AND {TicketsWithIterationsMeta.ticket_type} IS NULL',
-        ),
-        (
-            MockTicketTypes(
-                tickets_types=MockFilterParametersNode(include=True, values=[]),
-                referred_tickets_types=MockFilterParametersNode(include=False, values=[])
-            ),
-            f'AND {TicketsWithIterationsMeta.referred_ticket_type} IS NULL',
-        ),
-        (
-            MockTicketTypes(
-                tickets_types=MockFilterParametersNode(include=False, values=[]),
-                referred_tickets_types=MockFilterParametersNode(include=False, values=[])
-            ),
-            f'AND ({TicketsWithIterationsMeta.ticket_type} IS NULL AND {TicketsWithIterationsMeta.referred_ticket_type} IS NULL)',
-        ),
-        (
-            MockTicketTypes(
-                tickets_types=MockFilterParametersNode(include=True, values=[1, 2]),
-                referred_tickets_types=MockFilterParametersNode(include=True, values=[1, 2])
-            ),
-            f'AND ({TicketsWithIterationsMeta.ticket_type} IN (1,2) OR {TicketsWithIterationsMeta.referred_ticket_type} IN (1,2))'
-        ),
-        (
-            MockTicketTypes(
-                tickets_types=MockFilterParametersNode(include=False, values=[1, 2]),
-                referred_tickets_types=MockFilterParametersNode(include=True, values=[1, 2])
-            ),
-            f'AND (({TicketsWithIterationsMeta.ticket_type} IS NULL OR {TicketsWithIterationsMeta.ticket_type} NOT IN (1,2)) OR {TicketsWithIterationsMeta.referred_ticket_type} IN (1,2))'
-        ),
-        (
-            MockTicketTypes(
-                tickets_types=MockFilterParametersNode(include=True, values=[1, 2]),
-                referred_tickets_types=MockFilterParametersNode(include=False, values=[1, 2])
-            ),
-            f'AND ({TicketsWithIterationsMeta.ticket_type} IN (1,2) AND ({TicketsWithIterationsMeta.referred_ticket_type} IS NULL OR {TicketsWithIterationsMeta.referred_ticket_type} NOT IN (1,2)))'
-        ),
-        (
-            MockTicketTypes(
-                tickets_types=MockFilterParametersNode(include=False, values=[1, 2]),
-                referred_tickets_types=MockFilterParametersNode(include=False, values=[1, 2])
-            ),
-            f'AND (({TicketsWithIterationsMeta.ticket_type} IS NULL OR {TicketsWithIterationsMeta.ticket_type} NOT IN (1,2)) AND ({TicketsWithIterationsMeta.referred_ticket_type} IS NULL OR {TicketsWithIterationsMeta.referred_ticket_type} NOT IN (1,2)))'
         ),
     ]
 )
 def test_generate_ticket_types_filter(
-    ticket_types: MockTicketTypes,
+    ticket_types: MockFilterParametersNode,
     output: str,
 ):
     assert TicketsWithIterationsSqlFilterClauseGenerator.generate_ticket_types_filter(
-        ticket_types=ticket_types
+        params=ticket_types
     ) == output
 
 
-# yapf: enable
+@pytest.mark.parametrize(
+    'ticket_types, output', [
+        (
+            MockFilterParametersNode(include=True, values=[]),
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[]),
+            f'AND {TicketsWithIterationsMeta.referred_ticket_type} IS NULL',
+        ),
+        (
+            MockFilterParametersNode(include=True, values=[1, 2]),
+            f'AND {TicketsWithIterationsMeta.referred_ticket_type} IN (1,2)'
+        ),
+        (
+            MockFilterParametersNode(include=True, values=[1]),
+            f'AND {TicketsWithIterationsMeta.referred_ticket_type} IN (1)'
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[1, 2]),
+            f'AND ({TicketsWithIterationsMeta.referred_ticket_type} IS NULL OR {TicketsWithIterationsMeta.referred_ticket_type} NOT IN (1,2))'
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[1]),
+            f'AND ({TicketsWithIterationsMeta.referred_ticket_type} IS NULL OR {TicketsWithIterationsMeta.referred_ticket_type} NOT IN (1))'
+        ),
+    ]
+)
+def test_generate_referred_ticket_types_filter(
+    ticket_types: MockFilterParametersNode,
+    output: str,
+):
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_referred_ticket_types_filter(
+        params=ticket_types
+    ) == output
+
+
 @pytest.mark.parametrize(
     'input,output', [
         (

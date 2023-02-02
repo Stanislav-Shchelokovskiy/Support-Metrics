@@ -1,6 +1,6 @@
 from toolbox.sql.repository import SqliteRepository, Repository
 from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
-from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator import (
+from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import (
     BaseNode,
     FilterParametersNode,
 )
@@ -10,10 +10,18 @@ from sql_queries.index import (
     CustomersActivitySqlPathIndex,
 )
 from sql_queries.customers_activity.meta import (
-    PlatformsProductsMeta, TicketsTagsMeta, TicketsTypesMeta,
-    CustomersGroupsMeta, LicenseStatusesMeta, ConversionStatusesMeta,
-    PositionsMeta, TribesMeta, EmployeesIterationsMeta, CATRepliesTypesMeta,
-    CATComponentsFeaturesMeta, CustomersMeta, TicketsWithIterationsMeta
+    PlatformsProductsMeta,
+    TicketsTagsMeta,
+    TicketsTypesMeta,
+    CustomersGroupsMeta,
+    LicenseStatusesMeta,
+    ConversionStatusesMeta,
+    PositionsMeta,
+    TribesMeta,
+    EmployeesIterationsMeta,
+    CATRepliesTypesMeta,
+    CATComponentsFeaturesMeta,
+    CustomersMeta,
 )
 
 

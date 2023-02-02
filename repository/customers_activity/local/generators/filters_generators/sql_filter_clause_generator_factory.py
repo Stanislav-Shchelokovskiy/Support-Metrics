@@ -24,16 +24,31 @@ class FilterParameterNode(BaseNode, Protocol):
     value: int
 
 
-class SqlFilterClauseFromFilterParametersGenerator:
+def params_guard(cls):
 
-    @staticmethod
-    def generate_like_filter(params: FilterParametersNode):
+    def decorate(func):
+
+        def guard(**kwargs):
+            if any(arg is None for arg in kwargs.values()):
+                return ''
+            return func(**kwargs)
+
+        return guard
+
+    for attr in cls.__dict__:
+        if callable(getattr(cls, attr)):
+            setattr(cls, attr, decorate(getattr(cls, attr)))
+    return cls
+
+
+class SqlFilterClauseFromFilterParametersGeneratorFactory:
+
+    def get_like_filter_generator(params: FilterParametersNode):
         generator = SqlFilterClauseGenerator()
         generate_filter = generator.generate_like_filter if params.include else generator.generate_not_like_filter
         return generate_filter
 
-    @staticmethod
-    def generate_in_filter(params: FilterParametersNode):
+    def get_in_filter_generator(params: FilterParametersNode):
         generator = SqlFilterClauseGenerator()
         generate_filter = generator.generate_in_filter if params.include else generator.generate_not_in_filter
         return generate_filter
