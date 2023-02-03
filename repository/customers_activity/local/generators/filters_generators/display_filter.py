@@ -69,7 +69,7 @@ query_params_store = {
             value_field=TicketsTypesMeta.id,
             display_field=TicketsTypesMeta.name,
         ),
-    'referred_tickets_types':
+    'duplicated_to_tickets_types':
         QueryParams(
             table=CustomersActivityDBIndex.get_tickets_types_name(),
             value_field=TicketsTypesMeta.id,

@@ -88,8 +88,8 @@ class TicketsWithLicensesMeta(TicketTribeMeta):
     feature_id = 'feature_id'
     license_status = 'license_status'
     conversion_status = 'conversion_status'
-    referred_ticket_type = 'referred_ticket_type'
-    referred_ticket_scid = 'referred_ticket_scid'
+    duplicated_to_ticket_type = 'duplicated_to_ticket_type'
+    duplicated_to_ticket_scid = 'duplicated_to_ticket_scid'
 
 
 class EmployeesIterationsMeta(TicketTribeMeta):

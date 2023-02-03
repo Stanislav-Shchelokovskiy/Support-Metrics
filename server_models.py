@@ -64,7 +64,7 @@ class TicketsWithIterationsParams(ServerModel):
     products_ids: FilterParametersNode | None = Field(alias='Products')
     tickets_tags: FilterParametersNode | None = Field(alias='Ticket tags')
     tickets_types: FilterParametersNode | None = Field(alias='Ticket types')
-    referred_tickets_types: FilterParametersNode | None = Field(alias='Referred ticket types')
+    duplicated_to_tickets_types: FilterParametersNode | None = Field(alias='Duplicated to ticket types')
     customers_groups: FilterParametersNode | None = Field(alias='User groups')
     license_statuses: FilterParametersNode | None = Field(alias='User types')
     conversion_statuses: FilterParametersNode | None = Field(alias='User conversion types')
