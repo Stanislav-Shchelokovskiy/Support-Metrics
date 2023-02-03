@@ -56,8 +56,8 @@ SELECT
 	CAST(cat.FeatureId	AS UNIQUEIDENTIFIER) AS {feature_id},
 	ti.license_status			AS {license_status},
 	ti.conversion_status		AS {conversion_status},
-	dups.ticket_type			AS {referred_ticket_type},
-	dups.ticket_scid			AS {referred_ticket_scid}
+	dups.ticket_type			AS {duplicated_to_ticket_type},
+	dups.ticket_scid			AS {duplicated_to_ticket_scid}
 FROM tickets_with_licenses_and_conversion AS ti
 	OUTER APPLY (
 		SELECT

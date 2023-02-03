@@ -74,21 +74,21 @@ class MockSqliteRepository:
             TicketsWithIterationsParams(**{
                 'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
                 'Ticket types': FilterParametersNode(include=True, values=[2]),
-                'Referred ticket types': FilterParametersNode(include=True, values=[2]),
+                'Duplicated to ticket types': FilterParametersNode(include=True, values=[2]),
             }),
             [
                 ['Percentile', '<=', 100],
                 'and',
                 ['Ticket types', 'in', ['Question']],
                 'and',
-                ['Referred ticket types', 'in', ['Question']]
+                ['Duplicated to ticket types', 'in', ['Question']]
             ]
         ),
         (
             TicketsWithIterationsParams(**{
                 'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
                 'Ticket types': FilterParametersNode(include=True, values=[2]),
-                'Referred ticket types': FilterParametersNode(include=False, values=[2]),
+                'Duplicated to ticket types': FilterParametersNode(include=False, values=[2]),
             }),
             [
                 ['Percentile', '<=', 100],
@@ -96,8 +96,8 @@ class MockSqliteRepository:
                 ['Ticket types', 'in', ['Question']],
                 'and',
                 [
-                    ['Referred ticket types', '=', 'NULL'], 'or',
-                    ['Referred ticket types', 'notin', ['Question']]
+                    ['Duplicated to ticket types', '=', 'NULL'], 'or',
+                    ['Duplicated to ticket types', 'notin', ['Question']]
                 ]
             ]
         ),
@@ -105,7 +105,7 @@ class MockSqliteRepository:
             TicketsWithIterationsParams(**{
                 'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
                 'Ticket types': FilterParametersNode(include=False, values=[2]),
-                'Referred ticket types': FilterParametersNode(include=False, values=[2]),
+                'Duplicated to ticket types': FilterParametersNode(include=False, values=[2]),
             }),
             [
                 ['Percentile', '<=', 100],
@@ -116,8 +116,8 @@ class MockSqliteRepository:
                 ],
                 'and',
                 [
-                    ['Referred ticket types', '=', 'NULL'], 'or',
-                    ['Referred ticket types', 'notin', ['Question']]
+                    ['Duplicated to ticket types', '=', 'NULL'], 'or',
+                    ['Duplicated to ticket types', 'notin', ['Question']]
                 ]
             ]
         )

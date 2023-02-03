@@ -132,31 +132,31 @@ def test_generate_ticket_types_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.referred_ticket_type} IS NULL',
+            f'AND {TicketsWithIterationsMeta.duplicated_to_ticket_type} IS NULL',
         ),
         (
             MockFilterParametersNode(include=True, values=[1, 2]),
-            f'AND {TicketsWithIterationsMeta.referred_ticket_type} IN (1,2)'
+            f'AND {TicketsWithIterationsMeta.duplicated_to_ticket_type} IN (1,2)'
         ),
         (
             MockFilterParametersNode(include=True, values=[1]),
-            f'AND {TicketsWithIterationsMeta.referred_ticket_type} IN (1)'
+            f'AND {TicketsWithIterationsMeta.duplicated_to_ticket_type} IN (1)'
         ),
         (
             MockFilterParametersNode(include=False, values=[1, 2]),
-            f'AND ({TicketsWithIterationsMeta.referred_ticket_type} IS NULL OR {TicketsWithIterationsMeta.referred_ticket_type} NOT IN (1,2))'
+            f'AND ({TicketsWithIterationsMeta.duplicated_to_ticket_type} IS NULL OR {TicketsWithIterationsMeta.duplicated_to_ticket_type} NOT IN (1,2))'
         ),
         (
             MockFilterParametersNode(include=False, values=[1]),
-            f'AND ({TicketsWithIterationsMeta.referred_ticket_type} IS NULL OR {TicketsWithIterationsMeta.referred_ticket_type} NOT IN (1))'
+            f'AND ({TicketsWithIterationsMeta.duplicated_to_ticket_type} IS NULL OR {TicketsWithIterationsMeta.duplicated_to_ticket_type} NOT IN (1))'
         ),
     ]
 )
-def test_generate_referred_ticket_types_filter(
+def test_generate_duplicated_to_ticket_types_filter(
     ticket_types: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_referred_ticket_types_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_duplicated_to_ticket_types_filter(
         params=ticket_types
     ) == output
 
