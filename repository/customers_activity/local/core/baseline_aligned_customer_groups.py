@@ -26,30 +26,27 @@ INNER JOIN (
     FROM    {CustomersActivityDBIndex.get_tracked_customers_groups_name()}
     WHERE   {build_filter_string([
                 f"{BaselineAlignedModeMeta.assignment_date} BETWEEN '{kwargs['range_start']}' AND '{kwargs['range_end']}'",
-                filter_generator.generate_customer_groups_filter(params=kwargs['customers_groups'], col=BaselineAlignedModeMeta.id)
+                filter_generator.generate_tracked_customer_groups_filter(params=kwargs['customers_groups'])
             ])}
 ) AS tcg ON tcg.user_crmid = twi.user_crmid
 WHERE {build_filter_string([
                 f'creation_date BETWEEN {BaselineAlignedModeMeta.assignment_date} AND {BaselineAlignedModeMeta.removal_date}',
-                get_tickets_filter(kwargs=kwargs, filter_generator=filter_generator)
+                get_tickets_filter(kwargs={**kwargs, 'ignore_groups_filter':True}, filter_generator=filter_generator)
             ])}
 UNION ALL
 SELECT  {get_common_select_fields()}
         CAST(JULIANDAY({TicketsWithIterationsMeta.creation_date})-JULIANDAY('{kwargs['range_start']}') AS INT) AS {BaselineAlignedModeMeta.days_since_baseline}
 FROM    ( SELECT * 
-          FROM {CustomersActivityDBIndex.get_tickets_with_iterations_name()}
-          WHERE {filter_generator.generate_creation_date_filter(range_start=kwargs['range_start'],range_end=kwargs['range_end'],filter_prefix='')}) AS twi
+          FROM   {CustomersActivityDBIndex.get_tickets_with_iterations_name()}
+          WHERE  {get_creation_date_and_tickets_filters(kwargs=kwargs, filter_generator=filter_generator, filter_prefix='')}) AS twi
 LEFT JOIN (
-    SELECT  {BaselineAlignedModeMeta.user_crmid}
-    FROM    {CustomersActivityDBIndex.get_tracked_customers_groups_name()}
-    {filter_generator.generate_customer_groups_filter(
+    SELECT {BaselineAlignedModeMeta.user_crmid}
+    FROM   {CustomersActivityDBIndex.get_tracked_customers_groups_name()}
+    WHERE  {filter_generator.generate_tracked_customer_groups_filter(
         params=kwargs['customers_groups'], 
-        col=BaselineAlignedModeMeta.id, filter_prefix='WHERE')}
+        col=BaselineAlignedModeMeta.id, filter_prefix='')}
 ) AS tcg ON tcg.user_crmid = twi.user_crmid
-WHERE {build_filter_string([
-            'tcg.user_crmid IS NULL',
-            get_creation_date_and_tickets_filters(kwargs=kwargs, filter_generator=filter_generator, filter_prefix='AND')
-        ])}
+WHERE tcg.user_crmid IS NULL
 )"""
 
 

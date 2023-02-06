@@ -1,6 +1,6 @@
 import pytest
 from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
-from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
+from sql_queries.customers_activity.meta import TicketsWithIterationsMeta, BaselineAlignedModeMeta
 from sql_queries.index import CustomersActivityDBIndex
 from repository.customers_activity.local.Tests.mocks import (
     MockFilterParametersNode,
@@ -91,6 +91,43 @@ def test_generate_customer_groups_filter(
     output: str,
 ):
     assert TicketsWithIterationsSqlFilterClauseGenerator.generate_customer_groups_filter(
+        params=input
+    ) == output
+
+
+@pytest.mark.parametrize(
+    'input, output', [
+        (
+            MockFilterParametersNode(include=True, values=[]),
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[]),
+            f'AND {BaselineAlignedModeMeta.id} IS NULL',
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['qwe', 'asd']),
+            f"AND {BaselineAlignedModeMeta.id} IN ('qwe','asd')"
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['asd']),
+            f"AND {BaselineAlignedModeMeta.id} IN ('asd')"
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['qwe', 'asd']),
+            f"AND ({BaselineAlignedModeMeta.id} IS NULL OR {BaselineAlignedModeMeta.id} NOT IN ('qwe','asd'))"
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['qwe']),
+            f"AND ({BaselineAlignedModeMeta.id} IS NULL OR {BaselineAlignedModeMeta.id} NOT IN ('qwe'))"
+        ),
+    ]
+)
+def test_generate_tracked_customer_groups_filter(
+    input: MockFilterParametersNode,
+    output: str,
+):
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_tracked_customer_groups_filter(
         params=input
     ) == output
 

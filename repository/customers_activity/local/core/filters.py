@@ -85,7 +85,7 @@ def try_get_customer_groups_filter(
     kwargs: dict,
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
 ) -> str:
-    if kwargs['use_baseline_aligned_mode']:
+    if kwargs.get('ignore_groups_filter', False):
         return ''
     return filter_generator.generate_customer_groups_filter(
         params=kwargs['customers_groups']
