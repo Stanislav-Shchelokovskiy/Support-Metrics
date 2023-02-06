@@ -10,6 +10,27 @@ RUN apt-get update && \
     ACCEPT_EULA=Y apt-get install -y msodbcsql18 && \
     ACCEPT_EULA=Y apt-get install -y unixodbc-dev
 
+# install latest sqlite
+WORKDIR /root/sqlite
+RUN wget https://www.sqlite.org/src/tarball/sqlite.tar.gz && \
+    tar xvfz sqlite.tar.gz && mv sqlite/* . && rm -r sqlite && \
+    export CFLAGS="-DSQLITE_ENABLE_FTS3 \
+    -DSQLITE_ENABLE_FTS3_PARENTHESIS \
+    -DSQLITE_ENABLE_FTS4 \
+    -DSQLITE_ENABLE_FTS5 \
+    -DSQLITE_ENABLE_JSON1 \
+    -DSQLITE_ENABLE_LOAD_EXTENSION \
+    -DSQLITE_ENABLE_RTREE \
+    -DSQLITE_ENABLE_STAT4 \
+    -DSQLITE_ENABLE_UPDATE_DELETE_LIMIT \
+    -DSQLITE_SOUNDEX \
+    -DSQLITE_TEMP_STORE=3 \
+    -DSQLITE_USE_URI \
+    -O2 \
+    -fPIC" && \
+    LIBS="-lm" ./configure --disable-tcl --enable-shared --enable-tempstore=always --prefix="/usr" && \
+    make && make install
+
 WORKDIR /root/app
 
 # copy dependencies first to make docker cache it and reuse this cache at the next step
