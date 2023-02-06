@@ -48,7 +48,7 @@ class PeriodsGenerator:
             '%Y-%m': 30.0,
             '%Y': 365.0,
         }[format]
-        return f'CAST(CEILING({field} / {period}) + 1 AS INT)'
+        return f'CAST(CEILING(IIF({field} = 0, 1, {field}) / {period}) AS INT)'
 
 
 # yapf: disable
