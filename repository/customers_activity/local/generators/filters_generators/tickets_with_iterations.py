@@ -11,7 +11,7 @@ from configs.customers_activity_config import CustomersActivityConfig
 @params_guard
 class TicketsWithIterationsSqlFilterClauseGenerator:
 
-    def generate_creation_date_with_offset_start_filter(
+    def generate_creation_date_with_rank_offset_start_filter(
         range_start: str,
         range_end: str,
     ) -> str:

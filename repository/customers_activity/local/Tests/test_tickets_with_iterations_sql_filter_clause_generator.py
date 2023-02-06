@@ -45,7 +45,7 @@ def test_generate_creation_date_with_offset_start_filter(
     kwargs: dict,
     output,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_creation_date_with_offset_start_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_creation_date_with_rank_offset_start_filter(
         **kwargs
     ) == output
 

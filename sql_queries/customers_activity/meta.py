@@ -150,6 +150,9 @@ class BaselineAlignedCustomersGroupsMeta(MetaData):
     assignment_date = 'assignment_date'
     removal_date = 'removal_date'
 
+class BaselineAlignedModeMeta(BaselineAlignedCustomersGroupsMeta):
+    days_since_baseline='days_since_baseline'
+
 
 class PeriodsMeta(MetaData):
     start = 'start'
