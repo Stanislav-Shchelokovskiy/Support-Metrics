@@ -29,7 +29,7 @@ RUN wget https://www.sqlite.org/src/tarball/sqlite.tar.gz && \
     -O2 \
     -fPIC" && \
     LIBS="-lm" ./configure --disable-tcl --enable-shared --enable-tempstore=always --prefix="/usr" && \
-    make && make install
+    make && make sqlite3.c && make install
 
 WORKDIR /root/app
 
