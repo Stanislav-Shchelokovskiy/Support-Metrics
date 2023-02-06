@@ -11,18 +11,29 @@ def get_creation_date_with_offset_start_filter(
     )
 
 
-def get_creation_date_and_tickets_filters(
+def try_get_creation_date_and_tickets_filters(
     kwargs: dict,
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
 ):
     if kwargs['use_baseline_aligned_mode']:
         return ''
+    return get_creation_date_and_tickets_filters(
+        kwargs=kwargs,
+        filter_generator=filter_generator,
+    )
+
+
+def get_creation_date_and_tickets_filters(
+    kwargs: dict,
+    filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
+    filter_prefix: str = 'WHERE'
+):
     return build_filter_string(
         [
-            'WHERE',
             get_creation_date_filter(
                 kwargs=kwargs,
                 filter_generator=filter_generator,
+                filter_prefix=filter_prefix,
             ),
             get_tickets_filter(
                 kwargs=kwargs,
@@ -35,10 +46,12 @@ def get_creation_date_and_tickets_filters(
 def get_creation_date_filter(
     kwargs: dict,
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
+    filter_prefix: str,
 ) -> str:
     return filter_generator.generate_creation_date_filter(
         range_start=kwargs['range_start'],
         range_end=kwargs['range_end'],
+        filter_prefix=filter_prefix,
     )
 
 
@@ -54,7 +67,7 @@ def get_tickets_filter(
             filter_generator.generate_ticket_types_filter(params=kwargs['tickets_types']),
             filter_generator.generate_duplicated_to_ticket_types_filter(params=kwargs['duplicated_to_tickets_types']),
             filter_generator.generate_ticket_tags_filter(params=kwargs['tickets_tags']),
-            get_customer_groups_filter(kwargs=kwargs, filter_generator=filter_generator),
+            try_get_customer_groups_filter(kwargs=kwargs, filter_generator=filter_generator),
             filter_generator.generate_license_status_filter(params=kwargs['license_statuses']),
             filter_generator.generate_conversion_status_filter(params=kwargs['conversion_statuses']),
             filter_generator.generate_emp_positions_filter(params=kwargs['positions_ids']),
@@ -68,7 +81,7 @@ def get_tickets_filter(
 # yapf: enable
 
 
-def get_customer_groups_filter(
+def try_get_customer_groups_filter(
     kwargs: dict,
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
 ) -> str:

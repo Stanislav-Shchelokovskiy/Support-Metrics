@@ -20,8 +20,9 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
     def generate_creation_date_filter(
         range_start: str,
         range_end: str,
+        filter_prefix: str = 'WHERE'
     ) -> str:
-        return f"{TicketsWithIterationsMeta.creation_date} BETWEEN '{range_start}' AND '{range_end}'"
+        return f"{filter_prefix} {TicketsWithIterationsMeta.creation_date} BETWEEN '{range_start}' AND '{range_end}'"
 
     def generate_customer_groups_filter(
         params: FilterParametersNode | None,

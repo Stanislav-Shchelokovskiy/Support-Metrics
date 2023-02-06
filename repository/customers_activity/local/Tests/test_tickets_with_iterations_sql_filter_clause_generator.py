@@ -17,7 +17,15 @@ from configs.customers_activity_config import CustomersActivityConfig
                 'range_start': 'qwe',
                 'range_end': 'asd',
             },
-            f"{TicketsWithIterationsMeta.creation_date} BETWEEN 'qwe' AND 'asd'",
+            f"WHERE {TicketsWithIterationsMeta.creation_date} BETWEEN 'qwe' AND 'asd'",
+        ),
+        (
+            {
+                'range_start': 'qwe',
+                'range_end': 'asd',
+                'filter_prefix': 'AND',
+            },
+            f"AND {TicketsWithIterationsMeta.creation_date} BETWEEN 'qwe' AND 'asd'",
         ),
     ]
 )
