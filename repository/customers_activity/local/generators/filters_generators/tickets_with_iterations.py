@@ -1,12 +1,11 @@
-from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
+from sql_queries.customers_activity.meta import TicketsWithIterationsMeta, BaselineAlignedModeMeta
 from sql_queries.index import CustomersActivityDBIndex
 from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import (
-    FilterParametersNode,
-    FilterParameterNode,
-    SqlFilterClauseFromFilterParametersGeneratorFactory,
-    params_guard
+    FilterParametersNode, FilterParameterNode,
+    SqlFilterClauseFromFilterParametersGeneratorFactory, params_guard
 )
 from configs.customers_activity_config import CustomersActivityConfig
+
 
 @params_guard
 class TicketsWithIterationsSqlFilterClauseGenerator:
@@ -18,9 +17,7 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
         return f"{TicketsWithIterationsMeta.creation_date} BETWEEN DATE('{range_start}', '-{CustomersActivityConfig.get_rank_period_offset()}') AND '{range_end}'"
 
     def generate_creation_date_filter(
-        range_start: str,
-        range_end: str,
-        filter_prefix: str = 'WHERE'
+        range_start: str, range_end: str, filter_prefix: str = 'WHERE'
     ) -> str:
         return f"{filter_prefix} {TicketsWithIterationsMeta.creation_date} BETWEEN '{range_start}' AND '{range_end}'"
 
@@ -36,6 +33,21 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             col=col,
             values=params.values,
             filter_prefix=filter_prefix,
+        )
+
+    def generate_tracked_customer_groups_filter(
+        params: FilterParametersNode | None,
+        col: str = BaselineAlignedModeMeta.id,
+        filter_prefix: str = 'AND'
+    ) -> str:
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
+            params
+        )
+        return generate_filter(
+            col=col,
+            values=params.values,
+            filter_prefix=filter_prefix,
+            values_converter=lambda val: f"'{val}'",
         )
 
     def generate_ticket_types_filter(params: FilterParametersNode) -> str:
