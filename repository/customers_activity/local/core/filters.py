@@ -5,7 +5,7 @@ def get_creation_date_with_offset_start_filter(
     kwargs: dict,
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
 ) -> str:
-    return filter_generator.generate_creation_date_with_offset_start_filter(
+    return filter_generator.generate_creation_date_with_rank_offset_start_filter(
         range_start=kwargs['range_start'],
         range_end=kwargs['range_end'],
     )
@@ -15,16 +15,30 @@ def get_creation_date_and_tickets_filters(
     kwargs: dict,
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
 ):
+    if kwargs['use_baseline_aligned_mode']:
+        return ''
     return build_filter_string(
         [
-            filter_generator.generate_creation_date_filter(
-                range_start=kwargs['range_start'],
-                range_end=kwargs['range_end'],
+            'WHERE',
+            get_creation_date_filter(
+                kwargs=kwargs,
+                filter_generator=filter_generator,
             ),
             get_tickets_filter(
-                kwargs=kwargs, filter_generator=filter_generator
+                kwargs=kwargs,
+                filter_generator=filter_generator,
             )
         ]
+    )
+
+
+def get_creation_date_filter(
+    kwargs: dict,
+    filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
+) -> str:
+    return filter_generator.generate_creation_date_filter(
+        range_start=kwargs['range_start'],
+        range_end=kwargs['range_end'],
     )
 
 
@@ -58,13 +72,12 @@ def get_customer_groups_filter(
     kwargs: dict,
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
 ) -> str:
-    return (
-        '' if kwargs['use_baseline_aligned_mode'] else
-        filter_generator.generate_customer_groups_filter(
-            params=kwargs['customers_groups']
-        )
+    if kwargs['use_baseline_aligned_mode']:
+        return ''
+    return filter_generator.generate_customer_groups_filter(
+        params=kwargs['customers_groups']
     )
 
 
 def build_filter_string(filters: list[str]) -> str:
-    return '\n'.join(filter(None, filters))
+    return '\n\t'.join(filter(None, filters))

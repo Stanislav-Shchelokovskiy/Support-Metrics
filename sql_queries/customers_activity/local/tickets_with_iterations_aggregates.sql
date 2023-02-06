@@ -5,7 +5,6 @@ SELECT
     COUNT({emp_post_id})            AS {iterations}
 FROM 
     {tickets_with_iterations_table}
-WHERE
-    {tickets_filter}
+{tickets_filter}
 GROUP BY {group_by_period}
 ORDER BY {period}

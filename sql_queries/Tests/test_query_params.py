@@ -60,7 +60,7 @@ tickets_with_iterations_common_params = {
                 'conversion_statuses_table': 'conversion_statuses_table',
                 'replies_types_table': 'replies_types_table',
                 'components_features_table': 'components_features_table',
-                'tracked_customer_groups_mode_fields':'tracked_customer_groups_mode_fields'
+                'baseline_aligned_mode_fields':'baseline_aligned_mode_fields'
             },
         ),
         (

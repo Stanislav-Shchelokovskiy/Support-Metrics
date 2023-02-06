@@ -9,6 +9,7 @@ from sql_queries.customers_activity.meta import (
     TicketsWithIterationsRawMeta,
     TicketsWithIterationsMeta,
     TicketsWithIterationsPeriodMeta,
+    BaselineAlignedModeMeta,
 )
 from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
 from repository.customers_activity.local.generators.periods import PeriodsGenerator
@@ -59,9 +60,14 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
             'license_statuses_table': CustomersActivityDBIndex.get_license_statuses_name(),
             'conversion_statuses_table': CustomersActivityDBIndex.get_conversion_statuses_name(),
             **TicketsWithIterationsRawMeta.get_attrs(),
-            'tracked_customer_groups_mode_fields': f', t.original_{TicketsWithIterationsMeta.creation_date}' if kwargs['use_baseline_aligned_mode'] else '',
+            'baseline_aligned_mode_fields': self.get_baseline_aligned_mode_fields(kwargs),
             **self.get_general_format_params(kwargs)
         }
+
+    def get_baseline_aligned_mode_fields(self, kwargs: dict) -> str:
+        if kwargs['use_baseline_aligned_mode']:
+            return f', t.{BaselineAlignedModeMeta.days_since_baseline}'
+        return ''
 
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
@@ -79,7 +85,8 @@ class TicketsWithIterationsAggregatesRepository(TicketsWithIterationsRawReposito
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         group_by_period = PeriodsGenerator.generate_group_by_period(
             format=kwargs['group_by_period'],
-            field=TicketsWithIterationsMeta.creation_date,
+            field=BaselineAlignedModeMeta.days_since_baseline if kwargs['use_baseline_aligned_mode'] else TicketsWithIterationsMeta.creation_date,
+            use_baseline_aligned_mode=kwargs['use_baseline_aligned_mode'],
         )
         return {
             **TicketsWithIterationsAggregatesMeta.get_attrs(),
