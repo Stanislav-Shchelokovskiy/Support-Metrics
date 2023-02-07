@@ -51,6 +51,39 @@ class CustomersActivitySqlPathIndex:
         )
 
     @staticmethod
+    def get_frameworks_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_extract_path()
+            + '/frameworks.sql'
+        )
+
+    @staticmethod
+    def get_operating_systems_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_extract_path()
+            + '/operating_systems.sql'
+        )
+
+    @staticmethod
+    def get_builds_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_extract_path() + '/builds.sql'
+        )
+
+    @staticmethod
+    def get_severity_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_extract_path() + '/severity.sql'
+        )
+
+    @staticmethod
+    def get_ticket_statuses_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_extract_path()
+            + '/ticket_statuses.sql'
+        )
+
+    @staticmethod
     def get_components_features_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_extract_path()
@@ -206,6 +239,26 @@ class CustomersActivityDBIndex:
     @staticmethod
     def get_tickets_types_name() -> str:
         return CustomersActivityDBIndex.get_root_name() + 'TicketsTypes'
+
+    @staticmethod
+    def get_frameworks_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'Frameworks'
+
+    @staticmethod
+    def get_operating_systems_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'OperatingSystems'
+
+    @staticmethod
+    def get_builds_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'Builds'
+
+    @staticmethod
+    def get_severity_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'Severity'
+
+    @staticmethod
+    def get_ticket_statuses_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'TicketStatuses'
 
     @staticmethod
     def get_license_statuses_name() -> str:

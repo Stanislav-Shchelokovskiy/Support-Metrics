@@ -7,7 +7,7 @@ from sql_queries.index import (
 )
 from toolbox.sql.sql_query import SqlQuery
 from sql_queries.customers_activity.meta import (
-    TicketsWithLicensesMeta,
+    TicketsWithPropertiesMeta,
     CustomersGroupsMeta,
     TicketsTagsMeta,
     TicketsWithIterationsPeriodMeta,
@@ -26,6 +26,11 @@ from sql_queries.customers_activity.meta import (
     CustomersMeta,
     KnotMeta,
     TicketsTypesMeta,
+    FrameworksMeta,
+    OperatingSystemsMeta,
+    BuildsMeta,
+    SeverityMeta,
+    TicketStatusesMeta,
 )
 
 
@@ -35,6 +40,7 @@ tickets_with_iterations_common_params = {
 }
 
 
+# yapf: disable
 @pytest.mark.parametrize(
     'get_query_file_path, format_params',
     [
@@ -47,9 +53,7 @@ tickets_with_iterations_common_params = {
         ),
         (
             CustomersActivitySqlPathIndex.get_tickets_with_properties_path,
-            {
-                **TicketsWithLicensesMeta.get_attrs(),
-            },
+            TicketsWithPropertiesMeta.get_attrs(),
         ),
         (
             CustomersActivitySqlPathIndex.get_tickets_with_iterations_raw_path,
@@ -60,7 +64,7 @@ tickets_with_iterations_common_params = {
                 'conversion_statuses_table': 'conversion_statuses_table',
                 'replies_types_table': 'replies_types_table',
                 'components_features_table': 'components_features_table',
-                'baseline_aligned_mode_fields':'baseline_aligned_mode_fields'
+                'baseline_aligned_mode_fields': 'baseline_aligned_mode_fields'
             },
         ),
         (
@@ -74,45 +78,34 @@ tickets_with_iterations_common_params = {
         ),
         (
             CustomersActivitySqlPathIndex.get_customers_groups_path,
-            {
-                **CustomersGroupsMeta.get_attrs(),
-            },
+            CustomersGroupsMeta.get_attrs(),
         ),
         (
             CustomersActivitySqlPathIndex.get_tracked_customers_groups_path,
             {
                 **BaselineAlignedCustomersGroupsMeta.get_attrs(),
                 'start_date': 'qwe',
-                'end_date':'asd',
+                'end_date': 'asd',
             },
         ),
         (
             CustomersActivitySqlPathIndex.get_ticket_tags_path,
-            {
-                **TicketsTagsMeta.get_attrs(),
-            },
+            TicketsTagsMeta.get_attrs(),
         ),
         (
             CustomersActivitySqlPathIndex.get_replies_types_path,
-            {
-                **CATRepliesTypesMeta.get_attrs(),
-            },
+            CATRepliesTypesMeta.get_attrs(),
         ),
         (
             CustomersActivitySqlPathIndex.get_components_features_path,
-            {
-                **CATComponentsFeaturesMeta.get_attrs(),
-            },
+            CATComponentsFeaturesMeta.get_attrs(),
         ),
         (
             CustomersActivitySqlPathIndex.get_platforms_products_path,
-            {
-                **PlatformsProductsMeta.get_attrs(),
-            },
+            PlatformsProductsMeta.get_attrs(),
         ),
         (
-            CustomersActivitySqlPathIndex.
-            get_tickets_period_path,
+            CustomersActivitySqlPathIndex.get_tickets_period_path,
             {
                 'table_name': 'test',
                 **TicketsWithIterationsPeriodMeta.get_attrs(),
@@ -149,8 +142,7 @@ tickets_with_iterations_common_params = {
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_emp_tribes_path,
-            {
+            CustomersActivitySqlPathIndex.get_emp_tribes_path, {
                 **TribeMeta.get_attrs(),
                 **TribesMeta.get_attrs(),
                 'EmpTribes': 'EmpTribes',
@@ -169,7 +161,7 @@ tickets_with_iterations_common_params = {
             CustomersActivitySqlPathIndex.get_customers_path,
             {
                 **CustomersMeta.get_attrs(),
-                 'Users': 'Users',
+                'Users': 'Users',
                 'TicketsWithIterations': 'TicketsWithIterations',
             },
         ),
@@ -191,9 +183,27 @@ tickets_with_iterations_common_params = {
         ),
         (
             CustomersActivitySqlPathIndex.get_tickets_types_path,
-            {
-                **TicketsTypesMeta.get_attrs(),
-            },
+            TicketsTypesMeta.get_attrs(),
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_frameworks_path,
+            FrameworksMeta.get_attrs(),
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_operating_systems_path,
+            OperatingSystemsMeta.get_attrs(),
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_builds_path,
+            BuildsMeta.get_attrs(),
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_severity_path,
+            SeverityMeta.get_attrs(),
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_ticket_statuses_path,
+            TicketStatusesMeta.get_attrs(),
         ),
     ],
 )

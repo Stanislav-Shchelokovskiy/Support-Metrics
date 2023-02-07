@@ -5,6 +5,11 @@ from repository.customers_activity.remote.tickets_and_iterations import (
 from repository.customers_activity.remote.tickets import (
     TicketsTagsRepository,
     TicketsTypesRepository,
+    FrameworksRepository,
+    OperatingSystemsRepository,
+    BuildsRepository,
+    SeverityRepository,
+    TicketStatusesRepository,
 )
 from repository.customers_activity.remote.customers_groups import (
     CustomersGroupsRepository,
@@ -27,6 +32,11 @@ from repository.customers_activity.local.customers import (
 from repository.customers_activity.local.tickets import (
     TicketsTypesRepository as SqliteTicketsTypesRepository,
     TicketsTagsRepository as SqliteTicketsTagsRepository,
+    FrameworksRepository as SqliteFrameworksRepository,
+    OperatingSystemsRepository as SqliteOperatingSystemsRepository,
+    BuildsRepository as SqliteBuildsRepository,
+    SeverityRepository as SqliteSeverityRepository,
+    TicketStatueseRepository as SqliteTicketStatueseRepository,
 )
 from repository.customers_activity.local.licenses_conversion import (
     LicenseStatusesRepository as SqliteLicenseStatusesRepository,
@@ -91,9 +101,23 @@ class SqlServerFactory:
     def create_employees_iterations_repository(self, **kwargs)-> EmployeesIterationsRepository:
         return EmployeesIterationsRepository()
 
-    def creaate_tickets_types_repository(self, **kwargs)->TicketsTypesRepository:
+    def create_tickets_types_repository(self, **kwargs) -> TicketsTypesRepository:
         return TicketsTypesRepository()
 
+    def create_frameworks_repository(self, **kwargs) -> FrameworksRepository:
+        return FrameworksRepository()
+
+    def create_operating_systems_repository(self, **kwargs) -> OperatingSystemsRepository:
+        return OperatingSystemsRepository()
+
+    def create_builds_repository(self, **kwargs) -> BuildsRepository:
+        return BuildsRepository()
+
+    def create_severity_repository(self, **kwargs) -> SeverityRepository:
+        return SeverityRepository()
+
+    def create_ticket_statuses_repository(self, **kwargs) -> TicketStatusesRepository:
+        return TicketStatusesRepository()
 
 class SqliteFactory:
 
@@ -114,6 +138,21 @@ class SqliteFactory:
 
     def create_reply_types_repository(self, **kwargs) -> SqliteReplyTypesRepository:
         return SqliteReplyTypesRepository()
+
+    def create_frameworks_repository(self, **kwargs) -> SqliteFrameworksRepository:
+        return SqliteFrameworksRepository()
+
+    def create_operating_systems_repository(self, **kwargs) -> SqliteOperatingSystemsRepository:
+        return SqliteOperatingSystemsRepository()
+
+    def create_builds_repository(self, **kwargs) -> SqliteBuildsRepository:
+        return SqliteBuildsRepository()
+
+    def create_severity_repository(self, **kwargs) -> SqliteSeverityRepository:
+        return SqliteSeverityRepository()
+
+    def create_ticket_statuses_repository(self, **kwargs) -> SqliteTicketStatueseRepository:
+        return SqliteTicketStatueseRepository()
 
     def create_license_statuses_repository(self, **kwargs) -> SqliteLicenseStatusesRepository:
         return SqliteLicenseStatusesRepository()

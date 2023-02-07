@@ -36,6 +36,31 @@ def customers_activity_get_replies_types() -> str:
     return repository.get_data_json()
 
 
+def customers_activity_get_frameworks() -> str:
+    repository = RepositoryFactory.customers_activity.local.create_frameworks_repository()
+    return repository.get_data_json()
+
+
+def customers_activity_get_operating_systems() -> str:
+    repository = RepositoryFactory.customers_activity.local.create_operating_systems_repository()
+    return repository.get_data_json()
+
+
+def customers_activity_get_builds() -> str:
+    repository = RepositoryFactory.customers_activity.local.create_builds_repository()
+    return repository.get_data_json()
+
+
+def customers_activity_get_severity_values() -> str:
+    repository = RepositoryFactory.customers_activity.local.create_severity_repository()
+    return repository.get_data_json()
+
+
+def customers_activity_get_ticket_statuses() -> str:
+    repository = RepositoryFactory.customers_activity.local.create_ticket_statuses_repository()
+    return repository.get_data_json()
+
+
 def customers_activity_get_license_statuses() -> str:
     repository = RepositoryFactory.customers_activity.local.create_license_statuses_repository()
     return repository.get_data_json()

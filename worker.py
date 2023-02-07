@@ -23,6 +23,8 @@ def on_startup(sender, **kwargs):
         'customers_activity_load_license_statuses',
         'customers_activity_load_conversion_statuses',
         'customers_activity_load_tribes',
+        'customers_activity_load_severity_values',
+        'customers_activity_load_ticket_statuses',
         'update_customers_activity',
     ]
     sender_app: Celery = sender.app
@@ -53,6 +55,9 @@ def update_customers_activity(**kwargs):
             customers_activity_load_tags.si(),
             customers_activity_load_groups.si(),
             customers_activity_load_tracked_groups.si(),
+            customers_activity_load_frameworks.si(),
+            customers_activity_load_operating_systems.si(),
+            customers_activity_load_builds.si(),
             customers_activity_load_replies_types.si(),
             customers_activity_load_components_features.si(),
             customers_activity_load_platforms_products.si(),
@@ -68,6 +73,47 @@ def customers_activity_load_tickets_types(self, **kwargs):
         self,
         customers_activity.load_tickets_types,
     )
+
+
+@app.task(name='customers_activity_load_frameworks', bind=True)
+def customers_activity_load_frameworks(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.load_frameworks,
+    )
+
+
+@app.task(name='customers_activity_load_operating_systems', bind=True)
+def customers_activity_load_operating_systems(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.load_operating_systems,
+    )
+
+
+@app.task(name='customers_activity_load_builds', bind=True)
+def customers_activity_load_builds(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.load_builds,
+    )
+
+
+@app.task(name='customers_activity_load_severity_values', bind=True)
+def customers_activity_load_severity_values(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.load_severity_values,
+    )
+
+
+@app.task(name='customers_activity_load_ticket_statuses', bind=True)
+def customers_activity_load_ticket_statuses(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.load_ticket_statuses,
+    )
+
 
 @app.task(name='customers_activity_load_tribes', bind=True)
 def customers_activity_load_tribes(self, **kwargs):
