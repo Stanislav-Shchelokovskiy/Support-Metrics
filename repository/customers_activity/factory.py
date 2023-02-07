@@ -10,6 +10,7 @@ from repository.customers_activity.remote.tickets import (
     BuildsRepository,
     SeverityRepository,
     TicketStatusesRepository,
+    IDEsRepository,
 )
 from repository.customers_activity.remote.customers_groups import (
     CustomersGroupsRepository,
@@ -37,6 +38,7 @@ from repository.customers_activity.local.tickets import (
     BuildsRepository as SqliteBuildsRepository,
     SeverityRepository as SqliteSeverityRepository,
     TicketStatueseRepository as SqliteTicketStatueseRepository,
+    IDEsRepository as SqliteIDEsRepository,
 )
 from repository.customers_activity.local.licenses_conversion import (
     LicenseStatusesRepository as SqliteLicenseStatusesRepository,
@@ -119,6 +121,9 @@ class SqlServerFactory:
     def create_ticket_statuses_repository(self, **kwargs) -> TicketStatusesRepository:
         return TicketStatusesRepository()
 
+    def create_ides_repository(self, **kwargs) -> IDEsRepository:
+        return IDEsRepository()
+
 class SqliteFactory:
 
     def create_tickets_with_iterations_period_repository(self, **kwargs) -> SqliteTicketsWithIterationsPeriodRepository:
@@ -153,6 +158,9 @@ class SqliteFactory:
 
     def create_ticket_statuses_repository(self, **kwargs) -> SqliteTicketStatueseRepository:
         return SqliteTicketStatueseRepository()
+    
+    def create_ides_repository(self, **kwargs) -> SqliteIDEsRepository:
+        return SqliteIDEsRepository()
 
     def create_license_statuses_repository(self, **kwargs) -> SqliteLicenseStatusesRepository:
         return SqliteLicenseStatusesRepository()

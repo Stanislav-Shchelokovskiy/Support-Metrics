@@ -95,6 +95,11 @@ def load_ticket_statuses():
     df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_ticket_statuses_name(): df})
 
+def load_ides():
+    repository = RepositoryFactory.customers_activity.remote.create_ides_repository()
+    df = repository.get_data()
+    _save_tables(tables={CustomersActivityDBIndex.get_ides_name(): df})
+
 def load_tribes():
     tribes_str = Network.get_data(end_point= f'http://{os.environ["QUERY_SERVICE"]}/get_available_tribes')
     tribes = json.loads(tribes_str)

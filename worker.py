@@ -23,8 +23,13 @@ def on_startup(sender, **kwargs):
         'customers_activity_load_license_statuses',
         'customers_activity_load_conversion_statuses',
         'customers_activity_load_tribes',
+        'customers_activity_load_operating_systems',
+        'customers_activity_load_frameworks',
         'customers_activity_load_severity_values',
         'customers_activity_load_ticket_statuses',
+        'customers_activity_load_replies_types',
+        'customers_activity_load_platforms_products',
+        'customers_activity_load_ides',
         'update_customers_activity',
     ]
     sender_app: Celery = sender.app
@@ -55,12 +60,8 @@ def update_customers_activity(**kwargs):
             customers_activity_load_tags.si(),
             customers_activity_load_groups.si(),
             customers_activity_load_tracked_groups.si(),
-            customers_activity_load_frameworks.si(),
-            customers_activity_load_operating_systems.si(),
             customers_activity_load_builds.si(),
-            customers_activity_load_replies_types.si(),
             customers_activity_load_components_features.si(),
-            customers_activity_load_platforms_products.si(),
             customers_activity_load_customers_tickets.si(),
             customers_activity_load_employees_iterations.si(),
         ]
@@ -112,6 +113,14 @@ def customers_activity_load_ticket_statuses(self, **kwargs):
     return run_retriable_task(
         self,
         customers_activity.load_ticket_statuses,
+    )
+
+
+@app.task(name='customers_activity_load_ides', bind=True)
+def customers_activity_load_ides(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.load_ides,
     )
 
 

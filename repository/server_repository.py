@@ -61,6 +61,11 @@ def customers_activity_get_ticket_statuses() -> str:
     return repository.get_data_json()
 
 
+def customers_activity_get_ides() -> str:
+    repository = RepositoryFactory.customers_activity.local.create_ides_repository()
+    return repository.get_data_json()
+
+
 def customers_activity_get_license_statuses() -> str:
     repository = RepositoryFactory.customers_activity.local.create_license_statuses_repository()
     return repository.get_data_json()

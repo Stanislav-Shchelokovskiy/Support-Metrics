@@ -8,6 +8,7 @@ from sql_queries.customers_activity.meta import (
     BuildsMeta,
     SeverityMeta,
     TicketStatusesMeta,
+    IDEsMeta,
 )
 
 
@@ -114,3 +115,18 @@ class TicketStatusesRepository(Repository):
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
         return TicketStatusesMeta.get_values()
+
+
+class IDEsRepository(Repository):
+    """
+    Loads ticket ides.
+    """
+
+    def get_main_query_path(self, kwargs: dict) -> str:
+        return CustomersActivitySqlPathIndex.get_ides_path()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return IDEsMeta.get_attrs()
+
+    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+        return IDEsMeta.get_values()

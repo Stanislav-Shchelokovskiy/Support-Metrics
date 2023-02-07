@@ -12,6 +12,7 @@ from sql_queries.customers_activity.meta import (
     BuildsMeta,
     SeverityMeta,
     TicketStatusesMeta,
+    IDEsMeta,
 )
 
 
@@ -101,6 +102,16 @@ def get_create_table_statements() -> dict[str, str]:
                     'id_type': 'TEXT',
                     'name': TicketStatusesMeta.name,
                     'table': CustomersActivityDBIndex.get_ticket_statuses_name(),
+                }
+            ),
+
+        CustomersActivityDBIndex.get_ides_name():
+            _knot_table_def(
+                format_params={
+                    'id' : IDEsMeta.id,
+                    'id_type': 'TEXT',
+                    'name': IDEsMeta.name,
+                    'table': CustomersActivityDBIndex.get_ides_name(),
                 }
             ),
 

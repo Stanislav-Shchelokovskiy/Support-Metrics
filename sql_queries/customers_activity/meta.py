@@ -53,6 +53,9 @@ class SeverityMeta(KnotMeta):
 class TicketStatusesMeta(KnotMeta):
     pass
 
+class IDEsMeta(KnotMeta):
+    pass
+
 
 class CATRepliesTypesMeta(KnotMeta):
     pass

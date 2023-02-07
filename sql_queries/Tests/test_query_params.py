@@ -31,6 +31,7 @@ from sql_queries.customers_activity.meta import (
     BuildsMeta,
     SeverityMeta,
     TicketStatusesMeta,
+    IDEsMeta,
 )
 
 
@@ -204,6 +205,10 @@ tickets_with_iterations_common_params = {
         (
             CustomersActivitySqlPathIndex.get_ticket_statuses_path,
             TicketStatusesMeta.get_attrs(),
+        ),
+        (
+            CustomersActivitySqlPathIndex.get_ides_path,
+            IDEsMeta.get_attrs(),
         ),
     ],
 )

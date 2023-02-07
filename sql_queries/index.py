@@ -77,6 +77,10 @@ class CustomersActivitySqlPathIndex:
         )
 
     @staticmethod
+    def get_ides_path() -> str:
+        return CustomersActivitySqlPathIndex.get_extract_path() + '/ides.sql'
+
+    @staticmethod
     def get_ticket_statuses_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_extract_path()
@@ -259,6 +263,10 @@ class CustomersActivityDBIndex:
     @staticmethod
     def get_ticket_statuses_name() -> str:
         return CustomersActivityDBIndex.get_root_name() + 'TicketStatuses'
+
+    @staticmethod
+    def get_ides_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'ides'
 
     @staticmethod
     def get_license_statuses_name() -> str:
