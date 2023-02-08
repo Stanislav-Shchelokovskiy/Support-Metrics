@@ -74,12 +74,21 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             values_converter=str,
         )
 
-    def generate_builds_filter(params: FilterParametersNode) -> str:
+    def generate_fixed_in_builds_filter(params: FilterParametersNode, ) -> str:
+        return TicketsWithIterationsSqlFilterClauseGenerator.generate_builds_filter(
+            params=params,
+            col=TicketsWithIterationsMeta.fixed_in_builds,
+        )
+
+    def generate_builds_filter(
+        params: FilterParametersNode,
+        col: str = TicketsWithIterationsMeta.builds
+    ) -> str:
         generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_like_filter_generator(
             params
         )
         return generate_filter(
-            col=TicketsWithIterationsMeta.builds,
+            col=col,
             values=params.values,
             filter_prefix='AND',
         )

@@ -67,6 +67,7 @@ def get_tickets_filter(
             filter_generator.generate_ticket_types_filter(params=kwargs['tickets_types']),
             filter_generator.generate_duplicated_to_ticket_types_filter(params=kwargs['duplicated_to_tickets_types']),
             filter_generator.generate_builds_filter(params=kwargs['builds']),
+            filter_generator.generate_fixed_in_builds_filter(params=kwargs['fixed_in_builds']),
             filter_generator.generate_severity_filter(params=kwargs['severity']),
             filter_generator.generate_ticket_status_filter(params=kwargs['ticket_status']),
             filter_generator.generate_frameworks_filter(params=kwargs['frameworks']),
