@@ -69,6 +69,8 @@ def get_tickets_filter(
             filter_generator.generate_builds_filter(params=kwargs['builds']),
             filter_generator.generate_severity_filter(params=kwargs['severity']),
             filter_generator.generate_ticket_status_filter(params=kwargs['ticket_status']),
+            filter_generator.generate_frameworks_filter(params=kwargs['frameworks']),
+            filter_generator.generate_operating_systems_filter(params=kwargs['operating_system_id']),
             filter_generator.generate_ides_filter(params=kwargs['ide_id']),
             filter_generator.generate_ticket_tags_filter(params=kwargs['tickets_tags']),
             try_get_customer_groups_filter(kwargs=kwargs, filter_generator=filter_generator),

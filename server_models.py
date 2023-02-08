@@ -68,6 +68,8 @@ class TicketsWithIterationsParams(ServerModel):
     builds: FilterParametersNode | None = Field(alias='Versions')
     severity: FilterParametersNode | None = Field(alias='Severity')
     ticket_status: FilterParametersNode | None = Field(alias='Ticket status')
+    operating_system_id: FilterParametersNode | None = Field(alias='Operating systems')
+    frameworks: FilterParametersNode | None = Field(alias='Frameworks/Specifics')
     ide_id: FilterParametersNode | None = Field(alias='IDE')
     customers_groups: FilterParametersNode | None = Field(alias='User groups')
     license_statuses: FilterParametersNode | None = Field(alias='User types')

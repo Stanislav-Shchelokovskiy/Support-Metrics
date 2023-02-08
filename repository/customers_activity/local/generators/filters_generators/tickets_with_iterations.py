@@ -106,6 +106,27 @@ class TicketsWithIterationsSqlFilterClauseGenerator:
             values_converter=lambda val: f"'{val}'",
         )
 
+    def generate_operating_systems_filter(params: FilterParametersNode) -> str:
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
+            params
+        )
+        return generate_filter(
+            col=TicketsWithIterationsMeta.operating_system_id,
+            values=params.values,
+            filter_prefix='AND',
+            values_converter=lambda val: f"'{val}'",
+        )
+
+    def generate_frameworks_filter(params: FilterParametersNode) -> str:
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_like_filter_generator(
+            params
+        )
+        return generate_filter(
+            col=TicketsWithIterationsMeta.frameworks,
+            values=params.values,
+            filter_prefix='AND',
+        )
+
     def generate_ides_filter(params: FilterParametersNode) -> str:
         generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
             params

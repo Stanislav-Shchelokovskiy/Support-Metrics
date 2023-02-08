@@ -832,6 +832,7 @@ def test_generate_ticket_status_filter(
         params=input
     ) == output
 
+
 @pytest.mark.parametrize(
     'input,output', [
         (
@@ -865,5 +866,79 @@ def test_generate_ides_filter(
     output: str,
 ):
     assert TicketsWithIterationsSqlFilterClauseGenerator.generate_ides_filter(
+        params=input
+    ) == output
+
+
+@pytest.mark.parametrize(
+    'input,output', [
+        (
+            MockFilterParametersNode(include=True, values=[]),
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[]),
+            f'AND {TicketsWithIterationsMeta.operating_system_id} IS NULL',
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['qwe', 'asd']),
+            f"AND {TicketsWithIterationsMeta.operating_system_id} IN ('qwe','asd')",
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['qwe']),
+            f"AND {TicketsWithIterationsMeta.operating_system_id} IN ('qwe')",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['qwe', 'asd']),
+            f"AND ({TicketsWithIterationsMeta.operating_system_id} IS NULL OR {TicketsWithIterationsMeta.operating_system_id} NOT IN ('qwe','asd'))",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['qwe']),
+            f"AND ({TicketsWithIterationsMeta.operating_system_id} IS NULL OR {TicketsWithIterationsMeta.operating_system_id} NOT IN ('qwe'))",
+        ),
+    ]
+)
+def test_generate_operating_systems_filter(
+    input: MockFilterParametersNode,
+    output: str,
+):
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_operating_systems_filter(
+        params=input
+    ) == output
+
+
+@pytest.mark.parametrize(
+    'input,output', [
+        (
+            MockFilterParametersNode(include=True, values=[]),
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[]),
+            f'AND {TicketsWithIterationsMeta.frameworks} IS NULL',
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['p1', 'p2']),
+            f"AND ({TicketsWithIterationsMeta.frameworks} LIKE '%p1%' OR {TicketsWithIterationsMeta.frameworks} LIKE '%p2%')"
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['p1']),
+            f"AND ({TicketsWithIterationsMeta.frameworks} LIKE '%p1%')"
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['p1', 'p2']),
+            f"AND ({TicketsWithIterationsMeta.frameworks} IS NULL OR NOT ({TicketsWithIterationsMeta.frameworks} LIKE '%p1%' OR {TicketsWithIterationsMeta.frameworks} LIKE '%p2%'))"
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['p1']),
+            f"AND ({TicketsWithIterationsMeta.frameworks} IS NULL OR NOT ({TicketsWithIterationsMeta.frameworks} LIKE '%p1%'))"
+        ),
+    ]
+)
+def test_generate_frameworks_filter(
+    input: MockFilterParametersNode,
+    output: str,
+):
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_frameworks_filter(
         params=input
     ) == output

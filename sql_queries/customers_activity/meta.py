@@ -107,7 +107,7 @@ class TicketsWithPropertiesMeta(TicketTribeMeta):
     ticket_tags = 'ticket_tags'
     platforms = 'platforms'
     products = 'products'
-    specifics = 'specifics'
+    frameworks = 'frameworks'
     builds = 'builds'
     fixed_in_builds = 'fixed_in_builds'
     fixed_by = 'fixed_by'

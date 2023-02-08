@@ -14,7 +14,7 @@ SELECT
     t.{ticket_tags},
     t.{platforms},
     t.{products},
-    t.{specifics},
+    t.{frameworks},
     t.{builds},
     t.{fixed_in_builds},
     t.{fixed_by},

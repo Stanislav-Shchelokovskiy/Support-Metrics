@@ -25,6 +25,8 @@ from sql_queries.customers_activity.meta import (
     SeverityMeta,
     TicketStatusesMeta,
     IDEsMeta,
+    OperatingSystemsMeta,
+    FrameworksMeta,
 )
 
 
@@ -89,6 +91,18 @@ query_params_store = {
             table=CustomersActivityDBIndex.get_ticket_statuses_name(),
             value_field=TicketStatusesMeta.id,
             display_field=TicketStatusesMeta.name,
+        ),
+    'frameworks':
+        QueryParams(
+            table=CustomersActivityDBIndex.get_frameworks_name(),
+            value_field=FrameworksMeta.id,
+            display_field=FrameworksMeta.name,
+        ),
+    'operating_system_id':
+        QueryParams(
+            table=CustomersActivityDBIndex.get_operating_systems_name(),
+            value_field=OperatingSystemsMeta.id,
+            display_field=OperatingSystemsMeta.name,
         ),
     'ide_id':
         QueryParams(

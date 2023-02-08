@@ -52,7 +52,7 @@ SELECT
 	tt.tags								AS {ticket_tags},
 	multi_selectors.platforms_ids		AS {platforms},
 	multi_selectors.products_ids		AS {products},
-	multi_selectors.specifics_ids		AS {specifics},
+	multi_selectors.specifics_ids		AS {frameworks},
 	multi_selectors.builds_ids			AS {builds},
 	multi_selectors.fixed_in_builds_ids	AS {fixed_in_builds},
 	fixed_info.fixed_by					AS {fixed_by},
