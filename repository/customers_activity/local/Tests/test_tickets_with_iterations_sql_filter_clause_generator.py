@@ -794,3 +794,76 @@ def test_generate_severity_filter(
     assert TicketsWithIterationsSqlFilterClauseGenerator.generate_severity_filter(
         params=input
     ) == output
+
+
+@pytest.mark.parametrize(
+    'input,output', [
+        (
+            MockFilterParametersNode(include=True, values=[]),
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[]),
+            f'AND {TicketsWithIterationsMeta.ticket_status} IS NULL',
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['qwe', 'asd']),
+            f"AND {TicketsWithIterationsMeta.ticket_status} IN ('qwe','asd')",
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['qwe']),
+            f"AND {TicketsWithIterationsMeta.ticket_status} IN ('qwe')",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['qwe', 'asd']),
+            f"AND ({TicketsWithIterationsMeta.ticket_status} IS NULL OR {TicketsWithIterationsMeta.ticket_status} NOT IN ('qwe','asd'))",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['qwe']),
+            f"AND ({TicketsWithIterationsMeta.ticket_status} IS NULL OR {TicketsWithIterationsMeta.ticket_status} NOT IN ('qwe'))",
+        ),
+    ]
+)
+def test_generate_ticket_status_filter(
+    input: MockFilterParametersNode,
+    output: str,
+):
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_ticket_status_filter(
+        params=input
+    ) == output
+
+@pytest.mark.parametrize(
+    'input,output', [
+        (
+            MockFilterParametersNode(include=True, values=[]),
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[]),
+            f'AND {TicketsWithIterationsMeta.ide_id} IS NULL',
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['qwe', 'asd']),
+            f"AND {TicketsWithIterationsMeta.ide_id} IN ('qwe','asd')",
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['qwe']),
+            f"AND {TicketsWithIterationsMeta.ide_id} IN ('qwe')",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['qwe', 'asd']),
+            f"AND ({TicketsWithIterationsMeta.ide_id} IS NULL OR {TicketsWithIterationsMeta.ide_id} NOT IN ('qwe','asd'))",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['qwe']),
+            f"AND ({TicketsWithIterationsMeta.ide_id} IS NULL OR {TicketsWithIterationsMeta.ide_id} NOT IN ('qwe'))",
+        ),
+    ]
+)
+def test_generate_ides_filter(
+    input: MockFilterParametersNode,
+    output: str,
+):
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_ides_filter(
+        params=input
+    ) == output

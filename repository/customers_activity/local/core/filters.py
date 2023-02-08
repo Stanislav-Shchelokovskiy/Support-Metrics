@@ -68,6 +68,8 @@ def get_tickets_filter(
             filter_generator.generate_duplicated_to_ticket_types_filter(params=kwargs['duplicated_to_tickets_types']),
             filter_generator.generate_builds_filter(params=kwargs['builds']),
             filter_generator.generate_severity_filter(params=kwargs['severity']),
+            filter_generator.generate_ticket_status_filter(params=kwargs['ticket_status']),
+            filter_generator.generate_ides_filter(params=kwargs['ide_id']),
             filter_generator.generate_ticket_tags_filter(params=kwargs['tickets_tags']),
             try_get_customer_groups_filter(kwargs=kwargs, filter_generator=filter_generator),
             filter_generator.generate_license_status_filter(params=kwargs['license_statuses']),

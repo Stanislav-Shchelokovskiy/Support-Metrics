@@ -22,6 +22,9 @@ from sql_queries.customers_activity.meta import (
     CATRepliesTypesMeta,
     CATComponentsFeaturesMeta,
     CustomersMeta,
+    SeverityMeta,
+    TicketStatusesMeta,
+    IDEsMeta,
 )
 
 
@@ -74,6 +77,24 @@ query_params_store = {
             table=CustomersActivityDBIndex.get_tickets_types_name(),
             value_field=TicketsTypesMeta.id,
             display_field=TicketsTypesMeta.name,
+        ),
+    'severity':
+        QueryParams(
+            table=CustomersActivityDBIndex.get_severity_name(),
+            value_field=SeverityMeta.id,
+            display_field=SeverityMeta.name,
+        ),
+    'ticket_status':
+        QueryParams(
+            table=CustomersActivityDBIndex.get_ticket_statuses_name(),
+            value_field=TicketStatusesMeta.id,
+            display_field=TicketStatusesMeta.name,
+        ),
+    'ide_id':
+        QueryParams(
+            table=CustomersActivityDBIndex.get_ides_name(),
+            value_field=IDEsMeta.id,
+            display_field=IDEsMeta.name,
         ),
     'customers_groups':
         QueryParams(

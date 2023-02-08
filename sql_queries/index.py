@@ -266,7 +266,7 @@ class CustomersActivityDBIndex:
 
     @staticmethod
     def get_ides_name() -> str:
-        return CustomersActivityDBIndex.get_root_name() + 'ides'
+        return CustomersActivityDBIndex.get_root_name() + 'IDEs'
 
     @staticmethod
     def get_license_statuses_name() -> str:
