@@ -720,3 +720,77 @@ def test_get_percentile_filter(
         alias=alias,
         percentile=percentile,
     ) == output
+
+
+@pytest.mark.parametrize(
+    'input,output', [
+        (
+            MockFilterParametersNode(include=True, values=[]),
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[]),
+            f'AND {TicketsWithIterationsMeta.builds} IS NULL',
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['p1', 'p2']),
+            f"AND ({TicketsWithIterationsMeta.builds} LIKE '%p1%' OR {TicketsWithIterationsMeta.builds} LIKE '%p2%')"
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['p1']),
+            f"AND ({TicketsWithIterationsMeta.builds} LIKE '%p1%')"
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['p1', 'p2']),
+            f"AND ({TicketsWithIterationsMeta.builds} IS NULL OR NOT ({TicketsWithIterationsMeta.builds} LIKE '%p1%' OR {TicketsWithIterationsMeta.builds} LIKE '%p2%'))"
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['p1']),
+            f"AND ({TicketsWithIterationsMeta.builds} IS NULL OR NOT ({TicketsWithIterationsMeta.builds} LIKE '%p1%'))"
+        ),
+    ]
+)
+def test_generate_builds_filter(
+    input: MockFilterParametersNode,
+    output: str,
+):
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_builds_filter(
+        params=input
+    ) == output
+
+
+@pytest.mark.parametrize(
+    'input,output', [
+        (
+            MockFilterParametersNode(include=True, values=[]),
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[]),
+            f'AND {TicketsWithIterationsMeta.severity} IS NULL',
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['qwe', 'asd']),
+            f"AND {TicketsWithIterationsMeta.severity} IN ('qwe','asd')",
+        ),
+        (
+            MockFilterParametersNode(include=True, values=['qwe']),
+            f"AND {TicketsWithIterationsMeta.severity} IN ('qwe')",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['qwe', 'asd']),
+            f"AND ({TicketsWithIterationsMeta.severity} IS NULL OR {TicketsWithIterationsMeta.severity} NOT IN ('qwe','asd'))",
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['qwe']),
+            f"AND ({TicketsWithIterationsMeta.severity} IS NULL OR {TicketsWithIterationsMeta.severity} NOT IN ('qwe'))",
+        ),
+    ]
+)
+def test_generate_severity_filter(
+    input: MockFilterParametersNode,
+    output: str,
+):
+    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_severity_filter(
+        params=input
+    ) == output
