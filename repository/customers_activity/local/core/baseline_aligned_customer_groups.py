@@ -42,9 +42,9 @@ FROM    ( SELECT *
 LEFT JOIN (
     SELECT {BaselineAlignedModeMeta.user_crmid}
     FROM   {CustomersActivityDBIndex.get_tracked_customers_groups_name()}
-    WHERE  {filter_generator.generate_tracked_customer_groups_filter(
+    {filter_generator.generate_tracked_customer_groups_filter(
         params=kwargs['customers_groups'], 
-        col=BaselineAlignedModeMeta.id, filter_prefix='')}
+        col=BaselineAlignedModeMeta.id, filter_prefix='WHERE')}
 ) AS tcg ON tcg.user_crmid = twi.user_crmid
 WHERE tcg.user_crmid IS NULL
 )"""
