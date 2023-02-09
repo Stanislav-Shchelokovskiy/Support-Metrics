@@ -58,7 +58,8 @@ CREATE INDEX idx_{TicketsWithIterations}_tickets_inner ON {TicketsWithIterations
     {tribe_id},
     {ticket_type},
     {license_status},
-    {emp_position_id}
+    {emp_position_id},
+    {is_private}
 );
 
 CREATE INDEX idx_{TicketsWithIterations}_iterations_inner ON {TicketsWithIterations}(
@@ -68,7 +69,8 @@ CREATE INDEX idx_{TicketsWithIterations}_iterations_inner ON {TicketsWithIterati
     {tribe_id},
     {ticket_type},
     {license_status},
-    {emp_position_id}
+    {emp_position_id},
+    {is_private}
 );
 
 CREATE INDEX idx_{TicketsWithIterations}_outer ON {TicketsWithIterations}(
