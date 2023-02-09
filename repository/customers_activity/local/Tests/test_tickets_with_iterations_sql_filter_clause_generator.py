@@ -1,5 +1,5 @@
 import pytest
-from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta, BaselineAlignedModeMeta
 from sql_queries.index import CustomersActivityDBIndex
 from repository.customers_activity.local.Tests.mocks import (
@@ -33,7 +33,7 @@ def test_generate_creation_date_filter(
     kwargs: dict,
     output,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_creation_date_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.common.generate_creation_date_filter(
         **kwargs
     ) == output
 
@@ -53,7 +53,7 @@ def test_generate_creation_date_with_offset_start_filter(
     kwargs: dict,
     output,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_creation_date_with_rank_offset_start_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.common.generate_creation_date_with_rank_offset_start_filter(
         **kwargs
     ) == output
 
@@ -90,7 +90,7 @@ def test_generate_customer_groups_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_customer_groups_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.customers.generate_customer_groups_filter(
         params=input
     ) == output
 
@@ -127,7 +127,7 @@ def test_generate_tracked_customer_groups_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_tracked_customer_groups_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.customers.generate_tracked_customer_groups_filter(
         params=input
     ) == output
 
@@ -164,7 +164,7 @@ def test_generate_ticket_types_filter(
     ticket_types: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_ticket_types_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.tickets_types.generate_ticket_types_filter(
         params=ticket_types
     ) == output
 
@@ -201,7 +201,7 @@ def test_generate_duplicated_to_ticket_types_filter(
     ticket_types: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_duplicated_to_ticket_types_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.tickets_types.generate_duplicated_to_ticket_types_filter(
         params=ticket_types
     ) == output
 
@@ -238,7 +238,7 @@ def test_generate_ticket_tags_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_ticket_tags_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.tickets.generate_ticket_tags_filter(
         params=input
     ) == output
 
@@ -275,7 +275,7 @@ def test_generate_tribes_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_tribes_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.tickets.generate_tribes_filter(
         params=input
     ) == output
 
@@ -312,7 +312,7 @@ def test_generate_reply_types_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_reply_types_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.cat.generate_reply_types_filter(
         params=input
     ) == output
 
@@ -349,7 +349,7 @@ def test_generate_components_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_components_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.cat.generate_components_filter(
         params=input
     ) == output
 
@@ -386,7 +386,7 @@ def test_generate_features_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_features_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.cat.generate_features_filter(
         params=input
     ) == output
 
@@ -423,7 +423,7 @@ def test_generate_license_status_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_license_status_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.customers.generate_license_status_filter(
         params=input
     ) == output
 
@@ -460,7 +460,7 @@ def test_generate_conversion_status_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_conversion_status_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.customers.generate_conversion_status_filter(
         params=input
     ) == output
 
@@ -497,7 +497,7 @@ def test_generate_platforms_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_platforms_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.platforms_products.generate_platforms_filter(
         params=input
     ) == output
 
@@ -534,7 +534,7 @@ def test_generate_products_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_products_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.platforms_products.generate_products_filter(
         params=input
     ) == output
 
@@ -571,7 +571,7 @@ def test_generate_emp_positions_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_emp_positions_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.employees.generate_emp_positions_filter(
         params=input
     ) == output
 
@@ -608,7 +608,7 @@ def test_generate_emp_tribes_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_emp_tribes_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.employees.generate_emp_tribes_filter(
         params=input
     ) == output
 
@@ -645,7 +645,7 @@ def test_generate_employees_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_employees_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.employees.generate_employees_filter(
         params=input
     ) == output
 
@@ -682,7 +682,7 @@ def test_generate_customers_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_customers_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.customers.generate_customers_filter(
         params=input
     ) == output
 
@@ -716,7 +716,7 @@ def test_get_percentile_filter(
     percentile: MockPercentile,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.get_percentile_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.limit.get_percentile_filter(
         alias=alias,
         percentile=percentile,
     ) == output
@@ -754,7 +754,7 @@ def test_generate_builds_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_builds_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.tickets.generate_builds_filter(
         params=input
     ) == output
 
@@ -791,7 +791,7 @@ def test_generate_severity_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_severity_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.bugs.generate_severity_filter(
         params=input
     ) == output
 
@@ -828,7 +828,7 @@ def test_generate_ticket_status_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_ticket_status_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.bugs.generate_ticket_status_filter(
         params=input
     ) == output
 
@@ -865,7 +865,7 @@ def test_generate_ides_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_ides_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.tickets.generate_ides_filter(
         params=input
     ) == output
 
@@ -902,7 +902,7 @@ def test_generate_operating_systems_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_operating_systems_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.tickets.generate_operating_systems_filter(
         params=input
     ) == output
 
@@ -939,6 +939,12 @@ def test_generate_frameworks_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.generate_frameworks_filter(
+    assert TicketsWithIterationsSqlFilterClauseGenerator.tickets.generate_frameworks_filter(
         params=input
     ) == output
+
+
+def test_generate_privacy_filter():
+    assert TicketsWithIterationsSqlFilterClauseGenerator.tickets.generate_privacy_filter(
+        params=MockFilterParameterNode(include=True, value=100),
+    ) == f'AND {TicketsWithIterationsMeta.is_private} = 100'

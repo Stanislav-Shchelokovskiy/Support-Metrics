@@ -3,7 +3,7 @@ from sql_queries.customers_activity.meta import (
     BaselineAlignedModeMeta,
 )
 from sql_queries.index import CustomersActivityDBIndex
-from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
 from repository.customers_activity.local.core.filters import (
     build_filter_string,
     get_creation_date_and_tickets_filters,
@@ -26,7 +26,7 @@ INNER JOIN (
     FROM    {CustomersActivityDBIndex.get_tracked_customers_groups_name()}
     WHERE   {build_filter_string([
                 f"{BaselineAlignedModeMeta.assignment_date} BETWEEN '{kwargs['range_start']}' AND '{kwargs['range_end']}'",
-                filter_generator.generate_tracked_customer_groups_filter(params=kwargs['customers_groups'])
+                filter_generator.customers.generate_tracked_customer_groups_filter(params=kwargs['customers_groups'])
             ])}
 ) AS tcg ON tcg.user_crmid = twi.user_crmid
 WHERE {build_filter_string([
@@ -42,7 +42,7 @@ FROM    ( SELECT *
 LEFT JOIN (
     SELECT {BaselineAlignedModeMeta.user_crmid}
     FROM   {CustomersActivityDBIndex.get_tracked_customers_groups_name()}
-    {filter_generator.generate_tracked_customer_groups_filter(
+    {filter_generator.customers.generate_tracked_customer_groups_filter(
         params=kwargs['customers_groups'], 
         col=BaselineAlignedModeMeta.id, filter_prefix='WHERE')}
 ) AS tcg ON tcg.user_crmid = twi.user_crmid

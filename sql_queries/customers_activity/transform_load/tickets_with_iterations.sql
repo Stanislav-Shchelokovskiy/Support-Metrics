@@ -27,6 +27,7 @@ SELECT
     CAST(t.{conversion_status} AS INT)         AS {conversion_status},
     CAST(t.{duplicated_to_ticket_type} AS INT) AS {duplicated_to_ticket_type},
     t.{duplicated_to_ticket_scid},
+    t.{assigned_to},
     t.{operating_system_id},
     t.{ide_id},
     t.{reply_id},

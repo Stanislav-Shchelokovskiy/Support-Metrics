@@ -1,8 +1,10 @@
+from typing import Any
 from toolbox.sql.repository import SqliteRepository, Repository
-from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
 from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import (
     BaseNode,
     FilterParametersNode,
+    FilterParameterNode,
 )
 from repository.customers_activity.local.core.customers_rank import Percentile
 from sql_queries.index import (
@@ -181,7 +183,7 @@ class DisplayFilterGenerator:
         repository: Repository = SqliteRepository(),
     ) -> list[list]:
         filters = []
-        filter_node: BaseNode | FilterParametersNode | Percentile
+        filter_node: BaseNode | FilterParametersNode | FilterParameterNode | Percentile
         aliases = node.get_field_aliases()
         for field_name, filter_node in node.get_field_values().items():
             if not filter_node:
@@ -197,9 +199,15 @@ class DisplayFilterGenerator:
                 )
                 if not filter:
                     continue
+            elif isinstance(filter_node, FilterParameterNode):
+                display_value = DisplayFilterGenerator.get_display_value(
+                    field_name=field_name,
+                    value=filter_node.value,
+                )
+                filter = [field_alias, '=', display_value]
             elif isinstance(filter_node, Percentile):
                 percentile: Percentile = filter_node
-                percentile_filter = TicketsWithIterationsSqlFilterClauseGenerator.get_percentile_filter(
+                percentile_filter = TicketsWithIterationsSqlFilterClauseGenerator.limit.get_percentile_filter(
                         alias = field_alias,
                         percentile=percentile.value,
                 )
@@ -211,6 +219,12 @@ class DisplayFilterGenerator:
         if len(filters) == 1:
             return filters[0]
         return filters
+
+    @staticmethod
+    def get_display_value(field_name: str, value: Any):
+        if field_name == 'is_private':
+            value = 'Private' if value else 'Public'
+        return value
 
     @staticmethod
     def generate_filter_from_filter_parameters(

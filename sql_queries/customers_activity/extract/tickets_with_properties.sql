@@ -65,6 +65,7 @@ SELECT
 	ti.conversion_status				AS {conversion_status},
 	dups.ticket_type					AS {duplicated_to_ticket_type},
 	dups.ticket_scid					AS {duplicated_to_ticket_scid},
+	CAST(single_selectors.Assignee		  AS UNIQUEIDENTIFIER) AS {assigned_to},
 	CAST(single_selectors.OperatingSystem AS UNIQUEIDENTIFIER) AS {operating_system_id},
 	CAST(single_selectors.IDE			  AS UNIQUEIDENTIFIER) AS {ide_id},
 	CAST(single_selectors.ReplyId		  AS UNIQUEIDENTIFIER) AS {reply_id},
@@ -74,6 +75,7 @@ FROM tickets_with_licenses_and_conversion AS ti
 	OUTER APPLY (
 		SELECT
 			Ticket_Id,
+			[Assignee]			AS [Assignee],
 			[TicketStatus]		AS [TicketStatus],
 			[ReplyId]			AS [ReplyId],
 			[ControlId]			AS [ControlId],
@@ -83,8 +85,8 @@ FROM tickets_with_licenses_and_conversion AS ti
 			[Severity]			AS [Severity]
 		FROM (	SELECT Ticket_Id, Name, Value
 				FROM [SupportCenterPaid].[c1f0951c-3885-44cf-accb-1a390f34c342].[TicketProperties]
-				WHERE Name IN ('ReplyId', 'ControlId', 'FeatureId', 'OperatingSystem', 'IDE', 'Severity', 'TicketStatus') AND Ticket_Id = ti.ticket_id) AS tp
-		PIVOT(MIN(Value) FOR Name IN ([TicketStatus], [ReplyId], [ControlId], [FeatureId], [OperatingSystem], [IDE], [Severity])) AS value ) AS single_selectors
+				WHERE Name IN ('ReplyId', 'ControlId', 'FeatureId', 'OperatingSystem', 'IDE', 'Severity', 'TicketStatus', 'Assignee') AND Ticket_Id = ti.ticket_id) AS tp
+		PIVOT(MIN(Value) FOR Name IN ([Assignee], [TicketStatus], [ReplyId], [ControlId], [FeatureId], [OperatingSystem], [IDE], [Severity])) AS value ) AS single_selectors
 	OUTER APPLY (
 		SELECT 	
 			STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'PlatformedProductId' AND Value NOT LIKE '%:%', CAST(Value AS UNIQUEIDENTIFIER), NULL)), ' ') WITHIN GROUP (ORDER BY Value ASC) AS platforms_ids,

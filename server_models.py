@@ -59,6 +59,7 @@ class Percentile(ServerModel):
 # yapf: disable
 class TicketsWithIterationsParams(ServerModel):
     percentile: Percentile = Field(alias='Percentile')
+    is_private: FilterParameterNode | None = Field(alias='Privacy')
     tribe_ids: FilterParametersNode | None = Field(alias='Tribes')
     platforms_ids: FilterParametersNode | None = Field(alias='Platforms')
     products_ids: FilterParametersNode | None = Field(alias='Products')

@@ -20,6 +20,7 @@ class FilterParametersNode(BaseNode, Protocol):
     values: list
 
 
+@runtime_checkable
 class FilterParameterNode(BaseNode, Protocol):
     include: bool
     value: int

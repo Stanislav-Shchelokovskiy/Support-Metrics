@@ -120,6 +120,7 @@ class TicketsWithPropertiesMeta(TicketTribeMeta):
     conversion_status = 'conversion_status'
     duplicated_to_ticket_type = 'duplicated_to_ticket_type'
     duplicated_to_ticket_scid = 'duplicated_to_ticket_scid'
+    assigned_to = 'assigned_to'
     operating_system_id = 'operating_system_id'
     ide_id = 'ide_id'
     reply_id = 'reply_id'
