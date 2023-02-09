@@ -61,11 +61,15 @@ def get_tickets_filter(
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
 ) -> str:
     return build_filter_string([
-            filter_generator.tickets.generate_privacy_filter(params=kwargs['is_private']),
+        # index start
             filter_generator.tickets.generate_tribes_filter(params=kwargs['tribe_ids']),
+            filter_generator.tickets_types.generate_ticket_types_filter(params=kwargs['tickets_types']),
+            filter_generator.customers.generate_license_status_filter(params=kwargs['license_statuses']),
+            filter_generator.employees.generate_emp_positions_filter(params=kwargs['positions_ids']),
+            filter_generator.tickets.generate_privacy_filter(params=kwargs['is_private']),
+        # index end
             filter_generator.platforms_products.generate_platforms_filter(params=kwargs['platforms_ids']),
             filter_generator.platforms_products.generate_products_filter(params=kwargs['products_ids']),
-            filter_generator.tickets_types.generate_ticket_types_filter(params=kwargs['tickets_types']),
             filter_generator.tickets_types.generate_duplicated_to_ticket_types_filter(params=kwargs['duplicated_to_tickets_types']),
             filter_generator.tickets.generate_builds_filter(params=kwargs['builds']),
             filter_generator.bugs.generate_fixed_in_builds_filter(params=kwargs['fixed_in_builds']),
@@ -76,9 +80,7 @@ def get_tickets_filter(
             filter_generator.tickets.generate_ides_filter(params=kwargs['ide_id']),
             filter_generator.tickets.generate_ticket_tags_filter(params=kwargs['tickets_tags']),
             try_get_customer_groups_filter(kwargs=kwargs, filter_generator=filter_generator),
-            filter_generator.customers.generate_license_status_filter(params=kwargs['license_statuses']),
             filter_generator.customers.generate_conversion_status_filter(params=kwargs['conversion_statuses']),
-            filter_generator.employees.generate_emp_positions_filter(params=kwargs['positions_ids']),
             filter_generator.employees.generate_emp_tribes_filter(params=kwargs['emp_tribe_ids']),
             filter_generator.employees.generate_employees_filter(params=kwargs['emp_ids']),
             filter_generator.cat.generate_reply_types_filter(params=kwargs['reply_ids']),
