@@ -5,7 +5,7 @@ DECLARE @start_date DATE = '{start_date}'
 DECLARE @end_date   DATE = '{end_date}'
 
 DECLARE @free_license TINYINT = 6
-DECLARE @paid		  TINYINT = 0
+DECLARE @paid		  TINYINT = 5
 
 DECLARE @note			TINYINT = 3
 DECLARE @description	TINYINT = 0
@@ -73,7 +73,7 @@ licenses AS (
 		CROSS APPLY(
 			SELECT Status
 			FROM CRM.dbo.Orders
-			WHERE ProcessedDate IS NOT NULL AND Id = oi.Order_Id) AS o
+			WHERE Status IN (@paid, @free_license) AND Id = oi.Order_Id) AS o
 		CROSS APPLY(
 			SELECT Id
 			FROM CRM.dbo.SaleItems
