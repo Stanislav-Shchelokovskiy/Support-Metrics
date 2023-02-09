@@ -7,6 +7,12 @@ from sql_queries.customers_activity.meta import (
     CustomersGroupsMeta,
     LicenseStatusesMeta,
     CATRepliesTypesMeta,
+    FrameworksMeta,
+    OperatingSystemsMeta,
+    BuildsMeta,
+    SeverityMeta,
+    TicketStatusesMeta,
+    IDEsMeta,
 )
 
 
@@ -46,6 +52,66 @@ def get_create_table_statements() -> dict[str, str]:
                     'id_type': 'INT',
                     'name': TicketsTypesMeta.name,
                     'table': CustomersActivityDBIndex.get_tickets_types_name(),
+                }
+            ),
+
+        CustomersActivityDBIndex.get_frameworks_name():
+            _knot_table_def(
+                format_params={
+                    'id' : FrameworksMeta.id,
+                    'id_type': 'TEXT',
+                    'name': FrameworksMeta.name,
+                    'table': CustomersActivityDBIndex.get_frameworks_name(),
+                }
+            ),
+
+        CustomersActivityDBIndex.get_operating_systems_name():
+            _knot_table_def(
+                format_params={
+                    'id' : OperatingSystemsMeta.id,
+                    'id_type': 'TEXT',
+                    'name': OperatingSystemsMeta.name,
+                    'table': CustomersActivityDBIndex.get_operating_systems_name(),
+                }
+            ),
+
+        CustomersActivityDBIndex.get_builds_name():
+            _knot_table_def(
+                format_params={
+                    'id' : BuildsMeta.id,
+                    'id_type': 'TEXT',
+                    'name': BuildsMeta.name,
+                    'table': CustomersActivityDBIndex.get_builds_name(),
+                }
+            ),
+
+        CustomersActivityDBIndex.get_severity_name():
+            _knot_table_def(
+                format_params={
+                    'id' : SeverityMeta.id,
+                    'id_type': 'TEXT',
+                    'name': SeverityMeta.name,
+                    'table': CustomersActivityDBIndex.get_severity_name(),
+                }
+            ),
+
+        CustomersActivityDBIndex.get_ticket_statuses_name():
+            _knot_table_def(
+                format_params={
+                    'id' : TicketStatusesMeta.id,
+                    'id_type': 'TEXT',
+                    'name': TicketStatusesMeta.name,
+                    'table': CustomersActivityDBIndex.get_ticket_statuses_name(),
+                }
+            ),
+
+        CustomersActivityDBIndex.get_ides_name():
+            _knot_table_def(
+                format_params={
+                    'id' : IDEsMeta.id,
+                    'id_type': 'TEXT',
+                    'name': IDEsMeta.name,
+                    'table': CustomersActivityDBIndex.get_ides_name(),
                 }
             ),
 

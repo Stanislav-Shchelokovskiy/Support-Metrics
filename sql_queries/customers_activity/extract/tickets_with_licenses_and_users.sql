@@ -82,13 +82,14 @@ licenses AS (
 
 
 SELECT
-		c.user_crmid				AS user_crmid,
-		u.FriendlyId				AS user_id,
-		ti.Id						AS ticket_id,
-		ti.TicketSCID				AS ticket_scid,
-		ti.TicketType				AS ticket_type,
-		ti.creation_date			AS creation_date,
-		ti.SupportTeam				AS support_team,
+		c.user_crmid	 AS user_crmid,
+		u.FriendlyId	 AS user_id,
+		ti.Id			 AS ticket_id,
+		ti.TicketSCID	 AS ticket_scid,
+		ti.TicketType	 AS ticket_type,
+		ti.creation_date AS creation_date,
+		ti.SupportTeam	 AS support_team,
+		ti.IsPrivate	 AS is_private,
 		IIF(EXISTS( SELECT TOP 1 end_user_crmid 
 					FROM   licenses 
 					WHERE  end_user_crmid = user_crmid AND 
@@ -116,7 +117,7 @@ SELECT
 												@expired)))) AS license_status
 INTO #TicketsWithLicenses
 FROM (
-			SELECT	Id, TicketSCID, TicketType, CAST(Created AS DATE) AS creation_date, OwnerGuid, ISNULL(ProcessingSupportTeam, SupportTeam) AS SupportTeam
+			SELECT	Id, TicketSCID, TicketType, CAST(Created AS DATE) AS creation_date, OwnerGuid, ISNULL(ProcessingSupportTeam, SupportTeam) AS SupportTeam, IsPrivate
 			FROM 	DXStatisticsV2.dbo.TicketInfos
 			WHERE 	Created BETWEEN @start_date AND @end_date ) AS ti
 		CROSS APPLY (

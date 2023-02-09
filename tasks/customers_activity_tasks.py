@@ -66,9 +66,39 @@ def load_employees_iterations(start_date: str, end_date: str):
 
 
 def load_tickets_types():
-    repository = RepositoryFactory.customers_activity.remote.creaate_tickets_types_repository()
+    repository = RepositoryFactory.customers_activity.remote.create_tickets_types_repository()
     df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_tickets_types_name(): df})
+
+def load_frameworks():
+    repository = RepositoryFactory.customers_activity.remote.create_frameworks_repository()
+    df = repository.get_data()
+    _save_tables(tables={CustomersActivityDBIndex.get_frameworks_name(): df})
+
+def load_operating_systems():
+    repository = RepositoryFactory.customers_activity.remote.create_operating_systems_repository()
+    df = repository.get_data()
+    _save_tables(tables={CustomersActivityDBIndex.get_operating_systems_name(): df})
+
+def load_builds():
+    repository = RepositoryFactory.customers_activity.remote.create_builds_repository()
+    df = repository.get_data()
+    _save_tables(tables={CustomersActivityDBIndex.get_builds_name(): df})
+
+def load_severity_values():
+    repository = RepositoryFactory.customers_activity.remote.create_severity_repository()
+    df = repository.get_data()
+    _save_tables(tables={CustomersActivityDBIndex.get_severity_name(): df})
+
+def load_ticket_statuses():
+    repository = RepositoryFactory.customers_activity.remote.create_ticket_statuses_repository()
+    df = repository.get_data()
+    _save_tables(tables={CustomersActivityDBIndex.get_ticket_statuses_name(): df})
+
+def load_ides():
+    repository = RepositoryFactory.customers_activity.remote.create_ides_repository()
+    df = repository.get_data()
+    _save_tables(tables={CustomersActivityDBIndex.get_ides_name(): df})
 
 def load_tribes():
     tribes_str = Network.get_data(end_point= f'http://{os.environ["QUERY_SERVICE"]}/get_available_tribes')

@@ -1,8 +1,10 @@
+from typing import Any
 from toolbox.sql.repository import SqliteRepository, Repository
-from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
 from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import (
     BaseNode,
     FilterParametersNode,
+    FilterParameterNode,
 )
 from repository.customers_activity.local.core.customers_rank import Percentile
 from sql_queries.index import (
@@ -22,6 +24,11 @@ from sql_queries.customers_activity.meta import (
     CATRepliesTypesMeta,
     CATComponentsFeaturesMeta,
     CustomersMeta,
+    SeverityMeta,
+    TicketStatusesMeta,
+    IDEsMeta,
+    OperatingSystemsMeta,
+    FrameworksMeta,
 )
 
 
@@ -74,6 +81,36 @@ query_params_store = {
             table=CustomersActivityDBIndex.get_tickets_types_name(),
             value_field=TicketsTypesMeta.id,
             display_field=TicketsTypesMeta.name,
+        ),
+    'severity':
+        QueryParams(
+            table=CustomersActivityDBIndex.get_severity_name(),
+            value_field=SeverityMeta.id,
+            display_field=SeverityMeta.name,
+        ),
+    'ticket_status':
+        QueryParams(
+            table=CustomersActivityDBIndex.get_ticket_statuses_name(),
+            value_field=TicketStatusesMeta.id,
+            display_field=TicketStatusesMeta.name,
+        ),
+    'frameworks':
+        QueryParams(
+            table=CustomersActivityDBIndex.get_frameworks_name(),
+            value_field=FrameworksMeta.id,
+            display_field=FrameworksMeta.name,
+        ),
+    'operating_system_id':
+        QueryParams(
+            table=CustomersActivityDBIndex.get_operating_systems_name(),
+            value_field=OperatingSystemsMeta.id,
+            display_field=OperatingSystemsMeta.name,
+        ),
+    'ide_id':
+        QueryParams(
+            table=CustomersActivityDBIndex.get_ides_name(),
+            value_field=IDEsMeta.id,
+            display_field=IDEsMeta.name,
         ),
     'customers_groups':
         QueryParams(
@@ -146,67 +183,98 @@ class DisplayFilterGenerator:
         repository: Repository = SqliteRepository(),
     ) -> list[list]:
         filters = []
-        filter_node: FilterParametersNode | BaseNode
+        filter_node: BaseNode | FilterParametersNode | FilterParameterNode | Percentile
         aliases = node.get_field_aliases()
         for field_name, filter_node in node.get_field_values().items():
-            display_field_alias = aliases[field_name]
-            if qp:= query_params_store.get(field_name):
-                filter = None
-                if hasattr(filter_node, 'values'):
-                    filter = DisplayFilterGenerator.generate_filter_from_filter_parameters(
-                        display_field_alias=display_field_alias,
-                        query_params = qp,
-                        filter_node=filter_node,
-                        repository=repository,
-                    )
-                    if not filter:
-                        continue
-                elif filter_node:
-                    filter = DisplayFilterGenerator.generate_display_filter(node=filter_node, repository=repository)
-                if filter:
-                    DisplayFilterGenerator.append_filter(filters, filter, node)
-            else:
+            if not filter_node:
+                continue
+            field_alias = aliases[field_name]
+            filter = None
+            if isinstance(filter_node, FilterParametersNode):
+                filter = DisplayFilterGenerator.generate_filter_from_filter_parameters(
+                    field=field_name,
+                    field_alias=field_alias,
+                    filter_node=filter_node,
+                    repository=repository,
+                )
+                if not filter:
+                    continue
+            elif isinstance(filter_node, FilterParameterNode):
+                display_value = DisplayFilterGenerator.get_display_value(
+                    field_name=field_name,
+                    value=filter_node.value,
+                )
+                filter = [field_alias, '=', display_value]
+            elif isinstance(filter_node, Percentile):
                 percentile: Percentile = filter_node
-                percentile_filter = TicketsWithIterationsSqlFilterClauseGenerator.get_percentile_filter(
-                        alias = display_field_alias,
+                percentile_filter = TicketsWithIterationsSqlFilterClauseGenerator.limit.get_percentile_filter(
+                        alias = field_alias,
                         percentile=percentile.value,
                 )
                 filter = [ int(clause) if clause.isdigit() else clause for clause in percentile_filter.split(' ')]
-                DisplayFilterGenerator.append_filter(filters, filter, node)
+            else:
+                filter = DisplayFilterGenerator.generate_display_filter(node=filter_node, repository=repository)
+            DisplayFilterGenerator.append_filter(filters, filter, node)
+
         if len(filters) == 1:
             return filters[0]
         return filters
 
     @staticmethod
+    def get_display_value(field_name: str, value: Any):
+        if field_name == 'is_private':
+            value = 'Private' if value else 'Public'
+        return value
+
+    @staticmethod
     def generate_filter_from_filter_parameters(
-        display_field_alias: str,
-        query_params: QueryParams,
+        field: str,
+        field_alias: str,
         filter_node: FilterParametersNode,
         repository: Repository,
     ):
         if not filter_node.values:
             if not filter_node.include:
-                return [display_field_alias, '=', 'NULL']
+                return [field_alias, '=', 'NULL']
             return ''
-        values = ', '.join([f"'{value}'" for value in filter_node.values])
-        display_values =repository.execute_query(
-            query_file_path=CustomersActivitySqlPathIndex.get_general_select_path(),
-            query_format_params={
-                'columns': query_params.display_field,
-                'table_name': query_params.table,
-                'filter_group_limit_clause': f'WHERE {query_params.value_field} IN ({values})\nGROUP BY {query_params.display_field}',
-            }
-        ).reset_index(drop=True)[query_params.display_field].values.tolist()
+
+        display_values = DisplayFilterGenerator.get_display_values(
+            field=field,
+            values=filter_node.values,
+            repository=repository
+        )
+
         if filter_node.include:
-            return [display_field_alias, 'in', display_values]
+            return [field_alias, 'in', display_values]
+
         filter = []
-        filter.append([display_field_alias, '=', 'NULL'])
+        filter.append([field_alias, '=', 'NULL'])
         filter.append('or')
-        filter.append([display_field_alias, 'notin', display_values])
+        filter.append([field_alias, 'notin', display_values])
         return filter
 
     @staticmethod
+    def get_display_values(
+        field: str,
+        values: list,
+        repository: Repository
+    ):
+        if query_params := query_params_store.get(field):
+            values = ', '.join([f"'{value}'" for value in values])
+            return repository.execute_query(
+                query_file_path=CustomersActivitySqlPathIndex.get_general_select_path(),
+                query_format_params={
+                    'columns': query_params.display_field,
+                    'table_name': query_params.table,
+                    'filter_group_limit_clause': f'WHERE {query_params.value_field} IN ({values})\nGROUP BY {query_params.display_field}',
+                }
+            ).reset_index(drop=True)[query_params.display_field].values.tolist()
+        return values
+
+    @staticmethod
     def append_filter(filters: list, filter: list, node: BaseNode):
+        if not filter:
+            return
         if filters:
             filters.append(node.get_append_operator())
         filters.append(filter)

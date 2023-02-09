@@ -66,6 +66,41 @@ def customers_activity_get_tickets_types():
     return get_response(json_data=df_json)
 
 
+@app.get('/get_frameworks')
+def customers_activity_get_frameworks():
+    df_json = server_repository.customers_activity_get_frameworks()
+    return get_response(json_data=df_json)
+
+
+@app.get('/get_operating_systems')
+def customers_activity_get_operating_systems():
+    df_json = server_repository.customers_activity_get_operating_systems()
+    return get_response(json_data=df_json)
+
+
+@app.get('/get_builds')
+def customers_activity_get_builds():
+    df_json = server_repository.customers_activity_get_builds()
+    return get_response(json_data=df_json)
+
+
+@app.get('/get_severity_values')
+def customers_activity_get_severity_values():
+    df_json = server_repository.customers_activity_get_severity_values()
+    return get_response(json_data=df_json)
+
+
+@app.get('/get_ticket_statuses')
+def customers_activity_get_ticket_statuses():
+    df_json = server_repository.customers_activity_get_ticket_statuses()
+    return get_response(json_data=df_json)
+
+@app.get('/get_ides')
+def customers_activity_get_ides():
+    df_json = server_repository.customers_activity_get_ides()
+    return get_response(json_data=df_json)
+
+
 @app.get('/get_tickets_tags')
 def customers_activity_get_tickets_tags():
     df_json = server_repository.customers_activity_get_tickets_tags()

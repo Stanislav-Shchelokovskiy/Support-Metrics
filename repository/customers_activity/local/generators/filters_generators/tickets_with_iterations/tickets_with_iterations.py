@@ -1,0 +1,21 @@
+from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.common import CommonSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.limit import LimitSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.platforms_products import PlatformsProductsSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.tickets import TicketsSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.ticket_types import TicketsTypesSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.bugs import BugsSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.cat import CATSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.customers import CustomersSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.employees import EmployeesSqlFilterClauseGenerator
+
+
+class TicketsWithIterationsSqlFilterClauseGenerator:
+    common = CommonSqlFilterClauseGenerator
+    limit = LimitSqlFilterClauseGenerator
+    platforms_products = PlatformsProductsSqlFilterClauseGenerator
+    tickets_types = TicketsTypesSqlFilterClauseGenerator
+    tickets = TicketsSqlFilterClauseGenerator
+    bugs = BugsSqlFilterClauseGenerator
+    cat = CATSqlFilterClauseGenerator
+    customers = CustomersSqlFilterClauseGenerator
+    employees = EmployeesSqlFilterClauseGenerator

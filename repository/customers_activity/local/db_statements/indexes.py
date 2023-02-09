@@ -4,7 +4,7 @@ from sql_queries.customers_activity.meta import (
     BaselineAlignedCustomersGroupsMeta,
     EmployeesIterationsMeta,
     PlatformsProductsMeta,
-    TicketsWithLicensesMeta,
+    TicketsWithPropertiesMeta,
 )
 
 
@@ -20,8 +20,8 @@ def get_create_index_statements():
                 _create_index_statement(
                     tbl=CustomersActivityDBIndex.get_customers_tickets_name(),
                     cols=[
-                        TicketsWithLicensesMeta.user_crmid,
-                        TicketsWithLicensesMeta.creation_date
+                        TicketsWithPropertiesMeta.user_crmid,
+                        TicketsWithPropertiesMeta.creation_date
                     ]
                 ),
             ],

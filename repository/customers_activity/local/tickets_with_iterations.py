@@ -11,7 +11,7 @@ from sql_queries.customers_activity.meta import (
     TicketsWithIterationsPeriodMeta,
     BaselineAlignedModeMeta,
 )
-from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
 from repository.customers_activity.local.generators.periods import PeriodsGenerator
 from repository.customers_activity.local.core.tickets_with_iterations_table import get_tickets_with_iterations_table
 from repository.customers_activity.local.core.filters import try_get_creation_date_and_tickets_filters

@@ -2,7 +2,7 @@ from toolbox.sql.repository import Repository
 from toolbox.sql.sql_query import SqlQuery
 from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.customers_activity.meta import (
-    TicketsWithLicensesMeta,
+    TicketsWithPropertiesMeta,
     EmployeesIterationsMeta,
 )
 
@@ -39,7 +39,7 @@ class CustomersTicketsRepository(Repository):
         return CustomersActivitySqlPathIndex.get_tickets_with_properties_path()
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
-        return TicketsWithLicensesMeta.get_attrs()
+        return TicketsWithPropertiesMeta.get_attrs()
 
     def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return TicketsWithLicensesMeta.get_values()
+        return TicketsWithPropertiesMeta.get_values()

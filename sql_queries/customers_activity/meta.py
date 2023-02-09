@@ -34,6 +34,29 @@ class TicketsTypesMeta(KnotMeta):
     pass
 
 
+class FrameworksMeta(KnotMeta):
+    pass
+
+
+class OperatingSystemsMeta(KnotMeta):
+    pass
+
+
+class BuildsMeta(KnotMeta):
+    pass
+
+
+class SeverityMeta(KnotMeta):
+    pass
+
+
+class TicketStatusesMeta(KnotMeta):
+    pass
+
+class IDEsMeta(KnotMeta):
+    pass
+
+
 class CATRepliesTypesMeta(KnotMeta):
     pass
 
@@ -73,23 +96,36 @@ class TicketTribeMeta(TribeMeta):
     ticket_id = 'ticket_id'
 
 
-class TicketsWithLicensesMeta(TicketTribeMeta):
+class TicketsWithPropertiesMeta(TicketTribeMeta):
     user_crmid = 'user_crmid'
     user_id = 'user_id'
     ticket_scid = 'ticket_scid'
     ticket_type = 'ticket_type'
     creation_date = 'creation_date'
+    is_private = 'is_private'
     user_groups = 'user_groups'
     ticket_tags = 'ticket_tags'
     platforms = 'platforms'
     products = 'products'
-    reply_id = 'reply_id'
-    component_id = 'component_id'
-    feature_id = 'feature_id'
+    frameworks = 'frameworks'
+    builds = 'builds'
+    fixed_in_builds = 'fixed_in_builds'
+    fixed_by = 'fixed_by'
+    fixed_on = 'fixed_on'
+    ticket_status = 'ticket_status'
+    closed_by = 'closed_by'
+    closed_on = 'closed_on'
+    severity = 'severity'
     license_status = 'license_status'
     conversion_status = 'conversion_status'
     duplicated_to_ticket_type = 'duplicated_to_ticket_type'
     duplicated_to_ticket_scid = 'duplicated_to_ticket_scid'
+    assigned_to = 'assigned_to'
+    operating_system_id = 'operating_system_id'
+    ide_id = 'ide_id'
+    reply_id = 'reply_id'
+    component_id = 'component_id'
+    feature_id = 'feature_id'
 
 
 class EmployeesIterationsMeta(TicketTribeMeta):
@@ -107,7 +143,7 @@ class EmployeesMeta(MetaData):
     name = EmployeesIterationsMeta.name
 
 
-class TicketsWithIterationsMeta(TicketsWithLicensesMeta):
+class TicketsWithIterationsMeta(TicketsWithPropertiesMeta):
     emp_post_id = 'emp_post_id'
     emp_crmid = 'emp_crmid'
     emp_tribe_id = 'emp_tribe_id'
@@ -144,14 +180,15 @@ class TicketsWithIterationsRawMeta(MetaData):
 
 
 class BaselineAlignedCustomersGroupsMeta(MetaData):
-    user_crmid = TicketsWithLicensesMeta.user_crmid
+    user_crmid = TicketsWithPropertiesMeta.user_crmid
     id = 'id'
     name = 'name'
     assignment_date = 'assignment_date'
     removal_date = 'removal_date'
 
+
 class BaselineAlignedModeMeta(BaselineAlignedCustomersGroupsMeta):
-    days_since_baseline='days_since_baseline'
+    days_since_baseline = 'days_since_baseline'
 
 
 class PeriodsMeta(MetaData):
