@@ -212,7 +212,7 @@ class DisplayFilterGenerator:
                         alias = field_alias,
                         percentile=percentile.value,
                     )
-                    filter = [ int(clause) if clause.isdigit() else clause for clause in percentile_filter.split(' ')]
+                    filter = [int(clause) if clause.isdigit() else clause for clause in percentile_filter.split(' ')]
                 case _:
                     filter = DisplayFilterGenerator.generate_display_filter(node=filter_node, repository=repository)
             DisplayFilterGenerator.append_filter(filters, filter, node)
