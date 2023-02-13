@@ -190,30 +190,31 @@ class DisplayFilterGenerator:
                 continue
             field_alias = aliases[field_name]
             filter = None
-            if isinstance(filter_node, FilterParametersNode):
-                filter = DisplayFilterGenerator.generate_filter_from_filter_parameters(
-                    field=field_name,
-                    field_alias=field_alias,
-                    filter_node=filter_node,
-                    repository=repository,
-                )
-                if not filter:
-                    continue
-            elif isinstance(filter_node, FilterParameterNode):
-                display_value = DisplayFilterGenerator.get_display_value(
-                    field_name=field_name,
-                    value=filter_node.value,
-                )
-                filter = [field_alias, '=', display_value]
-            elif isinstance(filter_node, Percentile):
-                percentile: Percentile = filter_node
-                percentile_filter = TicketsWithIterationsSqlFilterClauseGenerator.limit.get_percentile_filter(
+            match filter_node:
+                case FilterParametersNode():
+                    filter = DisplayFilterGenerator.generate_filter_from_filter_parameters(
+                        field=field_name,
+                        field_alias=field_alias,
+                        filter_node=filter_node,
+                        repository=repository,
+                    )
+                    if not filter:
+                        continue
+                case FilterParameterNode():
+                    display_value = DisplayFilterGenerator.get_display_value(
+                        field_name=field_name,
+                        value=filter_node.value,
+                    )
+                    filter = [field_alias, '=', display_value]
+                case Percentile():
+                    percentile: Percentile = filter_node
+                    percentile_filter = TicketsWithIterationsSqlFilterClauseGenerator.limit.get_percentile_filter(
                         alias = field_alias,
                         percentile=percentile.value,
-                )
-                filter = [ int(clause) if clause.isdigit() else clause for clause in percentile_filter.split(' ')]
-            else:
-                filter = DisplayFilterGenerator.generate_display_filter(node=filter_node, repository=repository)
+                    )
+                    filter = [ int(clause) if clause.isdigit() else clause for clause in percentile_filter.split(' ')]
+                case _:
+                    filter = DisplayFilterGenerator.generate_display_filter(node=filter_node, repository=repository)
             DisplayFilterGenerator.append_filter(filters, filter, node)
 
         if len(filters) == 1:
