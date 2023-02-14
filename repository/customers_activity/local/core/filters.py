@@ -62,11 +62,11 @@ def get_tickets_filter(
 ) -> str:
     return build_filter_string([
         # index start
-            filter_generator.tickets.generate_tribes_filter(params=kwargs['tribe_ids']),
             filter_generator.tickets_types.generate_ticket_types_filter(params=kwargs['tickets_types']),
             filter_generator.customers.generate_license_status_filter(params=kwargs['license_statuses']),
             filter_generator.employees.generate_emp_positions_filter(params=kwargs['positions_ids']),
             filter_generator.tickets.generate_privacy_filter(params=kwargs['is_private']),
+            filter_generator.tickets.generate_tribes_filter(params=kwargs['tribe_ids']),
         # index end
             filter_generator.platforms_products.generate_platforms_filter(params=kwargs['platforms_ids']),
             filter_generator.platforms_products.generate_products_filter(params=kwargs['products_ids']),

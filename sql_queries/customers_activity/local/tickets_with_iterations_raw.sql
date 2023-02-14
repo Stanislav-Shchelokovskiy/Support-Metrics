@@ -1,8 +1,11 @@
 SELECT
     t.{user_id},
     t.{ticket_scid},
-    t.{tribe_name},
+    t.{tribes_names},
     t.{creation_date},
+    t.{license_name},
+    t.{subscription_start},
+    t.{expiration_date},
     ( SELECT name 
       FROM   {license_statuses_table}
       WHERE  id = t.license_status
@@ -17,14 +20,11 @@ SELECT
       LIMIT 1 ) AS {reply},
     ( SELECT component_name 
       FROM   {components_features_table}
-      WHERE  tribe_id = t.tribe_id AND 
-             component_id = t.component_id
+      WHERE  component_id = t.component_id
       LIMIT 1 ) AS {component},
     ( SELECT feature_name 
       FROM   {components_features_table}
-      WHERE  tribe_id = t.tribe_id AND
-             component_id = t.component_id AND
-             feature_id = t.feature_id
+      WHERE  feature_id = t.feature_id
       LIMIT 1 ) AS {feature},
     t.{emp_post_id},
     t.{emp_name},
