@@ -16,13 +16,13 @@ DECLARE @licensed				 TINYINT = 0
 DECLARE @free					 TINYINT = 1
 DECLARE @expired				 TINYINT = 2
 DECLARE @revoked				 TINYINT = 3
-DECLARE @no_license_expired		 TINYINT = 4
-DECLARE @no_license_expired_free TINYINT = 5
-DECLARE @no_license				 TINYINT = 6
-DECLARE @no_license_free		 TINYINT = 7
+DECLARE @no_license				 TINYINT = 4
+DECLARE @no_license_expired		 TINYINT = 5
+DECLARE @no_license_free		 TINYINT = 6
+DECLARE @no_license_expired_free TINYINT = 7
 DECLARE @trial					 TINYINT = 8
 DECLARE @converted_paid			 TINYINT = 9
-DECLARE @converted_free			 TINYINT = 10;
+DECLARE @converted_free			 TINYINT = 10
 
 
 DROP TABLE IF EXISTS #PlatformsProductsTribes
@@ -117,11 +117,11 @@ WITH enterprise_clients AS (
 
 licenses_only AS (
 	SELECT
-		Owner_Id AS owner_crmid,
-		EndUser_Id AS end_user_crmid,
-		OrderItem_Id AS order_item_id,
-		@actual_lic_origin AS lic_origin,
-		NULL AS revoked_since
+		Owner_Id			AS owner_crmid,
+		EndUser_Id			AS end_user_crmid,
+		OrderItem_Id		AS order_item_id,
+		@actual_lic_origin	AS lic_origin,
+		NULL				AS revoked_since
 	FROM
 		CRM.dbo.Licenses
 	UNION
@@ -130,7 +130,7 @@ licenses_only AS (
 		EndUser_Id,
 		OrderItem_Id,
 		@historical_lic_origin,
-		CONVERT(DATE, EntityModified)
+		IIF(ChangedProperties LIKE '%EndUser_Id%', CONVERT(DATE, EntityModified), NULL)
 	FROM 
 		CRMAudit.dxcrm.Licenses
 ),
@@ -192,16 +192,19 @@ SELECT
 		multi_selectors.products_ids		AS ticket_products,
 		licenses.*,
 		IIF(tickets.creation_date BETWEEN licenses.subscription_start AND licenses.expiration_date, IIF(licenses.free = @paid, @licensed, @free),
-			IIF(licenses.revoked_since IS NULL AND tickets.creation_date > licenses.expiration_date, @expired,
-				IIF(tickets.creation_date > licenses.revoked_since, @revoked,
-					ISNULL((SELECT TOP 1 
-								CASE 
-									WHEN tickets.creation_date BETWEEN subscription_start AND expiration_date 
-									THEN IIF(free = @free_license, @no_license_free, @no_license )
-									ELSE IIF(free = @free_license, @no_license_expired_free, @no_license_expired) END 
-							FROM licenses 
-							WHERE licenses.end_user_crmid = customers.user_crmid
-							ORDER BY expiration_date DESC), 
+			IIF(licenses.revoked_since IS NULL AND licenses.expiration_date IS NOT NULL AND tickets.creation_date > licenses.expiration_date, @expired,
+				IIF(licenses.revoked_since IS NOT NULL AND tickets.creation_date > licenses.revoked_since, @revoked,
+					ISNULL((SELECT TOP 1 lic_status
+							FROM ( SELECT	CASE 
+												WHEN tickets.creation_date BETWEEN subscription_start AND expiration_date 
+												THEN IIF(free = @free_license, @no_license_free, @no_license )
+												WHEN expiration_date IS NOT NULL AND tickets.creation_date > expiration_date 
+												THEN IIF(free = @free_license, @no_license_expired_free, @no_license_expired)
+												ELSE NULL 
+											END AS lic_status
+									FROM licenses
+									WHERE licenses.end_user_crmid = customers.user_crmid ) AS no_matched_licensess
+							ORDER BY -lic_status DESC),
 						IIF(EXISTS(SELECT TOP 1 customer_id FROM enterprise_clients WHERE customer_id = customers.user_crmid), @licensed,
 							@trial)))))		AS license_status
 INTO #TicketsWithLicensesRaw
@@ -247,7 +250,7 @@ FROM (	SELECT	Id, FriendlyId, EntityType, CAST(Created AS DATE) AS creation_date
 										INNER JOIN STRING_SPLIT(licenses_inner.licensed_platforms, @separator) AS lp ON lp.value = tp.value
 							) AS licensed_ticket_platforms
 					WHERE end_user_crmid = customers.user_crmid ) AS licenses_mapped
-			WHERE licenses_mapped.products_in_license IS NOT NULL AND licenses_mapped.platforms_in_license IS NOT NULL
+			WHERE licenses_mapped.products_in_license IS NOT NULL OR licenses_mapped.platforms_in_license IS NOT NULL
 		) AS licenses
 WHERE IsEmployee = 0 OR EntityType=2
 

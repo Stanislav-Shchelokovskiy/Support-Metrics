@@ -59,6 +59,11 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
             'components_features_table': CustomersActivityDBIndex.get_cat_components_features_name(),
             'license_statuses_table': CustomersActivityDBIndex.get_license_statuses_name(),
             'conversion_statuses_table': CustomersActivityDBIndex.get_conversion_statuses_name(),
+            'tickets_types_table': CustomersActivityDBIndex.get_tickets_types_name(),
+            'employees_table': CustomersActivityDBIndex.get_employees_name(),
+            'severity_table': CustomersActivityDBIndex.get_severity_name(),
+            'operating_systems_table': CustomersActivityDBIndex.get_operating_systems_name(),
+            'ides_table': CustomersActivityDBIndex.get_ides_name(),
             **TicketsWithIterationsRawMeta.get_attrs(),
             'baseline_aligned_mode_fields': self.get_baseline_aligned_mode_fields(kwargs),
             **self.get_general_format_params(kwargs)

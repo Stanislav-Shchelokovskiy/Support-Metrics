@@ -173,7 +173,10 @@ class TicketsWithIterationsAggregatesMeta(MetaData):
 class TicketsWithIterationsRawMeta(MetaData):
     user_id = TicketsWithIterationsMeta.user_id
     ticket_scid = TicketsWithIterationsMeta.ticket_scid
+    ticket_type = TicketsWithIterationsMeta.ticket_type
     tribes_names = TicketsWithIterationsMeta.tribes_names
+    is_private = TicketsWithIterationsMeta.is_private
+    creation_date = TicketsWithIterationsMeta.creation_date
     license_name = TicketsWithIterationsMeta.license_name
     subscription_start = TicketsWithIterationsMeta.subscription_start
     expiration_date = TicketsWithIterationsMeta.expiration_date
@@ -182,11 +185,23 @@ class TicketsWithIterationsRawMeta(MetaData):
     reply = 'reply'
     component = 'component'
     feature = 'feature'
+    builds = TicketsWithIterationsMeta.builds
+    fixed_in_builds = TicketsWithIterationsMeta.fixed_in_builds
+    fixed_by = TicketsWithIterationsMeta.fixed_by
+    fixed_on = TicketsWithIterationsMeta.fixed_on
+    ticket_status = TicketsWithIterationsMeta.ticket_status
+    closed_by = TicketsWithIterationsMeta.closed_by
+    closed_on = TicketsWithIterationsMeta.closed_on
+    severity = TicketsWithIterationsMeta.severity
+    duplicated_to_ticket_type = TicketsWithIterationsMeta.duplicated_to_ticket_type
+    duplicated_to_ticket_scid = TicketsWithIterationsMeta.duplicated_to_ticket_scid
+    assigned_to =TicketsWithIterationsMeta.assigned_to
+    operating_system = 'operating_system'
+    ide = 'ide'
     emp_post_id = TicketsWithIterationsMeta.emp_post_id
     emp_name = TicketsWithIterationsMeta.emp_name
     emp_position_name = TicketsWithIterationsMeta.emp_position_name
     emp_tribe_name = TicketsWithIterationsMeta.emp_tribe_name
-    creation_date = TicketsWithIterationsMeta.creation_date
 
 
 class BaselineAlignedCustomersGroupsMeta(MetaData):
