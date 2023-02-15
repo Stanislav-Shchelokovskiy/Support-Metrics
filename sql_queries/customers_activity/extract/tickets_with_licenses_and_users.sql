@@ -12,17 +12,19 @@ DECLARE @free_license TINYINT = 6
 DECLARE @actual_lic_origin     TINYINT = 0
 DECLARE @historical_lic_origin TINYINT = 1
 
-DECLARE @licensed				 TINYINT = 0
-DECLARE @free					 TINYINT = 1
-DECLARE @expired				 TINYINT = 2
-DECLARE @revoked				 TINYINT = 3
-DECLARE @no_license				 TINYINT = 4
-DECLARE @no_license_expired		 TINYINT = 5
-DECLARE @no_license_free		 TINYINT = 6
-DECLARE @no_license_expired_free TINYINT = 7
-DECLARE @trial					 TINYINT = 8
-DECLARE @converted_paid			 TINYINT = 9
-DECLARE @converted_free			 TINYINT = 10
+DECLARE @licensed					TINYINT = 0
+DECLARE @free						TINYINT = 1
+DECLARE @expired					TINYINT = 2
+DECLARE @revoked					TINYINT = 3
+DECLARE @no_license					TINYINT = 4
+DECLARE @no_license_revoked			TINYINT = 5
+DECLARE @no_license_expired			TINYINT = 6
+DECLARE @no_license_expired_revoked	TINYINT = 7
+DECLARE @no_license_free			TINYINT = 8
+DECLARE @no_license_expired_free	TINYINT = 9
+DECLARE @trial						TINYINT = 10
+DECLARE @converted_paid				TINYINT = 11
+DECLARE @converted_free				TINYINT = 12
 
 
 DROP TABLE IF EXISTS #PlatformsProductsTribes
@@ -200,9 +202,9 @@ SELECT
 					ISNULL((SELECT TOP 1 lic_status
 							FROM ( SELECT	CASE 
 												WHEN tickets.creation_date BETWEEN subscription_start AND expiration_date 
-												THEN IIF(free = @free_license, @no_license_free, @no_license )
+												THEN IIF(free = @free_license, @no_license_free, IIF(revoked IS NULL, @no_license, @no_license_revoked))
 												WHEN expiration_date IS NOT NULL AND tickets.creation_date > expiration_date 
-												THEN IIF(free = @free_license, @no_license_expired_free, @no_license_expired)
+												THEN IIF(free = @free_license, @no_license_expired_free, IIF(revoked IS NULL, @no_license_expired, @no_license_expired_revoked))
 												ELSE NULL 
 											END AS lic_status
 									FROM licenses

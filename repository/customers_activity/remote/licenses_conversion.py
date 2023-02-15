@@ -11,7 +11,7 @@ class LicenseStatusesRepository(Repository):
     def get_data(self, **kwargs) -> DataFrame:
         return DataFrame(
             data={
-                TicketsTypesMeta.id: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                TicketsTypesMeta.id: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                 TicketsTypesMeta.name:
                     [
                         'Licensed',
@@ -19,9 +19,11 @@ class LicenseStatusesRepository(Repository):
                         'Expired',
                         'Revoked',
                         'No license, Licensed',
+                        'No license, Licensed, Revoked',
                         'No license, Expired',
+                        'No license, Expired, Revoked',
                         'No license, Free',
-                        'No license, Expired Free',
+                        'No license, Free, Expired',
                         'Trial',
                     ]
             }
@@ -33,8 +35,8 @@ class ConversionStatusesRepository(Repository):
     def get_data(self, **kwargs) -> DataFrame:
         return DataFrame(
             data={
-                ConversionStatusesMeta.license_status_id: [0, 1, 8, 8],
-                ConversionStatusesMeta.id: [9, 10, 9, 10],
+                ConversionStatusesMeta.license_status_id: [0, 1, 10, 10],
+                ConversionStatusesMeta.id: [11, 12, 11, 12],
                 ConversionStatusesMeta.name: [
                     'Paid',
                     'Free',
