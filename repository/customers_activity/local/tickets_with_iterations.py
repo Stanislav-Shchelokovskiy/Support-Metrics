@@ -1,3 +1,4 @@
+from typing import Iterable
 from toolbox.sql.repository import SqliteRepository
 from toolbox.utils.converters import DF_to_JSON
 from sql_queries.index import (
@@ -75,7 +76,7 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
         return ''
 
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return TicketsWithIterationsRawMeta.get_values()
 
 
@@ -99,9 +100,9 @@ class TicketsWithIterationsAggregatesRepository(TicketsWithIterationsRawReposito
             **TicketsWithIterationsRawRepository.get_general_format_params(self, kwargs)
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return [
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
+        return (
             TicketsWithIterationsAggregatesMeta.period,
             TicketsWithIterationsAggregatesMeta.tickets,
             TicketsWithIterationsAggregatesMeta.iterations,
-        ]
+        )

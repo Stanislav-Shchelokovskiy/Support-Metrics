@@ -1,3 +1,4 @@
+from typing import Iterable
 from toolbox.sql.repository import SqliteRepository
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
@@ -26,7 +27,7 @@ class CATRepliesTypesRepository(SqliteRepository):
             'filter_group_limit_clause': f'ORDER BY {CATRepliesTypesMeta.name}',
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return CATRepliesTypesMeta.get_values()
 
 
@@ -47,11 +48,11 @@ class CATComponentsRepository(SqliteRepository):
             'filter_group_limit_clause': f'{filter}\nGROUP BY {cols}\nORDER BY {CATComponentsFeaturesMeta.component_name}',
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return [
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
+        return (
             CATComponentsFeaturesMeta.component_id,
             CATComponentsFeaturesMeta.component_name,
-        ]
+        )
 
 
 class CATFeaturesRepository(SqliteRepository):
@@ -74,8 +75,8 @@ class CATFeaturesRepository(SqliteRepository):
             'filter_group_limit_clause': f'{filter}\nORDER BY {CATComponentsFeaturesMeta.feature_name}',
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return [
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
+        return (
             CATComponentsFeaturesMeta.feature_id,
             CATComponentsFeaturesMeta.feature_name,
-        ]
+        )

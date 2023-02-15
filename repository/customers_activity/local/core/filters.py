@@ -1,3 +1,4 @@
+from typing import Iterable
 from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
 
 
@@ -29,7 +30,7 @@ def get_creation_date_and_tickets_filters(
     filter_prefix: str = 'WHERE'
 ):
     return build_filter_string(
-        [
+        (
             get_creation_date_filter(
                 kwargs=kwargs,
                 filter_generator=filter_generator,
@@ -39,7 +40,7 @@ def get_creation_date_and_tickets_filters(
                 kwargs=kwargs,
                 filter_generator=filter_generator,
             )
-        ]
+        )
     )
 
 
@@ -60,7 +61,7 @@ def get_tickets_filter(
     kwargs: dict,
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
 ) -> str:
-    return build_filter_string([
+    return build_filter_string((
         # index start
             filter_generator.tickets_types.generate_ticket_types_filter(params=kwargs['tickets_types']),
             filter_generator.customers.generate_license_status_filter(params=kwargs['license_statuses']),
@@ -87,7 +88,7 @@ def get_tickets_filter(
             filter_generator.cat.generate_components_filter(params=kwargs['components_ids']),
             filter_generator.cat.generate_features_filter(params=kwargs['feature_ids']),
             filter_generator.customers.generate_customers_filter(params=kwargs['customers_crmids']),
-        ])
+        ))
 # yapf: enable
 
 
@@ -102,5 +103,5 @@ def try_get_customer_groups_filter(
     )
 
 
-def build_filter_string(filters: list[str]) -> str:
+def build_filter_string(filters: Iterable[str]) -> str:
     return '\n\t'.join(filter(None, filters))

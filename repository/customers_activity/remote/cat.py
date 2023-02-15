@@ -1,3 +1,4 @@
+from typing import Iterable
 from toolbox.sql.repository import Repository
 from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.customers_activity.meta import (
@@ -17,7 +18,7 @@ class CATRepliesTypesRepository(Repository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {**kwargs, **CATRepliesTypesMeta.get_attrs()}
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return CATRepliesTypesMeta.get_values()
 
 
@@ -32,5 +33,5 @@ class CATComponentsFeaturesRepository(Repository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {**kwargs, **CATComponentsFeaturesMeta.get_attrs()}
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return CATComponentsFeaturesMeta.get_values()
