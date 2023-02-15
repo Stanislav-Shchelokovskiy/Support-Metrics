@@ -99,8 +99,8 @@ FROM #TicketsWithLicenses AS ti
 		ORDER BY EntityModified DESC
 	) AS fixed_info
 	OUTER APPLY (
-		SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), tribes_inner.id) , ' ') WITHIN GROUP (ORDER BY id ASC) AS tribes_ids,
-				STRING_AGG(CONVERT(NVARCHAR(MAX), tribes_inner.name) , ' ') WITHIN GROUP (ORDER BY id ASC) AS tribes_names	
+		SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), tribes_inner.id) , @separator) WITHIN GROUP (ORDER BY id ASC) AS tribes_ids,
+				STRING_AGG(CONVERT(NVARCHAR(MAX), tribes_inner.name) , @separator) WITHIN GROUP (ORDER BY id ASC) AS tribes_names	
 		FROM (	SELECT *, MIN(level) OVER() AS max_level
 				FROM (	SELECT TOP 1 Id AS id, Name AS name, 1 AS level
 						FROM   CRM.dbo.Tribes
