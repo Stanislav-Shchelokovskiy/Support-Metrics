@@ -269,16 +269,16 @@ DROP TABLE IF EXISTS #TicketsWithLicenses
 SELECT *
 INTO #TicketsWithLicenses
 FROM (	SELECT 
-			tws.*,
-			ROW_NUMBER() OVER (PARTITION BY tws.user_id, tws.ticket_scid ORDER BY tws.license_status ASC) AS license_rank
+			twl_raw.*,
+			ROW_NUMBER() OVER (PARTITION BY twl_raw.user_id, twl_raw.ticket_scid ORDER BY twl_raw.license_status ASC) AS license_rank
 		FROM 
-			#TicketsWithLicensesRaw AS tws
+			#TicketsWithLicensesRaw AS twl_raw
 			INNER JOIN ( SELECT		user_id, ticket_scid, MIN(license_status) AS license_status
 						 FROM		#TicketsWithLicensesRaw
-						 GROUP BY	user_id, ticket_scid) AS tws_ranked ON	tws_ranked.user_id = tws.user_id AND
-																			tws_ranked.ticket_scid = tws.ticket_scid AND
-																			tws_ranked.license_status = tws.license_status) AS tws
+						 GROUP BY	user_id, ticket_scid) AS twl_raw_ranked ON	twl_raw_ranked.user_id = twl_raw.user_id AND
+																				twl_raw_ranked.ticket_scid = twl_raw.ticket_scid AND
+																				twl_raw_ranked.license_status = twl_raw.license_status) AS twl
 WHERE license_rank = 1
 
 CREATE NONCLUSTERED INDEX idx_userid_ls ON #TicketsWithLicenses(user_id, license_status)
-CREATE NONCLUSTERED INDEX idx_tickettype_ticketscid ON #TicketsWithLicenses(ticket_id) INCLUDE (ticket_type, ticket_scid)
+CREATE CLUSTERED INDEX idx_tickettype_ticketscid ON #TicketsWithLicenses(ticket_id)

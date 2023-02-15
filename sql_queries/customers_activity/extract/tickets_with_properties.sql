@@ -41,24 +41,26 @@ SELECT
 	ti.subscription_start				AS {subscription_start},
 	ti.expiration_date					AS {expiration_date},
 	ti.license_status					AS {license_status},
-	IIF(EXISTS(	SELECT	TOP 1 user_id
-				FROM	#TicketsWithLicenses
-				WHERE	user_id = ti.user_id AND license_status = @trial), 
-				IIF(license_status = @licensed, @converted_paid, 
-					IIF(license_status = @free,  @converted_free,
-						IIF(license_status = @trial, 
-							IIF(EXISTS(SELECT TOP 1 user_id
-									   FROM #TicketsWithLicenses
-									   WHERE user_id = ti.user_id AND license_status = @licensed), @converted_paid,
-								IIF(EXISTS(SELECT TOP 1 user_id
-										   FROM #TicketsWithLicenses
-										   WHERE user_id = ti.user_id AND license_status = @free), @converted_free, 
-								NULL)
-							),
-						NULL)
-					)
-				), 
-			NULL)						AS {conversion_status}
+	CASE
+		WHEN license_status IN (@licensed, @free) AND EXISTS(SELECT	TOP 1 twl.user_id FROM #TicketsWithLicenses AS twl WHERE twl.user_id = ti.user_id AND twl.license_status = @trial)
+		THEN CASE
+				WHEN license_status = @licensed
+				THEN @converted_paid
+				ELSE @converted_free 
+			END
+		WHEN license_status = @trial
+		THEN (	SELECT TOP 1 CASE
+								WHEN twl.license_status = @licensed
+								THEN @converted_paid
+								WHEN twl.license_status = @free
+								THEN @converted_free
+								ELSE NULL
+							 END
+				FROM #TicketsWithLicenses AS twl
+				WHERE twl.user_id = ti.user_id
+				ORDER BY twl.license_status )
+		ELSE NULL
+	END 									AS {conversion_status}
 FROM #TicketsWithLicenses AS ti
 	OUTER APPLY (
 		SELECT
