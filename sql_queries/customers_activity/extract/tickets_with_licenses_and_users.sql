@@ -74,8 +74,7 @@ WITH sale_items_flat AS (
 	FROM
 		CRM.dbo.SaleItems AS si
 	WHERE
-		IsTraining = 0 AND
-		Parent IS NOT NULL 
+		IsTraining = 0
 	UNION ALL
 	SELECT
 		si.Id,
@@ -153,6 +152,10 @@ licenses AS (
 			SELECT	SubscriptionStart, SaleItem_Id, Order_Id, HoldingPeriod
 			FROM	CRM.dbo.OrderItems
 			WHERE	Id = lcs.order_item_id) AS oi
+		CROSS APPLY ( 
+			SELECT	FreeSaleItem_Id
+			FROM	CRM.dbo.License_FreeSaleItem
+			WHERE	License_Id = lcs.Id ) AS bundled_skus
 		CROSS APPLY(
 			SELECT	Status
 			FROM	CRM.dbo.Orders
@@ -160,7 +163,7 @@ licenses AS (
 		CROSS APPLY(
 			SELECT	id, name, items 
 			FROM	#SaleItemsFlat
-			WHERE	id=oi.SaleItem_Id) AS si
+			WHERE	id IN (oi.SaleItem_Id, bundled_skus.FreeSaleItem_Id)) AS si
 		OUTER APPLY (
 			SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), p.Platform_Id), @separator) AS licensed_platforms
 			FROM (	SELECT	DISTINCT sibpc.Platform_Id
