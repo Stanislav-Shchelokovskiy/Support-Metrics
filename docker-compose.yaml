@@ -23,6 +23,20 @@ x-support_analytics_service:
     - LD_LIBRARY_PATH=/usr/lib #https://stackoverflow.com/questions/49920444/upgrading-sqlite3-version-used-in-python3-on-linux
 
 services:
+  support_analytics_dashboard:
+    <<: *support_analytics_service
+    hostname: support_analytics_dashboard
+    container_name: support_analytics_dashboard
+    command: celery -A worker flower --port=${FLOWER_PORT}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${FLOWER_PORT}/healthcheck"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    ports:
+      - "${FLOWER_PORT}:${FLOWER_PORT}"
+
   support_analytics_worker:
     <<: *support_analytics_service
     hostname: support_analytics_worker
@@ -30,16 +44,9 @@ services:
     command: celery --app worker worker --beat --loglevel=INFO --concurrency 7 #--logfile=logs/celery.log
     volumes:
       - support_analytics-volume:${DB_HOME}
-
-  support_analytics_dashboard:
-    <<: *support_analytics_service
-    hostname: support_analytics_dashboard
-    container_name: support_analytics_dashboard
-    command: celery -A worker flower --port=${FLOWER_PORT}
-    ports:
-      - "${FLOWER_PORT}:${FLOWER_PORT}"
     depends_on:
-      - support_analytics_worker
+      support_analytics_dashboard:
+        condition: service_healthy
 
   support_analytics_server:
     <<: *support_analytics_service
