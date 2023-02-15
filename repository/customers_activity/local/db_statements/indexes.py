@@ -22,7 +22,7 @@ def get_create_index_statements() -> dict[str, tuple[str]]:
                     tbl=CustomersActivityDBIndex.get_customers_tickets_name(),
                     cols=(
                         TicketsWithPropertiesMeta.user_crmid,
-                        TicketsWithPropertiesMeta.creation_date
+                        TicketsWithPropertiesMeta.creation_date,
                     )
                 ),
             ),
@@ -30,7 +30,7 @@ def get_create_index_statements() -> dict[str, tuple[str]]:
             (
                 _create_index_statement(
                     tbl=CustomersActivityDBIndex.get_employees_iterations_name(),
-                    cols=(EmployeesIterationsMeta.ticket_id)
+                    cols=(EmployeesIterationsMeta.ticket_id,)
                 ),
             ),
         CustomersActivityDBIndex.get_cat_components_features_name():
