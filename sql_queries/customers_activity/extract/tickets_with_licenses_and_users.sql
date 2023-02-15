@@ -4,7 +4,7 @@ SET ANSI_WARNINGS OFF
 DECLARE @start_date DATE = '{start_date}'
 DECLARE @end_date   DATE = '{end_date}'
 
-DECLARE @separator CHAR = ' '
+DECLARE @separator CHAR = ';'
 
 DECLARE @paid		  TINYINT = 5
 DECLARE @free_license TINYINT = 6

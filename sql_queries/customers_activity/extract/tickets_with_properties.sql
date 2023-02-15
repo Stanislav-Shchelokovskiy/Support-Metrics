@@ -1,3 +1,5 @@
+DECLARE @separator CHAR = ';'
+
 DECLARE @licensed				 TINYINT = 0
 DECLARE @free					 TINYINT = 1
 DECLARE @trial					 TINYINT = 8
@@ -76,11 +78,11 @@ FROM #TicketsWithLicenses AS ti
 	) AS single_selectors
 	OUTER APPLY (
 		SELECT 	
-			STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'PlatformedProductId' AND Value NOT LIKE '%:%', CAST(Value AS UNIQUEIDENTIFIER), NULL)), ' ') WITHIN GROUP (ORDER BY Value ASC) AS platforms_ids,
-			STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'ProductId',	 CAST(Value AS UNIQUEIDENTIFIER), NULL)), ' ') WITHIN GROUP (ORDER BY Value ASC) AS products_ids,
-			STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'SpecificId',	 CAST(Value AS UNIQUEIDENTIFIER), NULL)), ' ') WITHIN GROUP (ORDER BY Value ASC) AS specifics_ids,
-			STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'BuildId',		 Value, NULL)), ' ') WITHIN GROUP (ORDER BY Value ASC) AS builds_ids,
-			STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'FixedInBuild', Value, NULL)), ' ') WITHIN GROUP (ORDER BY Value ASC) AS fixed_in_builds_ids
+			STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'PlatformedProductId' AND Value NOT LIKE '%:%', CAST(Value AS UNIQUEIDENTIFIER), NULL)), @separator) WITHIN GROUP (ORDER BY Value ASC) AS platforms_ids,
+			STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'ProductId',	 CAST(Value AS UNIQUEIDENTIFIER), NULL)), @separator) WITHIN GROUP (ORDER BY Value ASC) AS products_ids,
+			STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'SpecificId',	 CAST(Value AS UNIQUEIDENTIFIER), NULL)), @separator) WITHIN GROUP (ORDER BY Value ASC) AS specifics_ids,
+			STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'BuildId',		 Value, NULL)), @separator) WITHIN GROUP (ORDER BY Value ASC) AS builds_ids,
+			STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'FixedInBuild', Value, NULL)), @separator) WITHIN GROUP (ORDER BY Value ASC) AS fixed_in_builds_ids
 		FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
 		WHERE	Ticket_Id = ti.ticket_id
 	) AS multi_selectors
@@ -97,43 +99,31 @@ FROM #TicketsWithLicenses AS ti
 		ORDER BY EntityModified DESC
 	) AS fixed_info
 	OUTER APPLY (
-		SELECT STRING_AGG(CONVERT(NVARCHAR(MAX), tribes_inner.id) , ' ') WITHIN GROUP (ORDER BY id ASC) AS tribes_ids,	
-			   STRING_AGG(CONVERT(NVARCHAR(MAX), tribes_inner.name) , ' ') WITHIN GROUP (ORDER BY id ASC) AS tribes_names	
-		FROM (
-			SELECT TOP 1 Id AS id, Name AS name
-			FROM   CRM.dbo.Tribes
-			WHERE  Id = (SELECT TOP 1 value
-						 FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
-						 WHERE	Ticket_Id = ti.ticket_id  AND Name = 'ProcessingTribe')
-			UNION ALL
-			SELECT DISTINCT product_tribe_id, product_tribe_name
-			FROM   #PlatformsProductsTribes
-			WHERE  NOT EXISTS (SELECT TOP 1 value
-							   FROM	  SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
-							   WHERE  Ticket_Id = ti.ticket_id  AND Name = 'ProcessingTribe')
-				   AND product_id IN (SELECT value
-									  FROM	 SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
-									  WHERE	 Ticket_Id = ti.ticket_id  AND Name = 'ProductId')
-				   AND product_tribe_id IS NOT NULL
-			UNION ALL
-			SELECT DISTINCT platform_tribe_id, platform_tribe_name
-			FROM   #PlatformsProductsTribes
-			WHERE  NOT EXISTS (	SELECT TOP 1 product_tribe_id
-								FROM   #PlatformsProductsTribes
-								WHERE  NOT EXISTS (SELECT TOP 1 value
-												   FROM	  SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
-												   WHERE  Ticket_Id = ti.ticket_id  AND Name = 'ProcessingTribe')
-									   AND product_id IN (SELECT value
-														  FROM	 SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
-														  WHERE	 Ticket_Id = ti.ticket_id  AND Name = 'ProductId')
-									   AND product_tribe_id IS NOT NULL)
-				   AND platform_id IN (SELECT value
-									   FROM	  SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
-									   WHERE  Ticket_Id = ti.ticket_id AND Name = 'PlatformedProductId' AND Value NOT LIKE '%:%')) AS tribes_inner
-		WHERE id IS NOT NULL
+		SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), tribes_inner.id) , ' ') WITHIN GROUP (ORDER BY id ASC) AS tribes_ids,
+				STRING_AGG(CONVERT(NVARCHAR(MAX), tribes_inner.name) , ' ') WITHIN GROUP (ORDER BY id ASC) AS tribes_names	
+		FROM (	SELECT *, MIN(level) OVER() AS max_level
+				FROM (	SELECT TOP 1 Id AS id, Name AS name, 1 AS level
+						FROM   CRM.dbo.Tribes
+						WHERE  Id = (SELECT TOP 1 value
+									 FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
+									 WHERE	Ticket_Id = @ticket_id  AND Name = 'ProcessingTribe')
+						UNION
+						SELECT product_tribe_id, product_tribe_name, 2
+						FROM   #PlatformsProductsTribes
+						WHERE  product_id IN (	SELECT	value
+												FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
+												WHERE	Ticket_Id = @ticket_id  AND Name = 'ProductId')
+							   AND product_tribe_id IS NOT NULL
+						UNION
+						SELECT platform_tribe_id, platform_tribe_name, 2
+						FROM   #PlatformsProductsTribes
+						WHERE  platform_id IN (	SELECT	value
+												FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
+												WHERE	Ticket_Id = @ticket_id AND Name = 'PlatformedProductId' AND Value NOT LIKE '%:%')) AS ti) AS tribes_inner
+		WHERE id IS NOT NULL AND level = max_level
 	) AS tribes
 	OUTER APPLY (
-		SELECT 	 STRING_AGG(CONVERT(NVARCHAR(MAX), UserGroup_Id), ' ') WITHIN GROUP (ORDER BY UserGroup_Id ASC) AS groups
+		SELECT 	 STRING_AGG(CONVERT(NVARCHAR(MAX), UserGroup_Id), @separator) WITHIN GROUP (ORDER BY UserGroup_Id ASC) AS groups
 		FROM 	 CRM.dbo.Customer_UserGroup
 		WHERE 	 Customer_Id = ti.user_crmid
 	) AS ug
@@ -145,7 +135,7 @@ FROM #TicketsWithLicenses AS ti
 						      WHERE  Name = 'Duplicate' AND Ticket_Id = ti.ticket_id)
 	) AS dups
 	OUTER APPLY (
-		SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), Tags), ' ') WITHIN GROUP (ORDER BY Tags ASC) AS tags
+		SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), Tags), @separator) WITHIN GROUP (ORDER BY Tags ASC) AS tags
 		FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketTags
 		WHERE	Tickets = ti.ticket_id
 	) AS ticket_tags
