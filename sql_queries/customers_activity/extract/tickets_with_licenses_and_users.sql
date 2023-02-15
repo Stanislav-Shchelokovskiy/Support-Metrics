@@ -275,8 +275,8 @@ FROM (	SELECT
 			#TicketsWithLicensesRaw AS twl_raw
 			INNER JOIN ( SELECT		user_id, ticket_scid, MIN(license_status) AS license_status
 						 FROM		#TicketsWithLicensesRaw
-						 GROUP BY	user_id, ticket_scid) AS twl_raw_ranked ON	twl_raw_ranked.user_id = twl_raw.user_id AND
-																				twl_raw_ranked.ticket_scid = twl_raw.ticket_scid AND
+						 GROUP BY	user_id, ticket_scid) AS twl_raw_ranked ON	twl_raw_ranked.user_id = 		twl_raw.user_id 	AND
+																				twl_raw_ranked.ticket_scid = 	twl_raw.ticket_scid AND
 																				twl_raw_ranked.license_status = twl_raw.license_status) AS twl
 WHERE license_rank = 1
 
