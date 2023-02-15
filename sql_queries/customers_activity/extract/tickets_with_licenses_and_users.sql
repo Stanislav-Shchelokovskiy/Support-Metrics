@@ -118,6 +118,7 @@ WITH enterprise_clients AS (
 
 licenses_only AS (
 	SELECT
+		Id,
 		Owner_Id			AS owner_crmid,
 		EndUser_Id			AS end_user_crmid,
 		OrderItem_Id		AS order_item_id,
@@ -127,6 +128,7 @@ licenses_only AS (
 		CRM.dbo.Licenses
 	UNION
 	SELECT
+		NULL,
 		Owner_Id,
 		EndUser_Id,
 		OrderItem_Id,
@@ -202,9 +204,9 @@ SELECT
 					ISNULL((SELECT TOP 1 lic_status
 							FROM ( SELECT	CASE 
 												WHEN tickets.creation_date BETWEEN subscription_start AND expiration_date 
-												THEN IIF(free = @free_license, @no_license_free, IIF(revoked IS NULL, @no_license, @no_license_revoked))
+												THEN IIF(free = @free_license, @no_license_free, IIF(revoked_since IS NULL, @no_license, @no_license_revoked))
 												WHEN expiration_date IS NOT NULL AND tickets.creation_date > expiration_date 
-												THEN IIF(free = @free_license, @no_license_expired_free, IIF(revoked IS NULL, @no_license_expired, @no_license_expired_revoked))
+												THEN IIF(free = @free_license, @no_license_expired_free, IIF(revoked_since IS NULL, @no_license_expired, @no_license_expired_revoked))
 												ELSE NULL 
 											END AS lic_status
 									FROM licenses

@@ -106,20 +106,20 @@ FROM #TicketsWithLicenses AS ti
 						FROM   CRM.dbo.Tribes
 						WHERE  Id = (SELECT TOP 1 value
 									 FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
-									 WHERE	Ticket_Id = @ticket_id  AND Name = 'ProcessingTribe')
+									 WHERE	Ticket_Id = ti.ticket_id  AND Name = 'ProcessingTribe')
 						UNION
 						SELECT product_tribe_id, product_tribe_name, 2
 						FROM   #PlatformsProductsTribes
 						WHERE  product_id IN (	SELECT	value
 												FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
-												WHERE	Ticket_Id = @ticket_id  AND Name = 'ProductId')
+												WHERE	Ticket_Id = ti.ticket_id  AND Name = 'ProductId')
 							   AND product_tribe_id IS NOT NULL
 						UNION
 						SELECT platform_tribe_id, platform_tribe_name, 2
 						FROM   #PlatformsProductsTribes
 						WHERE  platform_id IN (	SELECT	value
 												FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
-												WHERE	Ticket_Id = @ticket_id AND Name = 'PlatformedProductId' AND Value NOT LIKE '%:%')) AS ti) AS tribes_inner
+												WHERE	Ticket_Id = ti.ticket_id AND Name = 'PlatformedProductId' AND Value NOT LIKE '%:%')) AS ti) AS tribes_inner
 		WHERE id IS NOT NULL AND level = max_level
 	) AS tribes
 	OUTER APPLY (
