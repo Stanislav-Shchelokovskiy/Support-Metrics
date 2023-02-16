@@ -70,6 +70,7 @@ tickets_with_iterations_common_params = {
                 'severity_table': 'severity_table',
                 'operating_systems_table': 'operating_systems_table',
                 'ides_table': 'ides_table',
+                'platforms_products_table': 'platforms_products_table',
                 'baseline_aligned_mode_fields': 'baseline_aligned_mode_fields'
             },
         ),

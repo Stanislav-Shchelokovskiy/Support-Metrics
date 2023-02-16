@@ -158,19 +158,23 @@ licenses AS (
 					SaleItem_Id, 
 					Order_Id
 			FROM	CRM.dbo.OrderItems
-			WHERE	Id = lcs.order_item_id) AS oi
+			WHERE	Id = lcs.order_item_id
+		) AS oi
 		CROSS APPLY ( 
 			SELECT	FreeSaleItem_Id
 			FROM	CRM.dbo.License_FreeSaleItem
-			WHERE	License_Id = lcs.Id ) AS bundled_skus
+			WHERE	License_Id = lcs.Id 
+		) AS bundled_skus
 		CROSS APPLY(
 			SELECT	Status AS free
 			FROM	CRM.dbo.Orders
-			WHERE	Status IN (@paid, @free_license) AND Id = oi.Order_Id) AS o
+			WHERE	Status IN (@paid, @free_license) AND Id = oi.Order_Id
+		) AS o
 		CROSS APPLY(
 			SELECT	id, name AS license_name, items 
 			FROM	#SaleItemsFlat
-			WHERE	id IN (oi.SaleItem_Id, bundled_skus.FreeSaleItem_Id)) AS si
+			WHERE	id IN (oi.SaleItem_Id, bundled_skus.FreeSaleItem_Id)
+		) AS si
 		OUTER APPLY (
 			SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), p.Platform_Id), @separator) AS licensed_platforms
 			FROM (	SELECT	DISTINCT sibpc.Platform_Id
