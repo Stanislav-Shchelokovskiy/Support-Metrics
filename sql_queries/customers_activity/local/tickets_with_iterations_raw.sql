@@ -6,6 +6,14 @@ SELECT
       WHERE  id = t.ticket_type
       LIMIT 1 )  AS {ticket_type},
     t.{tribes_names},
+    ( SELECT GROUP_CONCAT(platform_name, '; ')
+      FROM (SELECT DISTINCT platform_name
+            FROM {platforms_products_table}
+            WHERE platform_id IN (SELECT value FROM JSON_EACH('["' || replace(t.platforms, ';', '", "') || '"]')))) AS {platforms},
+    ( SELECT GROUP_CONCAT(product_name, '; ')
+      FROM (SELECT DISTINCT product_name 
+            FROM {platforms_products_table}
+            WHERE product_id IN (SELECT value FROM JSON_EACH('["' || replace(t.products, ';', '", "') || '"]')))) AS {products},
     t.{is_private},
     t.{creation_date},
     t.license_name AS {license_name},

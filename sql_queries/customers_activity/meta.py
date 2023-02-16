@@ -175,6 +175,8 @@ class TicketsWithIterationsRawMeta(MetaData):
     ticket_scid = TicketsWithIterationsMeta.ticket_scid
     ticket_type = TicketsWithIterationsMeta.ticket_type
     tribes_names = TicketsWithIterationsMeta.tribes_names
+    platforms = TicketsWithIterationsMeta.platforms
+    products = TicketsWithIterationsMeta.products
     is_private = TicketsWithIterationsMeta.is_private
     creation_date = TicketsWithIterationsMeta.creation_date
     license_name = 'most_appropriate_license'
