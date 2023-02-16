@@ -43,11 +43,10 @@ def on_startup(sender, **kwargs):
 
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
-    # update posts by clients every day at 4am
     sender.add_periodic_task(
         crontab(
             minute=0,
-            hour=3,
+            hour=1,
         ),
         update_customers_activity.s(),
     )
