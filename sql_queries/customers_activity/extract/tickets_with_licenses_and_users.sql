@@ -235,11 +235,11 @@ FROM (	SELECT	Id, FriendlyId, EntityType, CAST(Created AS DATE) AS creation_date
 		OUTER APPLY (
 			SELECT 	
 				STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'PlatformedProductId' AND 
-													  Value NOT LIKE '%:%',  CAST(Value AS UNIQUEIDENTIFIER), NULL)), @separator) WITHIN GROUP (ORDER BY Value ASC) AS platforms_ids,
-				STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'ProductId',	 CAST(Value AS UNIQUEIDENTIFIER), NULL)), @separator) WITHIN GROUP (ORDER BY Value ASC) AS products_ids,
-				STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'SpecificId',	 CAST(Value AS UNIQUEIDENTIFIER), NULL)), @separator) WITHIN GROUP (ORDER BY Value ASC) AS specifics_ids,
-				STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'BuildId',		 Value, NULL)),							  @separator) WITHIN GROUP (ORDER BY Value ASC) AS builds_ids,
-				STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'FixedInBuild', Value, NULL)),							  @separator) WITHIN GROUP (ORDER BY Value ASC) AS fixed_in_builds_ids
+													  Value NOT LIKE '%:%',  CAST(Value AS UNIQUEIDENTIFIER), NULL)), @separator) AS platforms_ids,
+				STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'ProductId',	 CAST(Value AS UNIQUEIDENTIFIER), NULL)), @separator) AS products_ids,
+				STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'SpecificId',	 CAST(Value AS UNIQUEIDENTIFIER), NULL)), @separator) AS specifics_ids,
+				STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'BuildId',		 Value, NULL)),							  @separator) AS builds_ids,
+				STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'FixedInBuild', Value, NULL)),							  @separator) AS fixed_in_builds_ids
 			FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
 			WHERE	Ticket_Id = tickets.Id
 		) AS multi_selectors
