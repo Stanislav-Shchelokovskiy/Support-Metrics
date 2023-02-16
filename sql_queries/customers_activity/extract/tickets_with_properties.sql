@@ -1,10 +1,10 @@
 DECLARE @separator CHAR = ';'
 
-DECLARE @licensed				 TINYINT = 0
-DECLARE @free					 TINYINT = 1
-DECLARE @trial					 TINYINT = 8
-DECLARE @converted_paid			 TINYINT = 9
-DECLARE @converted_free			 TINYINT = 10;
+DECLARE @licensed					TINYINT = 0
+DECLARE @free						TINYINT = 1
+DECLARE @trial						TINYINT = 10
+DECLARE @converted_paid				TINYINT = 11
+DECLARE @converted_free				TINYINT = 12;
 
 SELECT
 	ti.user_crmid						AS {user_crmid},
