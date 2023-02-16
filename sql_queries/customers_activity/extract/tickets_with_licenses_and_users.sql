@@ -144,16 +144,19 @@ licenses AS (
 		end_user_crmid,
 		lic_origin,
 		revoked_since,
-		CONVERT(DATE, oi.SubscriptionStart) AS subscription_start,
-		CONVERT(DATE, DATEADD(DAY, ISNULL(oi.HoldingPeriod, 99999), oi.SubscriptionStart)) AS expiration_date,
-		IIF(o.Status = @free_license, @free_license, @paid) AS free,
-		si.Name AS license_name,
+		oi.subscription_start,
+		oi.expiration_date,
+		o.free,
+		si.license_name,
 		platforms.licensed_platforms,
 		products.licensed_products
 	FROM
 		licenses_only AS lcs 
 		CROSS APPLY (
-			SELECT	SubscriptionStart, SaleItem_Id, Order_Id, HoldingPeriod
+			SELECT	CONVERT(DATE, SubscriptionStart) AS subscription_start,
+					CONVERT(DATE, DATEADD(DAY, ISNULL(HoldingPeriod, 99999), SubscriptionStart)) AS expiration_date,
+					SaleItem_Id, 
+					Order_Id
 			FROM	CRM.dbo.OrderItems
 			WHERE	Id = lcs.order_item_id) AS oi
 		CROSS APPLY ( 
@@ -161,11 +164,11 @@ licenses AS (
 			FROM	CRM.dbo.License_FreeSaleItem
 			WHERE	License_Id = lcs.Id ) AS bundled_skus
 		CROSS APPLY(
-			SELECT	Status
+			SELECT	Status AS free
 			FROM	CRM.dbo.Orders
 			WHERE	Status IN (@paid, @free_license) AND Id = oi.Order_Id) AS o
 		CROSS APPLY(
-			SELECT	id, name, items 
+			SELECT	id, name AS license_name, items 
 			FROM	#SaleItemsFlat
 			WHERE	id IN (oi.SaleItem_Id, bundled_skus.FreeSaleItem_Id)) AS si
 		OUTER APPLY (
@@ -198,22 +201,29 @@ SELECT
 		multi_selectors.platforms_ids		AS ticket_platforms,
 		multi_selectors.products_ids		AS ticket_products,
 		licenses.*,
-		IIF(tickets.creation_date BETWEEN licenses.subscription_start AND licenses.expiration_date, IIF(licenses.free = @paid, @licensed, @free),
-			IIF(licenses.revoked_since IS NULL AND licenses.expiration_date IS NOT NULL AND tickets.creation_date > licenses.expiration_date, @expired,
-				IIF(licenses.revoked_since IS NOT NULL AND tickets.creation_date > licenses.revoked_since, @revoked,
-					ISNULL((SELECT TOP 1 lic_status
-							FROM ( SELECT	CASE 
-												WHEN tickets.creation_date BETWEEN subscription_start AND expiration_date 
-												THEN IIF(free = @free_license, @no_license_free, IIF(revoked_since IS NULL, @no_license, @no_license_revoked))
+		CASE
+			WHEN tickets.creation_date BETWEEN licenses.subscription_start AND licenses.expiration_date
+				THEN IIF(licenses.free = @paid, @licensed, @free)
+			WHEN licenses.revoked_since IS NULL AND licenses.expiration_date IS NOT NULL AND tickets.creation_date > licenses.expiration_date
+				THEN @expired
+			WHEN licenses.revoked_since IS NOT NULL AND tickets.creation_date > licenses.revoked_since
+				THEN @revoked
+			ELSE ISNULL((	SELECT TOP 1 lic_status
+							FROM ( SELECT	CASE
+												WHEN tickets.creation_date < MIN(subscription_start) OVER ()
+													THEN @trial
+												WHEN tickets.creation_date <= expiration_date 
+													THEN IIF(free = @free_license, @no_license_free, IIF(revoked_since IS NULL, @no_license, @no_license_revoked))
 												WHEN expiration_date IS NOT NULL AND tickets.creation_date > expiration_date 
-												THEN IIF(free = @free_license, @no_license_expired_free, IIF(revoked_since IS NULL, @no_license_expired, @no_license_expired_revoked))
+													THEN IIF(free = @free_license, @no_license_expired_free, IIF(revoked_since IS NULL, @no_license_expired, @no_license_expired_revoked))
 												ELSE NULL 
-											END AS lic_status
+											END AS lic_status,
+											expiration_date
 									FROM licenses
 									WHERE licenses.end_user_crmid = customers.user_crmid ) AS no_matched_licensess
-							ORDER BY -lic_status DESC),
-						IIF(EXISTS(SELECT TOP 1 customer_id FROM enterprise_clients WHERE customer_id = customers.user_crmid), @licensed,
-							@trial)))))		AS license_status
+							ORDER BY -lic_status DESC, expiration_date DESC), 
+					IIF(EXISTS(SELECT TOP 1 customer_id FROM enterprise_clients WHERE customer_id = customers.user_crmid), @licensed, @trial))
+		END									AS license_status
 INTO #TicketsWithLicensesRaw
 FROM (	SELECT	Id, FriendlyId, EntityType, CAST(Created AS DATE) AS creation_date, Owner, IsPrivate
 		FROM   SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].Tickets

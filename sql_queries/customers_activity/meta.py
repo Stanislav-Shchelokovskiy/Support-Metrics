@@ -177,7 +177,7 @@ class TicketsWithIterationsRawMeta(MetaData):
     tribes_names = TicketsWithIterationsMeta.tribes_names
     is_private = TicketsWithIterationsMeta.is_private
     creation_date = TicketsWithIterationsMeta.creation_date
-    license_name = TicketsWithIterationsMeta.license_name
+    license_name = 'most_appropriate_license'
     subscription_start = TicketsWithIterationsMeta.subscription_start
     expiration_date = TicketsWithIterationsMeta.expiration_date
     license_status = TicketsWithIterationsMeta.license_status

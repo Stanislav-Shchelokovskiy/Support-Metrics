@@ -8,7 +8,7 @@ SELECT
     t.{tribes_names},
     t.{is_private},
     t.{creation_date},
-    t.{license_name},
+    t.license_name AS {license_name},
     t.{subscription_start},
     t.{expiration_date},
     ( SELECT name 
