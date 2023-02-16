@@ -251,23 +251,23 @@ def test_generate_ticket_tags_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.tribe_id} IS NULL',
+            f'AND {TicketsWithIterationsMeta.tribes_ids} IS NULL',
         ),
         (
-            MockFilterParametersNode(include=True, values=['qwe', 'asd']),
-            f"AND {TicketsWithIterationsMeta.tribe_id} IN ('qwe','asd')",
+            MockFilterParametersNode(include=True, values=['t1', 't2']),
+            f"AND ({TicketsWithIterationsMeta.tribes_ids} LIKE '%t1%' OR {TicketsWithIterationsMeta.tribes_ids} LIKE '%t2%')"
         ),
         (
-            MockFilterParametersNode(include=True, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.tribe_id} IN ('qwe')",
+            MockFilterParametersNode(include=True, values=['t1']),
+            f"AND ({TicketsWithIterationsMeta.tribes_ids} LIKE '%t1%')"
         ),
         (
-            MockFilterParametersNode(include=False, values=['qwe', 'asd']),
-            f"AND ({TicketsWithIterationsMeta.tribe_id} IS NULL OR {TicketsWithIterationsMeta.tribe_id} NOT IN ('qwe','asd'))",
+            MockFilterParametersNode(include=False, values=['t1', 't2']),
+            f"AND ({TicketsWithIterationsMeta.tribes_ids} IS NULL OR NOT ({TicketsWithIterationsMeta.tribes_ids} LIKE '%t1%' OR {TicketsWithIterationsMeta.tribes_ids} LIKE '%t2%'))"
         ),
         (
-            MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND ({TicketsWithIterationsMeta.tribe_id} IS NULL OR {TicketsWithIterationsMeta.tribe_id} NOT IN ('qwe'))",
+            MockFilterParametersNode(include=False, values=['t1']),
+            f"AND ({TicketsWithIterationsMeta.tribes_ids} IS NULL OR NOT ({TicketsWithIterationsMeta.tribes_ids} LIKE '%t1%'))"
         ),
     ]
 )

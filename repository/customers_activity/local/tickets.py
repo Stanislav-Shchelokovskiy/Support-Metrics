@@ -1,3 +1,4 @@
+from typing import Iterable
 from toolbox.sql.repository import SqliteRepository
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
@@ -31,7 +32,7 @@ class TicketsTypesRepository(SqliteRepository):
             'filter_group_limit_clause': '',
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return TicketsTypesMeta.get_values()
 
 
@@ -50,7 +51,7 @@ class TicketsTagsRepository(SqliteRepository):
             'filter_group_limit_clause': f'ORDER BY {TicketsTagsMeta.name}',
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return TicketsTagsMeta.get_values()
 
 class FrameworksRepository(SqliteRepository):
@@ -68,7 +69,7 @@ class FrameworksRepository(SqliteRepository):
             'filter_group_limit_clause': f'ORDER BY {FrameworksMeta.name}',
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return FrameworksMeta.get_values()
 
 
@@ -87,7 +88,7 @@ class OperatingSystemsRepository(SqliteRepository):
             'filter_group_limit_clause': f'ORDER BY {OperatingSystemsMeta.name}',
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return OperatingSystemsMeta.get_values()
 
 
@@ -106,8 +107,8 @@ class BuildsRepository(SqliteRepository):
             'filter_group_limit_clause': f'ORDER BY {BuildsMeta.id} DESC',
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return [BuildsMeta.id]
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
+        return (BuildsMeta.id,)
 
 
 class SeverityRepository(SqliteRepository):
@@ -125,7 +126,7 @@ class SeverityRepository(SqliteRepository):
             'filter_group_limit_clause': '',
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return SeverityMeta.get_values()
 
 
@@ -144,7 +145,7 @@ class TicketStatueseRepository(SqliteRepository):
             'filter_group_limit_clause': '',
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return TicketStatusesMeta.get_values()
 
 
@@ -163,5 +164,5 @@ class IDEsRepository(SqliteRepository):
             'filter_group_limit_clause': f'ORDER BY {IDEsMeta.name}',
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return IDEsMeta.get_values()

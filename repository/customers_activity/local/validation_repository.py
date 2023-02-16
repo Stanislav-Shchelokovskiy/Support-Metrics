@@ -1,3 +1,4 @@
+from typing import Iterable
 from toolbox.sql.repository import SqliteRepository
 from sql_queries.index import CustomersActivitySqlPathIndex
 
@@ -17,5 +18,5 @@ class ValidationRepository(SqliteRepository):
             'table': kwargs['table'],
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return ['value', 'valid']
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
+        return ('value', 'valid',)

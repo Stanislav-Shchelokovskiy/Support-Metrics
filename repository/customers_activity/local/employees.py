@@ -1,3 +1,4 @@
+from typing import Iterable
 from toolbox.sql.repository import SqliteRepository
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
@@ -27,7 +28,7 @@ class EmpPositionsRepository(SqliteRepository):
             'filter_group_limit_clause': f'ORDER BY {PositionsMeta.name}',
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return PositionsMeta.get_values()
 
 
@@ -46,7 +47,7 @@ class EmpTribesRepository(SqliteRepository):
             'filter_group_limit_clause': f'ORDER BY {TribesMeta.name}',
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return TribesMeta.get_values()
 
 
@@ -69,5 +70,5 @@ class EmployeesRepository(SqliteRepository):
             'filter_group_limit_clause': f'{filter}\nORDER BY {EmployeesMeta.name}',
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return [EmployeesMeta.crmid, EmployeesMeta.name]
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
+        return (EmployeesMeta.crmid, EmployeesMeta.name,)

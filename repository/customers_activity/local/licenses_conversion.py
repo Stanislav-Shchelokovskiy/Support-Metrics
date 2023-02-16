@@ -1,3 +1,4 @@
+from typing import Iterable
 from toolbox.sql.repository import SqliteRepository
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
@@ -26,7 +27,7 @@ class LicenseStatusesRepository(SqliteRepository):
             'filter_group_limit_clause': '',
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return LicenseStatusesMeta.get_values()
 
 
@@ -47,5 +48,5 @@ class ConversionStatusesRepository(SqliteRepository):
                 ),
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return ConversionStatusesMeta.get_values()

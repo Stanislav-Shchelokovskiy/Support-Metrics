@@ -1,3 +1,4 @@
+from typing import Iterable
 from toolbox.sql.repository import SqliteRepository
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
@@ -31,8 +32,8 @@ class CustomersRepository(SqliteRepository):
             'filter_group_limit_clause': f'WHERE\n{ids_filter}' if ids_filter else f"WHERE {CustomersMeta.name} LIKE '{search_param}%'\nLIMIT {kwargs['take']} OFFSET {kwargs['skip']}",
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return [CustomersMeta.id, CustomersMeta.name]
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
+        return (CustomersMeta.id, CustomersMeta.name,)
 
     def validate_values(self, **kwargs) -> str:
         validation_repository = ValidationRepository()
@@ -58,7 +59,7 @@ class CustomersGroupsRepository(SqliteRepository):
             'filter_group_limit_clause': f'ORDER BY {CustomersGroupsMeta.name}',
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return CustomersGroupsMeta.get_values()
 
 
@@ -78,8 +79,8 @@ class TrackedCustomersGroupsRepository(SqliteRepository):
             'filter_group_limit_clause': f'GROUP BY {cols}\nORDER BY {BaselineAlignedCustomersGroupsMeta.name}',
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
-        return [
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
+        return (
             BaselineAlignedCustomersGroupsMeta.id,
             BaselineAlignedCustomersGroupsMeta.name,
-        ]
+        )

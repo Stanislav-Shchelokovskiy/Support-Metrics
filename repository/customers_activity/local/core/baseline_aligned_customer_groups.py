@@ -15,7 +15,7 @@ def get_baseline_aligned_mode_query(
     kwargs: dict,
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
 ):
-    return f"""(SELECT {get_common_select_fields()}
+    return f"""(SELECT twi.*,
         CAST(JULIANDAY(creation_date)-JULIANDAY('{kwargs['range_start']}')-baseline_aligned_offest_in_days AS INT) AS {BaselineAlignedModeMeta.days_since_baseline}
 FROM    {CustomersActivityDBIndex.get_tickets_with_iterations_name()} AS twi
 INNER JOIN (
@@ -34,7 +34,7 @@ WHERE {build_filter_string([
                 get_tickets_filter(kwargs={**kwargs, 'ignore_groups_filter':True}, filter_generator=filter_generator)
             ])}
 UNION ALL
-SELECT  {get_common_select_fields()}
+SELECT  twi.*,
         CAST(JULIANDAY({TicketsWithIterationsMeta.creation_date})-JULIANDAY('{kwargs['range_start']}') AS INT) AS {BaselineAlignedModeMeta.days_since_baseline}
 FROM    ( SELECT * 
           FROM   {CustomersActivityDBIndex.get_tickets_with_iterations_name()}
@@ -48,29 +48,3 @@ LEFT JOIN (
 ) AS tcg ON tcg.user_crmid = twi.user_crmid
 WHERE tcg.user_crmid IS NULL
 )"""
-
-
-def get_common_select_fields() -> str:
-    return f"""
-        {TicketsWithIterationsMeta.user_id},
-        {TicketsWithIterationsMeta.ticket_scid},
-        {TicketsWithIterationsMeta.tribe_id},
-        {TicketsWithIterationsMeta.tribe_name},
-        {TicketsWithIterationsMeta.user_groups},
-        {TicketsWithIterationsMeta.ticket_type},
-        {TicketsWithIterationsMeta.creation_date},
-        {TicketsWithIterationsMeta.ticket_tags},
-        {TicketsWithIterationsMeta.reply_id},
-        {TicketsWithIterationsMeta.component_id},
-        {TicketsWithIterationsMeta.feature_id},
-        {TicketsWithIterationsMeta.license_status},
-        {TicketsWithIterationsMeta.conversion_status},
-        {TicketsWithIterationsMeta.platforms},
-        {TicketsWithIterationsMeta.products},
-        {TicketsWithIterationsMeta.emp_post_id},
-        {TicketsWithIterationsMeta.emp_name},
-        {TicketsWithIterationsMeta.emp_position_name},
-        {TicketsWithIterationsMeta.emp_tribe_name},
-        {TicketsWithIterationsMeta.emp_position_id},
-        {TicketsWithIterationsMeta.emp_tribe_id},
-        {TicketsWithIterationsMeta.emp_crmid},"""

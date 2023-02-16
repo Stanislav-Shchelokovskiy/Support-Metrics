@@ -1,3 +1,4 @@
+from typing import Iterable
 from toolbox.sql.repository import Repository
 from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.customers_activity.meta import (
@@ -23,7 +24,7 @@ class TicketsTagsRepository(Repository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return TicketsTagsMeta.get_attrs()
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return TicketsTagsMeta.get_values()
 
 
@@ -38,7 +39,7 @@ class TicketsTypesRepository(Repository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return TicketsTypesMeta.get_attrs()
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return TicketsTypesMeta.get_values()
 
 
@@ -53,7 +54,7 @@ class FrameworksRepository(Repository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return FrameworksMeta.get_attrs()
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return FrameworksMeta.get_values()
 
 
@@ -68,7 +69,7 @@ class OperatingSystemsRepository(Repository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return OperatingSystemsMeta.get_attrs()
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return OperatingSystemsMeta.get_values()
 
 
@@ -83,7 +84,7 @@ class BuildsRepository(Repository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return BuildsMeta.get_attrs()
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return BuildsMeta.get_values()
 
 
@@ -98,7 +99,7 @@ class SeverityRepository(Repository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return SeverityMeta.get_attrs()
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return SeverityMeta.get_values()
 
 
@@ -113,7 +114,7 @@ class TicketStatusesRepository(Repository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return TicketStatusesMeta.get_attrs()
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return TicketStatusesMeta.get_values()
 
 
@@ -128,5 +129,5 @@ class IDEsRepository(Repository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return IDEsMeta.get_attrs()
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return IDEsMeta.get_values()

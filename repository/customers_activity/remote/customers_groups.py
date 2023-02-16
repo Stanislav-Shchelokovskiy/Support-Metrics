@@ -1,3 +1,4 @@
+from typing import Iterable
 from toolbox.sql.repository import Repository
 from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.customers_activity.meta import (
@@ -17,7 +18,7 @@ class CustomersGroupsRepository(Repository):
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return CustomersGroupsMeta.get_attrs()
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return CustomersGroupsMeta.get_values()
 
 
@@ -36,5 +37,5 @@ class TrackedCustomersGroupsRepository(Repository):
             **BaselineAlignedCustomersGroupsMeta.get_attrs(),
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> list[str]:
+    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return BaselineAlignedCustomersGroupsMeta.get_values()

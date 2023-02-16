@@ -61,10 +61,15 @@ tickets_with_iterations_common_params = {
             {
                 **TicketsWithIterationsRawMeta.get_attrs(),
                 **tickets_with_iterations_common_params,
+                'tickets_types_table': 'tickets_types_table',
                 'license_statuses_table': 'license_statuses_table',
                 'conversion_statuses_table': 'conversion_statuses_table',
                 'replies_types_table': 'replies_types_table',
                 'components_features_table': 'components_features_table',
+                'employees_table': 'employees_table',
+                'severity_table': 'severity_table',
+                'operating_systems_table': 'operating_systems_table',
+                'ides_table': 'ides_table',
                 'baseline_aligned_mode_fields': 'baseline_aligned_mode_fields'
             },
         ),

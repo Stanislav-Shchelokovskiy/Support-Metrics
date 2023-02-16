@@ -17,14 +17,13 @@ class TicketsSqlFilterClauseGenerator:
         return f'AND {col} = {params.value}'
 
     def generate_tribes_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
+        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_like_filter_generator(
             params
         )
         return generate_filter(
-            col=TicketsWithIterationsMeta.tribe_id,
+            col=TicketsWithIterationsMeta.tribes_ids,
             values=params.values,
             filter_prefix='AND',
-            values_converter=lambda val: f"'{val}'",
         )
 
     def generate_builds_filter(
