@@ -43,14 +43,14 @@ SELECT
 	ti.license_status					AS {license_status},
 	CASE
 		WHEN ti.license_status IN (@licensed, @free) AND EXISTS(SELECT	TOP 1 twl.user_id FROM #TicketsWithLicenses AS twl WHERE twl.user_id = ti.user_id AND twl.license_status = @trial)
-		THEN IIF(ti.license_status = @licensed, @converted_paid, @converted_free)
+			THEN IIF(ti.license_status = @licensed, @converted_paid, @converted_free)
 		WHEN ti.license_status = @trial
-		THEN ISNULL((	SELECT TOP 1 @converted_paid
-						FROM #TicketsWithLicenses AS twl
-						WHERE twl.user_id = ti.user_id AND twl.license_status = @licensed),
-					(	SELECT TOP 1 @converted_free
-						FROM #TicketsWithLicenses AS twl
-						WHERE twl.user_id = ti.user_id AND twl.license_status = @free))
+			THEN ISNULL((	SELECT TOP 1 @converted_paid
+							FROM #TicketsWithLicenses AS twl
+							WHERE twl.user_id = ti.user_id AND twl.license_status = @licensed),
+						(	SELECT TOP 1 @converted_free
+							FROM #TicketsWithLicenses AS twl
+							WHERE twl.user_id = ti.user_id AND twl.license_status = @free))
 		ELSE NULL
 	END 								AS {conversion_status}
 FROM #TicketsWithLicenses AS ti
