@@ -34,10 +34,6 @@ class FeatureParams(TribeParams):
     components: FilterParametersNode
 
 
-class ProductParams(TribeParams):
-    platforms: FilterParametersNode
-
-
 class EmployeeParams(ServerModel):
     tribes: FilterParametersNode
     positions: FilterParametersNode

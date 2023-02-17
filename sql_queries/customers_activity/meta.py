@@ -82,10 +82,14 @@ class CATComponentsFeaturesMeta(TribeIdMeta):
     feature_name = 'feature_name'
 
 
-class PlatformsProductsMeta(TribeIdMeta):
+class PlatformsProductsMeta(MetaData):
+    platform_tribe_id = 'platform_tribe_id'
     platform_id = 'platform_id'
+    product_tribe_id = 'product_tribe_id'
     product_id = 'product_id'
+    platform_tribe_name = 'platform_tribe_name'
     platform_name = 'platform_name'
+    product_tribe_name = 'product_tribe_name'
     product_name = 'product_name'
 
 
@@ -197,7 +201,7 @@ class TicketsWithIterationsRawMeta(MetaData):
     severity = TicketsWithIterationsMeta.severity
     duplicated_to_ticket_type = TicketsWithIterationsMeta.duplicated_to_ticket_type
     duplicated_to_ticket_scid = TicketsWithIterationsMeta.duplicated_to_ticket_scid
-    assigned_to =TicketsWithIterationsMeta.assigned_to
+    assigned_to = TicketsWithIterationsMeta.assigned_to
     operating_system = 'operating_system'
     ide = 'ide'
     emp_post_id = TicketsWithIterationsMeta.emp_post_id

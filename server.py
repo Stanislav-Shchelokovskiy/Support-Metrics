@@ -11,7 +11,6 @@ from server_models import (
     TicketsWithIterationsParams,
     TribeParams,
     FeatureParams,
-    ProductParams,
     StatAppState,
     ConversionStatusParams,
     EmployeeParams,
@@ -139,10 +138,9 @@ def customers_activity_get_platforms(params: TribeParams):
 
 
 @app.post('/get_products')
-def customers_activity_get_products(params: ProductParams):
+def customers_activity_get_products(params: TribeParams):
     df_json = server_repository.customers_activity_get_products(
         tribe_ids=params.tribes,
-        platform_ids=params.platforms,
     )
     return get_response(json_data=df_json)
 

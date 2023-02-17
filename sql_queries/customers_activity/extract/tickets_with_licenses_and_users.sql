@@ -16,15 +16,16 @@ DECLARE @licensed					TINYINT = 0
 DECLARE @free						TINYINT = 1
 DECLARE @expired					TINYINT = 2
 DECLARE @revoked					TINYINT = 3
-DECLARE @no_license					TINYINT = 4
-DECLARE @no_license_revoked			TINYINT = 5
-DECLARE @no_license_expired			TINYINT = 6
-DECLARE @no_license_expired_revoked	TINYINT = 7
-DECLARE @no_license_free			TINYINT = 8
-DECLARE @no_license_expired_free	TINYINT = 9
-DECLARE @trial						TINYINT = 10
-DECLARE @converted_paid				TINYINT = 11
-DECLARE @converted_free				TINYINT = 12
+DECLARE @assigned_to_someone		TINYINT = 4
+DECLARE @no_license					TINYINT = 5
+DECLARE @no_license_revoked			TINYINT = 6
+DECLARE @no_license_expired			TINYINT = 7
+DECLARE @no_license_expired_revoked	TINYINT = 8
+DECLARE @no_license_free			TINYINT = 9
+DECLARE @no_license_expired_free	TINYINT = 10
+DECLARE @trial						TINYINT = 11
+DECLARE @converted_paid				TINYINT = 101
+DECLARE @converted_free				TINYINT = 102
 
 
 DROP TABLE IF EXISTS #PlatformsProductsTribes
@@ -33,17 +34,17 @@ SELECT
 	products.Id				AS product_id,
 	platform_tribe.id		AS platform_tribe_id,
 	product_tribe.Id		AS product_tribe_id,
-	platforms.Name			AS platform_name,
-	products.Name			AS product_name,
 	platform_tribe.Name		AS platform_tribe_name,
-	product_tribe.Name		AS product_tribe_name
+	platforms.Name			AS platform_name,
+	product_tribe.Name		AS product_tribe_name,
+	products.Name			AS product_name
 INTO #PlatformsProductsTribes
 FROM (SELECT DISTINCT Product_Id, Platform_Id 
 	  FROM CRM.dbo.SaleItemBuild_Product_Plaform
 	  WHERE AuxiliaryPackage = 0) AS sibpp
 	  INNER JOIN CRM.dbo.Platforms AS platforms ON platforms.Id = sibpp.Platform_Id
 	  INNER JOIN CRM.dbo.Products AS products ON products.Id = sibpp.Product_Id
-	  LEFT JOIN CRM.dbo.Tribes AS platform_tribe ON platform_tribe.Id = platforms.DefaultTribe
+	  INNER JOIN CRM.dbo.Tribes AS platform_tribe ON platform_tribe.Id = platforms.DefaultTribe
 	  LEFT JOIN CRM.dbo.Tribes AS product_tribe ON product_tribe.Id = products.Tribe_Id
 WHERE platforms.DefaultTribe IS NOT NULL OR products.Tribe_Id IS NOT NULL
 
@@ -128,12 +129,12 @@ licenses_only AS (
 		CRM.dbo.Licenses
 	UNION
 	SELECT
-		NULL,
+		EntityOid,
 		Owner_Id,
 		EndUser_Id,
 		OrderItem_Id,
 		@historical_lic_origin,
-		IIF(ChangedProperties LIKE '%EndUser_Id%', CONVERT(DATE, EntityModified), NULL)
+		IIF(ChangedProperties LIKE '%EndUser%', CONVERT(DATE, EntityModified), NULL)
 	FROM 
 		CRMAudit.dxcrm.Licenses
 ),
@@ -211,7 +212,7 @@ SELECT
 			WHEN licenses.revoked_since IS NULL AND licenses.expiration_date IS NOT NULL AND tickets.creation_date > licenses.expiration_date
 				THEN @expired
 			WHEN licenses.revoked_since IS NOT NULL AND tickets.creation_date > licenses.revoked_since
-				THEN @revoked
+				THEN IIF(licenses.owner_crmid = customers.user_crmid, @assigned_to_someone, @revoked)
 			ELSE ISNULL((	SELECT TOP 1 lic_status
 							FROM ( SELECT	CASE
 												WHEN tickets.creation_date < MIN(subscription_start) OVER ()

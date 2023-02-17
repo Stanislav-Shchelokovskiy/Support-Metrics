@@ -72,8 +72,7 @@ def get_create_index_statements() -> dict[str, tuple[str]]:
                 _create_index_statement(
                     tbl=CustomersActivityDBIndex.get_platforms_products_name(),
                     cols=(
-                        PlatformsProductsMeta.tribe_id,
-                        PlatformsProductsMeta.platform_id,
+                        PlatformsProductsMeta.product_tribe_id,
                         PlatformsProductsMeta.product_id,
                         PlatformsProductsMeta.product_name,
                     )
@@ -81,7 +80,7 @@ def get_create_index_statements() -> dict[str, tuple[str]]:
                 _create_index_statement(
                     tbl=CustomersActivityDBIndex.get_platforms_products_name(),
                     cols=(
-                        PlatformsProductsMeta.tribe_id,
+                        PlatformsProductsMeta.platform_tribe_id,
                         PlatformsProductsMeta.platform_id,
                         PlatformsProductsMeta.platform_name,
                     )
