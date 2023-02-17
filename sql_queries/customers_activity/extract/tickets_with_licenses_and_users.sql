@@ -43,7 +43,7 @@ FROM (SELECT DISTINCT Product_Id, Platform_Id
 	  WHERE AuxiliaryPackage = 0) AS sibpp
 	  INNER JOIN CRM.dbo.Platforms AS platforms ON platforms.Id = sibpp.Platform_Id
 	  INNER JOIN CRM.dbo.Products AS products ON products.Id = sibpp.Product_Id
-	  LEFT JOIN CRM.dbo.Tribes AS platform_tribe ON platform_tribe.Id = platforms.DefaultTribe
+	  INNER JOIN CRM.dbo.Tribes AS platform_tribe ON platform_tribe.Id = platforms.DefaultTribe
 	  LEFT JOIN CRM.dbo.Tribes AS product_tribe ON product_tribe.Id = products.Tribe_Id
 WHERE platforms.DefaultTribe IS NOT NULL OR products.Tribe_Id IS NOT NULL
 
@@ -128,12 +128,12 @@ licenses_only AS (
 		CRM.dbo.Licenses
 	UNION
 	SELECT
-		NULL,
+		EntityOid,
 		Owner_Id,
 		EndUser_Id,
 		OrderItem_Id,
 		@historical_lic_origin,
-		IIF(ChangedProperties LIKE '%EndUser_Id%', CONVERT(DATE, EntityModified), NULL)
+		IIF(ChangedProperties LIKE '%EndUser%', CONVERT(DATE, EntityModified), NULL)
 	FROM 
 		CRMAudit.dxcrm.Licenses
 ),
