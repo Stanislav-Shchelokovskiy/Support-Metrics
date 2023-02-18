@@ -3,8 +3,9 @@ DECLARE @separator CHAR = ';'
 DECLARE @licensed					TINYINT = 0
 DECLARE @free						TINYINT = 1
 DECLARE @trial						TINYINT = 11
-DECLARE @converted_paid				TINYINT = 101
-DECLARE @converted_free				TINYINT = 102
+
+DECLARE @converted_paid	TINYINT = 0
+DECLARE @converted_free	TINYINT = 1
 
 SELECT
 	ti.user_crmid						AS {user_crmid},

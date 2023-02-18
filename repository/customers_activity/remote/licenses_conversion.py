@@ -37,7 +37,7 @@ class ConversionStatusesRepository(Repository):
         return DataFrame(
             data={
                 ConversionStatusesMeta.license_status_id: [0, 1, 11, 11],
-                ConversionStatusesMeta.id: [101, 102, 101, 102],
+                ConversionStatusesMeta.id: [0, 1, 0, 1],
                 ConversionStatusesMeta.name: [
                     'Paid',
                     'Free',
