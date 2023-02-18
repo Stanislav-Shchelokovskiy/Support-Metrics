@@ -24,8 +24,9 @@ DECLARE @no_license_expired_revoked	TINYINT = 8
 DECLARE @no_license_free			TINYINT = 9
 DECLARE @no_license_expired_free	TINYINT = 10
 DECLARE @trial						TINYINT = 11
-DECLARE @converted_paid				TINYINT = 101
-DECLARE @converted_free				TINYINT = 102
+
+DECLARE @converted_paid	TINYINT = 5
+DECLARE @converted_free	TINYINT = 6
 
 
 DROP TABLE IF EXISTS #PlatformsProductsTribes
