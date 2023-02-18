@@ -28,6 +28,9 @@ DECLARE @trial						TINYINT = 11
 DECLARE @converted_paid	TINYINT = 0
 DECLARE @converted_free	TINYINT = 1
 
+DECLARE @best_suitable	TINYINT = 0
+DECLARE @suitable		TINYINT = 1
+DECLARE @least_suitable	TINYINT = 2
 
 DROP TABLE IF EXISTS #PlatformsProductsTribes
 SELECT
@@ -111,7 +114,7 @@ CREATE CLUSTERED INDEX sib_product_cnt ON #SaleItemBuildProductCount (sib_Id, pl
 
 
 
-DROP TABLE IF EXISTS #TicketsWithLicensesRaw;
+DROP TABLE IF EXISTS #TicketsWithLicenses;
 WITH enterprise_clients AS (
 	SELECT	Customer_Id AS customer_id
 	FROM	DXStatisticsV2.dbo.UserInGroups
@@ -179,17 +182,19 @@ licenses AS (
 		) AS si
 		OUTER APPLY (
 			SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), p.Platform_Id), @separator) AS licensed_platforms
-			FROM (	SELECT	DISTINCT sibpc.Platform_Id
-					FROM	(SELECT Id FROM CRM.dbo.SaleItem_Build WHERE SaleItem_Id IN (SELECT value FROM STRING_SPLIT(si.items, @separator))) AS sib
-							INNER JOIN #SaleItemBuildProductCount AS sibpc ON sibpc.sib_id = sib.Id
-							INNER JOIN #PlatformProductCount AS ppc ON ppc.platform_id = sibpc.platform_id AND sibpc.product_cnt > ppc.product_cnt_boundary) AS p
+			FROM (	SELECT		sibpc.Platform_Id
+					FROM		(SELECT Id FROM CRM.dbo.SaleItem_Build WHERE SaleItem_Id IN (SELECT value FROM STRING_SPLIT(si.items, @separator))) AS sib
+								INNER JOIN #SaleItemBuildProductCount AS sibpc ON sibpc.sib_id = sib.Id
+								INNER JOIN #PlatformProductCount AS ppc ON ppc.platform_id = sibpc.platform_id AND sibpc.product_cnt > ppc.product_cnt_boundary
+					GROUP BY	sibpc.Platform_Id) AS p
 		) AS platforms
 		OUTER APPLY (
 			SELECT STRING_AGG(CONVERT(NVARCHAR(MAX), p.Product_Id), @separator) AS licensed_products
-			FROM (	SELECT	DISTINCT sibpp.Product_Id
-					FROM	CRM.dbo.SaleItem_Build AS sib
-							INNER JOIN CRM.dbo.SaleItemBuild_Product_Plaform AS sibpp ON sibpp.SaleItemBuild_Id = sib.Id
-					WHERE	sib.SaleItem_Id IN (SELECT value FROM STRING_SPLIT(si.items, @separator)) ) AS p
+			FROM (	SELECT		sibpp.Product_Id
+					FROM		CRM.dbo.SaleItem_Build AS sib
+								INNER JOIN CRM.dbo.SaleItemBuild_Product_Plaform AS sibpp ON sibpp.SaleItemBuild_Id = sib.Id
+					WHERE		sib.SaleItem_Id IN (SELECT value FROM STRING_SPLIT(si.items, @separator)) 
+					GROUP BY	sibpp.Product_Id) AS p
 		) AS products
 )
 
@@ -208,12 +213,9 @@ SELECT
 		multi_selectors.products_ids		AS ticket_products,
 		licenses.*,
 		CASE
-			WHEN tickets.creation_date BETWEEN licenses.subscription_start AND licenses.expiration_date
-				THEN IIF(licenses.free = @paid, @licensed, @free)
-			WHEN licenses.revoked_since IS NULL AND licenses.expiration_date IS NOT NULL AND tickets.creation_date > licenses.expiration_date
-				THEN @expired
-			WHEN licenses.revoked_since IS NOT NULL AND tickets.creation_date > licenses.revoked_since
-				THEN IIF(licenses.owner_crmid = customers.user_crmid, @assigned_to_someone, @revoked)
+			WHEN suitability = @best_suitable	THEN IIF(licenses.free = @paid, @licensed, @free)
+			WHEN suitability = @suitable		THEN @expired
+			WHEN suitability = @least_suitable	THEN IIF(licenses.owner_crmid = customers.user_crmid, @assigned_to_someone, @revoked)
 			ELSE ISNULL((	SELECT TOP 1 lic_status
 							FROM ( SELECT	CASE
 												WHEN tickets.creation_date < MIN(subscription_start) OVER ()
@@ -226,11 +228,12 @@ SELECT
 											END AS lic_status,
 											expiration_date
 									FROM licenses
-									WHERE licenses.end_user_crmid = customers.user_crmid ) AS no_matched_licensess
-							ORDER BY -lic_status DESC, expiration_date DESC), 
+									WHERE licenses.end_user_crmid = customers.user_crmid ) AS not_matched_licensess
+							WHERE lic_status IS NOT NULL
+							ORDER BY lic_status ASC, expiration_date DESC), 
 					IIF(EXISTS(SELECT TOP 1 customer_id FROM enterprise_clients WHERE customer_id = customers.user_crmid), @licensed, @trial))
 		END									AS license_status
-INTO #TicketsWithLicensesRaw
+INTO #TicketsWithLicenses
 FROM (	SELECT	Id, FriendlyId, EntityType, CAST(Created AS DATE) AS creation_date, Owner, IsPrivate
 		FROM   SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].Tickets
 		WHERE 	Created BETWEEN @start_date AND @end_date ) AS tickets
@@ -256,45 +259,31 @@ FROM (	SELECT	Id, FriendlyId, EntityType, CAST(Created AS DATE) AS creation_date
 			WHERE	FriendlyId = users.FriendlyId
 		) AS customers
 		OUTER APPLY (
-			SELECT *
-			FROM (	SELECT	
-							licenses_inner.*, 
-							licensed_ticket_products.ids AS products_in_license, 
-							licensed_ticket_platforms.ids AS platforms_in_license
-					FROM	licenses AS licenses_inner
-							CROSS APPLY (
-								SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), tp.value), @separator) AS ids
-								FROM	STRING_SPLIT(multi_selectors.products_ids, @separator)   AS tp
-										INNER JOIN STRING_SPLIT(licenses_inner.licensed_products, @separator) AS lp ON lp.value = tp.value
-							) AS licensed_ticket_products
-							CROSS APPLY (
-								SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), tp.value), @separator)  AS ids
-								FROM	STRING_SPLIT(multi_selectors.platforms_ids, @separator)	  AS tp
-										INNER JOIN STRING_SPLIT(licenses_inner.licensed_platforms, @separator) AS lp ON lp.value = tp.value
-							) AS licensed_ticket_platforms
-					WHERE end_user_crmid = customers.user_crmid ) AS licenses_mapped
-			WHERE licenses_mapped.products_in_license IS NOT NULL OR licenses_mapped.platforms_in_license IS NOT NULL
+			SELECT	TOP 1 licenses_inner.*
+			FROM	(	SELECT	licenses_most_inner.*,
+							CASE 
+								WHEN tickets.creation_date BETWEEN licenses_most_inner.subscription_start AND licenses_most_inner.expiration_date
+									THEN @best_suitable
+								WHEN licenses_most_inner.revoked_since IS NULL AND licenses_most_inner.expiration_date IS NOT NULL AND tickets.creation_date > licenses_most_inner.expiration_date
+									THEN @suitable
+								WHEN licenses_most_inner.revoked_since IS NOT NULL AND tickets.creation_date > licenses_most_inner.revoked_since
+									THEN @least_suitable
+								ELSE NULL
+							END AS suitability
+						FROM	licenses AS licenses_most_inner
+						WHERE	end_user_crmid = customers.user_crmid 
+					) AS licenses_inner
+			WHERE	suitability IS NOT NULL AND
+					(	EXISTS (	SELECT	*
+									FROM	STRING_SPLIT(multi_selectors.products_ids, @separator)   AS tp
+											INNER JOIN STRING_SPLIT(licenses_inner.licensed_products, @separator) AS lp ON lp.value = tp.value ) 
+						OR
+						EXISTS (	SELECT	*
+									FROM	STRING_SPLIT(multi_selectors.platforms_ids, @separator)	  AS tp
+											INNER JOIN STRING_SPLIT(licenses_inner.licensed_platforms, @separator) AS lp ON lp.value = tp.value))
+			ORDER BY suitability, lic_origin	
 		) AS licenses
 WHERE IsEmployee = 0 OR EntityType=2
-
-CREATE CLUSTERED INDEX idx_userid_ticketscid_ls ON #TicketsWithLicensesRaw(user_id, ticket_scid, license_status)
-
-
-
-DROP TABLE IF EXISTS #TicketsWithLicenses
-SELECT *
-INTO #TicketsWithLicenses
-FROM (	SELECT 
-			twl_raw.*,
-			ROW_NUMBER() OVER (PARTITION BY twl_raw.user_id, twl_raw.ticket_scid ORDER BY twl_raw.license_status ASC) AS license_rank
-		FROM 
-			#TicketsWithLicensesRaw AS twl_raw
-			INNER JOIN ( SELECT		user_id, ticket_scid, MIN(license_status) AS license_status
-						 FROM		#TicketsWithLicensesRaw
-						 GROUP BY	user_id, ticket_scid) AS twl_raw_ranked ON	twl_raw_ranked.user_id = 		twl_raw.user_id 	AND
-																				twl_raw_ranked.ticket_scid = 	twl_raw.ticket_scid AND
-																				twl_raw_ranked.license_status = twl_raw.license_status) AS twl
-WHERE license_rank = 1
 
 CREATE NONCLUSTERED INDEX idx_userid_ls ON #TicketsWithLicenses(user_id, license_status)
 CREATE CLUSTERED INDEX idx_tickettype_ticketscid ON #TicketsWithLicenses(ticket_id)
