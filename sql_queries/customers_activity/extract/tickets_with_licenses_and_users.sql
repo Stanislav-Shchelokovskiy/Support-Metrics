@@ -102,6 +102,7 @@ FROM (	SELECT id, name, STRING_AGG(items, @separator) AS items
 	 CROSS APPLY (SELECT DISTINCT value AS item FROM STRING_SPLIT(si.items, @separator)) AS v
 GROUP BY id, name
 
+CREATE CLUSTERED INDEX idx_id ON #SaleItemsFlat (id)
 
 
 DROP TABLE IF EXISTS #SaleItemBuildProductCount
@@ -173,10 +174,10 @@ licenses AS (
 		CROSS APPLY(
 			SELECT	Status AS free
 			FROM	CRM.dbo.Orders
-			WHERE	Status IN (@paid, @free_license) AND Id = oi.Order_Id
+			WHERE	Id = oi.Order_Id AND Status IN (@paid, @free_license) 
 		) AS o
 		CROSS APPLY(
-			SELECT	id, name AS license_name, items 
+			SELECT	name AS license_name, items 
 			FROM	#SaleItemsFlat
 			WHERE	id IN (oi.SaleItem_Id, bundled_skus.FreeSaleItem_Id)
 		) AS si
