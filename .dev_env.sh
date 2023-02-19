@@ -6,3 +6,4 @@ export DB_HOME=/home/shchelokovskiy/code/support_analytics/data
 export SQLITE_DATABASE=/home/shchelokovskiy/code/support_analytics/data/db
 export REDIS_DB=SUPPORT_ANALYTICS
 export QUERY_SERVICE=localhost:11005
+export UPDATE_CUSTOMERS_ACTIVITY_ON_STARTUP=1

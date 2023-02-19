@@ -30,8 +30,10 @@ def on_startup(sender, **kwargs):
         'customers_activity_load_replies_types',
         'customers_activity_load_platforms_products',
         'customers_activity_load_ides',
-        'update_customers_activity',
     ]
+    if os.environ['UPDATE_CUSTOMERS_ACTIVITY_ON_STARTUP']:
+        tasks.append('update_customers_activity')
+
     sender_app: Celery = sender.app
     with sender_app.connection() as conn:
         for task in tasks:
@@ -47,6 +49,7 @@ def setup_periodic_tasks(sender, **kwargs):
         crontab(
             minute=0,
             hour=1,
+            day_of_week=(1,3,5,),
         ),
         update_customers_activity.s(),
     )
