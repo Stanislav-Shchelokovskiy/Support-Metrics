@@ -21,6 +21,7 @@ x-support_analytics_service:
     - DB_HOME
     - SQLITE_DATABASE=${DB_HOME}/db
     - LD_LIBRARY_PATH=/usr/lib #https://stackoverflow.com/questions/49920444/upgrading-sqlite3-version-used-in-python3-on-linux
+    - UPDATE_CUSTOMERS_ACTIVITY_ON_STARTUP
 
 services:
   support_analytics_dashboard:
