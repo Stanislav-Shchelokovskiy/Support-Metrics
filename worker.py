@@ -31,7 +31,7 @@ def on_startup(sender, **kwargs):
         'customers_activity_load_platforms_products',
         'customers_activity_load_ides',
     ]
-    if os.environ['UPDATE_CUSTOMERS_ACTIVITY_ON_STARTUP']:
+    if int(os.environ['UPDATE_CUSTOMERS_ACTIVITY_ON_STARTUP']):
         tasks.append('update_customers_activity')
 
     sender_app: Celery = sender.app
