@@ -16,7 +16,7 @@ Add **.env** file containing the following env vars:
 Make sure:
 1. <b>support_analytics</b> network is created<br>
     docker network create -d bridge support_analytics
-2. <b>redice_service</b> is up<br>
-    docker run --restart always -d --name=redis_service --network=support_analytics -p 6379:6379 -p 10001:8001 redis/redis-stack:latest
+2. <b>redise_service</b> is up<br>
+    docker run -d --name=redis_service -v redis_stack:/data --network=support_analytics -p 6379:6379 -p 10001:8001 --restart always redis/redis-stack:latest 
 
 Then run <b>docker-compose up</b>.
