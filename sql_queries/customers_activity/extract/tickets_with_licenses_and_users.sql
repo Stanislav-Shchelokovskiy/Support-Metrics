@@ -282,7 +282,7 @@ FROM (	SELECT	Id, FriendlyId, EntityType, CAST(Created AS DATE) AS creation_date
 						EXISTS (	SELECT	*
 									FROM	STRING_SPLIT(multi_selectors.platforms_ids, @separator)	  AS tp
 											INNER JOIN STRING_SPLIT(licenses_inner.licensed_platforms, @separator) AS lp ON lp.value = tp.value))
-			ORDER BY suitability, lic_origin	
+			ORDER BY suitability, lic_origin, free	
 		) AS licenses
 WHERE IsEmployee = 0 OR EntityType=2
 

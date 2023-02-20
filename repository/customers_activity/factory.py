@@ -124,6 +124,7 @@ class SqlServerFactory:
     def create_ides_repository(self, **kwargs) -> IDEsRepository:
         return IDEsRepository()
 
+
 class SqliteFactory:
 
     def create_tickets_with_iterations_period_repository(self, **kwargs) -> SqliteTicketsWithIterationsPeriodRepository:
@@ -158,7 +159,7 @@ class SqliteFactory:
 
     def create_ticket_statuses_repository(self, **kwargs) -> SqliteTicketStatueseRepository:
         return SqliteTicketStatueseRepository()
-    
+
     def create_ides_repository(self, **kwargs) -> SqliteIDEsRepository:
         return SqliteIDEsRepository()
 

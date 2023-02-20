@@ -1,5 +1,5 @@
 from typing import Iterable
-from toolbox.sql.repository import Repository
+from toolbox.sql.repository import SqlServerRepository
 from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.customers_activity.meta import (
     TicketsTagsMeta,
@@ -13,7 +13,7 @@ from sql_queries.customers_activity.meta import (
 )
 
 
-class TicketsTagsRepository(Repository):
+class TicketsTagsRepository(SqlServerRepository):
     """
     Loads tags we use to filter customers by.
     """
@@ -28,7 +28,7 @@ class TicketsTagsRepository(Repository):
         return TicketsTagsMeta.get_values()
 
 
-class TicketsTypesRepository(Repository):
+class TicketsTypesRepository(SqlServerRepository):
     """
     Loads tickets types.
     """
@@ -43,7 +43,7 @@ class TicketsTypesRepository(Repository):
         return TicketsTypesMeta.get_values()
 
 
-class FrameworksRepository(Repository):
+class FrameworksRepository(SqlServerRepository):
     """
     Loads frameworks/specifics.
     """
@@ -58,7 +58,7 @@ class FrameworksRepository(Repository):
         return FrameworksMeta.get_values()
 
 
-class OperatingSystemsRepository(Repository):
+class OperatingSystemsRepository(SqlServerRepository):
     """
     Loads operating systems.
     """
@@ -73,7 +73,7 @@ class OperatingSystemsRepository(Repository):
         return OperatingSystemsMeta.get_values()
 
 
-class BuildsRepository(Repository):
+class BuildsRepository(SqlServerRepository):
     """
     Loads builds.
     """
@@ -88,7 +88,7 @@ class BuildsRepository(Repository):
         return BuildsMeta.get_values()
 
 
-class SeverityRepository(Repository):
+class SeverityRepository(SqlServerRepository):
     """
     Loads bug severity values.
     """
@@ -103,7 +103,7 @@ class SeverityRepository(Repository):
         return SeverityMeta.get_values()
 
 
-class TicketStatusesRepository(Repository):
+class TicketStatusesRepository(SqlServerRepository):
     """
     Loads ticket statuses.
     """
@@ -118,7 +118,7 @@ class TicketStatusesRepository(Repository):
         return TicketStatusesMeta.get_values()
 
 
-class IDEsRepository(Repository):
+class IDEsRepository(SqlServerRepository):
     """
     Loads ticket ides.
     """

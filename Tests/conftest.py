@@ -38,4 +38,4 @@ def build_test_db():
             start_date=start_date,
             end_date=end_date,
         )
-        customers_activity.build_tables(rank_period_offset='6 MONTHS')
+        customers_activity.process_staged_data(rank_period_offset='6 MONTHS')

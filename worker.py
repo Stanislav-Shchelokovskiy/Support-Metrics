@@ -67,7 +67,7 @@ def update_customers_activity(**kwargs):
             customers_activity_load_customers_tickets.si(),
             customers_activity_load_employees_iterations.si(),
         ]
-    )(customers_activity_build_tables.si())
+    )(customers_activity_process_staged_data.si())
 
 
 @app.task(name='customers_activity_load_tickets_types', bind=True)
@@ -218,11 +218,11 @@ def customers_activity_load_employees_iterations(self, **kwargs):
     )
 
 
-@app.task(name='customers_activity_build_tables', bind=True)
-def customers_activity_build_tables(self, **kwargs):
+@app.task(name='customers_activity_process_staged_data', bind=True)
+def customers_activity_process_staged_data(self, **kwargs):
     return run_retriable_task(
         self,
-        customers_activity.build_tables,
+        customers_activity.process_staged_data,
         rank_period_offset=CustomersActivityConfig.get_rank_period_offset(),
     )
 

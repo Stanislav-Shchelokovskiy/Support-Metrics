@@ -13,6 +13,7 @@ Add **.env** file containing the following env vars:
 - CORS_ORIGINS=["http://ubuntu-support.corp.devexpress.com","http://localhost:3000"]
 - QUERY_SERVICE=query_service_server:11005
 - UPDATE_CUSTOMERS_ACTIVITY_ON_STARTUP=0
+- PRODUCTION=1
 
 Make sure:
 1. <b>support_analytics</b> network is created<br>
