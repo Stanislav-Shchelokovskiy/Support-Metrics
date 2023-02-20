@@ -1,5 +1,5 @@
 from typing import Iterable
-from toolbox.sql.repository import Repository
+from toolbox.sql.repository import SqlServerRepository
 from toolbox.sql.sql_query import SqlQuery
 from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.customers_activity.meta import (
@@ -8,7 +8,7 @@ from sql_queries.customers_activity.meta import (
 )
 
 
-class EmployeesIterationsRepository(Repository):
+class EmployeesIterationsRepository(SqlServerRepository):
     """
     Loads employee iterations.
     """
@@ -23,7 +23,7 @@ class EmployeesIterationsRepository(Repository):
         return EmployeesIterationsMeta.get_values()
 
 
-class CustomersTicketsRepository(Repository):
+class CustomersTicketsRepository(SqlServerRepository):
     """
     Loads customers with their tickets and licenses.
     """

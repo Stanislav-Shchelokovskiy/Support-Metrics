@@ -1,10 +1,10 @@
 from typing import Iterable
-from toolbox.sql.repository import Repository
+from toolbox.sql.repository import SqlServerRepository
 from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.customers_activity.meta import PlatformsProductsMeta
 
 
-class PlatformsProductsRepository(Repository):
+class PlatformsProductsRepository(SqlServerRepository):
     """
     Loads available platforms and products.
     """
