@@ -1,6 +1,7 @@
 import os
 import json
 from toolbox.utils.network import Network
+from toolbox.sql.connections.sql_server_connection import SqlServerConnection
 from pandas import DataFrame
 from toolbox.sql.sqlite_db import get_or_create_db
 from sql_queries.index import CustomersActivityDBIndex
@@ -119,8 +120,11 @@ def load_conversion_statuses():
     df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_conversion_statuses_name(): df})
 
+def cleanup_remote_server_resources():
+    SqlServerConnection().dispose()
 
-def build_tables(rank_period_offset: str):
+def process_staged_data(rank_period_offset: str):
+    cleanup_remote_server_resources()
     TablesBuilder.customers_activity.build_tickets_with_iterations(rank_period_offset=rank_period_offset)
     TablesBuilder.customers_activity.build_emp_positions()
     TablesBuilder.customers_activity.build_emp_tribes()
