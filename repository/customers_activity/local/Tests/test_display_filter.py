@@ -1,5 +1,6 @@
 import pytest
 from pandas import DataFrame
+from toolbox.sql.repository import Repository
 from repository.customers_activity.local.generators.filters_generators.display_filter import DisplayFilterGenerator
 from sql_queries.index import CustomersActivityDBIndex
 from sql_queries.customers_activity.meta import (
@@ -16,23 +17,17 @@ from server_models import (
 )
 
 
-class MockSqliteRepository:
-
-    def execute_query(self, **kwargs):
-        table_name = kwargs['query_format_params']['table_name']
+class MockSqliteRepository(Repository):
+    # yapf: disable
+    def get_data(self, **kwargs):
+        table_name = self.queries.get_main_query_format_params()['table_name']
         return {
-            CustomersActivityDBIndex.get_tribes_name():
-                DataFrame(data={TribesMeta.name: ['XAML United Team']}),
-            CustomersActivityDBIndex.get_tickets_types_name():
-                DataFrame(data={TicketsTypesMeta.name: ['Question']}),
-            CustomersActivityDBIndex.get_license_statuses_name():
-                DataFrame(
-                    data={LicenseStatusesMeta.name: ['Licensed', 'Free']}
-                ),
+            CustomersActivityDBIndex.get_tribes_name(): DataFrame(data={TribesMeta.name: ['XAML United Team']}),
+            CustomersActivityDBIndex.get_tickets_types_name(): DataFrame(data={TicketsTypesMeta.name: ['Question']}),
+            CustomersActivityDBIndex.get_license_statuses_name(): DataFrame(data={LicenseStatusesMeta.name: ['Licensed', 'Free']}),
         }[table_name]
 
 
-# yapf: disable
 @pytest.mark.parametrize(
     'node, output', [
         (
@@ -127,7 +122,8 @@ def test_generate_conversion_filter(
     node: TicketsWithIterationsParams,
     output: list[str | int],
 ):
-    assert DisplayFilterGenerator.generate_display_filter(
-        node=node,
-        repository=MockSqliteRepository(),
-    ) == output
+    with pytest.MonkeyPatch.context() as monkeypatch:
+        monkeypatch.setattr(DisplayFilterGenerator, 'repository_type', MockSqliteRepository)
+        assert DisplayFilterGenerator.generate_display_filter(
+            node=node,
+        ) == output

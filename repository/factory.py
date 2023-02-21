@@ -1,6 +1,6 @@
 from repository.customers_activity.factory import (
     CustomersActivityFactory,
-    TablesBuilder as InnerTablesBuilder,
+    CustomersActivityTablesBuilderFactory,
 )
 
 
@@ -9,4 +9,4 @@ class RepositoryFactory:
 
 
 class TablesBuilder:
-    customers_activity = InnerTablesBuilder()
+    customers_activity = CustomersActivityTablesBuilderFactory

@@ -1,5 +1,5 @@
 from typing import Iterable
-from toolbox.sql.repository import SqlServerRepository
+from toolbox.sql.repository_queries import RepositoryAlchemyQueries
 from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.customers_activity.meta import (
     CATRepliesTypesMeta,
@@ -7,10 +7,7 @@ from sql_queries.customers_activity.meta import (
 )
 
 
-class CATRepliesTypesRepository(SqlServerRepository):
-    """
-    Loads CAT reply types.
-    """
+class CATRepliesTypes(RepositoryAlchemyQueries):
 
     def get_main_query_path(self, kwargs: dict) -> str:
         return CustomersActivitySqlPathIndex.get_replies_types_path()
@@ -22,10 +19,7 @@ class CATRepliesTypesRepository(SqlServerRepository):
         return CATRepliesTypesMeta.get_values()
 
 
-class CATComponentsFeaturesRepository(SqlServerRepository):
-    """
-    Loads CAT components and features.
-    """
+class CATComponentsFeatures(RepositoryAlchemyQueries):
 
     def get_main_query_path(self, kwargs: dict) -> str:
         return CustomersActivitySqlPathIndex.get_components_features_path()

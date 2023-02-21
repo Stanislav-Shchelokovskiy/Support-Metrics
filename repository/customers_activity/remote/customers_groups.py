@@ -1,5 +1,5 @@
 from typing import Iterable
-from toolbox.sql.repository import SqlServerRepository
+from toolbox.sql.repository_queries import RepositoryAlchemyQueries
 from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.customers_activity.meta import (
     CustomersGroupsMeta,
@@ -7,7 +7,7 @@ from sql_queries.customers_activity.meta import (
 )
 
 
-class CustomersGroupsRepository(SqlServerRepository):
+class CustomersGroups(RepositoryAlchemyQueries):
     """
     Loads groups we use to filter tickets by.
     """
@@ -22,7 +22,7 @@ class CustomersGroupsRepository(SqlServerRepository):
         return CustomersGroupsMeta.get_values()
 
 
-class TrackedCustomersGroupsRepository(SqlServerRepository):
+class TrackedCustomersGroups(RepositoryAlchemyQueries):
     """
     Loads groups we use to filter and tickets align tickets by.
     """

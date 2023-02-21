@@ -1,5 +1,5 @@
 from typing import Iterable
-from toolbox.sql.repository import SqliteRepository
+from toolbox.sql.repository_queries import RepositoryQueries
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
     CustomersActivityDBIndex,
@@ -17,10 +17,7 @@ from sql_queries.customers_activity.meta import (
 
 
 # yapf: disable
-class TicketsTypesRepository(SqliteRepository):
-    """
-    Interface to a local table storing tickets types.
-    """
+class TicketsTypes(RepositoryQueries):
 
     def get_main_query_path(self, kwargs: dict) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
@@ -36,10 +33,7 @@ class TicketsTypesRepository(SqliteRepository):
         return TicketsTypesMeta.get_values()
 
 
-class TicketsTagsRepository(SqliteRepository):
-    """
-    Interface to a local table storing tickets tags.
-    """
+class TicketsTags(RepositoryQueries):
 
     def get_main_query_path(self, kwargs: dict) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
@@ -54,10 +48,7 @@ class TicketsTagsRepository(SqliteRepository):
     def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return TicketsTagsMeta.get_values()
 
-class FrameworksRepository(SqliteRepository):
-    """
-    Interface to a local table storing frameworks.
-    """
+class Frameworks(RepositoryQueries):
 
     def get_main_query_path(self, kwargs: dict) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
@@ -73,10 +64,7 @@ class FrameworksRepository(SqliteRepository):
         return FrameworksMeta.get_values()
 
 
-class OperatingSystemsRepository(SqliteRepository):
-    """
-    Interface to a local table storing operating systems.
-    """
+class OperatingSystems(RepositoryQueries):
 
     def get_main_query_path(self, kwargs: dict) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
@@ -92,10 +80,7 @@ class OperatingSystemsRepository(SqliteRepository):
         return OperatingSystemsMeta.get_values()
 
 
-class BuildsRepository(SqliteRepository):
-    """
-    Interface to a local table storing builds.
-    """
+class BuildsRepositoryQueries(RepositoryQueries):
 
     def get_main_query_path(self, kwargs: dict) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
@@ -111,10 +96,7 @@ class BuildsRepository(SqliteRepository):
         return (BuildsMeta.id,)
 
 
-class SeverityRepository(SqliteRepository):
-    """
-    Interface to a local table storing bug severity values.
-    """
+class Severity(RepositoryQueries):
 
     def get_main_query_path(self, kwargs: dict) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
@@ -130,10 +112,8 @@ class SeverityRepository(SqliteRepository):
         return SeverityMeta.get_values()
 
 
-class TicketStatueseRepository(SqliteRepository):
-    """
-    Interface to a local table storing ticket statuses values.
-    """
+class TicketStatuses(RepositoryQueries):
+
 
     def get_main_query_path(self, kwargs: dict) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
@@ -149,10 +129,7 @@ class TicketStatueseRepository(SqliteRepository):
         return TicketStatusesMeta.get_values()
 
 
-class IDEsRepository(SqliteRepository):
-    """
-    Interface to a local table storing ides.
-    """
+class IDEs(RepositoryQueries):
 
     def get_main_query_path(self, kwargs: dict) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()

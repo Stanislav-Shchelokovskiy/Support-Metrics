@@ -1,5 +1,5 @@
 from typing import Iterable
-from toolbox.sql.repository import SqliteRepository
+from toolbox.sql.repository_queries import RepositoryQueries
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
     CustomersActivityDBIndex,
@@ -12,7 +12,7 @@ from repository.customers_activity.local.generators.filters_generators.conversio
 
 
 #yapf: disable
-class LicenseStatusesRepository(SqliteRepository):
+class LicenseStatuses(RepositoryQueries):
     """
     Interface to a local table storing license statuses.
     """
@@ -31,7 +31,7 @@ class LicenseStatusesRepository(SqliteRepository):
         return LicenseStatusesMeta.get_values()
 
 
-class ConversionStatusesRepository(SqliteRepository):
+class ConversionStatuses(RepositoryQueries):
     """
     Interface to a local table storing conversion statuses.
     """
