@@ -32,42 +32,34 @@ DECLARE @best_suitable	TINYINT = 0
 DECLARE @suitable		TINYINT = 1
 DECLARE @least_suitable	TINYINT = 2
 
-DROP TABLE IF EXISTS #PlatformsProductsTribes
-SELECT
-	platforms.Id			AS platform_id,
-	products.Id				AS product_id,
-	platform_tribe.id		AS platform_tribe_id,
-	product_tribe.Id		AS product_tribe_id,
-	platform_tribe.Name		AS platform_tribe_name,
-	platforms.Name			AS platform_name,
-	product_tribe.Name		AS product_tribe_name,
-	products.Name			AS product_name
-INTO #PlatformsProductsTribes
-FROM (SELECT DISTINCT Product_Id, Platform_Id 
-	  FROM CRM.dbo.SaleItemBuild_Product_Plaform
-	  WHERE AuxiliaryPackage = 0) AS sibpp
-	  INNER JOIN CRM.dbo.Platforms AS platforms ON platforms.Id = sibpp.Platform_Id
-	  INNER JOIN CRM.dbo.Products AS products ON products.Id = sibpp.Product_Id
-	  INNER JOIN CRM.dbo.Tribes AS platform_tribe ON platform_tribe.Id = platforms.DefaultTribe
-	  LEFT JOIN CRM.dbo.Tribes AS product_tribe ON product_tribe.Id = products.Tribe_Id
-WHERE platforms.DefaultTribe IS NOT NULL OR products.Tribe_Id IS NOT NULL
-
-CREATE NONCLUSTERED INDEX ppt_product ON #PlatformsProductsTribes (product_id, product_tribe_id) INCLUDE(platform_tribe_id, product_tribe_name)
-CREATE NONCLUSTERED INDEX ppt_platform ON #PlatformsProductsTribes (platform_id, platform_tribe_id, platform_tribe_name)
-
-
-
 DROP TABLE IF EXISTS #PlatformProductCount
 SELECT 
 	platform_id, 
 	CEILING(COUNT(product_id) * 2.0 / 3) AS product_cnt_boundary
 INTO #PlatformProductCount
-FROM #PlatformsProductsTribes
+FROM (
+	SELECT
+		platforms.Id			AS platform_id,
+		products.Id				AS product_id,
+		platform_tribe.id		AS platform_tribe_id,
+		product_tribe.Id		AS product_tribe_id,
+		platform_tribe.Name		AS platform_tribe_name,
+		platforms.Name			AS platform_name,
+		product_tribe.Name		AS product_tribe_name,
+		products.Name			AS product_name
+	FROM (SELECT DISTINCT Product_Id, Platform_Id 
+		  FROM CRM.dbo.SaleItemBuild_Product_Plaform
+		  WHERE AuxiliaryPackage = 0)	AS sibpp
+		  INNER JOIN CRM.dbo.Platforms	AS platforms		ON platforms.Id = sibpp.Platform_Id
+		  INNER JOIN CRM.dbo.Products	AS products			ON products.Id = sibpp.Product_Id
+		  INNER JOIN CRM.dbo.Tribes		AS platform_tribe	ON platform_tribe.Id = platforms.DefaultTribe
+		  LEFT JOIN CRM.dbo.Tribes		AS product_tribe	ON product_tribe.Id = products.Tribe_Id
+	WHERE platforms.DefaultTribe IS NOT NULL OR products.Tribe_Id IS NOT NULL
+) AS PlatformsProductsTribes
 WHERE product_tribe_id = platform_tribe_id
 GROUP BY platform_id
 
 CREATE CLUSTERED INDEX ppc_platform ON #PlatformProductCount(platform_id)
-
 
 
 DROP TABLE IF EXISTS #SaleItemsFlat;

@@ -96,26 +96,7 @@ FROM #TicketsWithLicenses AS ti
 	OUTER APPLY (
 		SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), tribes_inner.id) , @separator)   AS tribes_ids,
 				STRING_AGG(CONVERT(NVARCHAR(MAX), tribes_inner.name) , @separator) AS tribes_names	
-		FROM (	SELECT *, MIN(level) OVER() AS max_level
-				FROM (	SELECT TOP 1 Id AS id, Name AS name, 1 AS level
-						FROM   CRM.dbo.Tribes
-						WHERE  Id = (SELECT TOP 1 value
-									 FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
-									 WHERE	Ticket_Id = ti.ticket_id  AND Name = 'ProcessingTribe')
-						UNION
-						SELECT product_tribe_id, product_tribe_name, 2
-						FROM   #PlatformsProductsTribes
-						WHERE  product_id IN (	SELECT	value
-												FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
-												WHERE	Ticket_Id = ti.ticket_id  AND Name = 'ProductId')
-							   AND product_tribe_id IS NOT NULL
-						UNION
-						SELECT platform_tribe_id, platform_tribe_name, 2
-						FROM   #PlatformsProductsTribes
-						WHERE  platform_id IN (	SELECT	value
-												FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
-												WHERE	Ticket_Id = ti.ticket_id AND Name = 'PlatformedProductId' AND Value NOT LIKE '%:%')) AS ti) AS tribes_inner
-		WHERE id IS NOT NULL AND level = max_level
+		FROM	DXStatisticsV2.dbo.get_ticket_tribes(ti.ticket_id, ti.ticket_type, DEFAULT ) AS tribes_inner
 	) AS tribes
 	OUTER APPLY (
 		SELECT 	 STRING_AGG(CONVERT(NVARCHAR(MAX), UserGroup_Id), @separator) AS groups
