@@ -24,4 +24,5 @@ FROM ( SELECT 	TicketId, PostId
 						  Id = ii.PostId AND
 						  Type NOT IN (@note, @description)) AS p
 	 CROSS APPLY ( SELECT *
-				   FROM   DXStatisticsV2.dbo.support_analytics_employees(p.Owner) ) AS e
+				   FROM   DXStatisticsV2.dbo.support_analytics_employees()
+				   WHERE  scid = p.Owner) AS e
