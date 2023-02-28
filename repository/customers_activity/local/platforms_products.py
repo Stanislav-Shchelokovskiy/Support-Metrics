@@ -1,5 +1,5 @@
 from typing import Iterable
-from toolbox.sql.repository import SqliteRepository
+from toolbox.sql.repository_queries import RepositoryQueries
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
     CustomersActivityDBIndex,
@@ -10,7 +10,7 @@ from repository.customers_activity.local.generators.filters_generators.platforms
 
 
 #yapf: disable
-class PlatformsRepository(SqliteRepository):
+class Platforms(RepositoryQueries):
     """
     Interface to a local table storing available platforms.
     """
@@ -40,7 +40,7 @@ class PlatformsRepository(SqliteRepository):
         return PlatformsProductsMeta.platform_name
 
 
-class ProductsRepository(PlatformsRepository):
+class Products(Platforms):
     """
     Interface to a local table storing products
     available for specified tribes.

@@ -1,5 +1,5 @@
 from typing import Iterable
-from toolbox.sql.repository import SqliteRepository
+from toolbox.sql.repository_queries import RepositoryQueries
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
     CustomersActivityDBIndex,
@@ -10,11 +10,11 @@ from sql_queries.customers_activity.meta import (
     CustomersMeta,
 )
 
-from repository.customers_activity.local.validation_repository import ValidationRepository
+from repository.customers_activity.local.validation_repository import ValidationRepositoryQueries
 
 
 # yapf: disable
-class CustomersRepository(SqliteRepository):
+class Customers(RepositoryQueries):
     """
     Interface to a local table storing available customers.
     """
@@ -35,16 +35,17 @@ class CustomersRepository(SqliteRepository):
     def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
         return (CustomersMeta.id, CustomersMeta.name,)
 
-    def validate_values(self, **kwargs) -> str:
-        validation_repository = ValidationRepository()
-        return validation_repository.validate_values(
-                kwargs={
-                    'values': ',\n'.join([f"('{value}')" for value in kwargs['values']]),
-                    'field': CustomersMeta.id,
-                    'table': CustomersActivityDBIndex.get_customers_name(),
-            })
 
-class CustomersGroupsRepository(SqliteRepository):
+class CustomersValidation(ValidationRepositoryQueries):
+    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+        return {
+            'values': ',\n'.join([f"('{value}')" for value in kwargs['values']]),
+            'field': CustomersMeta.id,
+            'table': CustomersActivityDBIndex.get_customers_name(),
+        }
+
+
+class CustomersGroups(RepositoryQueries):
     """
     Interface to a local table storing customers groups.
     """
@@ -63,7 +64,7 @@ class CustomersGroupsRepository(SqliteRepository):
         return CustomersGroupsMeta.get_values()
 
 
-class TrackedCustomersGroupsRepository(SqliteRepository):
+class TrackedCustomersGroups(RepositoryQueries):
     """
     Interface to a local table storing customers groups we track and work with.
     """

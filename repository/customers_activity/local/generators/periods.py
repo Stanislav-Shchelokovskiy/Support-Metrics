@@ -1,10 +1,12 @@
 from toolbox.utils.converters import Object_to_JSON
-from toolbox.sql.repository import SqliteRepository, Repository
+from toolbox.sql.repository_queries import RepositoryQueries
+from toolbox.sql.repository import SqliteRepository
 from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.customers_activity.meta import PeriodsMeta
 
 
 class PeriodsGenerator:
+    repository_type = SqliteRepository
 
     @staticmethod
     def get_group_by_periods_json():
@@ -57,7 +59,6 @@ class PeriodsGenerator:
         start: str,
         end: str,
         format: str,
-        repository: Repository = SqliteRepository(),
     ) -> str:
         anchor_modifier = {
             '%Y-%m-%d': "'START OF DAY'",
@@ -76,15 +77,17 @@ class PeriodsGenerator:
         if format == '%Y-%W':
             format = '%Y-%m-%d'
 
-        periods = repository.execute_query(
-            query_file_path=CustomersActivitySqlPathIndex.get_periods_array_path(),
-            query_format_params={
-                **PeriodsMeta.get_attrs(),
-                'anchor_expr': f"STRFTIME('%Y-%m-%d', '{start}', {anchor_modifier})",
-                'anchor_expr_formatted': f"STRFTIME('{format}', '{start}', {anchor_modifier})",
-                'recursive_expr': f"STRFTIME('%Y-%m-%d', {PeriodsMeta.start}, {recursive_member_modifier})",
-                'recursive_expr_formatted': f"STRFTIME('{format}', {PeriodsMeta.start}, {recursive_member_modifier})",
-                'recursion_cond_expr': f"{PeriodsMeta.start} < '{end}'",
-            }
-        ).reset_index(drop=True)[PeriodsMeta.period].values.tolist()
+        periods = PeriodsGenerator.repository_type(
+            queries=RepositoryQueries(
+                main_query_path=CustomersActivitySqlPathIndex.get_periods_array_path(),
+                main_query_format_params={
+                    **PeriodsMeta.get_attrs(),
+                    'anchor_expr': f"STRFTIME('%Y-%m-%d', '{start}', {anchor_modifier})",
+                    'anchor_expr_formatted': f"STRFTIME('{format}', '{start}', {anchor_modifier})",
+                    'recursive_expr': f"STRFTIME('%Y-%m-%d', {PeriodsMeta.start}, {recursive_member_modifier})",
+                    'recursive_expr_formatted': f"STRFTIME('{format}', {PeriodsMeta.start}, {recursive_member_modifier})",
+                    'recursion_cond_expr': f"{PeriodsMeta.start} < '{end}'",
+                }
+            )
+        ).get_data().reset_index(drop=True)[PeriodsMeta.period].values.tolist()
         return Object_to_JSON.convert(periods)

@@ -1,5 +1,5 @@
 from typing import Iterable
-from toolbox.sql.repository import SqlServerRepository
+from toolbox.sql.repository_queries import RepositoryAlchemyQueries
 from toolbox.sql.sql_query import SqlQuery
 from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.customers_activity.meta import (
@@ -8,27 +8,27 @@ from sql_queries.customers_activity.meta import (
 )
 
 
-class EmployeesIterationsRepository(SqlServerRepository):
+class EmployeesIterations(RepositoryAlchemyQueries):
     """
     Loads employee iterations.
     """
 
-    def get_main_query_path(self, kwargs: dict) -> str:
+    def get_main_query_path(self, **kwargs) -> str:
         return CustomersActivitySqlPathIndex.get_employees_iterations_path()
 
-    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return {**kwargs, **EmployeesIterationsMeta.get_attrs()}
 
-    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
+    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
         return EmployeesIterationsMeta.get_values()
 
 
-class CustomersTicketsRepository(SqlServerRepository):
+class CustomersTickets(RepositoryAlchemyQueries):
     """
     Loads customers with their tickets and licenses.
     """
 
-    def get_prep_queries(self, kwargs: dict) -> Iterable[SqlQuery]:
+    def get_prep_queries(self, **kwargs) -> Iterable[SqlQuery]:
         return (
             self.sql_query_type(
                 query_file_path=CustomersActivitySqlPathIndex.get_tickets_with_licenses_and_users_path(),
@@ -36,11 +36,11 @@ class CustomersTicketsRepository(SqlServerRepository):
             ),
         )
 
-    def get_main_query_path(self, kwargs: dict) -> str:
+    def get_main_query_path(self, **kwargs) -> str:
         return CustomersActivitySqlPathIndex.get_tickets_with_properties_path()
 
-    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return TicketsWithPropertiesMeta.get_attrs()
 
-    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
+    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
         return TicketsWithPropertiesMeta.get_values()

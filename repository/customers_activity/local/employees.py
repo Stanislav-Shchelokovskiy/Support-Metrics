@@ -1,5 +1,5 @@
 from typing import Iterable
-from toolbox.sql.repository import SqliteRepository
+from toolbox.sql.repository_queries import RepositoryQueries
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
     CustomersActivityDBIndex,
@@ -13,7 +13,7 @@ from repository.customers_activity.local.generators.filters_generators.employees
 
 
 # yapf: disable
-class EmpPositionsRepository(SqliteRepository):
+class EmpPositions(RepositoryQueries):
     """
     Interface to a local table storing available emp positions.
     """
@@ -32,7 +32,7 @@ class EmpPositionsRepository(SqliteRepository):
         return PositionsMeta.get_values()
 
 
-class EmpTribesRepository(SqliteRepository):
+class EmpTribes(RepositoryQueries):
     """
     Interface to a local table storing available emp tribes.
     """
@@ -51,7 +51,7 @@ class EmpTribesRepository(SqliteRepository):
         return TribesMeta.get_values()
 
 
-class EmployeesRepository(SqliteRepository):
+class Employees(RepositoryQueries):
     """
     Interface to a local table storing employees.
     """

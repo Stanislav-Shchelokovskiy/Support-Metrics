@@ -1,5 +1,5 @@
 from typing import Iterable
-from toolbox.sql.repository import SqliteRepository
+from toolbox.sql.repository_queries import RepositoryQueries
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
     CustomersActivityDBIndex,
@@ -12,7 +12,7 @@ from repository.customers_activity.local.generators.filters_generators.cat impor
 
 
 # yapf: disable
-class CATRepliesTypesRepository(SqliteRepository):
+class CATRepliesTypes(RepositoryQueries):
     """
     Interface to a local table storing CAT reply types.
     """
@@ -31,7 +31,7 @@ class CATRepliesTypesRepository(SqliteRepository):
         return CATRepliesTypesMeta.get_values()
 
 
-class CATComponentsRepository(SqliteRepository):
+class CATComponents(RepositoryQueries):
     """
     Interface to a local table storing CAT components.
     """
@@ -55,7 +55,7 @@ class CATComponentsRepository(SqliteRepository):
         )
 
 
-class CATFeaturesRepository(SqliteRepository):
+class CATFeatures(RepositoryQueries):
     """
     Interface to a local table storing CAT features
     available for the specified components.

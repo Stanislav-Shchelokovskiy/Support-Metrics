@@ -1,15 +1,12 @@
 from typing import Iterable
-from toolbox.sql.repository import SqliteRepository
+from toolbox.sql.repository_queries import RepositoryQueries
 from sql_queries.index import CustomersActivitySqlPathIndex
 
 
-class ValidationRepository(SqliteRepository):
+class ValidationRepositoryQueries(RepositoryQueries):
 
     def get_main_query_path(self, kwargs: dict) -> str:
         return CustomersActivitySqlPathIndex.get_validate_path()
-
-    def validate_values(self, kwargs: dict) -> str:
-        return self.get_data_json(**kwargs)
 
     def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
         return {
@@ -19,4 +16,4 @@ class ValidationRepository(SqliteRepository):
         }
 
     def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
-        return ('value', 'valid',)
+        return ('value', 'valid', )

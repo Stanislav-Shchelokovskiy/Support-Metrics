@@ -1,12 +1,11 @@
 from pandas import DataFrame
-from toolbox.sql.repository import SqlServerRepository
 from sql_queries.customers_activity.meta import (
     TicketsTypesMeta,
     ConversionStatusesMeta,
 )
 
 
-class LicenseStatusesRepository(SqlServerRepository):
+class LicenseStatusesRepository:
 
     def get_data(self, **kwargs) -> DataFrame:
         return DataFrame(
@@ -31,7 +30,7 @@ class LicenseStatusesRepository(SqlServerRepository):
         )
 
 
-class ConversionStatusesRepository(SqlServerRepository):
+class ConversionStatusesRepository:
 
     def get_data(self, **kwargs) -> DataFrame:
         return DataFrame(

@@ -1,5 +1,5 @@
 from typing import Iterable
-from toolbox.sql.repository import SqliteRepository
+from toolbox.sql.repository_queries import RepositoryQueries
 from toolbox.utils.converters import DF_to_JSON
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
@@ -20,25 +20,24 @@ from configs.customers_activity_config import CustomersActivityConfig
 
 
 #yapf: disable
-class TicketsPeriodRepository(SqliteRepository):
+class TicketsPeriod(RepositoryQueries):
     """
     Interface to a local table storing min and max boundarise
     for tickets and iterations.
     """
-    def get_period_json(self) -> str:
 
-        df = self.execute_query(
-                query_file_path=CustomersActivitySqlPathIndex.get_tickets_period_path(),
-                query_format_params={
-                    'table_name': CustomersActivityDBIndex.get_customers_tickets_name(),
-                    **TicketsWithIterationsPeriodMeta.get_attrs(),
-                    'rank_period_offset': CustomersActivityConfig.get_rank_period_offset(),
-                }
-            ).reset_index(drop=True)
-        return DF_to_JSON.convert(df.iloc[0], orient='index')
+    def get_main_query_path(self, kwargs: dict) -> str:
+        return CustomersActivitySqlPathIndex.get_tickets_period_path()
+
+    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+        return {
+            'table_name': CustomersActivityDBIndex.get_customers_tickets_name(),
+            **TicketsWithIterationsPeriodMeta.get_attrs(),
+            'rank_period_offset': CustomersActivityConfig.get_rank_period_offset(),
+        }
 
 
-class TicketsWithIterationsRawRepository(SqliteRepository):
+class TicketsWithIterationsRaw(RepositoryQueries):
     """
     Interface to a local table storing raw tickets with iterations data.
     """
@@ -81,7 +80,7 @@ class TicketsWithIterationsRawRepository(SqliteRepository):
         return TicketsWithIterationsRawMeta.get_values()
 
 
-class TicketsWithIterationsAggregatesRepository(TicketsWithIterationsRawRepository):
+class TicketsWithIterationsAggregates(TicketsWithIterationsRaw):
     """
     Interface to a local table storing aggregated tickets with iterations data.
     """
@@ -98,7 +97,7 @@ class TicketsWithIterationsAggregatesRepository(TicketsWithIterationsRawReposito
         return {
             **TicketsWithIterationsAggregatesMeta.get_attrs(),
             'group_by_period': group_by_period,
-            **TicketsWithIterationsRawRepository.get_general_format_params(self, kwargs)
+            **TicketsWithIterationsRaw.get_general_format_params(self, kwargs)
         }
 
     def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
