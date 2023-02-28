@@ -9,11 +9,11 @@ class PlatformsProducts(RepositoryAlchemyQueries):
     Loads available platforms and products.
     """
 
-    def get_main_query_path(self, kwargs: dict) -> str:
+    def get_main_query_path(self, **kwargs) -> str:
         return CustomersActivitySqlPathIndex.get_platforms_products_path()
 
-    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return {**kwargs, **PlatformsProductsMeta.get_attrs()}
 
-    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
+    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
         return PlatformsProductsMeta.get_values()

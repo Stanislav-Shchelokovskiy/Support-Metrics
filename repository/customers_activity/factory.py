@@ -23,7 +23,7 @@ from repository.customers_activity.local.tables_builder import TablesBuilder
 # yapf: disable
 class SqlServerFactory:
     def _create_repository(self, queries: RepositoryQueries)->SqlServerRepository:
-        SqlServerRepository(queries = queries)
+        return SqlServerRepository(queries = queries)
 
     def create_groups_repository(self, **kwargs) -> SqlServerRepository:
         return self._create_repository(queries = customers_groups.CustomersGroups())
@@ -170,4 +170,4 @@ class CustomersActivityFactory:
 
 
 class CustomersActivityTablesBuilderFactory:
-    customers_activity = TablesBuilder()
+    tables_builder = TablesBuilder()
