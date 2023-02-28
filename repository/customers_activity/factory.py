@@ -170,4 +170,4 @@ class CustomersActivityFactory:
 
 
 class CustomersActivityTablesBuilderFactory:
-    tables_builder = TablesBuilder()
+    builder = TablesBuilder()

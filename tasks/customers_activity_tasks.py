@@ -121,10 +121,10 @@ def load_conversion_statuses():
     _save_tables(tables={CustomersActivityDBIndex.get_conversion_statuses_name(): df})
 
 def process_staged_data(rank_period_offset: str):
-    TablesBuilder.customers_activity.tables_builder.build_tickets_with_iterations(rank_period_offset=rank_period_offset)
-    TablesBuilder.customers_activity.tables_builder.build_emp_positions()
-    TablesBuilder.customers_activity.tables_builder.build_emp_tribes()
-    TablesBuilder.customers_activity.tables_builder.build_employees()
-    TablesBuilder.customers_activity.tables_builder.build_users()
-    TablesBuilder.customers_activity.tables_builder.vacuum()
-    TablesBuilder.customers_activity.tables_builder.run_analyze()
+    TablesBuilder.customers_activity.builder.build_tickets_with_iterations(rank_period_offset=rank_period_offset)
+    TablesBuilder.customers_activity.builder.build_emp_positions()
+    TablesBuilder.customers_activity.builder.build_emp_tribes()
+    TablesBuilder.customers_activity.builder.build_employees()
+    TablesBuilder.customers_activity.builder.build_users()
+    TablesBuilder.customers_activity.builder.vacuum()
+    TablesBuilder.customers_activity.builder.run_analyze()
