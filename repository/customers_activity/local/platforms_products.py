@@ -15,11 +15,11 @@ class Platforms(RepositoryQueries):
     Interface to a local table storing available platforms.
     """
 
-    def get_main_query_path(self, kwargs: dict) -> str:
+    def get_main_query_path(self, **kwargs) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
-    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
-        cols = ', '.join(self.get_must_have_columns(kwargs))
+    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+        cols = ', '.join(self.get_must_have_columns(**kwargs))
         filter = self.get_filter(tribe_ids=kwargs['tribe_ids'])
         return {
             'columns': cols,
@@ -30,7 +30,7 @@ class Platforms(RepositoryQueries):
     def get_filter(self, tribe_ids: FilterParametersNode)->str:
         return PlatformsProductsSqlFilterClauseGenerator.generate_platforms_filter(tribe_ids=tribe_ids)
 
-    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
+    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
         return (
             PlatformsProductsMeta.platform_id,
             PlatformsProductsMeta.platform_name,
@@ -48,7 +48,7 @@ class Products(Platforms):
     def get_filter(self, tribe_ids: FilterParametersNode)->str:
         return PlatformsProductsSqlFilterClauseGenerator.generate_products_filter(tribe_ids=tribe_ids)
 
-    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
+    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
         return (
             PlatformsProductsMeta.product_id,
             PlatformsProductsMeta.product_name,

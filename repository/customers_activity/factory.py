@@ -79,7 +79,7 @@ class SqlServerFactory:
 
 class SqliteFactory:
     def _create_repository(self, queries: RepositoryQueries)->SqliteRepository:
-        SqliteRepository(queries = queries)
+        return SqliteRepository(queries = queries)
 
     def create_tickets_with_iterations_period_repository(self, **kwargs) -> SqliteRepository:
         return self._create_repository(queries = sqlite_tickets_with_iterations.TicketsPeriod())
