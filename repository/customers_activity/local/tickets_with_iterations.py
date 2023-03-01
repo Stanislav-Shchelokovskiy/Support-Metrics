@@ -45,7 +45,7 @@ class TicketsWithIterationsRaw(RepositoryQueries):
     def get_main_query_path(self, **kwargs) -> str:
         return CustomersActivitySqlPathIndex.get_tickets_with_iterations_raw_path()
 
-    def get_general_format_params(self, kwargs:dict)-> dict[str,str]:
+    def get_general_format_params(self, **kwargs)-> dict[str,str]:
         generator = TicketsWithIterationsSqlFilterClauseGenerator
         return {
             'tickets_with_iterations_table': get_tickets_with_iterations_table(kwargs=kwargs, filter_generator=generator),
@@ -66,8 +66,8 @@ class TicketsWithIterationsRaw(RepositoryQueries):
             'ides_table': CustomersActivityDBIndex.get_ides_name(),
             'platforms_products_table': CustomersActivityDBIndex.get_platforms_products_name(),
             **TicketsWithIterationsRawMeta.get_attrs(),
-            'baseline_aligned_mode_fields': self.get_baseline_aligned_mode_fields(kwargs),
-            **self.get_general_format_params(kwargs)
+            'baseline_aligned_mode_fields': self.get_baseline_aligned_mode_fields(**kwargs),
+            **self.get_general_format_params(**kwargs)
         }
 
     def get_baseline_aligned_mode_fields(self, **kwargs) -> str:
@@ -97,7 +97,7 @@ class TicketsWithIterationsAggregates(TicketsWithIterationsRaw):
         return {
             **TicketsWithIterationsAggregatesMeta.get_attrs(),
             'group_by_period': group_by_period,
-            **TicketsWithIterationsRaw.get_general_format_params(self, kwargs)
+            **TicketsWithIterationsRaw.get_general_format_params(self, **kwargs)
         }
 
     def get_must_have_columns(self, **kwargs) -> Iterable[str]:
