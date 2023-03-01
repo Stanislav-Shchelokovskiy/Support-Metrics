@@ -26,10 +26,10 @@ class TicketsPeriod(RepositoryQueries):
     for tickets and iterations.
     """
 
-    def get_main_query_path(self, kwargs: dict) -> str:
+    def get_main_query_path(self, **kwargs) -> str:
         return CustomersActivitySqlPathIndex.get_tickets_period_path()
 
-    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return {
             'table_name': CustomersActivityDBIndex.get_customers_tickets_name(),
             **TicketsWithIterationsPeriodMeta.get_attrs(),
@@ -42,7 +42,7 @@ class TicketsWithIterationsRaw(RepositoryQueries):
     Interface to a local table storing raw tickets with iterations data.
     """
 
-    def get_main_query_path(self, kwargs: dict) -> str:
+    def get_main_query_path(self, **kwargs) -> str:
         return CustomersActivitySqlPathIndex.get_tickets_with_iterations_raw_path()
 
     def get_general_format_params(self, kwargs:dict)-> dict[str,str]:
@@ -53,7 +53,7 @@ class TicketsWithIterationsRaw(RepositoryQueries):
         }
 
 
-    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return {
             'replies_types_table': CustomersActivityDBIndex.get_cat_replies_types_name(),
             'components_features_table': CustomersActivityDBIndex.get_cat_components_features_name(),
@@ -70,13 +70,13 @@ class TicketsWithIterationsRaw(RepositoryQueries):
             **self.get_general_format_params(kwargs)
         }
 
-    def get_baseline_aligned_mode_fields(self, kwargs: dict) -> str:
+    def get_baseline_aligned_mode_fields(self, **kwargs) -> str:
         if kwargs['use_baseline_aligned_mode']:
             return f', t.{BaselineAlignedModeMeta.days_since_baseline}'
         return ''
 
 
-    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
+    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
         return TicketsWithIterationsRawMeta.get_values()
 
 
@@ -85,10 +85,10 @@ class TicketsWithIterationsAggregates(TicketsWithIterationsRaw):
     Interface to a local table storing aggregated tickets with iterations data.
     """
 
-    def get_main_query_path(self, kwargs: dict) -> str:
+    def get_main_query_path(self, **kwargs) -> str:
         return CustomersActivitySqlPathIndex.get_tickets_with_iterations_aggregates_path()
 
-    def get_main_query_format_params(self, kwargs: dict) -> dict[str, str]:
+    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         group_by_period = PeriodsGenerator.generate_group_by_period(
             format=kwargs['group_by_period'],
             field=BaselineAlignedModeMeta.days_since_baseline if kwargs['use_baseline_aligned_mode'] else TicketsWithIterationsMeta.creation_date,
@@ -100,7 +100,7 @@ class TicketsWithIterationsAggregates(TicketsWithIterationsRaw):
             **TicketsWithIterationsRaw.get_general_format_params(self, kwargs)
         }
 
-    def get_must_have_columns(self, kwargs: dict) -> Iterable[str]:
+    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
         return (
             TicketsWithIterationsAggregatesMeta.period,
             TicketsWithIterationsAggregatesMeta.tickets,
