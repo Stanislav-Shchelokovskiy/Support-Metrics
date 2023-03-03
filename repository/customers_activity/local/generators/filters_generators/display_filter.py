@@ -178,6 +178,7 @@ query_params_store = {
 
 class DisplayFilterGenerator:
     repository_type = SqliteRepository
+
     # yapf: disable
     @staticmethod
     def generate_display_filter(
@@ -209,7 +210,7 @@ class DisplayFilterGenerator:
                 case Percentile():
                     percentile: Percentile = filter_node
                     percentile_filter = TicketsWithIterationsSqlFilterClauseGenerator.limit.get_percentile_filter(
-                        alias = field_alias,
+                        alias=field_alias,
                         percentile=percentile.value,
                     )
                     filter = [int(clause) if clause.isdigit() else clause for clause in percentile_filter.split(' ')]

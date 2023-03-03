@@ -94,6 +94,7 @@ def customers_activity_get_ticket_statuses():
     df_json = server_repository.customers_activity_get_ticket_statuses()
     return get_response(json_data=df_json)
 
+
 @app.get('/get_ides')
 def customers_activity_get_ides():
     df_json = server_repository.customers_activity_get_ides()

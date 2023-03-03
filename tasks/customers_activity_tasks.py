@@ -1,7 +1,6 @@
 import os
 import json
 from toolbox.utils.network import Network
-from toolbox.sql.connections.sql_server_connection import SqlServerConnection
 from pandas import DataFrame
 from toolbox.sql.sqlite_db import get_or_create_db
 from sql_queries.index import CustomersActivityDBIndex
@@ -31,10 +30,12 @@ def load_groups():
     df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_customers_groups_name(): df})
 
+
 def load_tracked_groups(start_date: str, end_date: str):
     repository = RepositoryFactory.customers_activity.remote.create_tracked_groups_repository()
     df = repository.get_data(start_date=start_date, end_date=end_date)
     _save_tables(tables={CustomersActivityDBIndex.get_tracked_customers_groups_name(): df})
+
 
 def load_replies_types():
     repository = RepositoryFactory.customers_activity.remote.create_replies_types_repository()
@@ -71,38 +72,45 @@ def load_tickets_types():
     df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_tickets_types_name(): df})
 
+
 def load_frameworks():
     repository = RepositoryFactory.customers_activity.remote.create_frameworks_repository()
     df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_frameworks_name(): df})
+
 
 def load_operating_systems():
     repository = RepositoryFactory.customers_activity.remote.create_operating_systems_repository()
     df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_operating_systems_name(): df})
 
+
 def load_builds():
     repository = RepositoryFactory.customers_activity.remote.create_builds_repository()
     df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_builds_name(): df})
+
 
 def load_severity_values():
     repository = RepositoryFactory.customers_activity.remote.create_severity_repository()
     df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_severity_name(): df})
 
+
 def load_ticket_statuses():
     repository = RepositoryFactory.customers_activity.remote.create_ticket_statuses_repository()
     df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_ticket_statuses_name(): df})
+
 
 def load_ides():
     repository = RepositoryFactory.customers_activity.remote.create_ides_repository()
     df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_ides_name(): df})
 
+
 def load_tribes():
-    tribes_str = Network.get_data(end_point= f'http://{os.environ["QUERY_SERVICE"]}/get_available_tribes')
+    tribes_str = Network.get_data(end_point=f'http://{os.environ["QUERY_SERVICE"]}/get_available_tribes')
     tribes = json.loads(tribes_str)
     df = DataFrame.from_records(data=tribes)
     df = df.reset_index(drop=True)
@@ -119,6 +127,7 @@ def load_conversion_statuses():
     repository = RepositoryFactory.customers_activity.remote.create_conversion_statuses_repository()
     df = repository.get_data()
     _save_tables(tables={CustomersActivityDBIndex.get_conversion_statuses_name(): df})
+
 
 def process_staged_data(rank_period_offset: str):
     TablesBuilder.customers_activity.builder.build_tickets_with_iterations(rank_period_offset=rank_period_offset)

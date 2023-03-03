@@ -11,7 +11,7 @@ from sql_queries.customers_activity.meta import (
 from repository.customers_activity.local.generators.filters_generators.conversion_statuses import ConversionStatusesSqlFilterClauseGenerator
 
 
-#yapf: disable
+# yapf: disable
 class LicenseStatuses(RepositoryQueries):
     """
     Interface to a local table storing license statuses.

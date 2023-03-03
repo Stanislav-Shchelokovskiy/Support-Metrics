@@ -9,7 +9,7 @@ from repository.customers_activity.local.generators.filters_generators.sql_filte
 from repository.customers_activity.local.generators.filters_generators.platforms_products import PlatformsProductsSqlFilterClauseGenerator
 
 
-#yapf: disable
+# yapf: disable
 class Platforms(RepositoryQueries):
     """
     Interface to a local table storing available platforms.
@@ -27,7 +27,7 @@ class Platforms(RepositoryQueries):
             'filter_group_limit_clause': f'{filter}\nGROUP BY {cols}\nORDER BY {self.get_order_by_column()}',
         }
 
-    def get_filter(self, tribe_ids: FilterParametersNode)->str:
+    def get_filter(self, tribe_ids: FilterParametersNode) -> str:
         return PlatformsProductsSqlFilterClauseGenerator.generate_platforms_filter(tribe_ids=tribe_ids)
 
     def get_must_have_columns(self, **kwargs) -> Iterable[str]:
@@ -45,7 +45,7 @@ class Products(Platforms):
     Interface to a local table storing products
     available for specified tribes.
     """
-    def get_filter(self, tribe_ids: FilterParametersNode)->str:
+    def get_filter(self, tribe_ids: FilterParametersNode) -> str:
         return PlatformsProductsSqlFilterClauseGenerator.generate_products_filter(tribe_ids=tribe_ids)
 
     def get_must_have_columns(self, **kwargs) -> Iterable[str]:

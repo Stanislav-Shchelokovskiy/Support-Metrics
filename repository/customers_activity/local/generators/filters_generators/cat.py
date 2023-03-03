@@ -2,8 +2,9 @@ from sql_queries.customers_activity.meta import CATComponentsFeaturesMeta
 from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import (
     FilterParametersNode,
     SqlFilterClauseFromFilterParametersGeneratorFactory,
-    params_guard
+    params_guard,
 )
+
 
 @params_guard
 class CATSqlFilterClauseGenerator:

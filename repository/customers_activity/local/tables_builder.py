@@ -16,7 +16,7 @@ from sql_queries.customers_activity.meta import (
 
 
 class TablesBuilder:
-    #yapf: disable
+    # yapf: disable
     def build_tickets_with_iterations(self, rank_period_offset: str):
         query = SqlQuery(
             query_file_path=CustomersActivitySqlPathIndex.get_tickets_with_iterations_path(),

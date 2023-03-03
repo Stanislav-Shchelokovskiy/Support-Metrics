@@ -1,6 +1,5 @@
 from typing import Iterable
 from toolbox.sql.repository_queries import RepositoryQueries
-from toolbox.utils.converters import DF_to_JSON
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
     CustomersActivityDBIndex,
@@ -19,7 +18,7 @@ from repository.customers_activity.local.core.filters import try_get_creation_da
 from configs.customers_activity_config import CustomersActivityConfig
 
 
-#yapf: disable
+# yapf: disable
 class TicketsPeriod(RepositoryQueries):
     """
     Interface to a local table storing min and max boundarise
@@ -45,13 +44,12 @@ class TicketsWithIterationsRaw(RepositoryQueries):
     def get_main_query_path(self, **kwargs) -> str:
         return CustomersActivitySqlPathIndex.get_tickets_with_iterations_raw_path()
 
-    def get_general_format_params(self, **kwargs)-> dict[str,str]:
+    def get_general_format_params(self, **kwargs) -> dict[str, str]:
         generator = TicketsWithIterationsSqlFilterClauseGenerator
         return {
             'tickets_with_iterations_table': get_tickets_with_iterations_table(kwargs=kwargs, filter_generator=generator),
             'tickets_filter': try_get_creation_date_and_tickets_filters(kwargs=kwargs, filter_generator=generator),
         }
-
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return {
@@ -74,7 +72,6 @@ class TicketsWithIterationsRaw(RepositoryQueries):
         if kwargs['use_baseline_aligned_mode']:
             return f', t.{BaselineAlignedModeMeta.days_since_baseline}'
         return ''
-
 
     def get_must_have_columns(self, **kwargs) -> Iterable[str]:
         return TicketsWithIterationsRawMeta.get_values()

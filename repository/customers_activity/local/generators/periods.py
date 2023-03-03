@@ -52,7 +52,6 @@ class PeriodsGenerator:
         }[format]
         return f'CAST(CEILING(IIF({field} = 0, 1, {field}) / {period}) AS INT)'
 
-
 # yapf: disable
     @staticmethod
     def generate_periods(
