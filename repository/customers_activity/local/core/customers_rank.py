@@ -13,9 +13,9 @@ class Percentile(Protocol):
 
 
 def get_ranked_tickets_with_iterations_query(
-    kwargs: dict,
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
-):
+    **kwargs,
+) -> str:
     percentile: Percentile = kwargs['percentile']
     tbl = CustomersActivityDBIndex.get_tickets_with_iterations_name()
     return (
@@ -27,15 +27,15 @@ def get_ranked_tickets_with_iterations_query(
                 FROM  {tbl}
                 INDEXED BY idx_{tbl}_{percentile.metric}_inner
                 WHERE
-                    {filters.get_creation_date_with_offset_start_filter(kwargs=kwargs,filter_generator=filter_generator)}
-                    {filters.get_tickets_filter(kwargs=kwargs,filter_generator=filter_generator)}
+                    {filters.get_creation_date_with_offset_start_filter(filter_generator=filter_generator, **kwargs)}
+                    {filters.get_tickets_filter(filter_generator=filter_generator, **kwargs)}
                 GROUP BY {TicketsWithIterationsMeta.user_crmid} ) AS rnk
         WHERE {filter_generator.limit.get_percentile_filter(alias='percentile', percentile=percentile.value)}
     ) AS usr_rnk ON usr_rnk.{TicketsWithIterationsMeta.user_crmid} = {tbl}.{TicketsWithIterationsMeta.user_crmid}"""
     )
 
 
-def get_rank_field(percentile: Percentile):
+def get_rank_field(percentile: Percentile) -> str:
     if percentile.metric == 'tickets':
         return TicketsWithIterationsMeta.ticket_scid
     return TicketsWithIterationsMeta.emp_post_id

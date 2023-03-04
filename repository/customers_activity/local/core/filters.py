@@ -1,65 +1,71 @@
 from typing import Iterable
 from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
+from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import FilterParametersNode
 
 
 def get_creation_date_with_offset_start_filter(
-    kwargs: dict,
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
+    range_start: str,
+    range_end: str,
+    **kwargs,
 ) -> str:
     return filter_generator.common.generate_creation_date_with_rank_offset_start_filter(
-        range_start=kwargs['range_start'],
-        range_end=kwargs['range_end'],
+        range_start=range_start,
+        range_end=range_end,
     )
 
 
 def try_get_creation_date_and_tickets_filters(
-    kwargs: dict,
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
-):
-    if kwargs['use_baseline_aligned_mode']:
+    use_baseline_aligned_mode: bool,
+    **kwargs,
+) -> str:
+    if use_baseline_aligned_mode:
         return ''
     return get_creation_date_and_tickets_filters(
-        kwargs=kwargs,
         filter_generator=filter_generator,
+        **kwargs,
     )
 
 
 def get_creation_date_and_tickets_filters(
-    kwargs: dict,
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
-    filter_prefix: str = 'WHERE'
-):
+    filter_prefix: str = 'WHERE',
+    **kwargs,
+) -> str:
     return build_filter_string(
         (
             get_creation_date_filter(
-                kwargs=kwargs,
                 filter_generator=filter_generator,
                 filter_prefix=filter_prefix,
+                **kwargs,
             ),
             get_tickets_filter(
-                kwargs=kwargs,
                 filter_generator=filter_generator,
-            )
+                **kwargs,
+            ),
         )
     )
 
 
 def get_creation_date_filter(
-    kwargs: dict,
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
     filter_prefix: str,
+    range_start: str,
+    range_end: str,
+    **kwargs,
 ) -> str:
     return filter_generator.common.generate_creation_date_filter(
-        range_start=kwargs['range_start'],
-        range_end=kwargs['range_end'],
+        range_start=range_start,
+        range_end=range_end,
         filter_prefix=filter_prefix,
     )
 
 
 # yapf: disable
 def get_tickets_filter(
-    kwargs: dict,
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
+    **kwargs,
 ) -> str:
     return build_filter_string((
         # index start
@@ -80,7 +86,7 @@ def get_tickets_filter(
         filter_generator.tickets.generate_operating_systems_filter(params=kwargs['operating_system_id']),
         filter_generator.tickets.generate_ides_filter(params=kwargs['ide_id']),
         filter_generator.tickets.generate_ticket_tags_filter(params=kwargs['tickets_tags']),
-        try_get_customer_groups_filter(kwargs=kwargs, filter_generator=filter_generator),
+        try_get_customer_groups_filter(filter_generator=filter_generator, **kwargs),
         filter_generator.customers.generate_conversion_status_filter(params=kwargs['conversion_statuses']),
         filter_generator.employees.generate_emp_tribes_filter(params=kwargs['emp_tribe_ids']),
         filter_generator.employees.generate_employees_filter(params=kwargs['emp_ids']),
@@ -93,13 +99,15 @@ def get_tickets_filter(
 
 
 def try_get_customer_groups_filter(
-    kwargs: dict,
     filter_generator: TicketsWithIterationsSqlFilterClauseGenerator,
+    customers_groups: FilterParametersNode,
+    ignore_groups_filter: bool = False,
+    **kwargs,
 ) -> str:
-    if kwargs.get('ignore_groups_filter', False):
+    if ignore_groups_filter:
         return ''
     return filter_generator.customers.generate_customer_groups_filter(
-        params=kwargs['customers_groups']
+        params=customers_groups
     )
 
 

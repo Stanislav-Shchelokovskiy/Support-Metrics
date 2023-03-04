@@ -47,8 +47,8 @@ class TicketsWithIterationsRaw(RepositoryQueries):
     def get_general_format_params(self, **kwargs) -> dict[str, str]:
         generator = TicketsWithIterationsSqlFilterClauseGenerator
         return {
-            'tickets_with_iterations_table': get_tickets_with_iterations_table(kwargs=kwargs, filter_generator=generator),
-            'tickets_filter': try_get_creation_date_and_tickets_filters(kwargs=kwargs, filter_generator=generator),
+            'tickets_with_iterations_table': get_tickets_with_iterations_table(filter_generator=generator, **kwargs),
+            'tickets_filter': try_get_creation_date_and_tickets_filters(filter_generator=generator, **kwargs),
         }
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
