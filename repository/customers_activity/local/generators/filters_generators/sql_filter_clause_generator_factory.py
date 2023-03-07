@@ -1,5 +1,5 @@
 from typing import Protocol, Any, runtime_checkable, Iterable
-from toolbox.sql.generators.filter_clause_generator import SqlFilterClauseGenerator
+import toolbox.sql.generators.filter_clause_generator as SqlFilterClauseGenerator
 
 
 class BaseNode(Protocol):
@@ -26,31 +26,24 @@ class FilterParameterNode(BaseNode, Protocol):
     value: int
 
 
-def params_guard(cls):
+def params_guard(func):
 
-    def decorate(func):
+    def guard(**kwargs):
+        if any(arg is None for arg in kwargs.values()):
+            return ''
+        return func(**kwargs)
 
-        def guard(**kwargs):
-            if any(arg is None for arg in kwargs.values()):
-                return ''
-            return func(**kwargs)
-
-        return guard
-
-    for attr in cls.__dict__:
-        if callable(getattr(cls, attr)):
-            setattr(cls, attr, decorate(getattr(cls, attr)))
-    return cls
+    return guard
 
 
 class SqlFilterClauseFromFilterParametersGeneratorFactory:
 
     def get_like_filter_generator(params: FilterParametersNode):
-        generator = SqlFilterClauseGenerator()
-        generate_filter = generator.generate_like_filter if params.include else generator.generate_not_like_filter
-        return generate_filter
+        if params.include:
+            return SqlFilterClauseGenerator.generate_like_filter
+        return SqlFilterClauseGenerator.generate_not_like_filter
 
     def get_in_filter_generator(params: FilterParametersNode):
-        generator = SqlFilterClauseGenerator()
-        generate_filter = generator.generate_in_filter if params.include else generator.generate_not_in_filter
-        return generate_filter
+        if params.include:
+            return SqlFilterClauseGenerator.generate_in_filter
+        return SqlFilterClauseGenerator.generate_not_in_filter

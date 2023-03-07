@@ -1,11 +1,15 @@
 import pytest
-from repository.customers_activity.local.generators.filters_generators.platforms_products import PlatformsProductsSqlFilterClauseGenerator
+import repository.customers_activity.local.generators.filters_generators.platforms_products as PlatformsProductsSqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import PlatformsProductsMeta
 from repository.customers_activity.local.Tests.mocks import MockFilterParametersNode
 
 
 @pytest.mark.parametrize(
     'tribes, output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -43,6 +47,10 @@ def test_generate_platforms_filter(
 
 @pytest.mark.parametrize(
     'tribes, output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',

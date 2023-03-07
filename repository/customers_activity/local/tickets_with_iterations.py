@@ -11,7 +11,6 @@ from sql_queries.customers_activity.meta import (
     TicketsWithIterationsPeriodMeta,
     BaselineAlignedModeMeta,
 )
-from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
 from repository.customers_activity.local.generators.periods import PeriodsGenerator
 from repository.customers_activity.local.core.tickets_with_iterations_table import get_tickets_with_iterations_table
 from repository.customers_activity.local.core.filters import try_get_creation_date_and_tickets_filters
@@ -45,10 +44,9 @@ class TicketsWithIterationsRaw(RepositoryQueries):
         return CustomersActivitySqlPathIndex.get_tickets_with_iterations_raw_path()
 
     def get_general_format_params(self, **kwargs) -> dict[str, str]:
-        generator = TicketsWithIterationsSqlFilterClauseGenerator
         return {
-            'tickets_with_iterations_table': get_tickets_with_iterations_table(filter_generator=generator, **kwargs),
-            'tickets_filter': try_get_creation_date_and_tickets_filters(filter_generator=generator, **kwargs),
+            'tickets_with_iterations_table': get_tickets_with_iterations_table(**kwargs),
+            'tickets_filter': try_get_creation_date_and_tickets_filters(**kwargs),
         }
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:

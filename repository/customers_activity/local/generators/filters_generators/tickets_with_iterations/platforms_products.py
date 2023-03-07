@@ -7,24 +7,24 @@ from repository.customers_activity.local.generators.filters_generators.sql_filte
 
 
 @params_guard
-class PlatformsProductsSqlFilterClauseGenerator:
+def generate_platforms_filter(params: FilterParametersNode) -> str:
+    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_like_filter_generator(
+        params
+    )
+    return generate_filter(
+        col=TicketsWithIterationsMeta.platforms,
+        values=params.values,
+        filter_prefix='AND',
+    )
 
-    def generate_platforms_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_like_filter_generator(
-            params
-        )
-        return generate_filter(
-            col=TicketsWithIterationsMeta.platforms,
-            values=params.values,
-            filter_prefix='AND',
-        )
 
-    def generate_products_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_like_filter_generator(
-            params
-        )
-        return generate_filter(
-            col=TicketsWithIterationsMeta.products,
-            values=params.values,
-            filter_prefix='AND',
-        )
+@params_guard
+def generate_products_filter(params: FilterParametersNode) -> str:
+    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_like_filter_generator(
+        params
+    )
+    return generate_filter(
+        col=TicketsWithIterationsMeta.products,
+        values=params.values,
+        filter_prefix='AND',
+    )

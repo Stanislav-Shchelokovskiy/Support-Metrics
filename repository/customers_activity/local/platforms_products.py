@@ -6,7 +6,7 @@ from sql_queries.index import (
 )
 from sql_queries.customers_activity.meta import PlatformsProductsMeta
 from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import FilterParametersNode
-from repository.customers_activity.local.generators.filters_generators.platforms_products import PlatformsProductsSqlFilterClauseGenerator
+import repository.customers_activity.local.generators.filters_generators.platforms_products as PlatformsProductsSqlFilterClauseGenerator
 
 
 # yapf: disable

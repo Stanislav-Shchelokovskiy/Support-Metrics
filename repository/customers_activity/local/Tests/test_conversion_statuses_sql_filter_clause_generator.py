@@ -1,11 +1,15 @@
 import pytest
-from repository.customers_activity.local.generators.filters_generators.conversion_statuses import ConversionStatusesSqlFilterClauseGenerator
+import repository.customers_activity.local.generators.filters_generators.conversion_statuses as ConversionStatusesSqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import ConversionStatusesMeta
 from repository.customers_activity.local.Tests.mocks import MockFilterParametersNode
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
