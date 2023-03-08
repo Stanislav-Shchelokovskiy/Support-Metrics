@@ -28,7 +28,7 @@ class FilterParameterNode(BaseNode, Protocol):
 
 
 @decorator
-def params_guard(func, **kwargs):
+def params_guard(func, instance, **kwargs):
     if any(arg is None for arg in kwargs.values()):
         return ''
     return func(**kwargs)
