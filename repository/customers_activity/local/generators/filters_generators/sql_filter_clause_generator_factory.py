@@ -1,6 +1,6 @@
 from typing import Protocol, Any, runtime_checkable, Iterable
 import toolbox.sql.generators.filter_clause_generator as SqlFilterClauseGenerator
-from toolbox.utils.decorator_factory import decorator
+from wrapt import decorator
 
 
 class BaseNode(Protocol):
@@ -28,7 +28,7 @@ class FilterParameterNode(BaseNode, Protocol):
 
 
 @decorator
-def params_guard(func, instance, **kwargs):
+def params_guard(func, instance, args, kwargs):
     if any(arg is None for arg in kwargs.values()):
         return ''
     return func(**kwargs)
