@@ -28,8 +28,7 @@ class TrackedCustomersGroups(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return CustomersActivitySqlPathIndex.get_tracked_customers_groups_path(
-        )
+        return CustomersActivitySqlPathIndex.get_tracked_customers_groups_path()
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return {
