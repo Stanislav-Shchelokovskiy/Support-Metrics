@@ -1,4 +1,4 @@
-from toolbox.sql.index import RootPath
+import toolbox.sql.index as RootPath
 
 
 class CustomersActivitySqlPathIndex:

@@ -1,7 +1,7 @@
 import pytest
+import toolbox.sql.index as RootPath
 from typing import Callable
 from os import getcwd
-from toolbox.sql.index import RootPath
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
 )
