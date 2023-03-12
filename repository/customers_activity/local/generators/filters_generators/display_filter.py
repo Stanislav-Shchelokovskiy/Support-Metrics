@@ -181,9 +181,7 @@ class DisplayFilterGenerator:
 
     # yapf: disable
     @staticmethod
-    def generate_display_filter(
-        node: BaseNode
-    ) -> list[list]:
+    def generate_display_filter(node: BaseNode) -> list[list]:
         filters = []
         filter_node: BaseNode | FilterParametersNode | FilterParameterNode | Percentile
         aliases = node.get_field_aliases()

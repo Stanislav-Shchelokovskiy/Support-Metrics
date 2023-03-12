@@ -159,7 +159,7 @@ class SqliteFactory:
     def create_display_filter_generator(self) -> DisplayFilterGenerator:
         return DisplayFilterGenerator
 
-    def create_periods_generator(z) -> PeriodsGenerator:
+    def create_periods_generator(self) -> PeriodsGenerator:
         return PeriodsGenerator
 # yapf: enable
 
