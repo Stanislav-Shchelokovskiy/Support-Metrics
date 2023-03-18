@@ -85,7 +85,7 @@ def vacuum():
     __execute_script_non_query('vacuum;')
 
 
-def run_analyze():
+def analyze():
     __execute_script_non_query('pragma optimize;')
 
 

@@ -1,12 +1,6 @@
-from repository.customers_activity.factory import (
-    CustomersActivityFactory,
-    CustomersActivityTablesBuilderFactory,
-)
-
-
 class RepositoryFactory:
-    customers_activity = CustomersActivityFactory
+    import repository.customers_activity.factory as customers_activity
 
 
 class TablesBuilder:
-    customers_activity = CustomersActivityTablesBuilderFactory
+    import repository.customers_activity.local.tables_builder as customers_activity

@@ -1,5 +1,6 @@
 from toolbox.sql.repository import SqlServerRepository, SqliteRepository, Repository
 from toolbox.sql.repository_queries import RepositoryQueries
+
 import repository.customers_activity.remote.tickets_and_iterations as tickets_and_iterations
 import repository.customers_activity.remote.tickets as tickets
 import repository.customers_activity.remote.customers_groups as customers_groups
@@ -17,7 +18,6 @@ import repository.customers_activity.local.employees as sqlite_employees
 
 from repository.customers_activity.local.generators.filters_generators.display_filter import DisplayFilterGenerator
 from repository.customers_activity.local.generators.periods import PeriodsGenerator
-import repository.customers_activity.local.tables_builder as TablesBuilder
 
 
 # yapf: disable
@@ -163,11 +163,5 @@ class SqliteFactory:
         return PeriodsGenerator
 # yapf: enable
 
-
-class CustomersActivityFactory:
-    remote = SqlServerFactory()
-    local = SqliteFactory()
-
-
-class CustomersActivityTablesBuilderFactory:
-    builder = TablesBuilder
+remote = SqlServerFactory()
+local = SqliteFactory()
