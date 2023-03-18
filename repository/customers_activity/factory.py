@@ -17,7 +17,7 @@ import repository.customers_activity.local.employees as sqlite_employees
 
 from repository.customers_activity.local.generators.filters_generators.display_filter import DisplayFilterGenerator
 from repository.customers_activity.local.generators.periods import PeriodsGenerator
-from repository.customers_activity.local.tables_builder import TablesBuilder
+import repository.customers_activity.local.tables_builder as TablesBuilder
 
 
 # yapf: disable
@@ -170,4 +170,4 @@ class CustomersActivityFactory:
 
 
 class CustomersActivityTablesBuilderFactory:
-    builder = TablesBuilder()
+    builder = TablesBuilder
