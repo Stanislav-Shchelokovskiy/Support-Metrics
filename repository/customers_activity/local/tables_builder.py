@@ -27,7 +27,7 @@ def build_tickets_with_iterations(rank_period_offset: str):
             'rank_period_offset': rank_period_offset,
         }
     )
-    __execute_non_query(query)
+    __execute(query)
 
 
 def build_emp_positions():
@@ -41,7 +41,7 @@ def build_emp_positions():
             'position_name': EmployeesIterationsMeta.position_name,
         }
     )
-    __execute_non_query(query)
+    __execute(query)
 
 
 def build_emp_tribes():
@@ -54,7 +54,7 @@ def build_emp_tribes():
             'EmployeesIterations': CustomersActivityDBIndex.get_employees_iterations_name(),
         }
     )
-    __execute_non_query(query)
+    __execute(query)
 
 
 def build_employees():
@@ -66,7 +66,7 @@ def build_employees():
             'EmployeesIterations': CustomersActivityDBIndex.get_employees_iterations_name(),
         }
     )
-    __execute_non_query(query)
+    __execute(query)
 
 
 def build_users():
@@ -78,20 +78,16 @@ def build_users():
             'TicketsWithIterations': CustomersActivityDBIndex.get_tickets_with_iterations_name(),
         }
     )
-    __execute_non_query(query)
+    __execute(query)
 
 
 def vacuum():
-    __execute_script_non_query('vacuum;')
+    __execute('vacuum;')
 
 
 def analyze():
-    __execute_script_non_query('pragma optimize;')
+    __execute('pragma optimize;')
 
 
-def __execute_non_query(query):
-    SQLiteNonQueryExecutor().execute_non_query(query)
-
-
-def __execute_script_non_query(script :str):
-    SQLiteNonQueryExecutor().execute_script_non_query(script)
+def __execute(query):
+    SQLiteNonQueryExecutor().execute_nonquery(query)

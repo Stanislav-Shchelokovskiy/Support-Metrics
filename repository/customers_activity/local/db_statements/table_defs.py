@@ -20,7 +20,7 @@ def _knot_table_def(format_params: dict[str, str]):
     return SqlQuery(
         query_file_path=CustomersActivitySqlPathIndex.get_knot_path(),
         format_params=format_params,
-    ).get_query()
+    ).get_script()
 
 
 # yapf: disable

@@ -227,7 +227,7 @@ def test_query_params(
         SqlQuery(
             query_file_path=get_query_file_path(),
             format_params=format_params,
-        ).get_query()
+        ).get_script()
 
 
 def prepare_env(monkeypatch: pytest.MonkeyPatch):
