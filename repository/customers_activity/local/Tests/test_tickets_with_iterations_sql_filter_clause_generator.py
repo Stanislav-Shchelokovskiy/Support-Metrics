@@ -1,5 +1,13 @@
 import pytest
-from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
+import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.limit as limit
+import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.common as common
+import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.platforms_products as platforms_products
+import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.tickets as tickets
+import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.ticket_types as ticket_types
+import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.bugs as bugs
+import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.cat as cat
+import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.customers as customers
+import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.employees as employees
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta, BaselineAlignedModeMeta
 from sql_queries.index import CustomersActivityDBIndex
 from repository.customers_activity.local.Tests.mocks import (
@@ -33,9 +41,7 @@ def test_generate_creation_date_filter(
     kwargs: dict,
     output,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.common.generate_creation_date_filter(
-        **kwargs
-    ) == output
+    assert common.generate_creation_date_filter(**kwargs) == output
 
 
 @pytest.mark.parametrize(
@@ -53,13 +59,17 @@ def test_generate_creation_date_with_offset_start_filter(
     kwargs: dict,
     output,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.common.generate_creation_date_with_rank_offset_start_filter(
+    assert common.generate_creation_date_with_rank_offset_start_filter(
         **kwargs
     ) == output
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -90,13 +100,15 @@ def test_generate_customer_groups_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.customers.generate_customer_groups_filter(
-        params=input
-    ) == output
+    assert customers.generate_customer_groups_filter(params=input) == output
 
 
 @pytest.mark.parametrize(
     'input, output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -127,13 +139,17 @@ def test_generate_tracked_customer_groups_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.customers.generate_tracked_customer_groups_filter(
+    assert customers.generate_tracked_customer_groups_filter(
         params=input
     ) == output
 
 
 @pytest.mark.parametrize(
-    'ticket_types, output', [
+    'tickets_types, output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -161,16 +177,20 @@ def test_generate_tracked_customer_groups_filter(
     ]
 )
 def test_generate_ticket_types_filter(
-    ticket_types: MockFilterParametersNode,
+    tickets_types: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.tickets_types.generate_ticket_types_filter(
-        params=ticket_types
+    assert ticket_types.generate_ticket_types_filter(
+        params=tickets_types
     ) == output
 
 
 @pytest.mark.parametrize(
-    'ticket_types, output', [
+    'tickets_types, output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -198,16 +218,20 @@ def test_generate_ticket_types_filter(
     ]
 )
 def test_generate_duplicated_to_ticket_types_filter(
-    ticket_types: MockFilterParametersNode,
+    tickets_types: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.tickets_types.generate_duplicated_to_ticket_types_filter(
-        params=ticket_types
+    assert ticket_types.generate_duplicated_to_ticket_types_filter(
+        params=tickets_types
     ) == output
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -238,13 +262,15 @@ def test_generate_ticket_tags_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.tickets.generate_ticket_tags_filter(
-        params=input
-    ) == output
+    assert tickets.generate_ticket_tags_filter(params=input) == output
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -275,13 +301,15 @@ def test_generate_tribes_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.tickets.generate_tribes_filter(
-        params=input
-    ) == output
+    assert tickets.generate_tribes_filter(params=input) == output
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -312,13 +340,15 @@ def test_generate_reply_types_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.cat.generate_reply_types_filter(
-        params=input
-    ) == output
+    assert cat.generate_reply_types_filter(params=input) == output
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -349,13 +379,15 @@ def test_generate_components_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.cat.generate_components_filter(
-        params=input
-    ) == output
+    assert cat.generate_components_filter(params=input) == output
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -386,13 +418,15 @@ def test_generate_features_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.cat.generate_features_filter(
-        params=input
-    ) == output
+    assert cat.generate_features_filter(params=input) == output
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -423,13 +457,15 @@ def test_generate_license_status_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.customers.generate_license_status_filter(
-        params=input
-    ) == output
+    assert customers.generate_license_status_filter(params=input) == output
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -460,13 +496,15 @@ def test_generate_conversion_status_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.customers.generate_conversion_status_filter(
-        params=input
-    ) == output
+    assert customers.generate_conversion_status_filter(params=input) == output
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -497,13 +535,15 @@ def test_generate_platforms_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.platforms_products.generate_platforms_filter(
-        params=input
-    ) == output
+    assert platforms_products.generate_platforms_filter(params=input) == output
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -534,13 +574,15 @@ def test_generate_products_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.platforms_products.generate_products_filter(
-        params=input
-    ) == output
+    assert platforms_products.generate_products_filter(params=input) == output
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -571,13 +613,15 @@ def test_generate_emp_positions_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.employees.generate_emp_positions_filter(
-        params=input
-    ) == output
+    assert employees.generate_emp_positions_filter(params=input) == output
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -608,13 +652,15 @@ def test_generate_emp_tribes_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.employees.generate_emp_tribes_filter(
-        params=input
-    ) == output
+    assert employees.generate_emp_tribes_filter(params=input) == output
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -645,13 +691,15 @@ def test_generate_employees_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.employees.generate_employees_filter(
-        params=input
-    ) == output
+    assert employees.generate_employees_filter(params=input) == output
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -682,9 +730,7 @@ def test_generate_customers_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.customers.generate_customers_filter(
-        params=input
-    ) == output
+    assert customers.generate_customers_filter(params=input) == output
 
 
 @pytest.mark.parametrize(
@@ -716,7 +762,7 @@ def test_get_percentile_filter(
     percentile: MockPercentile,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.limit.get_percentile_filter(
+    assert limit.generate_percentile_filter(
         alias=alias,
         percentile=percentile,
     ) == output
@@ -724,6 +770,10 @@ def test_get_percentile_filter(
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -754,13 +804,15 @@ def test_generate_builds_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.tickets.generate_builds_filter(
-        params=input
-    ) == output
+    assert tickets.generate_builds_filter(params=input) == output
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -791,13 +843,15 @@ def test_generate_severity_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.bugs.generate_severity_filter(
-        params=input
-    ) == output
+    assert bugs.generate_severity_filter(params=input) == output
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -828,13 +882,15 @@ def test_generate_ticket_status_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.bugs.generate_ticket_status_filter(
-        params=input
-    ) == output
+    assert bugs.generate_ticket_status_filter(params=input) == output
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -865,13 +921,15 @@ def test_generate_ides_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.tickets.generate_ides_filter(
-        params=input
-    ) == output
+    assert tickets.generate_ides_filter(params=input) == output
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -902,13 +960,15 @@ def test_generate_operating_systems_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.tickets.generate_operating_systems_filter(
-        params=input
-    ) == output
+    assert tickets.generate_operating_systems_filter(params=input) == output
 
 
 @pytest.mark.parametrize(
     'input,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -939,12 +999,10 @@ def test_generate_frameworks_filter(
     input: MockFilterParametersNode,
     output: str,
 ):
-    assert TicketsWithIterationsSqlFilterClauseGenerator.tickets.generate_frameworks_filter(
-        params=input
-    ) == output
+    assert tickets.generate_frameworks_filter(params=input) == output
 
 
 def test_generate_privacy_filter():
-    assert TicketsWithIterationsSqlFilterClauseGenerator.tickets.generate_privacy_filter(
+    assert tickets.generate_privacy_filter(
         params=MockFilterParameterNode(include=True, value=100),
     ) == f'AND {TicketsWithIterationsMeta.is_private} = 100'

@@ -48,6 +48,7 @@ class TicketsTags(RepositoryQueries):
     def get_must_have_columns(self, **kwargs) -> Iterable[str]:
         return TicketsTagsMeta.get_values()
 
+
 class Frameworks(RepositoryQueries):
 
     def get_main_query_path(self, **kwargs) -> str:
@@ -113,7 +114,6 @@ class Severity(RepositoryQueries):
 
 
 class TicketStatuses(RepositoryQueries):
-
 
     def get_main_query_path(self, **kwargs) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()

@@ -1,11 +1,15 @@
 import pytest
-from repository.customers_activity.local.generators.filters_generators.cat import CATSqlFilterClauseGenerator
+import repository.customers_activity.local.generators.filters_generators.cat as CATSqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import CATComponentsFeaturesMeta
 from repository.customers_activity.local.Tests.mocks import MockFilterParametersNode
 
 
 @pytest.mark.parametrize(
     'tribes, output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -43,6 +47,16 @@ def test_generate_components_filter(
 
 @pytest.mark.parametrize(
     'tribes, components, output', [
+        (
+            None,
+            None,
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=True, values=[]),
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             MockFilterParametersNode(include=True, values=[]),

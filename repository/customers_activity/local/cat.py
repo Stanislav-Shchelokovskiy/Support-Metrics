@@ -8,7 +8,7 @@ from sql_queries.customers_activity.meta import (
     CATRepliesTypesMeta,
     CATComponentsFeaturesMeta,
 )
-from repository.customers_activity.local.generators.filters_generators.cat import CATSqlFilterClauseGenerator
+import repository.customers_activity.local.generators.filters_generators.cat as CATSqlFilterClauseGenerator
 
 
 # yapf: disable

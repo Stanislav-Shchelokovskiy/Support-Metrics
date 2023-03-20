@@ -1,11 +1,15 @@
 import pytest
-from repository.customers_activity.local.generators.filters_generators.platforms_products import PlatformsProductsSqlFilterClauseGenerator
+import repository.customers_activity.local.generators.filters_generators.platforms_products as PlatformsProductsSqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import PlatformsProductsMeta
 from repository.customers_activity.local.Tests.mocks import MockFilterParametersNode
 
 
 @pytest.mark.parametrize(
     'tribes, output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -44,6 +48,10 @@ def test_generate_platforms_filter(
 @pytest.mark.parametrize(
     'tribes, output', [
         (
+            None,
+            '',
+        ),
+        (
             MockFilterParametersNode(include=True, values=[]),
             '',
         ),
@@ -53,7 +61,7 @@ def test_generate_platforms_filter(
         ),
         (
             MockFilterParametersNode(include=True, values=['t1']),
-            f"WHERE {PlatformsProductsMeta.product_tribe_id} IN ('t1')",
+            f"WHERE {PlatformsProductsMeta.product_tribe_id} IN ('t1') OR {PlatformsProductsMeta.platform_tribe_id} IN ('t1')",
         ),
         (
             MockFilterParametersNode(include=False, values=['t1']),
@@ -61,7 +69,7 @@ def test_generate_platforms_filter(
         ),
         (
             MockFilterParametersNode(include=True, values=['t1', 't2']),
-            f"WHERE {PlatformsProductsMeta.product_tribe_id} IN ('t1','t2')",
+            f"WHERE {PlatformsProductsMeta.product_tribe_id} IN ('t1','t2') OR {PlatformsProductsMeta.platform_tribe_id} IN ('t1','t2')",
         ),
         (
             MockFilterParametersNode(include=False, values=['t1', 't2']),

@@ -1,6 +1,8 @@
+from collections.abc import Collection
+
 class MockFilterParametersNode:
 
-    def __init__(self, include: bool, values: list) -> None:
+    def __init__(self, include: bool, values: Collection) -> None:
         self.include = include
         self.values = values
 

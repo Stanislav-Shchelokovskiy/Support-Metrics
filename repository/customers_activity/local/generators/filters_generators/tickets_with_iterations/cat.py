@@ -7,37 +7,39 @@ from repository.customers_activity.local.generators.filters_generators.sql_filte
 
 
 @params_guard
-class CATSqlFilterClauseGenerator:
+def generate_reply_types_filter(params: FilterParametersNode) -> str:
+    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
+        params
+    )
+    return generate_filter(
+        col=TicketsWithIterationsMeta.reply_id,
+        values=params.values,
+        filter_prefix='AND',
+        values_converter=lambda val: f"'{val}'",
+    )
 
-    def generate_reply_types_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
-            params
-        )
-        return generate_filter(
-            col=TicketsWithIterationsMeta.reply_id,
-            values=params.values,
-            filter_prefix='AND',
-            values_converter=lambda val: f"'{val}'",
-        )
 
-    def generate_components_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
-            params
-        )
-        return generate_filter(
-            col=TicketsWithIterationsMeta.component_id,
-            values=params.values,
-            filter_prefix='AND',
-            values_converter=lambda val: f"'{val}'",
-        )
+@params_guard
+def generate_components_filter(params: FilterParametersNode) -> str:
+    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
+        params
+    )
+    return generate_filter(
+        col=TicketsWithIterationsMeta.component_id,
+        values=params.values,
+        filter_prefix='AND',
+        values_converter=lambda val: f"'{val}'",
+    )
 
-    def generate_features_filter(params: FilterParametersNode) -> str:
-        generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
-            params
-        )
-        return generate_filter(
-            col=TicketsWithIterationsMeta.feature_id,
-            values=params.values,
-            filter_prefix='AND',
-            values_converter=lambda val: f"'{val}'",
-        )
+
+@params_guard
+def generate_features_filter(params: FilterParametersNode) -> str:
+    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
+        params
+    )
+    return generate_filter(
+        col=TicketsWithIterationsMeta.feature_id,
+        values=params.values,
+        filter_prefix='AND',
+        values_converter=lambda val: f"'{val}'",
+    )

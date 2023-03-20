@@ -9,7 +9,7 @@ from sql_queries.customers_activity.meta import (
     TribesMeta,
     EmployeesMeta,
 )
-from repository.customers_activity.local.generators.filters_generators.employees import EmployeesSqlFilterClauseGenerator
+import repository.customers_activity.local.generators.filters_generators.employees as EmployeesSqlFilterClauseGenerator
 
 
 # yapf: disable

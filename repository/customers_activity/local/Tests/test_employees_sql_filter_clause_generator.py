@@ -1,11 +1,15 @@
 import pytest
-from repository.customers_activity.local.generators.filters_generators.employees import EmployeesSqlFilterClauseGenerator
+import repository.customers_activity.local.generators.filters_generators.employees as EmployeesSqlFilterClauseGenerator
 from sql_queries.customers_activity.meta import EmployeesMeta
 from repository.customers_activity.local.Tests.mocks import MockFilterParametersNode
 
 
 @pytest.mark.parametrize(
     'positions,output', [
+        (
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             '',
@@ -36,13 +40,23 @@ def test_generate_positions_filter(
     positions: list[str],
     output: str,
 ):
-    assert EmployeesSqlFilterClauseGenerator._generate_positions_filter(
+    assert EmployeesSqlFilterClauseGenerator.generate_positions_filter(
         position_ids=positions
     ) == output
 
 
 @pytest.mark.parametrize(
     'positions,tribes,output', [
+        (
+            None,
+            None,
+            '',
+        ),
+        (
+            MockFilterParametersNode(include=True, values=[]),
+            None,
+            '',
+        ),
         (
             MockFilterParametersNode(include=True, values=[]),
             MockFilterParametersNode(include=True, values=[]),

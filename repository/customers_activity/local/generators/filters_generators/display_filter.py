@@ -1,7 +1,6 @@
 from typing import Any
 from toolbox.sql.repository import SqliteRepository
 from toolbox.sql.repository_queries import RepositoryQueries
-from repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.tickets_with_iterations import TicketsWithIterationsSqlFilterClauseGenerator
 from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import (
     BaseNode,
     FilterParametersNode,
@@ -31,6 +30,7 @@ from sql_queries.customers_activity.meta import (
     OperatingSystemsMeta,
     FrameworksMeta,
 )
+import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.limit as limit
 
 
 class QueryParams:
@@ -178,11 +178,10 @@ query_params_store = {
 
 class DisplayFilterGenerator:
     repository_type = SqliteRepository
+
     # yapf: disable
     @staticmethod
-    def generate_display_filter(
-        node: BaseNode
-    ) -> list[list]:
+    def generate_display_filter(node: BaseNode) -> list[list]:
         filters = []
         filter_node: BaseNode | FilterParametersNode | FilterParameterNode | Percentile
         aliases = node.get_field_aliases()
@@ -208,8 +207,8 @@ class DisplayFilterGenerator:
                     filter = [field_alias, '=', display_value]
                 case Percentile():
                     percentile: Percentile = filter_node
-                    percentile_filter = TicketsWithIterationsSqlFilterClauseGenerator.limit.get_percentile_filter(
-                        alias = field_alias,
+                    percentile_filter = limit.generate_percentile_filter(
+                        alias=field_alias,
                         percentile=percentile.value,
                     )
                     filter = [int(clause) if clause.isdigit() else clause for clause in percentile_filter.split(' ')]
