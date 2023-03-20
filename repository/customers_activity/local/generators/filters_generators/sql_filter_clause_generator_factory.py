@@ -1,4 +1,5 @@
-from typing import Protocol, Any, runtime_checkable, Iterable
+from collections.abc import Collection
+from typing import Protocol, Any, runtime_checkable
 import toolbox.sql.generators.filter_clause_generator as SqlFilterClauseGenerator
 from wrapt import decorator
 
@@ -18,7 +19,7 @@ class BaseNode(Protocol):
 @runtime_checkable
 class FilterParametersNode(BaseNode, Protocol):
     include: bool
-    values: Iterable
+    values: Collection
 
 
 @runtime_checkable

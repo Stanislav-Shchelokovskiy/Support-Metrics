@@ -61,7 +61,7 @@ def test_generate_platforms_filter(
         ),
         (
             MockFilterParametersNode(include=True, values=['t1']),
-            f"WHERE {PlatformsProductsMeta.product_tribe_id} IN ('t1')",
+            f"WHERE {PlatformsProductsMeta.product_tribe_id} IN ('t1') OR {PlatformsProductsMeta.platform_tribe_id} IN ('t1')",
         ),
         (
             MockFilterParametersNode(include=False, values=['t1']),
@@ -69,7 +69,7 @@ def test_generate_platforms_filter(
         ),
         (
             MockFilterParametersNode(include=True, values=['t1', 't2']),
-            f"WHERE {PlatformsProductsMeta.product_tribe_id} IN ('t1','t2')",
+            f"WHERE {PlatformsProductsMeta.product_tribe_id} IN ('t1','t2') OR {PlatformsProductsMeta.platform_tribe_id} IN ('t1','t2')",
         ),
         (
             MockFilterParametersNode(include=False, values=['t1', 't2']),
