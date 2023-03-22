@@ -1,7 +1,7 @@
 import pytest
 from pandas import DataFrame
 from toolbox.sql.repository import Repository
-from repository.customers_activity.local.generators.filters_generators.display_filter import DisplayFilterGenerator
+import repository.customers_activity.local.generators.filters_generators.display_filter as DisplayFilterGenerator
 from sql_queries.index import CustomersActivityDBIndex
 from sql_queries.customers_activity.meta import (
     TicketsTypesMeta,
@@ -123,7 +123,7 @@ def test_generate_conversion_filter(
     output: list[str | int],
 ):
     with pytest.MonkeyPatch.context() as monkeypatch:
-        monkeypatch.setattr(DisplayFilterGenerator, 'repository_type', MockSqliteRepository)
+        monkeypatch.setattr(DisplayFilterGenerator, '__repository_type', MockSqliteRepository)
         assert DisplayFilterGenerator.generate_display_filter(
             node=node,
         ) == output

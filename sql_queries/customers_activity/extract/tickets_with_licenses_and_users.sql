@@ -110,7 +110,7 @@ CREATE CLUSTERED INDEX sib_product_cnt ON #SaleItemBuildProductCount (sib_Id, pl
 DROP TABLE IF EXISTS #TicketsWithLicenses;
 WITH enterprise_clients AS (
 	SELECT	Customer_Id AS customer_id
-	FROM	DXStatisticsV2.dbo.UserInGroups
+	FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].UserInGroup
 	WHERE	UserGroup_Id = '943B96B1-7C80-11E5-BF27-6470020143F0' --Barclays licensed customers
 ),
 

@@ -76,6 +76,8 @@ class TicketsWithIterationsParams(ServerModel):
     emp_tribe_ids: FilterParametersNode | None = Field(alias='Employees tribes')
     emp_ids: FilterParametersNode | None = Field(alias='Employees')
     assigned_to_ids: FilterParametersNode | None = Field(alias='Assigned to')
+    closed_by_ids: FilterParametersNode | None = Field(alias='Closed by')
+    fixed_by_ids: FilterParametersNode | None = Field(alias='Fixed by')
     reply_ids: FilterParametersNode | None = Field(alias='CAT replies types')
     components_ids: FilterParametersNode | None = Field(alias='CAT components')
     feature_ids: FilterParametersNode | None = Field(alias='CAT features')

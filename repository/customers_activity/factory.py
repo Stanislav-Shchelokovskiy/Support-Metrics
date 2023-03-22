@@ -16,8 +16,8 @@ import repository.customers_activity.local.cat as sqlite_cat
 import repository.customers_activity.local.tickets_with_iterations as sqlite_tickets_with_iterations
 import repository.customers_activity.local.employees as sqlite_employees
 
-from repository.customers_activity.local.generators.filters_generators.display_filter import DisplayFilterGenerator
-from repository.customers_activity.local.generators.periods import PeriodsGenerator
+import repository.customers_activity.local.generators.filters_generators.display_filter as DisplayFilterGenerator
+import repository.customers_activity.local.generators.periods as PeriodsGenerator
 
 
 # yapf: disable

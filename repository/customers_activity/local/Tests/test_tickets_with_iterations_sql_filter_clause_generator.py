@@ -207,6 +207,16 @@ def test_single_like_filters(
             None,
         ),
         (
+            bugs.generate_closed_by_filter,
+            TicketsWithIterationsMeta.closed_by,
+            None,
+        ),
+        (
+            bugs.generate_fixed_by_filter,
+            TicketsWithIterationsMeta.fixed_by,
+            None,
+        ),
+        (
             cat.generate_reply_types_filter,
             TicketsWithIterationsMeta.reply_id,
             None,
