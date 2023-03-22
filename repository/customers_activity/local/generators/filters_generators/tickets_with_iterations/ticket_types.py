@@ -7,28 +7,25 @@ from repository.customers_activity.local.generators.filters_generators.sql_filte
 
 
 @params_guard
-def generate_ticket_types_filter(params: FilterParametersNode) -> str:
-    generate_ticket_types_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
-        params
-    )
-    return generate_ticket_types_filter(
-        col=TicketsWithIterationsMeta.ticket_type,
-        values=params.values,
-        filter_prefix='AND',
-        values_converter=str,
-    )
-
-
-@params_guard
-def generate_duplicated_to_ticket_types_filter(
-    params: FilterParametersNode
+def generate_ticket_types_filter(
+    params: FilterParametersNode,
+    col: str = TicketsWithIterationsMeta.ticket_type
 ) -> str:
     generate_ticket_types_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
         params
     )
     return generate_ticket_types_filter(
-        col=TicketsWithIterationsMeta.duplicated_to_ticket_type,
+        col=col,
         values=params.values,
         filter_prefix='AND',
         values_converter=str,
+    )
+
+
+def generate_duplicated_to_ticket_types_filter(
+    params: FilterParametersNode
+) -> str:
+    return generate_ticket_types_filter(
+        params=params,
+        col=TicketsWithIterationsMeta.duplicated_to_ticket_type,
     )

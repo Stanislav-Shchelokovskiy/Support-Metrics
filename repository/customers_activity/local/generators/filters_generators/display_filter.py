@@ -46,7 +46,21 @@ class QueryParams:
         self.display_field = display_field
 
 
-query_params_store = {
+def __get_emps_params():
+    return QueryParams(
+            table=CustomersActivityDBIndex.get_employees_name(),
+            value_field=EmployeesIterationsMeta.crmid,
+            display_field=EmployeesIterationsMeta.name,
+        )
+
+def __get_tickets_types_params():
+    return QueryParams(
+            table=CustomersActivityDBIndex.get_tickets_types_name(),
+            value_field=TicketsTypesMeta.id,
+            display_field=TicketsTypesMeta.name,
+        )
+
+__query_params_store = {
     'tribe_ids':
         QueryParams(
             table=CustomersActivityDBIndex.get_tribes_name(),
@@ -71,18 +85,8 @@ query_params_store = {
             value_field=TicketsTagsMeta.id,
             display_field=TicketsTagsMeta.name,
         ),
-    'tickets_types':
-        QueryParams(
-            table=CustomersActivityDBIndex.get_tickets_types_name(),
-            value_field=TicketsTypesMeta.id,
-            display_field=TicketsTypesMeta.name,
-        ),
-    'duplicated_to_tickets_types':
-        QueryParams(
-            table=CustomersActivityDBIndex.get_tickets_types_name(),
-            value_field=TicketsTypesMeta.id,
-            display_field=TicketsTypesMeta.name,
-        ),
+    'tickets_types': __get_tickets_types_params(),
+    'duplicated_to_tickets_types': __get_tickets_types_params(),
     'severity':
         QueryParams(
             table=CustomersActivityDBIndex.get_severity_name(),
@@ -143,12 +147,10 @@ query_params_store = {
             value_field=TribesMeta.id,
             display_field=TribesMeta.name,
         ),
-    'emp_ids':
-        QueryParams(
-            table=CustomersActivityDBIndex.get_employees_name(),
-            value_field=EmployeesIterationsMeta.crmid,
-            display_field=EmployeesIterationsMeta.name,
-        ),
+    'emp_ids': __get_emps_params(),
+    'assigned_to_ids': __get_emps_params(),
+    'closed_by_ids': __get_emps_params(),
+    'fixed_by_ids': __get_emps_params(),
     'reply_ids':
         QueryParams(
             table=CustomersActivityDBIndex.get_cat_replies_types_name(),
@@ -176,104 +178,102 @@ query_params_store = {
 }
 
 
-class DisplayFilterGenerator:
-    repository_type = SqliteRepository
-
-    # yapf: disable
-    @staticmethod
-    def generate_display_filter(node: BaseNode) -> list[list]:
-        filters = []
-        filter_node: BaseNode | FilterParametersNode | FilterParameterNode | Percentile
-        aliases = node.get_field_aliases()
-        for field_name, filter_node in node.get_field_values().items():
-            if not filter_node:
-                continue
-            field_alias = aliases[field_name]
-            filter = None
-            match filter_node:
-                case FilterParametersNode():
-                    filter = DisplayFilterGenerator.generate_filter_from_filter_parameters(
-                        field=field_name,
-                        field_alias=field_alias,
-                        filter_node=filter_node,
-                    )
-                    if not filter:
-                        continue
-                case FilterParameterNode():
-                    display_value = DisplayFilterGenerator.get_display_value(
-                        field_name=field_name,
-                        value=filter_node.value,
-                    )
-                    filter = [field_alias, '=', display_value]
-                case Percentile():
-                    percentile: Percentile = filter_node
-                    percentile_filter = limit.generate_percentile_filter(
-                        alias=field_alias,
-                        percentile=percentile.value,
-                    )
-                    filter = [int(clause) if clause.isdigit() else clause for clause in percentile_filter.split(' ')]
-                case _:
-                    filter = DisplayFilterGenerator.generate_display_filter(node=filter_node)
-            DisplayFilterGenerator.append_filter(filters, filter, node)
-
-        if len(filters) == 1:
-            return filters[0]
-        return filters
-
-    @staticmethod
-    def get_display_value(field_name: str, value: Any):
-        if field_name == 'is_private':
-            value = 'Private' if value else 'Public'
-        return value
-
-    @staticmethod
-    def generate_filter_from_filter_parameters(
-        field: str,
-        field_alias: str,
-        filter_node: FilterParametersNode,
-    ):
-        if not filter_node.values:
-            if not filter_node.include:
-                return [field_alias, '=', 'NULL']
-            return ''
-
-        display_values = DisplayFilterGenerator.get_display_values(
-            field=field,
-            values=filter_node.values,
-        )
-
-        if filter_node.include:
-            return [field_alias, 'in', display_values]
-
-        filter = []
-        filter.append([field_alias, '=', 'NULL'])
-        filter.append('or')
-        filter.append([field_alias, 'notin', display_values])
-        return filter
-
-    @staticmethod
-    def get_display_values(
-        field: str,
-        values: list,
-    ):
-        if query_params := query_params_store.get(field):
-            values = ', '.join([f"'{value}'" for value in values])
-            return DisplayFilterGenerator.repository_type(
-                queries=RepositoryQueries(
-                    main_query_path=CustomersActivitySqlPathIndex.get_general_select_path(),
-                    main_query_format_params={
-                        'columns': query_params.display_field,
-                        'table_name': query_params.table,
-                        'filter_group_limit_clause': f'WHERE {query_params.value_field} IN ({values})\nGROUP BY {query_params.display_field}',
-                    }
+# yapf: disable
+def generate_display_filter(node: BaseNode) -> list[list]:
+    filters = []
+    filter_node: BaseNode | FilterParametersNode | FilterParameterNode | Percentile
+    aliases = node.get_field_aliases()
+    for field_name, filter_node in node.get_field_values().items():
+        if not filter_node:
+            continue
+        field_alias = aliases[field_name]
+        filter = None
+        match filter_node:
+            case FilterParametersNode():
+                filter = __generate_filter_from_filter_parameters(
+                    field=field_name,
+                    field_alias=field_alias,
+                    filter_node=filter_node,
                 )
-            ).get_data().reset_index(drop=True)[query_params.display_field].values.tolist()
-        return values
+                if not filter:
+                    continue
+            case FilterParameterNode():
+                display_value = __get_display_value(
+                    field_name=field_name,
+                    value=filter_node.value,
+                )
+                filter = [field_alias, '=', display_value]
+            case Percentile():
+                percentile: Percentile = filter_node
+                percentile_filter = limit.generate_percentile_filter(
+                    alias=field_alias,
+                    percentile=percentile.value,
+                )
+                filter = [int(clause) if clause.isdigit() else clause for clause in percentile_filter.split(' ')]
+            case _:
+                filter = generate_display_filter(node=filter_node)
+        __append_filter(filters, filter, node)
 
-    @staticmethod
-    def append_filter(filters: list, filter: list, node: BaseNode):
-        if not filter:
-            return
-        if filters:
-            filters.append(node.get_append_operator())
-        filters.append(filter)
+    if len(filters) == 1:
+        return filters[0]
+    return filters
+
+
+def __get_display_value(field_name: str, value: Any):
+    if field_name == 'is_private':
+        value = 'Private' if value else 'Public'
+    return value
+
+
+def __generate_filter_from_filter_parameters(
+    field: str,
+    field_alias: str,
+    filter_node: FilterParametersNode,
+):
+    if not filter_node.values:
+        if not filter_node.include:
+            return [field_alias, '=', 'NULL']
+        return ''
+
+    display_values = __get_display_values(
+        field=field,
+        values=filter_node.values,
+    )
+
+    if filter_node.include:
+        return [field_alias, 'in', display_values]
+
+    filter = []
+    filter.append([field_alias, '=', 'NULL'])
+    filter.append('or')
+    filter.append([field_alias, 'notin', display_values])
+    return filter
+
+
+
+__repository_type = SqliteRepository
+def __get_display_values(
+    field: str,
+    values: list,
+):
+    if query_params := __query_params_store.get(field):
+        values = ', '.join([f"'{value}'" for value in values])
+        return __repository_type(
+            queries=RepositoryQueries(
+                main_query_path=CustomersActivitySqlPathIndex.get_general_select_path(),
+                main_query_format_params={
+                    'columns': query_params.display_field,
+                    'table_name': query_params.table,
+                    'filter_group_limit_clause': f'WHERE {query_params.value_field} IN ({values})\nGROUP BY {query_params.display_field}',
+                }
+            )
+        ).get_data().reset_index(drop=True)[query_params.display_field].values.tolist()
+    return values
+
+
+def __append_filter(filters: list, filter: list, node: BaseNode):
+    if not filter:
+        return
+    if filters:
+        filters.append(node.get_append_operator())
+    filters.append(filter)

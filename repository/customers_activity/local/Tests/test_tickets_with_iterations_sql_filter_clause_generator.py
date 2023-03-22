@@ -11,7 +11,6 @@ import repository.customers_activity.local.generators.filters_generators.tickets
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta, BaselineAlignedModeMeta
 from sql_queries.index import CustomersActivityDBIndex
 from repository.customers_activity.local.Tests.mocks import (
-    MockFilterParametersNode,
     MockFilterParameterNode,
     MockPercentile,
 )
@@ -65,675 +64,6 @@ def test_generate_creation_date_with_offset_start_filter(
 
 
 @pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.user_groups} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.user_groups} LIKE '%p1%' OR {TicketsWithIterationsMeta.user_groups} LIKE '%p2%')"
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.user_groups} LIKE '%p1%')"
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.user_groups} IS NULL OR NOT ({TicketsWithIterationsMeta.user_groups} LIKE '%p1%' OR {TicketsWithIterationsMeta.user_groups} LIKE '%p2%'))"
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.user_groups} IS NULL OR NOT ({TicketsWithIterationsMeta.user_groups} LIKE '%p1%'))"
-        ),
-    ]
-)
-def test_generate_customer_groups_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert customers.generate_customer_groups_filter(params=input) == output
-
-
-@pytest.mark.parametrize(
-    'input, output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {BaselineAlignedModeMeta.id} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe', 'asd']),
-            f"AND {BaselineAlignedModeMeta.id} IN ('qwe','asd')"
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['asd']),
-            f"AND {BaselineAlignedModeMeta.id} IN ('asd')"
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe', 'asd']),
-            f"AND ({BaselineAlignedModeMeta.id} IS NULL OR {BaselineAlignedModeMeta.id} NOT IN ('qwe','asd'))"
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND ({BaselineAlignedModeMeta.id} IS NULL OR {BaselineAlignedModeMeta.id} NOT IN ('qwe'))"
-        ),
-    ]
-)
-def test_generate_tracked_customer_groups_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert customers.generate_tracked_customer_groups_filter(
-        params=input
-    ) == output
-
-
-@pytest.mark.parametrize(
-    'tickets_types, output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.ticket_type} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[1, 2]),
-            f'AND {TicketsWithIterationsMeta.ticket_type} IN (1,2)'
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[1]),
-            f'AND {TicketsWithIterationsMeta.ticket_type} IN (1)'
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[1, 2]),
-            f'AND ({TicketsWithIterationsMeta.ticket_type} IS NULL OR {TicketsWithIterationsMeta.ticket_type} NOT IN (1,2))'
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[1]),
-            f'AND ({TicketsWithIterationsMeta.ticket_type} IS NULL OR {TicketsWithIterationsMeta.ticket_type} NOT IN (1))'
-        ),
-    ]
-)
-def test_generate_ticket_types_filter(
-    tickets_types: MockFilterParametersNode,
-    output: str,
-):
-    assert ticket_types.generate_ticket_types_filter(
-        params=tickets_types
-    ) == output
-
-
-@pytest.mark.parametrize(
-    'tickets_types, output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.duplicated_to_ticket_type} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[1, 2]),
-            f'AND {TicketsWithIterationsMeta.duplicated_to_ticket_type} IN (1,2)'
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[1]),
-            f'AND {TicketsWithIterationsMeta.duplicated_to_ticket_type} IN (1)'
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[1, 2]),
-            f'AND ({TicketsWithIterationsMeta.duplicated_to_ticket_type} IS NULL OR {TicketsWithIterationsMeta.duplicated_to_ticket_type} NOT IN (1,2))'
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[1]),
-            f'AND ({TicketsWithIterationsMeta.duplicated_to_ticket_type} IS NULL OR {TicketsWithIterationsMeta.duplicated_to_ticket_type} NOT IN (1))'
-        ),
-    ]
-)
-def test_generate_duplicated_to_ticket_types_filter(
-    tickets_types: MockFilterParametersNode,
-    output: str,
-):
-    assert ticket_types.generate_duplicated_to_ticket_types_filter(
-        params=tickets_types
-    ) == output
-
-
-@pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.ticket_tags} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[1, 2]),
-            f"AND ({TicketsWithIterationsMeta.ticket_tags} LIKE '%1%' OR {TicketsWithIterationsMeta.ticket_tags} LIKE '%2%')",
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[1]),
-            f"AND ({TicketsWithIterationsMeta.ticket_tags} LIKE '%1%')",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[1, 2]),
-            f"AND ({TicketsWithIterationsMeta.ticket_tags} IS NULL OR NOT ({TicketsWithIterationsMeta.ticket_tags} LIKE '%1%' OR {TicketsWithIterationsMeta.ticket_tags} LIKE '%2%'))",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[1]),
-            f"AND ({TicketsWithIterationsMeta.ticket_tags} IS NULL OR NOT ({TicketsWithIterationsMeta.ticket_tags} LIKE '%1%'))",
-        ),
-    ]
-)
-def test_generate_ticket_tags_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert tickets.generate_ticket_tags_filter(params=input) == output
-
-
-@pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.tribes_ids} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['t1', 't2']),
-            f"AND ({TicketsWithIterationsMeta.tribes_ids} LIKE '%t1%' OR {TicketsWithIterationsMeta.tribes_ids} LIKE '%t2%')"
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['t1']),
-            f"AND ({TicketsWithIterationsMeta.tribes_ids} LIKE '%t1%')"
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['t1', 't2']),
-            f"AND ({TicketsWithIterationsMeta.tribes_ids} IS NULL OR NOT ({TicketsWithIterationsMeta.tribes_ids} LIKE '%t1%' OR {TicketsWithIterationsMeta.tribes_ids} LIKE '%t2%'))"
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['t1']),
-            f"AND ({TicketsWithIterationsMeta.tribes_ids} IS NULL OR NOT ({TicketsWithIterationsMeta.tribes_ids} LIKE '%t1%'))"
-        ),
-    ]
-)
-def test_generate_tribes_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert tickets.generate_tribes_filter(params=input) == output
-
-
-@pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.reply_id} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe', 'asd']),
-            f"AND {TicketsWithIterationsMeta.reply_id} IN ('qwe','asd')",
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.reply_id} IN ('qwe')",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe', 'asd']),
-            f"AND ({TicketsWithIterationsMeta.reply_id} IS NULL OR {TicketsWithIterationsMeta.reply_id} NOT IN ('qwe','asd'))",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND ({TicketsWithIterationsMeta.reply_id} IS NULL OR {TicketsWithIterationsMeta.reply_id} NOT IN ('qwe'))",
-        ),
-    ]
-)
-def test_generate_reply_types_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert cat.generate_reply_types_filter(params=input) == output
-
-
-@pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.component_id} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe', 'asd']),
-            f"AND {TicketsWithIterationsMeta.component_id} IN ('qwe','asd')",
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.component_id} IN ('qwe')",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe', 'asd']),
-            f"AND ({TicketsWithIterationsMeta.component_id} IS NULL OR {TicketsWithIterationsMeta.component_id} NOT IN ('qwe','asd'))",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND ({TicketsWithIterationsMeta.component_id} IS NULL OR {TicketsWithIterationsMeta.component_id} NOT IN ('qwe'))",
-        ),
-    ]
-)
-def test_generate_components_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert cat.generate_components_filter(params=input) == output
-
-
-@pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.feature_id} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe', 'asd']),
-            f"AND {TicketsWithIterationsMeta.feature_id} IN ('qwe','asd')",
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.feature_id} IN ('qwe')",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe', 'asd']),
-            f"AND ({TicketsWithIterationsMeta.feature_id} IS NULL OR {TicketsWithIterationsMeta.feature_id} NOT IN ('qwe','asd'))",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND ({TicketsWithIterationsMeta.feature_id} IS NULL OR {TicketsWithIterationsMeta.feature_id} NOT IN ('qwe'))",
-        ),
-    ]
-)
-def test_generate_features_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert cat.generate_features_filter(params=input) == output
-
-
-@pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.license_status} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[1, 2]),
-            f'AND {TicketsWithIterationsMeta.license_status} IN (1,2)'
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[1]),
-            f'AND {TicketsWithIterationsMeta.license_status} IN (1)'
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[1, 2]),
-            f'AND ({TicketsWithIterationsMeta.license_status} IS NULL OR {TicketsWithIterationsMeta.license_status} NOT IN (1,2))'
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[1]),
-            f'AND ({TicketsWithIterationsMeta.license_status} IS NULL OR {TicketsWithIterationsMeta.license_status} NOT IN (1))'
-        ),
-    ]
-)
-def test_generate_license_status_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert customers.generate_license_status_filter(params=input) == output
-
-
-@pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.conversion_status} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[1, 2]),
-            f'AND {TicketsWithIterationsMeta.conversion_status} IN (1,2)'
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[1]),
-            f'AND {TicketsWithIterationsMeta.conversion_status} IN (1)'
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[1, 2]),
-            f'AND ({TicketsWithIterationsMeta.conversion_status} IS NULL OR {TicketsWithIterationsMeta.conversion_status} NOT IN (1,2))'
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[1]),
-            f'AND ({TicketsWithIterationsMeta.conversion_status} IS NULL OR {TicketsWithIterationsMeta.conversion_status} NOT IN (1))'
-        ),
-    ]
-)
-def test_generate_conversion_status_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert customers.generate_conversion_status_filter(params=input) == output
-
-
-@pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.platforms} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.platforms} LIKE '%p1%' OR {TicketsWithIterationsMeta.platforms} LIKE '%p2%')"
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.platforms} LIKE '%p1%')"
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.platforms} IS NULL OR NOT ({TicketsWithIterationsMeta.platforms} LIKE '%p1%' OR {TicketsWithIterationsMeta.platforms} LIKE '%p2%'))"
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.platforms} IS NULL OR NOT ({TicketsWithIterationsMeta.platforms} LIKE '%p1%'))"
-        ),
-    ]
-)
-def test_generate_platforms_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert platforms_products.generate_platforms_filter(params=input) == output
-
-
-@pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.products} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.products} LIKE '%p1%' OR {TicketsWithIterationsMeta.products} LIKE '%p2%')"
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.products} LIKE '%p1%')"
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.products} IS NULL OR NOT ({TicketsWithIterationsMeta.products} LIKE '%p1%' OR {TicketsWithIterationsMeta.products} LIKE '%p2%'))"
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.products} IS NULL OR NOT ({TicketsWithIterationsMeta.products} LIKE '%p1%'))"
-        ),
-    ]
-)
-def test_generate_products_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert platforms_products.generate_products_filter(params=input) == output
-
-
-@pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.emp_position_id} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe', 'asd']),
-            f"AND {TicketsWithIterationsMeta.emp_position_id} IN ('qwe','asd')",
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.emp_position_id} IN ('qwe')",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe', 'asd']),
-            f"AND ({TicketsWithIterationsMeta.emp_position_id} IS NULL OR {TicketsWithIterationsMeta.emp_position_id} NOT IN ('qwe','asd'))",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND ({TicketsWithIterationsMeta.emp_position_id} IS NULL OR {TicketsWithIterationsMeta.emp_position_id} NOT IN ('qwe'))",
-        ),
-    ]
-)
-def test_generate_emp_positions_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert employees.generate_emp_positions_filter(params=input) == output
-
-
-@pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.emp_tribe_id} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe', 'asd']),
-            f"AND {TicketsWithIterationsMeta.emp_tribe_id} IN ('qwe','asd')",
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.emp_tribe_id} IN ('qwe')",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe', 'asd']),
-            f"AND ({TicketsWithIterationsMeta.emp_tribe_id} IS NULL OR {TicketsWithIterationsMeta.emp_tribe_id} NOT IN ('qwe','asd'))",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND ({TicketsWithIterationsMeta.emp_tribe_id} IS NULL OR {TicketsWithIterationsMeta.emp_tribe_id} NOT IN ('qwe'))",
-        ),
-    ]
-)
-def test_generate_emp_tribes_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert employees.generate_emp_tribes_filter(params=input) == output
-
-
-@pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.emp_crmid} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe', 'asd']),
-            f"AND {TicketsWithIterationsMeta.emp_crmid} IN ('qwe','asd')",
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.emp_crmid} IN ('qwe')",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe', 'asd']),
-            f"AND ({TicketsWithIterationsMeta.emp_crmid} IS NULL OR {TicketsWithIterationsMeta.emp_crmid} NOT IN ('qwe','asd'))",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND ({TicketsWithIterationsMeta.emp_crmid} IS NULL OR {TicketsWithIterationsMeta.emp_crmid} NOT IN ('qwe'))",
-        ),
-    ]
-)
-def test_generate_employees_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert employees.generate_employees_filter(params=input) == output
-
-
-@pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {CustomersActivityDBIndex.get_tickets_with_iterations_name()}.{TicketsWithIterationsMeta.user_crmid} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe', 'asd']),
-            f"AND {CustomersActivityDBIndex.get_tickets_with_iterations_name()}.{TicketsWithIterationsMeta.user_crmid} IN ('qwe','asd')",
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe']),
-            f"AND {CustomersActivityDBIndex.get_tickets_with_iterations_name()}.{TicketsWithIterationsMeta.user_crmid} IN ('qwe')",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe', 'asd']),
-            f"AND ({CustomersActivityDBIndex.get_tickets_with_iterations_name()}.{TicketsWithIterationsMeta.user_crmid} IS NULL OR {CustomersActivityDBIndex.get_tickets_with_iterations_name()}.{TicketsWithIterationsMeta.user_crmid} NOT IN ('qwe','asd'))",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND ({CustomersActivityDBIndex.get_tickets_with_iterations_name()}.{TicketsWithIterationsMeta.user_crmid} IS NULL OR {CustomersActivityDBIndex.get_tickets_with_iterations_name()}.{TicketsWithIterationsMeta.user_crmid} NOT IN ('qwe'))",
-        ),
-    ]
-)
-def test_generate_customers_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert customers.generate_customers_filter(params=input) == output
-
-
-@pytest.mark.parametrize(
     'alias, percentile, output', [
         (
             'alias',
@@ -768,241 +98,163 @@ def test_get_percentile_filter(
     ) == output
 
 
-@pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.builds} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.builds} LIKE '%p1%' OR {TicketsWithIterationsMeta.builds} LIKE '%p2%')"
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.builds} LIKE '%p1%')"
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.builds} IS NULL OR NOT ({TicketsWithIterationsMeta.builds} LIKE '%p1%' OR {TicketsWithIterationsMeta.builds} LIKE '%p2%'))"
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.builds} IS NULL OR NOT ({TicketsWithIterationsMeta.builds} LIKE '%p1%'))"
-        ),
-    ]
-)
-def test_generate_builds_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert tickets.generate_builds_filter(params=input) == output
-
-
-@pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.severity} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe', 'asd']),
-            f"AND {TicketsWithIterationsMeta.severity} IN ('qwe','asd')",
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.severity} IN ('qwe')",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe', 'asd']),
-            f"AND ({TicketsWithIterationsMeta.severity} IS NULL OR {TicketsWithIterationsMeta.severity} NOT IN ('qwe','asd'))",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND ({TicketsWithIterationsMeta.severity} IS NULL OR {TicketsWithIterationsMeta.severity} NOT IN ('qwe'))",
-        ),
-    ]
-)
-def test_generate_severity_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert bugs.generate_severity_filter(params=input) == output
-
-
-@pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.ticket_status} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe', 'asd']),
-            f"AND {TicketsWithIterationsMeta.ticket_status} IN ('qwe','asd')",
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.ticket_status} IN ('qwe')",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe', 'asd']),
-            f"AND ({TicketsWithIterationsMeta.ticket_status} IS NULL OR {TicketsWithIterationsMeta.ticket_status} NOT IN ('qwe','asd'))",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND ({TicketsWithIterationsMeta.ticket_status} IS NULL OR {TicketsWithIterationsMeta.ticket_status} NOT IN ('qwe'))",
-        ),
-    ]
-)
-def test_generate_ticket_status_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert bugs.generate_ticket_status_filter(params=input) == output
-
-
-@pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.ide_id} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe', 'asd']),
-            f"AND {TicketsWithIterationsMeta.ide_id} IN ('qwe','asd')",
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.ide_id} IN ('qwe')",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe', 'asd']),
-            f"AND ({TicketsWithIterationsMeta.ide_id} IS NULL OR {TicketsWithIterationsMeta.ide_id} NOT IN ('qwe','asd'))",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND ({TicketsWithIterationsMeta.ide_id} IS NULL OR {TicketsWithIterationsMeta.ide_id} NOT IN ('qwe'))",
-        ),
-    ]
-)
-def test_generate_ides_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert tickets.generate_ides_filter(params=input) == output
-
-
-@pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.operating_system_id} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe', 'asd']),
-            f"AND {TicketsWithIterationsMeta.operating_system_id} IN ('qwe','asd')",
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['qwe']),
-            f"AND {TicketsWithIterationsMeta.operating_system_id} IN ('qwe')",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe', 'asd']),
-            f"AND ({TicketsWithIterationsMeta.operating_system_id} IS NULL OR {TicketsWithIterationsMeta.operating_system_id} NOT IN ('qwe','asd'))",
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['qwe']),
-            f"AND ({TicketsWithIterationsMeta.operating_system_id} IS NULL OR {TicketsWithIterationsMeta.operating_system_id} NOT IN ('qwe'))",
-        ),
-    ]
-)
-def test_generate_operating_systems_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert tickets.generate_operating_systems_filter(params=input) == output
-
-
-@pytest.mark.parametrize(
-    'input,output', [
-        (
-            None,
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=[]),
-            '',
-        ),
-        (
-            MockFilterParametersNode(include=False, values=[]),
-            f'AND {TicketsWithIterationsMeta.frameworks} IS NULL',
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.frameworks} LIKE '%p1%' OR {TicketsWithIterationsMeta.frameworks} LIKE '%p2%')"
-        ),
-        (
-            MockFilterParametersNode(include=True, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.frameworks} LIKE '%p1%')"
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['p1', 'p2']),
-            f"AND ({TicketsWithIterationsMeta.frameworks} IS NULL OR NOT ({TicketsWithIterationsMeta.frameworks} LIKE '%p1%' OR {TicketsWithIterationsMeta.frameworks} LIKE '%p2%'))"
-        ),
-        (
-            MockFilterParametersNode(include=False, values=['p1']),
-            f"AND ({TicketsWithIterationsMeta.frameworks} IS NULL OR NOT ({TicketsWithIterationsMeta.frameworks} LIKE '%p1%'))"
-        ),
-    ]
-)
-def test_generate_frameworks_filter(
-    input: MockFilterParametersNode,
-    output: str,
-):
-    assert tickets.generate_frameworks_filter(params=input) == output
-
-
-def test_generate_privacy_filter():
-    assert tickets.generate_privacy_filter(
-        params=MockFilterParameterNode(include=True, value=100),
+def test_generate_privacy_filter() -> str:
+    return tickets.generate_privacy_filter(
+        params=MockFilterParameterNode(include=True, value=100)
     ) == f'AND {TicketsWithIterationsMeta.is_private} = 100'
+
+
+@pytest.mark.parametrize(
+    'generator, field', [
+        (
+            tickets.generate_tribes_filter,
+            TicketsWithIterationsMeta.tribes_ids,
+        ),
+        (
+            platforms_products.generate_platforms_filter,
+            TicketsWithIterationsMeta.platforms,
+        ),
+        (
+            platforms_products.generate_products_filter,
+            TicketsWithIterationsMeta.products,
+        ),
+        (
+            tickets.generate_builds_filter,
+            TicketsWithIterationsMeta.builds,
+        ),
+        (
+            bugs.generate_fixed_in_builds_filter,
+            TicketsWithIterationsMeta.fixed_in_builds,
+        ),
+        (
+            tickets.generate_frameworks_filter,
+            TicketsWithIterationsMeta.frameworks,
+        ),
+        (
+            tickets.generate_ticket_tags_filter,
+            TicketsWithIterationsMeta.ticket_tags,
+        ),
+        (
+            customers.generate_customer_groups_filter,
+            TicketsWithIterationsMeta.user_groups,
+        ),
+    ]
+)
+def test_single_like_filters(
+    generator,
+    field: str,
+    single_like_filter_cases,
+):
+    for values, output in single_like_filter_cases:
+        assert generator(params=values) == output.format(field=field)
+
+
+@pytest.mark.parametrize(
+    'generator, field, values_converter', [
+        (
+            ticket_types.generate_ticket_types_filter,
+            TicketsWithIterationsMeta.ticket_type,
+            str,
+        ),
+        (
+            customers.generate_license_status_filter,
+            TicketsWithIterationsMeta.license_status,
+            str,
+        ),
+        (
+            employees.generate_emp_positions_filter,
+            TicketsWithIterationsMeta.emp_position_id,
+            None,
+        ),
+        (
+            customers.generate_tracked_customer_groups_filter,
+            BaselineAlignedModeMeta.id,
+            None,
+        ),
+        (
+            ticket_types.generate_duplicated_to_ticket_types_filter,
+            TicketsWithIterationsMeta.duplicated_to_ticket_type,
+            str,
+        ),
+        (
+            cat.generate_components_filter,
+            TicketsWithIterationsMeta.component_id,
+            None,
+        ),
+        (
+            cat.generate_features_filter,
+            TicketsWithIterationsMeta.feature_id,
+            None,
+        ),
+        (
+            customers.generate_conversion_status_filter,
+            TicketsWithIterationsMeta.conversion_status,
+            str,
+        ),
+        (
+            employees.generate_emp_tribes_filter,
+            TicketsWithIterationsMeta.emp_tribe_id,
+            None,
+        ),
+        (
+            employees.generate_employees_filter,
+            TicketsWithIterationsMeta.emp_crmid,
+            None,
+        ),
+        (
+            bugs.generate_assigned_to_filter,
+            TicketsWithIterationsMeta.assigned_to,
+            None,
+        ),
+        (
+            bugs.generate_closed_by_filter,
+            TicketsWithIterationsMeta.closed_by,
+            None,
+        ),
+        (
+            bugs.generate_fixed_by_filter,
+            TicketsWithIterationsMeta.fixed_by,
+            None,
+        ),
+        (
+            cat.generate_reply_types_filter,
+            TicketsWithIterationsMeta.reply_id,
+            None,
+        ),
+        (
+            customers.generate_customers_filter,
+            f'{CustomersActivityDBIndex.get_tickets_with_iterations_name()}.{TicketsWithIterationsMeta.user_crmid}',
+            None,
+        ),
+        (
+            bugs.generate_severity_filter,
+            TicketsWithIterationsMeta.severity,
+            None,
+        ),
+        (
+            bugs.generate_ticket_status_filter,
+            TicketsWithIterationsMeta.ticket_status,
+            None,
+        ),
+        (
+            tickets.generate_operating_systems_filter,
+            TicketsWithIterationsMeta.operating_system_id,
+            None,
+        ),
+        (
+            tickets.generate_ides_filter,
+            TicketsWithIterationsMeta.ide_id,
+            None,
+        ),
+    ]
+)
+def test_single_in_filters(
+    generator,
+    field: str,
+    values_converter,
+    single_in_filter_cases,
+):
+    for values, output in single_in_filter_cases(
+        convert=values_converter, prefix='AND'
+    ):
+        assert generator(params=values) == output.format(field=field)

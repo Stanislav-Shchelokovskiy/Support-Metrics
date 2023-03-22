@@ -32,12 +32,12 @@ def generate_emp_tribes_filter(params: FilterParametersNode) -> str:
 
 
 @params_guard
-def generate_employees_filter(params: FilterParametersNode) -> str:
+def generate_employees_filter(params: FilterParametersNode, col: str = TicketsWithIterationsMeta.emp_crmid) -> str:
     generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
         params
     )
     return generate_filter(
-        col=TicketsWithIterationsMeta.emp_crmid,
+        col=col,
         values=params.values,
         filter_prefix='AND',
         values_converter=lambda val: f"'{val}'",
