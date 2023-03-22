@@ -149,6 +149,12 @@ query_params_store = {
             value_field=EmployeesIterationsMeta.crmid,
             display_field=EmployeesIterationsMeta.name,
         ),
+    'assigned_to_ids':
+        QueryParams(
+            table=CustomersActivityDBIndex.get_employees_name(),
+            value_field=EmployeesIterationsMeta.crmid,
+            display_field=EmployeesIterationsMeta.name,
+        ),
     'reply_ids':
         QueryParams(
             table=CustomersActivityDBIndex.get_cat_replies_types_name(),

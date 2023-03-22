@@ -39,3 +39,16 @@ def generate_fixed_in_builds_filter(params: FilterParametersNode, ) -> str:
         params=params,
         col=TicketsWithIterationsMeta.fixed_in_builds,
     )
+
+
+@params_guard
+def generate_assigned_to_filter(params: FilterParametersNode) -> str:
+    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
+        params
+    )
+    return generate_filter(
+        col=TicketsWithIterationsMeta.assigned_to,
+        values=params.values,
+        filter_prefix='AND',
+        values_converter=lambda val: f"'{val}'",
+    )

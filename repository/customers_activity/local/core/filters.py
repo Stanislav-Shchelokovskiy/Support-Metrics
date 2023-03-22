@@ -80,6 +80,7 @@ def get_tickets_filter(**kwargs) -> str:
         customers.generate_conversion_status_filter(params=kwargs['conversion_statuses']),
         employees.generate_emp_tribes_filter(params=kwargs['emp_tribe_ids']),
         employees.generate_employees_filter(params=kwargs['emp_ids']),
+        bugs.generate_assigned_to_filter(params=kwargs['assigned_to_ids']),
         cat.generate_reply_types_filter(params=kwargs['reply_ids']),
         cat.generate_components_filter(params=kwargs['components_ids']),
         cat.generate_features_filter(params=kwargs['feature_ids']),
