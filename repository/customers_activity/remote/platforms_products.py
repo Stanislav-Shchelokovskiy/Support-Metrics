@@ -6,7 +6,7 @@ from sql_queries.customers_activity.meta import PlatformsProductsMeta
 
 class PlatformsProducts(RepositoryAlchemyQueries):
     """
-    Loads available platforms and products.
+    Query to load available platforms and products.
     """
 
     def get_main_query_path(self, **kwargs) -> str:

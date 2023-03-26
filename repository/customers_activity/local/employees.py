@@ -15,7 +15,7 @@ import repository.customers_activity.local.generators.filters_generators.employe
 # yapf: disable
 class EmpPositions(RepositoryQueries):
     """
-    Interface to a local table storing available emp positions.
+    Query to a local table storing available emp positions.
     """
 
     def get_main_query_path(self, **kwargs) -> str:
@@ -34,7 +34,7 @@ class EmpPositions(RepositoryQueries):
 
 class EmpTribes(RepositoryQueries):
     """
-    Interface to a local table storing available emp tribes.
+    Query to a local table storing available emp tribes.
     """
 
     def get_main_query_path(self, **kwargs) -> str:
@@ -53,7 +53,7 @@ class EmpTribes(RepositoryQueries):
 
 class Employees(RepositoryQueries):
     """
-    Interface to a local table storing employees.
+    Query to a local table storing employees.
     """
 
     def get_main_query_path(self, **kwargs) -> str:
