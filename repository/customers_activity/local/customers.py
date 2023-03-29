@@ -16,7 +16,7 @@ from repository.customers_activity.local.validation_repository import Validation
 # yapf: disable
 class Customers(RepositoryQueries):
     """
-    Interface to a local table storing available customers.
+    Query to a local table storing available customers.
     """
 
     def get_main_query_path(self, **kwargs) -> str:
@@ -47,7 +47,7 @@ class CustomersValidation(ValidationRepositoryQueries):
 
 class CustomersGroups(RepositoryQueries):
     """
-    Interface to a local table storing customers groups.
+    Query to a local table storing customers groups.
     """
 
     def get_main_query_path(self, **kwargs) -> str:
@@ -66,7 +66,7 @@ class CustomersGroups(RepositoryQueries):
 
 class TrackedCustomersGroups(RepositoryQueries):
     """
-    Interface to a local table storing customers groups we track and work with.
+    Query to a local table storing customers groups we track and work with.
     """
 
     def get_main_query_path(self, **kwargs) -> str:

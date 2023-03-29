@@ -17,7 +17,6 @@ def generate_severity_filter(params: FilterParametersNode) -> str:
         col=TicketsWithIterationsMeta.severity,
         values=params.values,
         filter_prefix='AND',
-        values_converter=lambda val: f"'{val}'",
     )
 
 
@@ -30,7 +29,6 @@ def generate_ticket_status_filter(params: FilterParametersNode) -> str:
         col=TicketsWithIterationsMeta.ticket_status,
         values=params.values,
         filter_prefix='AND',
-        values_converter=lambda val: f"'{val}'",
     )
 
 
@@ -59,4 +57,26 @@ def generate_fixed_by_filter(params: FilterParametersNode) -> str:
     return generate_employees_filter(
         params=params,
         col=TicketsWithIterationsMeta.fixed_by,
+    )
+
+
+@params_guard
+def generate_closed_on_filter(
+    params: FilterParametersNode,
+    col: str = TicketsWithIterationsMeta.closed_on,
+) -> str:
+    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_between_filter_generator(
+        params
+    )
+    return generate_filter(
+        col=col,
+        values=params.values,
+        filter_prefix='AND',
+    )
+
+
+def generate_fixed_on_filter(params: FilterParametersNode) -> str:
+    return generate_closed_on_filter(
+        params=params,
+        col=TicketsWithIterationsMeta.fixed_on,
     )

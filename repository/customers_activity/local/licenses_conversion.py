@@ -14,7 +14,7 @@ import repository.customers_activity.local.generators.filters_generators.convers
 # yapf: disable
 class LicenseStatuses(RepositoryQueries):
     """
-    Interface to a local table storing license statuses.
+    Query to a local table storing license statuses.
     """
 
     def get_main_query_path(self, **kwargs) -> str:
@@ -33,7 +33,7 @@ class LicenseStatuses(RepositoryQueries):
 
 class ConversionStatuses(RepositoryQueries):
     """
-    Interface to a local table storing conversion statuses.
+    Query to a local table storing conversion statuses.
     """
 
     def get_main_query_path(self, **kwargs) -> str:

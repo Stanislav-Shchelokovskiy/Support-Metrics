@@ -9,7 +9,7 @@ from sql_queries.customers_activity.meta import (
 
 class CustomersGroups(RepositoryAlchemyQueries):
     """
-    Loads groups we use to filter tickets by.
+    Query to load groups we use to filter tickets by.
     """
 
     def get_main_query_path(self, **kwargs) -> str:
@@ -24,7 +24,7 @@ class CustomersGroups(RepositoryAlchemyQueries):
 
 class TrackedCustomersGroups(RepositoryAlchemyQueries):
     """
-    Loads groups we use to filter and tickets align tickets by.
+    Query to load groups we use to filter and tickets align tickets by.
     """
 
     def get_main_query_path(self, **kwargs) -> str:

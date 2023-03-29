@@ -12,7 +12,7 @@ import repository.customers_activity.local.generators.filters_generators.platfor
 # yapf: disable
 class Platforms(RepositoryQueries):
     """
-    Interface to a local table storing available platforms.
+    Query to a local table storing available platforms.
     """
 
     def get_main_query_path(self, **kwargs) -> str:
@@ -42,7 +42,7 @@ class Platforms(RepositoryQueries):
 
 class Products(Platforms):
     """
-    Interface to a local table storing products
+    Query to a local table storing products
     available for specified tribes.
     """
     def get_filter(self, tribe_ids: FilterParametersNode) -> str:

@@ -20,7 +20,7 @@ import repository.customers_activity.local.generators.periods as PeriodsGenerato
 # yapf: disable
 class TicketsPeriod(RepositoryQueries):
     """
-    Interface to a local table storing min and max boundarise
+    Query to a local table storing min and max boundarise
     for tickets and iterations.
     """
 
@@ -37,7 +37,7 @@ class TicketsPeriod(RepositoryQueries):
 
 class TicketsWithIterationsRaw(RepositoryQueries):
     """
-    Interface to a local table storing raw tickets with iterations data.
+    Query to a local table storing raw tickets with iterations data.
     """
 
     def get_main_query_path(self, **kwargs) -> str:
@@ -77,7 +77,7 @@ class TicketsWithIterationsRaw(RepositoryQueries):
 
 class TicketsWithIterationsAggregates(TicketsWithIterationsRaw):
     """
-    Interface to a local table storing aggregated tickets with iterations data.
+    Query to a local table storing aggregated tickets with iterations data.
     """
 
     def get_main_query_path(self, **kwargs) -> str:

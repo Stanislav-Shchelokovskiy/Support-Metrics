@@ -14,7 +14,7 @@ import repository.customers_activity.local.generators.filters_generators.cat as 
 # yapf: disable
 class CATRepliesTypes(RepositoryQueries):
     """
-    Interface to a local table storing CAT reply types.
+    Query to a local table storing CAT reply types.
     """
 
     def get_main_query_path(self, **kwargs) -> str:
@@ -33,7 +33,7 @@ class CATRepliesTypes(RepositoryQueries):
 
 class CATComponents(RepositoryQueries):
     """
-    Interface to a local table storing CAT components.
+    Query to a local table storing CAT components.
     """
 
     def get_main_query_path(self, **kwargs) -> str:
@@ -57,7 +57,7 @@ class CATComponents(RepositoryQueries):
 
 class CATFeatures(RepositoryQueries):
     """
-    Interface to a local table storing CAT features
+    Query to a local table storing CAT features
     available for the specified components.
     """
 

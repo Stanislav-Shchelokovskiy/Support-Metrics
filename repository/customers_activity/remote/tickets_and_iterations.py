@@ -10,7 +10,7 @@ from sql_queries.customers_activity.meta import (
 
 class EmployeesIterations(RepositoryAlchemyQueries):
     """
-    Loads employee iterations.
+    Query to load employee iterations.
     """
 
     def get_main_query_path(self, **kwargs) -> str:
@@ -25,7 +25,7 @@ class EmployeesIterations(RepositoryAlchemyQueries):
 
 class CustomersTickets(RepositoryAlchemyQueries):
     """
-    Loads customers with their tickets and licenses.
+    Query to load customers with their tickets and licenses.
     """
 
     def get_prep_queries(self, **kwargs) -> Iterable[SqlQuery]:

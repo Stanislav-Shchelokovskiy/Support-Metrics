@@ -8,6 +8,9 @@ from sql_queries.customers_activity.meta import (
 
 
 class CATRepliesTypes(RepositoryAlchemyQueries):
+    """
+    Query to load cat replies types.
+    """
 
     def get_main_query_path(self, **kwargs) -> str:
         return CustomersActivitySqlPathIndex.get_replies_types_path()
@@ -20,6 +23,9 @@ class CATRepliesTypes(RepositoryAlchemyQueries):
 
 
 class CATComponentsFeatures(RepositoryAlchemyQueries):
+    """
+    Query to load cat components and features.
+    """
 
     def get_main_query_path(self, **kwargs) -> str:
         return CustomersActivitySqlPathIndex.get_components_features_path()

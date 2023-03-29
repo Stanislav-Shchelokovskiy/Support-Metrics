@@ -15,7 +15,7 @@ from sql_queries.customers_activity.meta import (
 
 class TicketsTags(RepositoryAlchemyQueries):
     """
-    Loads tags we use to filter customers by.
+    Query to load tags we use to filter customers by.
     """
 
     def get_main_query_path(self, **kwargs) -> str:
@@ -30,7 +30,7 @@ class TicketsTags(RepositoryAlchemyQueries):
 
 class TicketsTypes(RepositoryAlchemyQueries):
     """
-    Loads tickets types.
+    Query to load tickets types.
     """
 
     def get_main_query_path(self, **kwargs) -> str:
@@ -45,7 +45,7 @@ class TicketsTypes(RepositoryAlchemyQueries):
 
 class Frameworks(RepositoryAlchemyQueries):
     """
-    Loads frameworks/specifics.
+    Query to load frameworks/specifics.
     """
 
     def get_main_query_path(self, **kwargs) -> str:
@@ -60,7 +60,7 @@ class Frameworks(RepositoryAlchemyQueries):
 
 class OperatingSystems(RepositoryAlchemyQueries):
     """
-    Loads operating systems.
+    Query to load operating systems.
     """
 
     def get_main_query_path(self, **kwargs) -> str:
@@ -75,7 +75,7 @@ class OperatingSystems(RepositoryAlchemyQueries):
 
 class Builds(RepositoryAlchemyQueries):
     """
-    Loads builds.
+    Query to load builds.
     """
 
     def get_main_query_path(self, **kwargs) -> str:
@@ -90,7 +90,7 @@ class Builds(RepositoryAlchemyQueries):
 
 class Severity(RepositoryAlchemyQueries):
     """
-    Loads bug severity values.
+    Query to load bug severity values.
     """
 
     def get_main_query_path(self, **kwargs) -> str:
@@ -105,7 +105,7 @@ class Severity(RepositoryAlchemyQueries):
 
 class TicketStatuses(RepositoryAlchemyQueries):
     """
-    Loads ticket statuses.
+    Query to load ticket statuses.
     """
 
     def get_main_query_path(self, **kwargs) -> str:
@@ -120,7 +120,7 @@ class TicketStatuses(RepositoryAlchemyQueries):
 
 class IDEs(RepositoryAlchemyQueries):
     """
-    Loads ticket ides.
+    Query to load ticket ides.
     """
 
     def get_main_query_path(self, **kwargs) -> str:

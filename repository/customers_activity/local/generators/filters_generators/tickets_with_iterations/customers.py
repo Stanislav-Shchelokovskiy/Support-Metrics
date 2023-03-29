@@ -36,7 +36,6 @@ def generate_tracked_customer_groups_filter(
         col=col,
         values=params.values,
         filter_prefix=filter_prefix,
-        values_converter=lambda val: f"'{val}'",
     )
 
 
@@ -75,5 +74,4 @@ def generate_customers_filter(params: FilterParametersNode) -> str:
         col=f'{CustomersActivityDBIndex.get_tickets_with_iterations_name()}.{TicketsWithIterationsMeta.user_crmid}',
         values=params.values,
         filter_prefix='AND',
-        values_converter=lambda val: f"'{val}'",
     )

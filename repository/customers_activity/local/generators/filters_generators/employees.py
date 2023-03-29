@@ -15,7 +15,6 @@ def generate_positions_filter(position_ids: FilterParametersNode) -> str:
         col=EmployeesMeta.position_id,
         values=position_ids.values,
         filter_prefix='WHERE',
-        values_converter=lambda val: f"'{val}'",
     )
 
 
@@ -32,6 +31,5 @@ def generate_positions_tribes_filter(
         col=EmployeesMeta.tribe_id,
         values=tribe_ids.values,
         filter_prefix=' AND' if positions_fitler else 'WHERE',
-        values_converter=lambda val: f"'{val}'",
     )
     return positions_fitler + tribes_filter
