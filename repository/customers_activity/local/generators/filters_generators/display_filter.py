@@ -182,17 +182,17 @@ __query_params_store = {
 def generate_display_filter(node: BaseNode) -> list[list]:
     filters = []
     filter_node: BaseNode | FilterParametersNode | FilterParameterNode | Percentile
-    aliases = node.get_field_aliases()
     for field_name, filter_node in node.get_field_values().items():
         if not filter_node:
             continue
-        field_alias = aliases[field_name]
+        field_alias = node.get_field_alias(field_name)
         filter = None
         match filter_node:
             case FilterParametersNode():
                 filter = __generate_filter_from_filter_parameters(
                     field=field_name,
-                    field_alias=field_alias,
+                    alias=field_alias,
+                    filter_op=node.get_filter_op(field_name),
                     filter_node=filter_node,
                 )
                 if not filter:
@@ -227,12 +227,13 @@ def __get_display_value(field_name: str, value: Any):
 
 def __generate_filter_from_filter_parameters(
     field: str,
-    field_alias: str,
+    alias: str,
+    filter_op: str,
     filter_node: FilterParametersNode,
 ):
     if not filter_node.values:
         if not filter_node.include:
-            return [field_alias, '=', 'NULL']
+            return [alias, '=', 'NULL']
         return ''
 
     display_values = __get_display_values(
@@ -241,12 +242,12 @@ def __generate_filter_from_filter_parameters(
     )
 
     if filter_node.include:
-        return [field_alias, 'in', display_values]
+        return [alias, filter_op, display_values]
 
     filter = []
-    filter.append([field_alias, '=', 'NULL'])
+    filter.append([alias, '=', 'NULL'])
     filter.append('or')
-    filter.append([field_alias, 'notin', display_values])
+    filter.append([alias, filter_op, display_values])
     return filter
 
 

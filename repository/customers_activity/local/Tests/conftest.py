@@ -1,5 +1,6 @@
 import pytest
 from repository.customers_activity.local.Tests.mocks import MockFilterParametersNode
+from toolbox.utils.converters import to_quoted_string
 
 
 # yapf: disable
@@ -7,7 +8,7 @@ from repository.customers_activity.local.Tests.mocks import MockFilterParameters
 def single_in_filter_cases():
 
     def cases(convert, prefix='WHERE'):
-        convert = convert or (lambda val: f"'{val}'")
+        convert = convert or to_quoted_string
         return [
             (
                 None,
@@ -46,7 +47,7 @@ def single_in_filter_cases():
 def double_in_filter_cases():
 
     def cases(convert, prefix='WHERE'):
-        convert = convert or (lambda val: f"'{val}'")
+        convert = convert or to_quoted_string
         return [
             (
                 None,
@@ -215,3 +216,32 @@ def single_like_filter_cases():
             "AND ({field} IS NULL OR NOT ({field} LIKE '%p1%'))"
         ),
     ]
+
+@pytest.fixture
+def between_filter_cases():
+    def cases(convert, prefix='WHERE'):
+        convert = convert or to_quoted_string
+        return [
+            (
+                None,
+                '',
+            ),
+            (
+                MockFilterParametersNode(include=True, values=[]),
+                '',
+            ),
+            (
+                MockFilterParametersNode(include=False, values=[]),
+                prefix + ' {field} IS NULL',
+            ),
+            (
+                MockFilterParametersNode(include=True, values=[1, 2]),
+                prefix + ' {field} BETWEEN ' + f'{convert(1)} AND {convert(2)}',
+            ),
+            (
+                MockFilterParametersNode(include=False, values=[1, 2]),
+                prefix + ' ({field} IS NULL OR {field} NOT BETWEEN ' + f'{convert(1)} AND {convert(2)})',
+            ),
+        ]
+
+    return cases

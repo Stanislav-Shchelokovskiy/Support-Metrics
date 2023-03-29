@@ -254,7 +254,28 @@ def test_single_in_filters(
     values_converter,
     single_in_filter_cases,
 ):
-    for values, output in single_in_filter_cases(
-        convert=values_converter, prefix='AND'
-    ):
+    # yapf: disable
+    for values, output in single_in_filter_cases(convert=values_converter, prefix='AND'):
         assert generator(params=values) == output.format(field=field)
+    # yapf: enable
+
+
+@pytest.mark.parametrize(
+    'generator, field, values_converter', [
+        (
+            bugs.generate_closed_on_filter,
+            TicketsWithIterationsMeta.closed_on,
+            None,
+        ),
+    ]
+)
+def test_between_filters(
+    generator,
+    field: str,
+    values_converter,
+    between_filter_cases,
+):
+    # yapf: disable
+    for values, output in between_filter_cases(convert=values_converter, prefix='AND'):
+        assert generator(params=values) == output.format(field=field)
+    # yapf: enable

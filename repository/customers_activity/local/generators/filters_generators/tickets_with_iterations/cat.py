@@ -15,7 +15,6 @@ def generate_reply_types_filter(params: FilterParametersNode) -> str:
         col=TicketsWithIterationsMeta.reply_id,
         values=params.values,
         filter_prefix='AND',
-        values_converter=lambda val: f"'{val}'",
     )
 
 
@@ -28,7 +27,6 @@ def generate_components_filter(params: FilterParametersNode) -> str:
         col=TicketsWithIterationsMeta.component_id,
         values=params.values,
         filter_prefix='AND',
-        values_converter=lambda val: f"'{val}'",
     )
 
 
@@ -41,5 +39,4 @@ def generate_features_filter(params: FilterParametersNode) -> str:
         col=TicketsWithIterationsMeta.feature_id,
         values=params.values,
         filter_prefix='AND',
-        values_converter=lambda val: f"'{val}'",
     )

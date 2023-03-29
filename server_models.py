@@ -1,17 +1,27 @@
 from typing import Literal, Any
 from pydantic import BaseModel, Field
+from pydantic.fields import FieldInfo 
 
 
 class ServerModel(BaseModel):
 
-    def get_field_aliases(self) -> dict[str, str]:
-        return {k: v.alias for k, v in self.__fields__.items()}
-
     def get_field_values(self) -> dict[str, Any]:
         return self.__dict__
 
+    def get_field_alias(self, field_name) -> str:
+        return self.__fields__[field_name].alias
+
     def get_append_operator(self) -> str:
         return 'and'
+
+    def get_filter_op(self, field_name) -> str:
+        val = self.__dict__[field_name]
+        if hasattr(val, 'include'):
+            fi: FieldInfo = self.__fields__[field_name].field_info
+            if val.include:
+                return fi.extra.get('positive_filter_op', 'in')
+            return fi.extra.get('negative_filter_op', 'notin')
+        raise NotImplementedError
 
 
 class FilterNode(ServerModel):
@@ -66,6 +76,7 @@ class TicketsWithIterationsParams(ServerModel):
     fixed_in_builds: FilterParametersNode | None = Field(alias='Fixed In')
     severity: FilterParametersNode | None = Field(alias='Severity')
     ticket_status: FilterParametersNode | None = Field(alias='Ticket statuses')
+    closed_between: FilterParametersNode | None = Field(alias='Closed', positive_filter_op='between', negative_filter_op='notbetween')
     operating_system_id: FilterParametersNode | None = Field(alias='Operating systems')
     frameworks: FilterParametersNode | None = Field(alias='Frameworks/Specifics')
     ide_id: FilterParametersNode | None = Field(alias='IDE')

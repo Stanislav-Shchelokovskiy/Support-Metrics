@@ -14,7 +14,6 @@ def generate_emp_positions_filter(params: FilterParametersNode) -> str:
         col=TicketsWithIterationsMeta.emp_position_id,
         values=params.values,
         filter_prefix='AND',
-        values_converter=lambda val: f"'{val}'",
     )
 
 
@@ -27,7 +26,6 @@ def generate_emp_tribes_filter(params: FilterParametersNode) -> str:
         col=TicketsWithIterationsMeta.emp_tribe_id,
         values=params.values,
         filter_prefix='AND',
-        values_converter=lambda val: f"'{val}'",
     )
 
 
@@ -40,5 +38,4 @@ def generate_employees_filter(params: FilterParametersNode, col: str = TicketsWi
         col=col,
         values=params.values,
         filter_prefix='AND',
-        values_converter=lambda val: f"'{val}'",
     )

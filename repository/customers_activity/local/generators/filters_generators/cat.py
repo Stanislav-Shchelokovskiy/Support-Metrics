@@ -15,7 +15,6 @@ def generate_components_filter(tribe_ids: FilterParametersNode) -> str:
         col=CATComponentsFeaturesMeta.tribe_id,
         values=tribe_ids.values,
         filter_prefix='WHERE',
-        values_converter=lambda val: f"'{val}'",
     )
 
 
@@ -32,7 +31,6 @@ def generate_features_filter(
         col=CATComponentsFeaturesMeta.component_id,
         values=component_ids.values,
         filter_prefix=' AND' if components_fitler else 'WHERE',
-        values_converter=lambda val: f"'{val}'",
     )
 
     return components_fitler + features_filter

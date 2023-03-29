@@ -19,7 +19,6 @@ def generate_tribes_filter(
         col=col,
         values=tribe_ids.values,
         filter_prefix=filter_prefix,
-        values_converter=lambda val: f"'{val}'",
     )
 
 

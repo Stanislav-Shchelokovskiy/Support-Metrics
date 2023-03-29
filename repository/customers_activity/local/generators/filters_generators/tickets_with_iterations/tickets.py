@@ -51,7 +51,6 @@ def generate_operating_systems_filter(params: FilterParametersNode) -> str:
         col=TicketsWithIterationsMeta.operating_system_id,
         values=params.values,
         filter_prefix='AND',
-        values_converter=lambda val: f"'{val}'",
     )
 
 
@@ -76,7 +75,6 @@ def generate_ides_filter(params: FilterParametersNode) -> str:
         col=TicketsWithIterationsMeta.ide_id,
         values=params.values,
         filter_prefix='AND',
-        values_converter=lambda val: f"'{val}'",
     )
 
 
