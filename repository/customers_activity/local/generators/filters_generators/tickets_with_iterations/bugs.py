@@ -61,12 +61,22 @@ def generate_fixed_by_filter(params: FilterParametersNode) -> str:
 
 
 @params_guard
-def generate_closed_on_filter(params: FilterParametersNode) -> str:
+def generate_closed_on_filter(
+    params: FilterParametersNode,
+    col: str = TicketsWithIterationsMeta.closed_on,
+) -> str:
     generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_between_filter_generator(
         params
     )
     return generate_filter(
-        col=TicketsWithIterationsMeta.closed_on,
+        col=col,
         values=params.values,
         filter_prefix='AND',
+    )
+
+
+def generate_fixed_on_filter(params: FilterParametersNode) -> str:
+    return generate_closed_on_filter(
+        params=params,
+        col=TicketsWithIterationsMeta.fixed_on,
     )

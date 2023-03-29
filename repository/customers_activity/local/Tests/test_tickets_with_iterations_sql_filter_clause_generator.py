@@ -267,6 +267,11 @@ def test_single_in_filters(
             TicketsWithIterationsMeta.closed_on,
             None,
         ),
+        (
+            bugs.generate_fixed_on_filter,
+            TicketsWithIterationsMeta.fixed_on,
+            None,
+        ),
     ]
 )
 def test_between_filters(
