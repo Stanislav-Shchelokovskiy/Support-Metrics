@@ -5,7 +5,7 @@ DECLARE @end_date   DATE = '{end_date}'
 
 DECLARE @no_line		TINYINT = 2
 
-SELECT
+SELECT DISTINCT
 	ticket_id		AS {ticket_id},
 	post_id			AS {post_id},
 	user_crmid		AS {crmid},
