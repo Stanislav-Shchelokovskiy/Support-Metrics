@@ -18,19 +18,25 @@ def build_test_db():
         import tasks.customers_activity_tasks as customers_activity
         start_date = os.environ['customers_activity_start_date']
         end_date = os.environ['customers_activity_end_date']
-        customers_activity.load_tribes()
         customers_activity.load_tickets_types()
         customers_activity.load_license_statuses()
         customers_activity.load_conversion_statuses()
+        customers_activity.load_tribes()
+        customers_activity.load_operating_systems()
+        customers_activity.load_frameworks(),
+        customers_activity.load_severity_values()
+        customers_activity.load_ticket_statuses()
+        customers_activity.load_replies_types()
+        customers_activity.load_platforms_products()
+        customers_activity.load_ides()
         customers_activity.load_tags()
         customers_activity.load_groups()
         customers_activity.load_tracked_groups(
             start_date=start_date,
             end_date=end_date,
         )
-        customers_activity.load_replies_types()
+        customers_activity.load_builds()
         customers_activity.load_components_features()
-        customers_activity.load_platforms_products()
         customers_activity.load_customers_tickets(
             start_date=start_date,
             end_date=end_date,
