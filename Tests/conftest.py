@@ -2,7 +2,6 @@ import pytest
 import os
 from pathlib import Path
 from Tests.env import prepare_env
-import tasks.customers_activity_tasks as customers_activity
 
 
 def pytest_configure(config: pytest.Config):
@@ -15,6 +14,8 @@ def build_test_db():
         prepare_env(monkeypatch)
         if Path(os.environ['SQLITE_DATABASE']).exists():
             return
+
+        import tasks.customers_activity_tasks as customers_activity
         start_date = os.environ['customers_activity_start_date']
         end_date = os.environ['customers_activity_end_date']
         customers_activity.load_tribes()
