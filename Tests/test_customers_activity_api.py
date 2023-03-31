@@ -42,6 +42,7 @@ def test_get_customers_activity_display_filter():
         ('median', False),
         ('reports_export_to_pdf', False),
         ('customer', False),
+        ('devextreme_contribution', False),
     ]
 )
 def test_get_tickets_with_iterations_aggregates(file_name, bam):
@@ -73,6 +74,7 @@ def test_get_tickets_with_iterations_aggregates(file_name, bam):
         ('median', False),
         ('reports_export_to_pdf', False),
         ('customer', False),
+        ('devextreme_contribution', False),
     ]
 )
 def test_get_tickets_with_iterations_raw(file_name, bam):

@@ -5,7 +5,10 @@ from os import getcwd
 def prepare_env(monkeypatch: pytest.MonkeyPatch):
     with open(getcwd() + '/.env', 'r') as env:
         for line in env:
-            name, value = line.strip().split('=')
+            line = line.strip()
+            if line[0] == '#':
+                continue
+            name, value = line.split('=')
             monkeypatch.setenv(name, value)
     monkeypatch.setenv('SQLITE_DATABASE', f'{getcwd()}/Tests/test_db')
     monkeypatch.setenv('QUERY_SERVICE', 'localhost:11005')
