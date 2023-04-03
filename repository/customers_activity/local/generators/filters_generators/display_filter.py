@@ -1,6 +1,7 @@
 from typing import Any
 from toolbox.sql.repository import SqliteRepository
 from toolbox.sql.repository_queries import RepositoryQueries
+from toolbox.sql.generators import NULL_FILTER_VALUE
 from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import (
     BaseNode,
     FilterParametersNode,
@@ -241,15 +242,32 @@ def __generate_filter_from_filter_parameters(
         values=filter_node.values,
     )
 
+    values_filter = [alias, filter_op, display_values]
+    values_contains_null = NULL_FILTER_VALUE in filter_node.values
     if filter_node.include:
-        return [alias, filter_op, display_values]
+        if values_contains_null:
+            return __generate_positive_isnull_fitler(alias, values_filter)
+        return values_filter
+        
+    if values_contains_null:
+        return __generate_negative_isnull_fitler(alias, values_filter)
+    return __generate_positive_isnull_fitler(alias, values_filter)
 
+
+def __generate_positive_isnull_fitler(alias, values_filter):
     filter = []
     filter.append([alias, '=', 'NULL'])
     filter.append('or')
-    filter.append([alias, filter_op, display_values])
+    filter.append(values_filter)
     return filter
 
+
+def __generate_negative_isnull_fitler(alias, values_filter):
+    filter = []
+    filter.append([alias, '!=', 'NULL'])
+    filter.append('and')
+    filter.append(values_filter)
+    return filter
 
 
 __repository_type = SqliteRepository
@@ -258,7 +276,7 @@ def __get_display_values(
     values: list,
 ):
     if query_params := __query_params_store.get(field):
-        values = ', '.join([f"'{value}'" for value in values])
+        values = ', '.join(f"'{value}'" for value in values if value != NULL_FILTER_VALUE)
         return __repository_type(
             queries=RepositoryQueries(
                 main_query_path=CustomersActivitySqlPathIndex.get_general_select_path(),
