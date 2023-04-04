@@ -242,7 +242,7 @@ def __generate_filter_from_filter_parameters(
         values=filter_node.values,
     )
 
-    values_filter = [alias, filter_op, display_values]
+    values_filter = [alias, filter_op, display_values] if display_values else None
     values_contains_null = NULL_FILTER_VALUE in filter_node.values
     if filter_node.include:
         if values_contains_null:
@@ -255,19 +255,25 @@ def __generate_filter_from_filter_parameters(
 
 
 def __generate_positive_isnull_fitler(alias, values_filter):
-    filter = []
-    filter.append([alias, '=', 'NULL'])
-    filter.append('or')
-    filter.append(values_filter)
-    return filter
+    isnull_filter = [alias, '=', 'NULL']
+    if values_filter:
+        filter = []
+        filter.append(isnull_filter)
+        filter.append('or')
+        filter.append(values_filter)
+        return filter
+    return isnull_filter
 
 
 def __generate_negative_isnull_fitler(alias, values_filter):
-    filter = []
-    filter.append([alias, '!=', 'NULL'])
-    filter.append('and')
-    filter.append(values_filter)
-    return filter
+    isnull_filter = [alias, '!=', 'NULL']
+    if values_filter:
+        filter = []
+        filter.append(isnull_filter)
+        filter.append('and')
+        filter.append(values_filter)
+        return filter
+    return isnull_filter
 
 
 __repository_type = SqliteRepository
