@@ -8,6 +8,7 @@ from sql_queries.customers_activity.meta import (
     TicketsTypesMeta,
     LicenseStatusesMeta,
     TribesMeta,
+    PlatformsProductsMeta,
 )
 
 from server_models import (
@@ -26,6 +27,7 @@ class MockSqliteRepository(Repository):
             CustomersActivityDBIndex.get_tribes_name(): DataFrame(data={TribesMeta.name: ['XAML United Team']}),
             CustomersActivityDBIndex.get_tickets_types_name(): DataFrame(data={TicketsTypesMeta.name: ['Question']}),
             CustomersActivityDBIndex.get_license_statuses_name(): DataFrame(data={LicenseStatusesMeta.name: ['Licensed', 'Free']}),
+            CustomersActivityDBIndex.get_platforms_products_name(): DataFrame(data={PlatformsProductsMeta.platform_name: []}),
         }[table_name]
 
 
@@ -143,6 +145,28 @@ class MockSqliteRepository(Repository):
                     ['Ticket types', '=', 'NULL'], 'or',
                     ['Ticket types', 'in', ['Question']]
                 ],
+            ]
+        ),
+        (
+            TicketsWithIterationsParams(**{
+                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Platforms': FilterParametersNode(include=True, values=[NULL_FILTER_VALUE]),
+            }),
+            [
+                ['Percentile', '<=', 100],
+                'and',
+                ['Platforms', '=', 'NULL'],
+            ]
+        ),
+        (
+            TicketsWithIterationsParams(**{
+                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Platforms': FilterParametersNode(include=False, values=[NULL_FILTER_VALUE]),
+            }),
+            [
+                ['Percentile', '<=', 100],
+                'and',
+                ['Platforms', '!=', 'NULL'],
             ]
         )
     ]
