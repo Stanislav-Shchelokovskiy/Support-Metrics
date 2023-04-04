@@ -236,14 +236,16 @@ def __generate_filter_from_filter_parameters(
         if not filter_node.include:
             return [alias, '=', 'NULL']
         return ''
+    values_contains_null = NULL_FILTER_VALUE in filter_node.values
+    values = [value for value in filter_node.values if value != NULL_FILTER_VALUE]
 
     display_values = __get_display_values(
         field=field,
-        values=filter_node.values,
+        values=values,
     )
 
     values_filter = [alias, filter_op, display_values] if display_values else None
-    values_contains_null = NULL_FILTER_VALUE in filter_node.values
+    
     if filter_node.include:
         if values_contains_null:
             return __generate_isnull_fitler(alias, values_filter, '=', 'or')
@@ -271,7 +273,7 @@ def __get_display_values(
     values: list,
 ):
     if query_params := __query_params_store.get(field):
-        values = ', '.join(f"'{value}'" for value in values if value != NULL_FILTER_VALUE)
+        values = ', '.join(f"'{value}'" for value in values)
         return __repository_type(
             queries=RepositoryQueries(
                 main_query_path=CustomersActivitySqlPathIndex.get_general_select_path(),

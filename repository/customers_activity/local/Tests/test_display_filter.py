@@ -168,6 +168,28 @@ class MockSqliteRepository(Repository):
                 'and',
                 ['Platforms', '!=', 'NULL'],
             ]
+        ),
+        (
+            TicketsWithIterationsParams(**{
+                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Versions': FilterParametersNode(include=True, values=[NULL_FILTER_VALUE]),
+            }),
+            [
+                ['Percentile', '<=', 100],
+                'and',
+                ['Versions', '=', 'NULL'],
+            ]
+        ),
+        (
+            TicketsWithIterationsParams(**{
+                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Versions': FilterParametersNode(include=False, values=[NULL_FILTER_VALUE]),
+            }),
+            [
+                ['Percentile', '<=', 100],
+                'and',
+                ['Versions', '!=', 'NULL'],
+            ]
         )
     ]
 )

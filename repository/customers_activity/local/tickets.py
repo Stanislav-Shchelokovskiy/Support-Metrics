@@ -90,12 +90,11 @@ class BuildsRepositoryQueries(RepositoryQueries):
         return {
             'columns': ', '.join(self.get_must_have_columns(**kwargs)),
             'table_name': CustomersActivityDBIndex.get_builds_name(),
-            'filter_group_limit_clause': f'ORDER BY {BuildsMeta.id} DESC',
+            'filter_group_limit_clause': f'ORDER BY {BuildsMeta.name} DESC',
         }
 
     def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return (BuildsMeta.id,)
-
+        return BuildsMeta.get_values()
 
 class Severity(RepositoryQueries):
 
