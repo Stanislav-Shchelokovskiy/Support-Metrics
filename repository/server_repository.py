@@ -1,5 +1,6 @@
 from repository.factory import RepositoryFactory
 from toolbox.utils.converters import DF_to_JSON
+from toolbox.utils.converters import Object_to_JSON
 
 
 # yapf: disable
@@ -136,7 +137,7 @@ def customers_activity_get_tickets_with_iterations_raw(**kwargs) -> str:
 
 def customers_activity_get_display_filter(*args) -> str:
     generator = RepositoryFactory.customers_activity.local.create_display_filter_generator()
-    return generator.generate_display_filter(*args)
+    return Object_to_JSON.convert(generator.generate_display_filter(*args))
 
 
 def customers_activity_get_periods_array(**kwargs) -> str:

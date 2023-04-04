@@ -1,9 +1,4 @@
-from toolbox.sql.meta_data import MetaData
-
-
-class KnotMeta(MetaData):
-    id = 'id'
-    name = 'name'
+from toolbox.sql.meta_data import MetaData, KnotMeta
 
 
 class TribesMeta(KnotMeta):

@@ -1,6 +1,7 @@
 import pytest
 from pandas import DataFrame
 from toolbox.sql.repository import Repository
+from toolbox.sql.generators import NULL_FILTER_VALUE
 import repository.customers_activity.local.generators.filters_generators.display_filter as DisplayFilterGenerator
 from sql_queries.index import CustomersActivityDBIndex
 from sql_queries.customers_activity.meta import (
@@ -114,6 +115,34 @@ class MockSqliteRepository(Repository):
                     ['Duplicated to ticket types', '=', 'NULL'], 'or',
                     ['Duplicated to ticket types', 'notin', ['Question']]
                 ]
+            ]
+        ),
+        (
+            TicketsWithIterationsParams(**{
+                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Ticket types': FilterParametersNode(include=False, values=[2, NULL_FILTER_VALUE]),
+            }),
+            [
+                ['Percentile', '<=', 100],
+                'and',
+                [
+                    ['Ticket types', '!=', 'NULL'], 'and',
+                    ['Ticket types', 'notin', ['Question']]
+                ],
+            ]
+        ),
+        (
+            TicketsWithIterationsParams(**{
+                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Ticket types': FilterParametersNode(include=True, values=[2, NULL_FILTER_VALUE]),
+            }),
+            [
+                ['Percentile', '<=', 100],
+                'and',
+                [
+                    ['Ticket types', '=', 'NULL'], 'or',
+                    ['Ticket types', 'in', ['Question']]
+                ],
             ]
         )
     ]

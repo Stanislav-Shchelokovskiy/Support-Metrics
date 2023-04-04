@@ -1,6 +1,7 @@
 import pytest
 from repository.customers_activity.local.Tests.mocks import MockFilterParametersNode
 from toolbox.utils.converters import to_quoted_string
+from toolbox.sql.generators import NULL_FILTER_VALUE
 
 
 # yapf: disable
@@ -37,6 +38,22 @@ def single_in_filter_cases():
             (
                 MockFilterParametersNode(include=False, values=[1, 2]),
                 prefix + ' ({field} IS NULL OR {field} NOT IN ' + f'({convert(1)},{convert(2)}))',
+            ),
+            (
+                MockFilterParametersNode(include=True, values=[1, 2, NULL_FILTER_VALUE]),
+                prefix + ' ({field} IS NULL OR {field} IN ' + f'({convert(1)},{convert(2)}))',
+            ),
+            (
+                MockFilterParametersNode(include=True, values=[NULL_FILTER_VALUE]),
+                prefix + ' {field} IS NULL',
+            ),
+            (
+                MockFilterParametersNode(include=False, values=[NULL_FILTER_VALUE]),
+                prefix + ' {field} IS NOT NULL',
+            ),
+            (
+                MockFilterParametersNode(include=False, values=[1, 2, NULL_FILTER_VALUE]),
+                prefix + ' ({field} IS NOT NULL AND {field} NOT IN ' + f'({convert(1)},{convert(2)}))',
             ),
         ]
 
@@ -215,6 +232,22 @@ def single_like_filter_cases():
             MockFilterParametersNode(include=False, values=['p1']),
             "AND ({field} IS NULL OR NOT ({field} LIKE '%p1%'))"
         ),
+        (
+            MockFilterParametersNode(include=True, values=['p1', 'p2', NULL_FILTER_VALUE]),
+            "AND ({field} IS NULL OR ({field} LIKE '%p1%' OR {field} LIKE '%p2%'))"
+        ),
+        (
+            MockFilterParametersNode(include=True, values=[NULL_FILTER_VALUE]),
+            "AND {field} IS NULL"
+        ),
+        (
+            MockFilterParametersNode(include=False, values=[NULL_FILTER_VALUE]),
+            "AND {field} IS NOT NULL"
+        ),
+        (
+            MockFilterParametersNode(include=False, values=['p1', 'p2', NULL_FILTER_VALUE]),
+            "AND ({field} IS NOT NULL AND NOT ({field} LIKE '%p1%' OR {field} LIKE '%p2%'))",
+        ),
     ]
 
 @pytest.fixture
@@ -231,16 +264,32 @@ def between_filter_cases():
                 '',
             ),
             (
+                MockFilterParametersNode(include=True, values=[NULL_FILTER_VALUE]),
+                prefix + ' {field} IS NULL',
+            ),
+            (
                 MockFilterParametersNode(include=False, values=[]),
                 prefix + ' {field} IS NULL',
+            ),
+            (
+                MockFilterParametersNode(include=False, values=[NULL_FILTER_VALUE]),
+                prefix + ' {field} IS NOT NULL',
             ),
             (
                 MockFilterParametersNode(include=True, values=[1, 2]),
                 prefix + ' {field} BETWEEN ' + f'{convert(1)} AND {convert(2)}',
             ),
+             (
+                MockFilterParametersNode(include=True, values=[1, 2, NULL_FILTER_VALUE]),
+                prefix + ' ({field} IS NULL OR {field} BETWEEN ' + f'{convert(1)} AND {convert(2)})',
+            ),
             (
                 MockFilterParametersNode(include=False, values=[1, 2]),
                 prefix + ' ({field} IS NULL OR {field} NOT BETWEEN ' + f'{convert(1)} AND {convert(2)})',
+            ),
+            (
+                MockFilterParametersNode(include=False, values=[1, 2, NULL_FILTER_VALUE]),
+                prefix + ' ({field} IS NOT NULL AND {field} NOT BETWEEN ' + f'{convert(1)} AND {convert(2)})',
             ),
         ]
 

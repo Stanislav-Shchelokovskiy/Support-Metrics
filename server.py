@@ -1,6 +1,6 @@
 import os
 import hashlib
-import json
+import help.index as help_index
 import repository.server_repository as server_repository
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,7 +16,6 @@ from server_models import (
     EmployeeParams,
     CustomersParams,
 )
-from help.index import Index as help_index
 
 
 server_cache = ServerCache()
@@ -281,11 +280,11 @@ def pull_state(state_id: str, ):
 @app.get('/get_customers_activity_help')
 def get_customers_activity_help():
     return get_response(
-        json_data=json.dumps(help_index.get_customers_activity_descriptions())
+        json_data=help_index.get_customers_activity_descriptions()
     )
 
 
 @app.post('/get_customers_activity_display_filter')
 def get_customers_activity_display_filter(body: TicketsWithIterationsParams):
     filters = server_repository.customers_activity_get_display_filter(body)
-    return get_response(json_data=json.dumps(filters))
+    return get_response(json_data=filters)
