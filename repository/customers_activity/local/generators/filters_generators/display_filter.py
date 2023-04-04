@@ -246,31 +246,20 @@ def __generate_filter_from_filter_parameters(
     values_contains_null = NULL_FILTER_VALUE in filter_node.values
     if filter_node.include:
         if values_contains_null:
-            return __generate_positive_isnull_fitler(alias, values_filter)
+            return __generate_isnull_fitler(alias, values_filter, '=', 'or')
         return values_filter
         
     if values_contains_null:
-        return __generate_negative_isnull_fitler(alias, values_filter)
-    return __generate_positive_isnull_fitler(alias, values_filter)
+        return __generate_isnull_fitler(alias, values_filter, '!=', 'and')
+    return __generate_isnull_fitler(alias, values_filter, '=', 'or')
 
 
-def __generate_positive_isnull_fitler(alias, values_filter):
-    isnull_filter = [alias, '=', 'NULL']
+def __generate_isnull_fitler(alias, values_filter, isnull_op, union_op):
+    isnull_filter = [alias, isnull_op, 'NULL']
     if values_filter:
         filter = []
         filter.append(isnull_filter)
-        filter.append('or')
-        filter.append(values_filter)
-        return filter
-    return isnull_filter
-
-
-def __generate_negative_isnull_fitler(alias, values_filter):
-    isnull_filter = [alias, '!=', 'NULL']
-    if values_filter:
-        filter = []
-        filter.append(isnull_filter)
-        filter.append('and')
+        filter.append(union_op)
         filter.append(values_filter)
         return filter
     return isnull_filter
