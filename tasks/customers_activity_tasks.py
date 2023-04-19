@@ -67,6 +67,12 @@ def load_employees_iterations(start_date: str, end_date: str):
     _save_tables(tables={CustomersActivityDBIndex.get_employees_iterations_name(): df})
 
 
+def load_employees(start_date: str):
+    repository = RepositoryFactory.customers_activity.remote.create_employees_repository()
+    df = repository.get_data(start_date=start_date)
+    _save_tables(tables={CustomersActivityDBIndex.get_employees_name(): df})
+
+
 def load_tickets_types():
     repository = RepositoryFactory.customers_activity.remote.create_tickets_types_repository()
     df = repository.get_data()
@@ -133,7 +139,6 @@ def process_staged_data(rank_period_offset: str):
     TablesBuilder.customers_activity.build_tickets_with_iterations(rank_period_offset=rank_period_offset)
     TablesBuilder.customers_activity.build_emp_positions()
     TablesBuilder.customers_activity.build_emp_tribes()
-    TablesBuilder.customers_activity.build_employees()
     TablesBuilder.customers_activity.build_users()
     TablesBuilder.customers_activity.vacuum()
     TablesBuilder.customers_activity.analyze()

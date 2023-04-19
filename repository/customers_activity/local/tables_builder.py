@@ -10,7 +10,6 @@ from sql_queries.customers_activity.meta import (
     PositionsMeta,
     TribeMeta,
     TribesMeta,
-    EmployeesMeta,
     CustomersMeta,
 )
 
@@ -51,18 +50,6 @@ def build_emp_tribes():
             **TribeMeta.get_attrs(),
             **TribesMeta.get_attrs(),
             'EmpTribes': CustomersActivityDBIndex.get_emp_tribes_name(),
-            'EmployeesIterations': CustomersActivityDBIndex.get_employees_iterations_name(),
-        }
-    )
-    __execute(query)
-
-
-def build_employees():
-    query = SqlQuery(
-        query_file_path=CustomersActivitySqlPathIndex.get_employees_path(),
-        format_params={
-            **EmployeesMeta.get_attrs(),
-            'Employees': CustomersActivityDBIndex.get_employees_name(),
             'EmployeesIterations': CustomersActivityDBIndex.get_employees_iterations_name(),
         }
     )

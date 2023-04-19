@@ -13,6 +13,7 @@ from sql_queries.customers_activity.meta import (
     SeverityMeta,
     TicketStatusesMeta,
     IDEsMeta,
+    EmployeesMeta,
 )
 
 
@@ -25,7 +26,9 @@ def _knot_table_def(format_params: dict[str, str]):
 
 # yapf: disable
 def get_create_table_statements() -> dict[str, str]:
-    return {
+    return __create_table_statements
+
+__create_table_statements = {
         CustomersActivityDBIndex.get_tribes_name():
             _knot_table_def(
                 format_params={
@@ -35,6 +38,17 @@ def get_create_table_statements() -> dict[str, str]:
                     'table': CustomersActivityDBIndex.get_tribes_name(),
                 }
             ),
+
+        CustomersActivityDBIndex.get_tents_name():
+            _knot_table_def(
+                format_params={
+                    'id': TribesMeta.id,
+                    'id_type': 'TEXT',
+                    'name': TribesMeta.name,
+                    'table': CustomersActivityDBIndex.get_tents_name(),
+                }
+            ),
+
         CustomersActivityDBIndex.get_tickets_tags_name():
             _knot_table_def(
                 format_params={
@@ -134,6 +148,7 @@ def get_create_table_statements() -> dict[str, str]:
                     'table': CustomersActivityDBIndex.get_license_statuses_name(),
                 }
             ),
+
         CustomersActivityDBIndex.get_cat_replies_types_name():
             _knot_table_def(
                 format_params={
@@ -143,4 +158,13 @@ def get_create_table_statements() -> dict[str, str]:
                     'table': CustomersActivityDBIndex.get_cat_replies_types_name(),
                 }
             ),
+
+        CustomersActivityDBIndex.get_employees_name():
+            SqlQuery(
+                query_file_path=CustomersActivitySqlPathIndex.get_emps_path(),
+                format_params={
+                    **EmployeesMeta.get_attrs(),
+                    'Employees': CustomersActivityDBIndex.get_employees_name()
+                }
+            ).get_script(),
     }

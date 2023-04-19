@@ -69,6 +69,9 @@ class TicketsWithIterationsPeriodMeta(MetaData):
 class TribeIdMeta(MetaData):
     tribe_id = 'tribe_id'
 
+class TentIdMeta(MetaData):
+    tent_id = 'tent_id'
+
 
 class CATComponentsFeaturesMeta(TribeIdMeta):
     component_id = 'component_id'
@@ -91,6 +94,8 @@ class PlatformsProductsMeta(MetaData):
 class TribeMeta(TribeIdMeta):
     tribe_name = 'tribe_name'
 
+class TentMeta(TentIdMeta):
+    tent_name = 'tent_name'
 
 class TicketTribeMeta(TribeMeta):
     ticket_id = 'ticket_id'
@@ -144,9 +149,13 @@ class EmployeesIterationsMeta(TicketTribeMeta):
 
 class EmployeesMeta(MetaData):
     tribe_id = EmployeesIterationsMeta.tribe_id
+    tent_id = TentIdMeta.tent_id
     position_id = EmployeesIterationsMeta.position_id
     crmid = EmployeesIterationsMeta.crmid
     name = EmployeesIterationsMeta.name
+    tribe_name = TribeMeta.tribe_name
+    tent_name = TentMeta.tent_name
+    position_name = 'position_name'
 
 
 class TicketsWithIterationsMeta(TicketsWithPropertiesMeta):

@@ -160,8 +160,7 @@ tickets_with_iterations_common_params = {
             CustomersActivitySqlPathIndex.get_employees_path,
             {
                 **EmployeesMeta.get_attrs(),
-                'Employees': 'Employees',
-                'EmployeesIterations': 'EmployeesIterations',
+                'start_date': 'start_date',
             },
         ),
         (

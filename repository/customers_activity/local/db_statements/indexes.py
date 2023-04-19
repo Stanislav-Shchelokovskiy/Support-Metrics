@@ -15,7 +15,9 @@ def _create_index_statement(tbl: str, cols: Iterable[str]) -> str:
 
 # yapf: disable
 def get_create_index_statements() -> dict[str, tuple[str]]:
-    return {
+    return __create_index_statements
+
+__create_index_statements = {
         CustomersActivityDBIndex.get_customers_tickets_name():
             (
                 _create_index_statement(
