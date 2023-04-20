@@ -15,7 +15,9 @@ def _create_index_statement(tbl: str, cols: Iterable[str]) -> str:
 
 # yapf: disable
 def get_create_index_statements() -> dict[str, tuple[str]]:
-    return {
+    return __create_index_statements
+
+__create_index_statements = {
         CustomersActivityDBIndex.get_customers_tickets_name():
             (
                 _create_index_statement(
@@ -38,7 +40,7 @@ def get_create_index_statements() -> dict[str, tuple[str]]:
                 _create_index_statement(
                     tbl=CustomersActivityDBIndex.get_cat_components_features_name(),
                     cols=(
-                        CATComponentsFeaturesMeta.tribe_id,
+                        CATComponentsFeaturesMeta.tent_id,
                         CATComponentsFeaturesMeta.component_id,
                         CATComponentsFeaturesMeta.component_name,
                     )
@@ -46,7 +48,7 @@ def get_create_index_statements() -> dict[str, tuple[str]]:
                 _create_index_statement(
                     tbl=CustomersActivityDBIndex.get_cat_components_features_name(),
                     cols=(
-                        CATComponentsFeaturesMeta.tribe_id,
+                        CATComponentsFeaturesMeta.tent_id,
                         CATComponentsFeaturesMeta.component_id,
                         CATComponentsFeaturesMeta.feature_id,
                         CATComponentsFeaturesMeta.feature_name,
@@ -72,7 +74,7 @@ def get_create_index_statements() -> dict[str, tuple[str]]:
                 _create_index_statement(
                     tbl=CustomersActivityDBIndex.get_platforms_products_name(),
                     cols=(
-                        PlatformsProductsMeta.product_tribe_id,
+                        PlatformsProductsMeta.product_tent_id,
                         PlatformsProductsMeta.product_id,
                         PlatformsProductsMeta.product_name,
                     )
@@ -80,7 +82,7 @@ def get_create_index_statements() -> dict[str, tuple[str]]:
                 _create_index_statement(
                     tbl=CustomersActivityDBIndex.get_platforms_products_name(),
                     cols=(
-                        PlatformsProductsMeta.platform_tribe_id,
+                        PlatformsProductsMeta.platform_tent_id,
                         PlatformsProductsMeta.platform_id,
                         PlatformsProductsMeta.platform_name,
                     )

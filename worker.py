@@ -23,6 +23,7 @@ def on_startup(sender, **kwargs):
         'customers_activity_load_license_statuses',
         'customers_activity_load_conversion_statuses',
         'customers_activity_load_tribes',
+        'customers_activity_load_tents',
         'customers_activity_load_operating_systems',
         'customers_activity_load_frameworks',
         'customers_activity_load_severity_values',
@@ -30,6 +31,7 @@ def on_startup(sender, **kwargs):
         'customers_activity_load_replies_types',
         'customers_activity_load_platforms_products',
         'customers_activity_load_ides',
+        'customers_activity_load_employees',
     ]
     if int(os.environ['UPDATE_CUSTOMERS_ACTIVITY_ON_STARTUP']):
         tasks.append('update_customers_activity')
@@ -134,6 +136,14 @@ def customers_activity_load_tribes(self, **kwargs):
     )
 
 
+@app.task(name='customers_activity_load_tents', bind=True)
+def customers_activity_load_tents(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.load_tents,
+    )
+
+
 @app.task(name='customers_activity_load_license_statuses', bind=True)
 def customers_activity_load_license_statuses(self, **kwargs):
     return run_retriable_task(
@@ -215,6 +225,15 @@ def customers_activity_load_employees_iterations(self, **kwargs):
         self,
         customers_activity.load_employees_iterations,
         **CustomersActivityConfig.get_tickets_period(),
+    )
+
+
+@app.task(name='customers_activity_load_employees', bind=True)
+def customers_activity_load_employees(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.load_employees,
+        start_date=CustomersActivityConfig.get_tickets_period()['start_date'],
     )
 
 

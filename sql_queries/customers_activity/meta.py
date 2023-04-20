@@ -5,6 +5,10 @@ class TribesMeta(KnotMeta):
     pass
 
 
+class TentsMeta(KnotMeta):
+    pass
+
+
 class PositionsMeta(KnotMeta):
     pass
 
@@ -66,11 +70,18 @@ class TicketsWithIterationsPeriodMeta(MetaData):
     period_end = 'period_end'
 
 
-class TribeIdMeta(MetaData):
+class TribeMeta(MetaData):
     tribe_id = 'tribe_id'
+    tribe_name = 'tribe_name'
 
 
-class CATComponentsFeaturesMeta(TribeIdMeta):
+class TentMeta(MetaData):
+    tent_id = 'tent_id'
+    tent_name = 'tent_name'
+
+
+class CATComponentsFeaturesMeta(MetaData):
+    tent_id = TentMeta.tent_id
     component_id = 'component_id'
     feature_id = 'feature_id'
     component_name = 'component_name'
@@ -78,22 +89,20 @@ class CATComponentsFeaturesMeta(TribeIdMeta):
 
 
 class PlatformsProductsMeta(MetaData):
-    platform_tribe_id = 'platform_tribe_id'
+    platform_tent_id = 'platform_tent_id'
     platform_id = 'platform_id'
-    product_tribe_id = 'product_tribe_id'
+    product_tent_id = 'product_tent_id'
     product_id = 'product_id'
-    platform_tribe_name = 'platform_tribe_name'
+    platform_tent_name = 'platform_tent_name'
     platform_name = 'platform_name'
-    product_tribe_name = 'product_tribe_name'
+    product_tent_name = 'product_tent_name'
     product_name = 'product_name'
 
 
-class TribeMeta(TribeIdMeta):
-    tribe_name = 'tribe_name'
-
-
-class TicketTribeMeta(TribeMeta):
+class TicketTribeMeta(MetaData):
     ticket_id = 'ticket_id'
+    tribe_id = TribeMeta.tribe_id
+    tribe_name = TribeMeta.tribe_name
 
 
 class TicketsWithPropertiesMeta(MetaData):
@@ -104,6 +113,8 @@ class TicketsWithPropertiesMeta(MetaData):
     ticket_type = 'ticket_type'
     tribes_ids = 'tribes_ids'
     tribes_names = 'tribes_names'
+    tent_id = 'tent_id'
+    tent_name = 'tent_name'
     creation_date = 'creation_date'
     is_private = 'is_private'
     user_groups = 'user_groups'
@@ -134,29 +145,43 @@ class TicketsWithPropertiesMeta(MetaData):
     conversion_status = 'conversion_status'
 
 
-class EmployeesIterationsMeta(TicketTribeMeta):
+class EmployeesIterationsMeta(MetaData):
+    ticket_id = TicketTribeMeta.ticket_id
     post_id = 'post_id'
     crmid = 'crmid'
+    scid = 'scid'
+    tribe_id = TicketTribeMeta.tribe_id
+    tent_id = TentMeta.tent_id
     position_id = 'position_id'
     name = 'name'
     position_name = 'position_name'
+    tribe_name = TicketTribeMeta.tribe_name
+    tent_name = TentMeta.tent_name
 
 
 class EmployeesMeta(MetaData):
     tribe_id = EmployeesIterationsMeta.tribe_id
+    tent_id = TentMeta.tent_id
     position_id = EmployeesIterationsMeta.position_id
     crmid = EmployeesIterationsMeta.crmid
+    scid = EmployeesIterationsMeta.scid
     name = EmployeesIterationsMeta.name
+    tribe_name = TribeMeta.tribe_name
+    tent_name = TentMeta.tent_name
+    position_name = 'position_name'
 
 
 class TicketsWithIterationsMeta(TicketsWithPropertiesMeta):
     emp_post_id = 'emp_post_id'
     emp_crmid = 'emp_crmid'
+    emp_scid = 'emp_scid'
     emp_tribe_id = 'emp_tribe_id'
+    emp_tent_id = 'emp_tent_id'
     emp_position_id = 'emp_position_id'
     emp_name = 'emp_name'
     emp_position_name = 'emp_position_name'
     emp_tribe_name = 'emp_tribe_name'
+    emp_tent_name = 'emp_tent_name'
 
 
 class TicketsWithIterationsAggregatesMeta(MetaData):
@@ -174,6 +199,7 @@ class TicketsWithIterationsRawMeta(MetaData):
     ticket_scid = TicketsWithIterationsMeta.ticket_scid
     ticket_type = TicketsWithIterationsMeta.ticket_type
     tribes_names = TicketsWithIterationsMeta.tribes_names
+    tent_name = TicketsWithIterationsMeta.tent_name
     platforms = TicketsWithIterationsMeta.platforms
     products = TicketsWithIterationsMeta.products
     is_private = TicketsWithIterationsMeta.is_private
@@ -203,6 +229,7 @@ class TicketsWithIterationsRawMeta(MetaData):
     emp_name = TicketsWithIterationsMeta.emp_name
     emp_position_name = TicketsWithIterationsMeta.emp_position_name
     emp_tribe_name = TicketsWithIterationsMeta.emp_tribe_name
+    emp_tent_name = TicketsWithIterationsMeta.emp_tent_name
 
 
 class BaselineAlignedCustomersGroupsMeta(MetaData):

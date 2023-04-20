@@ -40,7 +40,7 @@ class CATComponents(RepositoryQueries):
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
-        filter = CATSqlFilterClauseGenerator.generate_components_filter(tribe_ids=kwargs['tribe_ids'])
+        filter = CATSqlFilterClauseGenerator.generate_components_filter(tent_ids=kwargs['tent_ids'])
         cols = ', '.join(self.get_must_have_columns(**kwargs))
         return {
             'columns': cols,
@@ -66,7 +66,7 @@ class CATFeatures(RepositoryQueries):
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         filter = CATSqlFilterClauseGenerator.generate_features_filter(
-                    tribe_ids=kwargs['tribe_ids'],
+                    tent_ids=kwargs['tent_ids'],
                     component_ids=kwargs['component_ids'],
                 )
         return {

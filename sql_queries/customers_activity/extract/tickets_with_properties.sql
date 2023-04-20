@@ -12,6 +12,8 @@ SELECT
 	ti.user_id							AS {user_id},
 	tribes.tribes_ids					AS {tribes_ids},
 	tribes.tribes_names					AS {tribes_names},
+	CAST(tent.id AS UNIQUEIDENTIFIER)	AS {tent_id},
+	tent.name							AS {tent_name},
 	ti.ticket_id						AS {ticket_id},
 	ti.ticket_scid						AS {ticket_scid},
 	ti.ticket_type						AS {ticket_type},
@@ -98,6 +100,10 @@ FROM #TicketsWithLicenses AS ti
 				STRING_AGG(CONVERT(NVARCHAR(MAX), tribes_inner.name) , @separator) AS tribes_names	
 		FROM	DXStatisticsV2.dbo.get_ticket_tribes(ti.ticket_id, ti.ticket_type, DEFAULT ) AS tribes_inner
 	) AS tribes
+	OUTER APPLY (
+		SELECT	tent_inner.*
+		FROM	DXStatisticsV2.dbo.get_ticket_tent(ti.ticket_id) AS tent_inner
+	) AS tent
 	OUTER APPLY (
 		SELECT 	 STRING_AGG(CONVERT(NVARCHAR(MAX), UserGroup_Id), @separator) AS groups
 		FROM 	 CRM.dbo.Customer_UserGroup

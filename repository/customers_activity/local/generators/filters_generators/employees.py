@@ -19,17 +19,30 @@ def generate_positions_filter(position_ids: FilterParametersNode) -> str:
 
 
 @params_guard
-def generate_positions_tribes_filter(
+def generate_positions_tribes_tents_filter(
     position_ids: FilterParametersNode,
     tribe_ids: FilterParametersNode,
+    tent_ids: FilterParametersNode,
 ) -> str:
     positions_fitler = generate_positions_filter(position_ids=position_ids)
-    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
+    generate_tribes_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
         params=tribe_ids
     )
-    tribes_filter = generate_filter(
+    generate_tents_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
+        params=tent_ids
+    )
+
+    tribes_filter = generate_tribes_filter(
         col=EmployeesMeta.tribe_id,
         values=tribe_ids.values,
         filter_prefix=' AND' if positions_fitler else 'WHERE',
     )
-    return positions_fitler + tribes_filter
+
+    positions_tribes_filter = positions_fitler + tribes_filter
+
+    tents_filter = generate_tents_filter(
+        col=EmployeesMeta.tent_id,
+        values=tent_ids.values,
+        filter_prefix=' AND' if positions_tribes_filter else 'WHERE',
+    )
+    return positions_tribes_filter + tents_filter

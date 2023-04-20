@@ -21,6 +21,7 @@ from sql_queries.customers_activity.meta import (
     ConversionStatusesMeta,
     PositionsMeta,
     TribesMeta,
+    TentsMeta,
     EmployeesIterationsMeta,
     CATRepliesTypesMeta,
     CATComponentsFeaturesMeta,
@@ -50,7 +51,7 @@ class QueryParams:
 def __get_emps_params():
     return QueryParams(
             table=CustomersActivityDBIndex.get_employees_name(),
-            value_field=EmployeesIterationsMeta.crmid,
+            value_field=EmployeesIterationsMeta.scid,
             display_field=EmployeesIterationsMeta.name,
         )
 
@@ -67,6 +68,12 @@ __query_params_store = {
             table=CustomersActivityDBIndex.get_tribes_name(),
             value_field=TribesMeta.id,
             display_field=TribesMeta.name,
+        ),
+    'tent_ids':
+        QueryParams(
+            table=CustomersActivityDBIndex.get_tents_name(),
+            value_field=TentsMeta.id,
+            display_field=TentsMeta.name,
         ),
     'platforms_ids':
         QueryParams(
@@ -147,6 +154,12 @@ __query_params_store = {
             table=CustomersActivityDBIndex.get_emp_tribes_name(),
             value_field=TribesMeta.id,
             display_field=TribesMeta.name,
+        ),
+    'emp_tent_ids':
+        QueryParams(
+            table=CustomersActivityDBIndex.get_emp_tents_name(),
+            value_field=TentsMeta.id,
+            display_field=TentsMeta.name,
         ),
     'emp_ids': __get_emps_params(),
     'assigned_to_ids': __get_emps_params(),

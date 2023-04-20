@@ -7,6 +7,7 @@ import repository.customers_activity.remote.customers_groups as customers_groups
 import repository.customers_activity.remote.cat as cat
 import repository.customers_activity.remote.platforms_products as platforms_products
 import repository.customers_activity.remote.licenses_conversion as licenses_conversion
+import repository.customers_activity.remote.employees as employees
 
 import repository.customers_activity.local.customers as sqlite_customers
 import repository.customers_activity.local.tickets as sqlite_tickets
@@ -54,6 +55,9 @@ class SqlServerFactory:
 
     def create_employees_iterations_repository(self) -> Repository:
         return self._create_repository(queries=tickets_and_iterations.EmployeesIterations())
+
+    def create_employees_repository(self) -> Repository:
+        return self._create_repository(queries=employees.Employees())
 
     def create_tickets_types_repository(self) -> Repository:
         return self._create_repository(queries=tickets.TicketsTypes())
@@ -146,6 +150,9 @@ class SqliteFactory:
 
     def create_emp_tribes_repository(self) -> Repository:
         return self._create_repository(queries=sqlite_employees.EmpTribes())
+
+    def create_emp_tents_repository(self) -> Repository:
+        return self._create_repository(queries=sqlite_employees.EmpTents())
 
     def create_employees_repository(self) -> Repository:
         return self._create_repository(queries=sqlite_employees.Employees())

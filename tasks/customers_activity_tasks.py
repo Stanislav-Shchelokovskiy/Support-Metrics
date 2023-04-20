@@ -67,6 +67,12 @@ def load_employees_iterations(start_date: str, end_date: str):
     _save_tables(tables={CustomersActivityDBIndex.get_employees_iterations_name(): df})
 
 
+def load_employees(start_date: str):
+    repository = RepositoryFactory.customers_activity.remote.create_employees_repository()
+    df = repository.get_data(start_date=start_date)
+    _save_tables(tables={CustomersActivityDBIndex.get_employees_name(): df})
+
+
 def load_tickets_types():
     repository = RepositoryFactory.customers_activity.remote.create_tickets_types_repository()
     df = repository.get_data()
@@ -117,6 +123,14 @@ def load_tribes():
     _save_tables(tables={CustomersActivityDBIndex.get_tribes_name(): df})
 
 
+def load_tents():
+    tents_str = Network.get_data(end_point=f'http://{os.environ["QUERY_SERVICE"]}/get_tents')
+    tents = json.loads(tents_str)
+    df = DataFrame.from_records(data=tents)
+    df = df.reset_index(drop=True)
+    _save_tables(tables={CustomersActivityDBIndex.get_tents_name(): df})
+
+
 def load_license_statuses():
     repository = RepositoryFactory.customers_activity.remote.create_license_statuses_repository()
     df = repository.get_data()
@@ -133,7 +147,7 @@ def process_staged_data(rank_period_offset: str):
     TablesBuilder.customers_activity.build_tickets_with_iterations(rank_period_offset=rank_period_offset)
     TablesBuilder.customers_activity.build_emp_positions()
     TablesBuilder.customers_activity.build_emp_tribes()
-    TablesBuilder.customers_activity.build_employees()
+    TablesBuilder.customers_activity.build_emp_tents()
     TablesBuilder.customers_activity.build_users()
     TablesBuilder.customers_activity.vacuum()
     TablesBuilder.customers_activity.analyze()

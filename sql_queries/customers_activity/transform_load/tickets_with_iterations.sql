@@ -5,6 +5,8 @@ SELECT
 	t.{user_id},
 	t.{tribes_ids},
 	t.{tribes_names},
+    t.{tent_id},
+    t.{tent_name},
 	t.{ticket_id},
 	t.{ticket_scid},
 	t.{ticket_type},
@@ -38,11 +40,14 @@ SELECT
 	CAST(t.{conversion_status} AS INT) AS {conversion_status},
     ei.{post_id}       AS {emp_post_id},
     ei.{crmid}         AS {emp_crmid},
+    ei.{scid}          AS {emp_scid},
     ei.{tribe_id}      AS {emp_tribe_id},
+    ei.{tent_id}       AS {emp_tent_id},
     ei.{position_id}   AS {emp_position_id},
     ei.{name}          AS {emp_name},
     ei.{position_name} AS {emp_position_name},
-    ei.{tribe_name}    AS {emp_tribe_name}
+    ei.{tribe_name}    AS {emp_tribe_name},
+    ei.{tent_name}     AS {emp_tent_name}
 FROM
     {CustomersTickets} AS t
     INNER JOIN (
@@ -62,7 +67,8 @@ CREATE INDEX idx_{TicketsWithIterations}_tickets_inner ON {TicketsWithIterations
     {license_status},
     {emp_position_id},
     {is_private},
-    {tribes_ids}
+    {tribes_ids},
+    {tent_id}
 );
 
 CREATE INDEX idx_{TicketsWithIterations}_iterations_inner ON {TicketsWithIterations}(
@@ -73,7 +79,8 @@ CREATE INDEX idx_{TicketsWithIterations}_iterations_inner ON {TicketsWithIterati
     {license_status},
     {emp_position_id},
     {is_private},
-    {tribes_ids}
+    {tribes_ids},
+    {tent_id}
 );
 
 CREATE INDEX idx_{TicketsWithIterations}_outer ON {TicketsWithIterations}(
@@ -84,6 +91,7 @@ CREATE INDEX idx_{TicketsWithIterations}_outer ON {TicketsWithIterations}(
     {emp_position_id},
     {is_private},
     {tribes_ids},
+    {tent_id},
     {user_id},
     {ticket_scid},
     {emp_post_id}

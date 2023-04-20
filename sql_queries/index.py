@@ -102,6 +102,13 @@ class CustomersActivitySqlPathIndex:
         )
 
     @staticmethod
+    def get_employees_path() -> str:
+        """Remote employees sql query"""
+        return (
+            CustomersActivitySqlPathIndex.get_extract_path() + '/employees.sql'
+        )
+
+    @staticmethod
     def get_employees_iterations_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_extract_path()
@@ -186,7 +193,15 @@ class CustomersActivitySqlPathIndex:
         )
 
     @staticmethod
-    def get_employees_path() -> str:
+    def get_emp_tents_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_transform_load_path()
+            + '/emp_tents.sql'
+        )
+
+    @staticmethod
+    def get_emps_path() -> str:
+        """Local table def sql."""
         return (
             CustomersActivitySqlPathIndex.get_transform_load_path()
             + '/emps.sql'
@@ -285,8 +300,16 @@ class CustomersActivityDBIndex:
         return CustomersActivityDBIndex.get_root_name() + 'AvailableTribes'
 
     @staticmethod
+    def get_tents_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'Tents'
+
+    @staticmethod
     def get_emp_tribes_name() -> str:
         return CustomersActivityDBIndex.get_root_name() + 'EmpTribes'
+
+    @staticmethod
+    def get_emp_tents_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'EmpTents'
 
     @staticmethod
     def get_employees_name() -> str:

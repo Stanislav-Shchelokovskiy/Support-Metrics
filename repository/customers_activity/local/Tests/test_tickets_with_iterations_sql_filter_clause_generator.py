@@ -152,6 +152,11 @@ def test_single_like_filters(
 @pytest.mark.parametrize(
     'generator, field, values_converter', [
         (
+            tickets.generate_tents_filter,
+            TicketsWithIterationsMeta.tent_id,
+            None,
+        ),
+        (
             ticket_types.generate_ticket_types_filter,
             TicketsWithIterationsMeta.ticket_type,
             str,
@@ -198,7 +203,7 @@ def test_single_like_filters(
         ),
         (
             employees.generate_employees_filter,
-            TicketsWithIterationsMeta.emp_crmid,
+            TicketsWithIterationsMeta.emp_scid,
             None,
         ),
         (

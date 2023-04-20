@@ -9,7 +9,7 @@ from toolbox.utils.converters import JSON_to_object
 from server_cache import ServerCache
 from server_models import (
     TicketsWithIterationsParams,
-    TribeParams,
+    TentsParams,
     FeatureParams,
     StatAppState,
     ConversionStatusParams,
@@ -113,9 +113,9 @@ def customers_activity_get_cat_get_replies_types():
 
 
 @app.post('/get_components')
-def customers_activity_get_cat_components(params: TribeParams):
+def customers_activity_get_cat_components(params: TentsParams):
     df_json = server_repository.customers_activity_get_components(
-        tribe_ids=params.tribes,
+        tent_ids=params.tents,
     )
     return get_response(json_data=df_json)
 
@@ -123,24 +123,24 @@ def customers_activity_get_cat_components(params: TribeParams):
 @app.post('/get_features')
 def customers_activity_get_cat_features(params: FeatureParams):
     df_json = server_repository.customers_activity_get_features(
-        tribe_ids=params.tribes,
+        tent_ids=params.tents,
         component_ids=params.components,
     )
     return get_response(json_data=df_json)
 
 
 @app.post('/get_platforms')
-def customers_activity_get_platforms(params: TribeParams):
+def customers_activity_get_platforms(params: TentsParams):
     df_json = server_repository.customers_activity_get_platforms(
-        tribe_ids=params.tribes,
+        tent_ids=params.tents,
     )
     return get_response(json_data=df_json)
 
 
 @app.post('/get_products')
-def customers_activity_get_products(params: TribeParams):
+def customers_activity_get_products(params: TentsParams):
     df_json = server_repository.customers_activity_get_products(
-        tribe_ids=params.tribes,
+        tent_ids=params.tents,
     )
     return get_response(json_data=df_json)
 
@@ -193,12 +193,20 @@ def customers_activity_get_emp_tribes():
     )
 
 
+@app.get('/get_emp_tents')
+def customers_activity_get_emp_tents():
+    return get_response(
+        json_data=server_repository.customers_activity_get_emp_tents()
+    )
+
+
 @app.post('/get_employees')
 def customers_activity_get_employees(params: EmployeeParams):
     return get_response(
         json_data=server_repository.customers_activity_get_employees(
             position_ids=params.positions,
             tribe_ids=params.tribes,
+            tent_ids=params.tents,
         )
     )
 

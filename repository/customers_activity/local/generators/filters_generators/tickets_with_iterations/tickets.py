@@ -28,6 +28,18 @@ def generate_tribes_filter(params: FilterParametersNode) -> str:
 
 
 @params_guard
+def generate_tents_filter(params: FilterParametersNode) -> str:
+    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
+        params
+    )
+    return generate_filter(
+        col=TicketsWithIterationsMeta.tent_id,
+        values=params.values,
+        filter_prefix='AND',
+    )
+
+
+@params_guard
 def generate_builds_filter(
     params: FilterParametersNode,
     col: str = TicketsWithIterationsMeta.builds
