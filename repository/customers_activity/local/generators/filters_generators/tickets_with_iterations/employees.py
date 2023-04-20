@@ -18,19 +18,23 @@ def generate_emp_positions_filter(params: FilterParametersNode) -> str:
 
 
 @params_guard
-def generate_emp_tribes_filter(params: FilterParametersNode) -> str:
+def generate_emp_tribes_filter(params: FilterParametersNode, col: str = TicketsWithIterationsMeta.emp_tribe_id) -> str:
     generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
         params
     )
     return generate_filter(
-        col=TicketsWithIterationsMeta.emp_tribe_id,
+        col=col,
         values=params.values,
         filter_prefix='AND',
     )
 
 
+def generate_emp_tents_filter(params: FilterParametersNode) -> str:
+    return generate_emp_tribes_filter(params=params, col=TicketsWithIterationsMeta.emp_tent_id)
+
+
 @params_guard
-def generate_employees_filter(params: FilterParametersNode, col: str = TicketsWithIterationsMeta.emp_crmid) -> str:
+def generate_employees_filter(params: FilterParametersNode, col: str = TicketsWithIterationsMeta.emp_scid) -> str:
     generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
         params
     )

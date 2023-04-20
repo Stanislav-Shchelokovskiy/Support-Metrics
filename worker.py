@@ -23,6 +23,7 @@ def on_startup(sender, **kwargs):
         'customers_activity_load_license_statuses',
         'customers_activity_load_conversion_statuses',
         'customers_activity_load_tribes',
+        'customers_activity_load_tents',
         'customers_activity_load_operating_systems',
         'customers_activity_load_frameworks',
         'customers_activity_load_severity_values',
@@ -132,6 +133,14 @@ def customers_activity_load_tribes(self, **kwargs):
     return run_retriable_task(
         self,
         customers_activity.load_tribes,
+    )
+
+
+@app.task(name='customers_activity_load_tents', bind=True)
+def customers_activity_load_tents(self, **kwargs):
+    return run_retriable_task(
+        self,
+        customers_activity.load_tents,
     )
 
 

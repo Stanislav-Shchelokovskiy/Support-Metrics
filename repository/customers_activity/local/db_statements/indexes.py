@@ -40,7 +40,7 @@ __create_index_statements = {
                 _create_index_statement(
                     tbl=CustomersActivityDBIndex.get_cat_components_features_name(),
                     cols=(
-                        CATComponentsFeaturesMeta.tribe_id,
+                        CATComponentsFeaturesMeta.tent_id,
                         CATComponentsFeaturesMeta.component_id,
                         CATComponentsFeaturesMeta.component_name,
                     )
@@ -48,7 +48,7 @@ __create_index_statements = {
                 _create_index_statement(
                     tbl=CustomersActivityDBIndex.get_cat_components_features_name(),
                     cols=(
-                        CATComponentsFeaturesMeta.tribe_id,
+                        CATComponentsFeaturesMeta.tent_id,
                         CATComponentsFeaturesMeta.component_id,
                         CATComponentsFeaturesMeta.feature_id,
                         CATComponentsFeaturesMeta.feature_name,
@@ -74,7 +74,7 @@ __create_index_statements = {
                 _create_index_statement(
                     tbl=CustomersActivityDBIndex.get_platforms_products_name(),
                     cols=(
-                        PlatformsProductsMeta.product_tribe_id,
+                        PlatformsProductsMeta.product_tent_id,
                         PlatformsProductsMeta.product_id,
                         PlatformsProductsMeta.product_name,
                     )
@@ -82,7 +82,7 @@ __create_index_statements = {
                 _create_index_statement(
                     tbl=CustomersActivityDBIndex.get_platforms_products_name(),
                     cols=(
-                        PlatformsProductsMeta.platform_tribe_id,
+                        PlatformsProductsMeta.platform_tent_id,
                         PlatformsProductsMeta.platform_id,
                         PlatformsProductsMeta.platform_name,
                     )

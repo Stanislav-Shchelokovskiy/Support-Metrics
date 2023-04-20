@@ -123,6 +123,14 @@ def load_tribes():
     _save_tables(tables={CustomersActivityDBIndex.get_tribes_name(): df})
 
 
+def load_tents():
+    tents_str = Network.get_data(end_point=f'http://{os.environ["QUERY_SERVICE"]}/get_tents')
+    tents = json.loads(tents_str)
+    df = DataFrame.from_records(data=tents)
+    df = df.reset_index(drop=True)
+    _save_tables(tables={CustomersActivityDBIndex.get_tents_name(): df})
+
+
 def load_license_statuses():
     repository = RepositoryFactory.customers_activity.remote.create_license_statuses_repository()
     df = repository.get_data()
@@ -139,6 +147,7 @@ def process_staged_data(rank_period_offset: str):
     TablesBuilder.customers_activity.build_tickets_with_iterations(rank_period_offset=rank_period_offset)
     TablesBuilder.customers_activity.build_emp_positions()
     TablesBuilder.customers_activity.build_emp_tribes()
+    TablesBuilder.customers_activity.build_emp_tents()
     TablesBuilder.customers_activity.build_users()
     TablesBuilder.customers_activity.vacuum()
     TablesBuilder.customers_activity.analyze()

@@ -7,43 +7,43 @@ from repository.customers_activity.local.generators.filters_generators.sql_filte
 
 
 @params_guard
-def generate_tribes_filter(
-    tribe_ids: FilterParametersNode,
+def generate_tents_filter(
+    tents_ids: FilterParametersNode,
     col: str,
     filter_prefix: str,
 ) -> str:
     generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
-        params=tribe_ids
+        params=tents_ids
     )
     return generate_filter(
         col=col,
-        values=tribe_ids.values,
+        values=tents_ids.values,
         filter_prefix=filter_prefix,
     )
 
 
 def generate_platforms_filter(
-    tribe_ids: FilterParametersNode,
+    tent_ids: FilterParametersNode,
     filter_prefix='WHERE',
 ) -> str:
-    return generate_tribes_filter(
-        tribe_ids=tribe_ids,
-        col=PlatformsProductsMeta.platform_tribe_id,
+    return generate_tents_filter(
+        tents_ids=tent_ids,
+        col=PlatformsProductsMeta.platform_tent_id,
         filter_prefix=filter_prefix,
     )
 
 
-def generate_products_filter(tribe_ids: FilterParametersNode, ) -> str:
-    products_filter = generate_tribes_filter(
-        tribe_ids=tribe_ids,
-        col=PlatformsProductsMeta.product_tribe_id,
+def generate_products_filter(tent_ids: FilterParametersNode, ) -> str:
+    products_filter = generate_tents_filter(
+        tents_ids=tent_ids,
+        col=PlatformsProductsMeta.product_tent_id,
         filter_prefix='WHERE',
     )
 
     platforms_filter = generate_platforms_filter(
-        tribe_ids=tribe_ids,
+        tent_ids=tent_ids,
         filter_prefix='',
-    ) if tribe_ids and tribe_ids.include and len(tribe_ids.values) > 0 else ''
+    ) if tent_ids and tent_ids.include and len(tent_ids.values) > 0 else ''
 
     logical_operator = ' OR ' if platforms_filter else ''
 

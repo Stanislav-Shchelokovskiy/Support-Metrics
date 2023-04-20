@@ -110,6 +110,11 @@ def customers_activity_get_emp_tribes() -> str:
     return repository.get_data_json()
 
 
+def customers_activity_get_emp_tents() -> str:
+    repository = RepositoryFactory.customers_activity.local.create_emp_tents_repository()
+    return repository.get_data_json()
+
+
 def customers_activity_get_employees(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_employees_repository()
     return repository.get_data_json(**kwargs)

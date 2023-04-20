@@ -151,6 +151,9 @@ class SqliteFactory:
     def create_emp_tribes_repository(self) -> Repository:
         return self._create_repository(queries=sqlite_employees.EmpTribes())
 
+    def create_emp_tents_repository(self) -> Repository:
+        return self._create_repository(queries=sqlite_employees.EmpTents())
+
     def create_employees_repository(self) -> Repository:
         return self._create_repository(queries=sqlite_employees.Employees())
 

@@ -193,6 +193,13 @@ class CustomersActivitySqlPathIndex:
         )
 
     @staticmethod
+    def get_emp_tents_path() -> str:
+        return (
+            CustomersActivitySqlPathIndex.get_transform_load_path()
+            + '/emp_tents.sql'
+        )
+
+    @staticmethod
     def get_emps_path() -> str:
         """Local table def sql."""
         return (
@@ -299,6 +306,10 @@ class CustomersActivityDBIndex:
     @staticmethod
     def get_emp_tribes_name() -> str:
         return CustomersActivityDBIndex.get_root_name() + 'EmpTribes'
+
+    @staticmethod
+    def get_emp_tents_name() -> str:
+        return CustomersActivityDBIndex.get_root_name() + 'EmpTents'
 
     @staticmethod
     def get_employees_name() -> str:

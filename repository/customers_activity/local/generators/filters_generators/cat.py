@@ -7,23 +7,23 @@ from repository.customers_activity.local.generators.filters_generators.sql_filte
 
 
 @params_guard
-def generate_components_filter(tribe_ids: FilterParametersNode) -> str:
+def generate_components_filter(tent_ids: FilterParametersNode) -> str:
     generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
-        params=tribe_ids
+        params=tent_ids
     )
     return generate_filter(
-        col=CATComponentsFeaturesMeta.tribe_id,
-        values=tribe_ids.values,
+        col=CATComponentsFeaturesMeta.tent_id,
+        values=tent_ids.values,
         filter_prefix='WHERE',
     )
 
 
 @params_guard
 def generate_features_filter(
-    tribe_ids: FilterParametersNode,
+    tent_ids: FilterParametersNode,
     component_ids: FilterParametersNode,
 ) -> str:
-    components_fitler = generate_components_filter(tribe_ids=tribe_ids)
+    components_fitler = generate_components_filter(tent_ids=tent_ids)
     generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
         params=component_ids
     )

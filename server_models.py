@@ -1,6 +1,6 @@
 from typing import Literal, Any
 from pydantic import BaseModel, Field
-from pydantic.fields import FieldInfo 
+from pydantic.fields import FieldInfo
 
 
 class ServerModel(BaseModel):
@@ -36,17 +36,18 @@ class FilterParametersNode(FilterNode):
     values: list[int | str]
 
 
-class TribeParams(ServerModel):
-    tribes: FilterParametersNode
+class TentsParams(ServerModel):
+    tents: FilterParametersNode
 
 
-class FeatureParams(TribeParams):
+class FeatureParams(TentsParams):
     components: FilterParametersNode
 
 
 class EmployeeParams(ServerModel):
-    tribes: FilterParametersNode
     positions: FilterParametersNode
+    tribes: FilterParametersNode
+    tents: FilterParametersNode
 
 
 class ConversionStatusParams(ServerModel):
@@ -67,6 +68,7 @@ class TicketsWithIterationsParams(ServerModel):
     percentile: Percentile = Field(alias='Percentile')
     is_private: FilterParameterNode | None = Field(alias='Privacy')
     tribe_ids: FilterParametersNode | None = Field(alias='Tribes')
+    tent_ids: FilterParametersNode | None = Field(alias='Tents')
     platforms_ids: FilterParametersNode | None = Field(alias='Platforms')
     products_ids: FilterParametersNode | None = Field(alias='Products')
     tickets_tags: FilterParametersNode | None = Field(alias='Ticket tags')
@@ -84,6 +86,7 @@ class TicketsWithIterationsParams(ServerModel):
     conversion_statuses: FilterParametersNode | None = Field(alias='User conversion types')
     positions_ids: FilterParametersNode | None = Field(alias='Employees positions')
     emp_tribe_ids: FilterParametersNode | None = Field(alias='Employees tribes')
+    emp_tent_ids: FilterParametersNode | None = Field(alias='Employees tents')
     emp_ids: FilterParametersNode | None = Field(alias='Employees')
     assigned_to_ids: FilterParametersNode | None = Field(alias='Assigned to')
     closed_by_ids: FilterParametersNode | None = Field(alias='Closed by')

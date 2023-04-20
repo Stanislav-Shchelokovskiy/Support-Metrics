@@ -20,15 +20,15 @@ class Platforms(RepositoryQueries):
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         cols = ', '.join(self.get_must_have_columns(**kwargs))
-        filter = self.get_filter(tribe_ids=kwargs['tribe_ids'])
+        filter = self.get_filter(tent_ids=kwargs['tent_ids'])
         return {
             'columns': cols,
             'table_name': CustomersActivityDBIndex.get_platforms_products_name(),
             'filter_group_limit_clause': f'{filter}\nGROUP BY {cols}\nORDER BY {self.get_order_by_column()}',
         }
 
-    def get_filter(self, tribe_ids: FilterParametersNode) -> str:
-        return PlatformsProductsSqlFilterClauseGenerator.generate_platforms_filter(tribe_ids=tribe_ids)
+    def get_filter(self, tent_ids: FilterParametersNode) -> str:
+        return PlatformsProductsSqlFilterClauseGenerator.generate_platforms_filter(tent_ids=tent_ids)
 
     def get_must_have_columns(self, **kwargs) -> Iterable[str]:
         return (
@@ -45,8 +45,8 @@ class Products(Platforms):
     Query to a local table storing products
     available for specified tribes.
     """
-    def get_filter(self, tribe_ids: FilterParametersNode) -> str:
-        return PlatformsProductsSqlFilterClauseGenerator.generate_products_filter(tribe_ids=tribe_ids)
+    def get_filter(self, tent_ids: FilterParametersNode) -> str:
+        return PlatformsProductsSqlFilterClauseGenerator.generate_products_filter(tent_ids=tent_ids)
 
     def get_must_have_columns(self, **kwargs) -> Iterable[str]:
         return (

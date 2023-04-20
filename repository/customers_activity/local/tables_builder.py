@@ -11,6 +11,8 @@ from sql_queries.customers_activity.meta import (
     TribeMeta,
     TribesMeta,
     CustomersMeta,
+    TentMeta,
+    TentsMeta,
 )
 
 
@@ -55,6 +57,17 @@ def build_emp_tribes():
     )
     __execute(query)
 
+def build_emp_tents():
+    query = SqlQuery(
+        query_file_path=CustomersActivitySqlPathIndex.get_emp_tents_path(),
+        format_params={
+            **TentMeta.get_attrs(),
+            **TentsMeta.get_attrs(),
+            'EmpTents': CustomersActivityDBIndex.get_emp_tents_name(),
+            'EmployeesIterations': CustomersActivityDBIndex.get_employees_iterations_name(),
+        }
+    )
+    __execute(query)
 
 def build_users():
     query = SqlQuery(

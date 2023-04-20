@@ -6,6 +6,7 @@ SELECT
       WHERE  id = t.ticket_type
       LIMIT 1 )  AS {ticket_type},
     t.{tribes_names},
+    t.{tent_name},
     ( SELECT GROUP_CONCAT(platform_name, '; ')
       FROM (SELECT DISTINCT platform_name
             FROM {platforms_products_table}
@@ -43,13 +44,13 @@ SELECT
     t.{fixed_in_builds},
     ( SELECT name 
       FROM   {employees_table}
-      WHERE  crmid = t.fixed_by
+      WHERE  scid = t.fixed_by
       LIMIT 1 )  AS {fixed_by},
     t.{fixed_on},
     t.{ticket_status},
     ( SELECT name 
       FROM   {employees_table}
-      WHERE  crmid = t.closed_by
+      WHERE  scid = t.closed_by
       LIMIT 1 )  AS {closed_by},
     t.{closed_on},
     ( SELECT name 
@@ -63,7 +64,7 @@ SELECT
     t.{duplicated_to_ticket_scid},
     ( SELECT name 
       FROM   {employees_table}
-      WHERE  crmid = t.assigned_to
+      WHERE  scid = t.assigned_to
       LIMIT 1 )  AS {assigned_to},
      ( SELECT name 
       FROM   {operating_systems_table}
@@ -76,6 +77,7 @@ SELECT
     t.{emp_post_id},
     t.{emp_name},
     t.{emp_position_name},
-    t.{emp_tribe_name}{baseline_aligned_mode_fields}
+    t.{emp_tribe_name},
+    t.{emp_tent_name}{baseline_aligned_mode_fields}
 FROM ({tickets_with_iterations_table}) AS t
 {tickets_filter}

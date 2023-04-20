@@ -64,6 +64,7 @@ def get_tickets_filter(**kwargs) -> str:
         employees.generate_emp_positions_filter(params=kwargs['positions_ids']),
         tickets.generate_privacy_filter(params=kwargs['is_private']),
         tickets.generate_tribes_filter(params=kwargs['tribe_ids']),
+        tickets.generate_tents_filter(params=kwargs['tent_ids']),
         # index end
         platforms_products.generate_platforms_filter(params=kwargs['platforms_ids']),
         platforms_products.generate_products_filter(params=kwargs['products_ids']),
@@ -79,6 +80,7 @@ def get_tickets_filter(**kwargs) -> str:
         try_get_customer_groups_filter(**kwargs),
         customers.generate_conversion_status_filter(params=kwargs['conversion_statuses']),
         employees.generate_emp_tribes_filter(params=kwargs['emp_tribe_ids']),
+        employees.generate_emp_tents_filter(params=kwargs['emp_tent_ids']),
         employees.generate_employees_filter(params=kwargs['emp_ids']),
         bugs.generate_assigned_to_filter(params=kwargs['assigned_to_ids']),
         bugs.generate_closed_by_filter(params=kwargs['closed_by_ids']),
