@@ -206,6 +206,14 @@ class CustomersActivitySqlPathIndex:
             CustomersActivitySqlPathIndex.get_transform_load_path()
             + '/emps.sql'
         )
+    
+    @staticmethod
+    def get_custs_groups_path() -> str:
+        """Local table def sql."""
+        return (
+            CustomersActivitySqlPathIndex.get_transform_load_path()
+            + '/customers_groups.sql'
+        )
 
     @staticmethod
     def get_customers_path() -> str:

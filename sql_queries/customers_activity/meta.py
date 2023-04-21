@@ -14,7 +14,7 @@ class PositionsMeta(KnotMeta):
 
 
 class CustomersGroupsMeta(KnotMeta):
-    pass
+    creation_date = 'creation_date'
 
 
 class TicketsTagsMeta(KnotMeta):

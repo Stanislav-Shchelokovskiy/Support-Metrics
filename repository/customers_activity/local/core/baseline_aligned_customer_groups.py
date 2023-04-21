@@ -1,11 +1,11 @@
 from sql_queries.customers_activity.meta import (
     TicketsWithIterationsMeta,
     BaselineAlignedModeMeta,
+    CustomersGroupsMeta,
 )
 from sql_queries.index import CustomersActivityDBIndex
 from repository.customers_activity.local.core.filters import (
     build_filter_string,
-    get_creation_date_and_tickets_filters,
     get_tickets_filter,
 )
 import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.customers as CustomersSqlFilterClauseGenerator
@@ -32,10 +32,10 @@ WHERE {build_filter_string([
             ])}
 UNION ALL
 SELECT  twi.*,
-        CAST(JULIANDAY({TicketsWithIterationsMeta.creation_date})-JULIANDAY('{kwargs['range_start']}') AS INT) AS {BaselineAlignedModeMeta.days_since_baseline}
+        CAST(JULIANDAY({TicketsWithIterationsMeta.creation_date})-JULIANDAY(({get_min_customers_groups_creation_date(kwargs)})) AS INT) AS {BaselineAlignedModeMeta.days_since_baseline}
 FROM    ( SELECT *
           FROM   {CustomersActivityDBIndex.get_tickets_with_iterations_name()}
-          WHERE  {get_creation_date_and_tickets_filters(filter_prefix='', **kwargs)}) AS twi
+          WHERE  {get_creation_date_and_tickets_filters(kwargs)}) AS twi
 LEFT JOIN (
     SELECT {BaselineAlignedModeMeta.user_crmid}
     FROM   {CustomersActivityDBIndex.get_tracked_customers_groups_name()}
@@ -45,3 +45,26 @@ LEFT JOIN (
 ) AS tcg ON tcg.user_crmid = twi.user_crmid
 WHERE tcg.user_crmid IS NULL
 )"""
+
+
+def get_creation_date_and_tickets_filters(kwargs):
+    """If customer is added to the target group(s) then we take tickets created only between
+    min creation_date among these groups (*) and max between range_start and (*)."""
+    return build_filter_string(
+        [
+            f"""creation_date BETWEEN ( SELECT MAX(start)
+                                        FROM (  {get_min_customers_groups_creation_date(kwargs)}
+                                                UNION ALL
+                                                SELECT '{kwargs['range_start']}'
+                                            )   ) AND '{kwargs['range_end']}'""",
+                get_tickets_filter(ignore_groups_filter=False, **kwargs)
+        ]
+    )
+
+def get_min_customers_groups_creation_date(kwargs):
+    return f"""SELECT MIN({CustomersGroupsMeta.creation_date}) AS start
+                FROM {CustomersActivityDBIndex.get_customers_groups_name()}
+                WHERE {CustomersSqlFilterClauseGenerator.generate_tracked_customer_groups_filter(
+                    params=kwargs['customers_groups'],
+                    col=CustomersGroupsMeta.id,
+                    filter_prefix='')}"""

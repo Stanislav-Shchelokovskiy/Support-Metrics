@@ -130,14 +130,13 @@ __create_table_statements = {
             ),
 
         CustomersActivityDBIndex.get_customers_groups_name():
-            _knot_table_def(
+            SqlQuery(
+                query_file_path=CustomersActivitySqlPathIndex.get_custs_groups_path(),
                 format_params={
-                    'id': CustomersGroupsMeta.id,
-                    'id_type': 'TEXT',
-                    'name': CustomersGroupsMeta.name,
-                    'table': CustomersActivityDBIndex.get_customers_groups_name(),
+                    **CustomersGroupsMeta.get_attrs(),
+                    'CustomersGroups': CustomersActivityDBIndex.get_customers_groups_name(),
                 }
-            ),
+            ).get_script(),
 
         CustomersActivityDBIndex.get_license_statuses_name():
             _knot_table_def(
