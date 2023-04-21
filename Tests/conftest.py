@@ -22,6 +22,8 @@ def build_test_db():
         customers_activity.load_license_statuses()
         customers_activity.load_conversion_statuses()
         customers_activity.load_tribes()
+        customers_activity.load_tents()
+        customers_activity.load_employees(start_date=start_date,)
         customers_activity.load_operating_systems()
         customers_activity.load_frameworks(),
         customers_activity.load_severity_values()
