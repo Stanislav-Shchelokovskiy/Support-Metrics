@@ -14,7 +14,7 @@ SELECT
 		ISNULL(deleted_ug.group_removal_date, @max_date)) AS {removal_date}
 FROM (	SELECT	Id AS id, Name AS name
 		FROM	CRM.dbo.UserGroups
-		WHERE	Name LIKE '% MAU %' AND Name NOT LIKE '% MAU | Candidate' ) AS g
+		WHERE	(Name LIKE '% MAU %' OR Name LIKE '%Ray') AND Name NOT LIKE '% MAU | Candidate' ) AS g
 	CROSS APPLY (	
 		SELECT	Customer_Id,
 				MAX(CONVERT(DATE, EntityModified)) AS group_assign_date
