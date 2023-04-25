@@ -17,6 +17,10 @@ class CustomersGroupsMeta(KnotMeta):
     creation_date = 'creation_date'
 
 
+class TrackedCustomersGroupsMeta(KnotMeta):
+    pass
+
+
 class TicketsTagsMeta(KnotMeta):
     pass
 
@@ -80,23 +84,43 @@ class TentMeta(MetaData):
     tent_name = 'tent_name'
 
 
+class CATComponentsMeta(MetaData):
+    component_id = 'component_id'
+    component_name = 'component_name'
+
+
+class CATFeaturesMeta(MetaData):
+    feature_id = 'feature_id'
+    feature_name = 'feature_name'
+
+
 class CATComponentsFeaturesMeta(MetaData):
     tent_id = TentMeta.tent_id
-    component_id = 'component_id'
-    feature_id = 'feature_id'
-    component_name = 'component_name'
-    feature_name = 'feature_name'
+    component_id = CATComponentsMeta.component_id
+    feature_id = CATFeaturesMeta.feature_id
+    component_name = CATComponentsMeta.component_name
+    feature_name = CATFeaturesMeta.feature_name
+
+
+class PlatformsMeta(MetaData):
+    platform_id = 'platform_id'
+    platform_name = 'platform_name'
+
+
+class ProductsMeta(MetaData):
+    product_id = 'product_id'
+    product_name = 'product_name'
 
 
 class PlatformsProductsMeta(MetaData):
     platform_tent_id = 'platform_tent_id'
-    platform_id = 'platform_id'
+    platform_id = PlatformsMeta.platform_id
     product_tent_id = 'product_tent_id'
-    product_id = 'product_id'
+    product_id = ProductsMeta.product_id
     platform_tent_name = 'platform_tent_name'
-    platform_name = 'platform_name'
+    platform_name = PlatformsMeta.platform_name
     product_tent_name = 'product_tent_name'
-    product_name = 'product_name'
+    product_name = ProductsMeta.product_name
 
 
 class TicketTribeMeta(MetaData):
@@ -159,13 +183,18 @@ class EmployeesIterationsMeta(MetaData):
     tent_name = TentMeta.tent_name
 
 
+class EmployeeMeta(MetaData):
+    scid = EmployeesIterationsMeta.scid
+    name = EmployeesIterationsMeta.name
+
+
 class EmployeesMeta(MetaData):
     tribe_id = EmployeesIterationsMeta.tribe_id
     tent_id = TentMeta.tent_id
     position_id = EmployeesIterationsMeta.position_id
     crmid = EmployeesIterationsMeta.crmid
-    scid = EmployeesIterationsMeta.scid
-    name = EmployeesIterationsMeta.name
+    scid = EmployeeMeta.scid
+    name = EmployeeMeta.name
     tribe_name = TribeMeta.tribe_name
     tent_name = TentMeta.tent_name
     position_name = 'position_name'
@@ -184,14 +213,21 @@ class TicketsWithIterationsMeta(TicketsWithPropertiesMeta):
     emp_tent_name = 'emp_tent_name'
 
 
-class TicketsWithIterationsAggregatesMeta(MetaData):
+class TicketsWithIterationsAggregatesOnlyMeta(MetaData):
     period = 'period'
-    user_id = TicketsWithIterationsMeta.user_id
     people = 'people'
-    ticket_scid = TicketsWithIterationsMeta.ticket_scid
     tickets = 'tickets'
-    emp_post_id = TicketsWithIterationsMeta.emp_post_id
     iterations = 'iterations'
+
+
+class TicketsWithIterationsAggregatesMeta(MetaData):
+    period = TicketsWithIterationsAggregatesOnlyMeta.period
+    user_id = TicketsWithIterationsMeta.user_id
+    people = TicketsWithIterationsAggregatesOnlyMeta.people
+    ticket_scid = TicketsWithIterationsMeta.ticket_scid
+    tickets = TicketsWithIterationsAggregatesOnlyMeta.tickets
+    emp_post_id = TicketsWithIterationsMeta.emp_post_id
+    iterations = TicketsWithIterationsAggregatesOnlyMeta.iterations
 
 
 class TicketsWithIterationsRawMeta(MetaData):
@@ -234,8 +270,8 @@ class TicketsWithIterationsRawMeta(MetaData):
 
 class BaselineAlignedCustomersGroupsMeta(MetaData):
     user_crmid = TicketsWithPropertiesMeta.user_crmid
-    id = 'id'
-    name = 'name'
+    id = TrackedCustomersGroupsMeta.id
+    name = TrackedCustomersGroupsMeta.name
     assignment_date = 'assignment_date'
     removal_date = 'removal_date'
 

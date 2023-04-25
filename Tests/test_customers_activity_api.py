@@ -10,7 +10,7 @@ from Tests.utils import (
 def test_get_tickets_with_iterations_period():
     assert network_get(
         url='get_tickets_with_iterations_period'
-    ) == '{"period_start":"2022-07-01","period_end":"2022-12-31"}'
+    ) == '[{"period_start":"2022-07-01","period_end":"2022-12-31"}]'
 
 
 @pytest.mark.e2e
@@ -22,6 +22,18 @@ def test_get_customers_activity_display_filter():
     assert response_is_valid(
         file='display_filter',
         check_file='display_filter',
+        response=response,
+    )
+
+@pytest.mark.e2e
+def test_get_customers_activity_validate_customers():
+    response = network_post(
+        url='validate_customers',
+        body='validate_customers',
+    )
+    assert response_is_valid(
+        file='validate_customers',
+        check_file='validate_customers',
         response=response,
     )
 

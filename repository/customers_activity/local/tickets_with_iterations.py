@@ -1,10 +1,13 @@
-from typing import Iterable
-from toolbox.sql.repository_queries import RepositoryQueries
+from collections.abc import Mapping, Iterable
+from itertools import chain
+from toolbox.sql_async import AsyncQueryDescriptor
+from toolbox.sql import MetaData
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
     CustomersActivityDBIndex,
 )
 from sql_queries.customers_activity.meta import (
+    TicketsWithIterationsAggregatesOnlyMeta,
     TicketsWithIterationsAggregatesMeta,
     TicketsWithIterationsRawMeta,
     TicketsWithIterationsMeta,
@@ -18,29 +21,31 @@ import repository.customers_activity.local.generators.periods as PeriodsGenerato
 
 
 # yapf: disable
-class TicketsPeriod(RepositoryQueries):
+class TicketsPeriod(AsyncQueryDescriptor):
     """
     Query to a local table storing min and max boundarise
     for tickets and iterations.
     """
 
-    def get_main_query_path(self, **kwargs) -> str:
+    def get_path(self, kwargs: Mapping) -> str:
         return CustomersActivitySqlPathIndex.get_tickets_period_path()
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return TicketsWithIterationsPeriodMeta
+
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'table_name': CustomersActivityDBIndex.get_customers_tickets_name(),
-            **TicketsWithIterationsPeriodMeta.get_attrs(),
             'rank_period_offset': CustomersActivityConfig.get_rank_period_offset(),
         }
 
 
-class TicketsWithIterationsRaw(RepositoryQueries):
+class TicketsWithIterationsRaw(AsyncQueryDescriptor):
     """
     Query to a local table storing raw tickets with iterations data.
     """
 
-    def get_main_query_path(self, **kwargs) -> str:
+    def get_path(self, kwargs: Mapping) -> str:
         return CustomersActivitySqlPathIndex.get_tickets_with_iterations_raw_path()
 
     def get_general_format_params(self, **kwargs) -> dict[str, str]:
@@ -49,7 +54,7 @@ class TicketsWithIterationsRaw(RepositoryQueries):
             'tickets_filter': try_get_creation_date_and_tickets_filters(**kwargs),
         }
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'replies_types_table': CustomersActivityDBIndex.get_cat_replies_types_name(),
             'components_features_table': CustomersActivityDBIndex.get_cat_components_features_name(),
@@ -71,8 +76,14 @@ class TicketsWithIterationsRaw(RepositoryQueries):
             return f', t.{BaselineAlignedModeMeta.days_since_baseline}'
         return ''
 
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return TicketsWithIterationsRawMeta.get_values()
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return TicketsWithIterationsRawMeta
+
+    def get_fields(self, kwargs: Mapping) -> Iterable[str]:
+        res = self.get_fields_meta(kwargs).get_values()
+        if kwargs['use_baseline_aligned_mode']:
+            return chain(res, (BaselineAlignedModeMeta.days_since_baseline,))
+        return res
 
 
 class TicketsWithIterationsAggregates(TicketsWithIterationsRaw):
@@ -80,10 +91,16 @@ class TicketsWithIterationsAggregates(TicketsWithIterationsRaw):
     Query to a local table storing aggregated tickets with iterations data.
     """
 
-    def get_main_query_path(self, **kwargs) -> str:
+    def get_path(self, kwargs: Mapping) -> str:
         return CustomersActivitySqlPathIndex.get_tickets_with_iterations_aggregates_path()
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return TicketsWithIterationsAggregatesOnlyMeta
+
+    def get_fields(self, kwargs: Mapping) -> Iterable[str]:
+        return self.get_fields_meta(kwargs).get_values()
+
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         group_by_period = PeriodsGenerator.generate_group_by_period(
             format=kwargs['group_by_period'],
             field=BaselineAlignedModeMeta.days_since_baseline if kwargs['use_baseline_aligned_mode'] else TicketsWithIterationsMeta.creation_date,
@@ -94,10 +111,3 @@ class TicketsWithIterationsAggregates(TicketsWithIterationsRaw):
             'group_by_period': group_by_period,
             **TicketsWithIterationsRaw.get_general_format_params(self, **kwargs)
         }
-
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return (
-            TicketsWithIterationsAggregatesMeta.period,
-            TicketsWithIterationsAggregatesMeta.tickets,
-            TicketsWithIterationsAggregatesMeta.iterations,
-        )

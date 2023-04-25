@@ -1,5 +1,13 @@
-from toolbox.sql.repository import SqlServerRepository, SqliteRepository, Repository
+from toolbox.sql.repository import SqlServerRepository, Repository
 from toolbox.sql.repository_queries import RepositoryQueries
+
+from toolbox.sql_async import (
+    AsyncRepository,
+    AsyncSqlQuery,
+    AsyncSQLiteQueryExecutor,
+    AsyncRepositoryQueries,
+    QueryDescriptor,
+)
 
 import repository.customers_activity.remote.tickets_and_iterations as tickets_and_iterations
 import repository.customers_activity.remote.tickets as tickets
@@ -82,86 +90,89 @@ class SqlServerFactory:
 
 
 class SqliteFactory:
-    def _create_repository(self, queries: RepositoryQueries) -> Repository:
-        return SqliteRepository(queries=queries)
+    def _create_repository(self, query_descriptor: QueryDescriptor) -> AsyncRepository:
+        return AsyncRepository(
+            queries=AsyncRepositoryQueries[AsyncSqlQuery](main_query=query_descriptor),
+            query_executor=AsyncSQLiteQueryExecutor()
+        )
 
-    def create_tickets_with_iterations_period_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_tickets_with_iterations.TicketsPeriod())
+    def create_tickets_with_iterations_period_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_tickets_with_iterations.TicketsPeriod())
 
-    def create_customers_groups_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_customers.CustomersGroups())
+    def create_customers_groups_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_customers.CustomersGroups())
 
-    def create_tracked_customers_groups_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_customers.TrackedCustomersGroups())
+    def create_tracked_customers_groups_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_customers.TrackedCustomersGroups())
 
-    def create_tickets_types_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_tickets.TicketsTypes())
+    def create_tickets_types_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_tickets.TicketsTypes())
 
-    def create_tickets_tags_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_tickets.TicketsTags())
+    def create_tickets_tags_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_tickets.TicketsTags())
 
-    def create_reply_types_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_cat.CATRepliesTypes())
+    def create_reply_types_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_cat.CATRepliesTypes())
 
-    def create_frameworks_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_tickets.Frameworks())
+    def create_frameworks_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_tickets.Frameworks())
 
-    def create_operating_systems_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_tickets.OperatingSystems())
+    def create_operating_systems_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_tickets.OperatingSystems())
 
-    def create_builds_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_tickets.BuildsRepositoryQueries())
+    def create_builds_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_tickets.Builds())
 
-    def create_severity_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_tickets.Severity())
+    def create_severity_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_tickets.Severity())
 
-    def create_ticket_statuses_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_tickets.TicketStatuses())
+    def create_ticket_statuses_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_tickets.TicketStatuses())
 
-    def create_ides_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_tickets.IDEs())
+    def create_ides_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_tickets.IDEs())
 
-    def create_license_statuses_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_licenses_conversion.LicenseStatuses())
+    def create_license_statuses_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_licenses_conversion.LicenseStatuses())
 
-    def create_conversion_statuses_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_licenses_conversion.ConversionStatuses())
+    def create_conversion_statuses_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_licenses_conversion.ConversionStatuses())
 
-    def create_platforms_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_platforms_products.Platforms())
+    def create_platforms_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_platforms_products.Platforms())
 
-    def create_products_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_platforms_products.Products())
+    def create_products_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_platforms_products.Products())
 
-    def create_components_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_cat.CATComponents())
+    def create_components_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_cat.CATComponents())
 
-    def create_features_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_cat.CATFeatures())
+    def create_features_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_cat.CATFeatures())
 
-    def create_tickets_with_iterations_raw_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_tickets_with_iterations.TicketsWithIterationsRaw())
+    def create_tickets_with_iterations_raw_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_tickets_with_iterations.TicketsWithIterationsRaw())
 
-    def create_tickets_with_iterations_aggregates_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_tickets_with_iterations.TicketsWithIterationsAggregates())
+    def create_tickets_with_iterations_aggregates_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_tickets_with_iterations.TicketsWithIterationsAggregates())
 
-    def create_emp_positions_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_employees.EmpPositions())
+    def create_emp_positions_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_employees.EmpPositions())
 
-    def create_emp_tribes_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_employees.EmpTribes())
+    def create_emp_tribes_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_employees.EmpTribes())
 
-    def create_emp_tents_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_employees.EmpTents())
+    def create_emp_tents_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_employees.EmpTents())
 
-    def create_employees_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_employees.Employees())
+    def create_employees_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_employees.Employees())
 
-    def create_customers_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_customers.Customers())
+    def create_customers_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_customers.Customers())
 
-    def create_customers_validation_repository(self) -> Repository:
-        return self._create_repository(queries=sqlite_customers.CustomersValidation())
+    def create_customers_validation_repository(self) -> AsyncRepository:
+        return self._create_repository(query_descriptor=sqlite_customers.CustomersValidation())
 
     def create_display_filter_generator(self) -> DisplayFilterGenerator:
         return DisplayFilterGenerator

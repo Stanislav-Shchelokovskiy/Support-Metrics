@@ -1,82 +1,72 @@
-from typing import Iterable
-from toolbox.sql.repository_queries import RepositoryQueries
+from collections.abc import Mapping
+from toolbox.sql_async import AsyncQueryDescriptor
+from toolbox.sql import MetaData
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
     CustomersActivityDBIndex,
 )
 from sql_queries.customers_activity.meta import (
     CATRepliesTypesMeta,
-    CATComponentsFeaturesMeta,
+    CATComponentsMeta,
+    CATFeaturesMeta,
 )
 import repository.customers_activity.local.generators.filters_generators.cat as CATSqlFilterClauseGenerator
 
 
-# yapf: disable
-class CATRepliesTypes(RepositoryQueries):
-    """
-    Query to a local table storing CAT reply types.
-    """
-
-    def get_main_query_path(self, **kwargs) -> str:
+class CATRepliesTypes(AsyncQueryDescriptor):
+    def get_path(self, kwargs: Mapping) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return CATRepliesTypesMeta
+
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'columns': ', '.join(self.get_must_have_columns(**kwargs)),
-            'table_name': CustomersActivityDBIndex.get_cat_replies_types_name(),
-            'filter_group_limit_clause': f'ORDER BY {CATRepliesTypesMeta.name}',
-        }
-
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return CATRepliesTypesMeta.get_values()
+        'columns': ', '.join(self.get_fields(kwargs)),
+        'table_name': CustomersActivityDBIndex.get_cat_replies_types_name(),
+        'filter_group_limit_clause': f'ORDER BY {CATRepliesTypesMeta.name}',
+    }
 
 
-class CATComponents(RepositoryQueries):
+class CATComponents(AsyncQueryDescriptor):
     """
     Query to a local table storing CAT components.
     """
-
-    def get_main_query_path(self, **kwargs) -> str:
+    def get_path(self, kwargs: Mapping) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return CATComponentsMeta
+
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         filter = CATSqlFilterClauseGenerator.generate_components_filter(tent_ids=kwargs['tent_ids'])
-        cols = ', '.join(self.get_must_have_columns(**kwargs))
+        cols = ', '.join(self.get_fields(kwargs))
         return {
             'columns': cols,
             'table_name': CustomersActivityDBIndex.get_cat_components_features_name(),
-            'filter_group_limit_clause': f'{filter}\nGROUP BY {cols}\nORDER BY {CATComponentsFeaturesMeta.component_name}',
+            'filter_group_limit_clause': f'{filter}\nGROUP BY {cols}\nORDER BY {CATComponentsMeta.component_name}',
         }
 
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return (
-            CATComponentsFeaturesMeta.component_id,
-            CATComponentsFeaturesMeta.component_name,
-        )
 
-
-class CATFeatures(RepositoryQueries):
+class CATFeatures(AsyncQueryDescriptor):
     """
     Query to a local table storing CAT features
     available for the specified components.
     """
 
-    def get_main_query_path(self, **kwargs) -> str:
+    def get_path(self,kwargs) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return CATFeaturesMeta
+
+    def get_format_params(self, kwargs) -> Mapping[str, str]:
         filter = CATSqlFilterClauseGenerator.generate_features_filter(
                     tent_ids=kwargs['tent_ids'],
                     component_ids=kwargs['component_ids'],
                 )
         return {
-            'columns': ', '.join(self.get_must_have_columns(**kwargs)),
+            'columns': ', '.join(self.get_fields(kwargs)),
             'table_name': CustomersActivityDBIndex.get_cat_components_features_name(),
-            'filter_group_limit_clause': f'{filter}\nORDER BY {CATComponentsFeaturesMeta.feature_name}',
+            'filter_group_limit_clause': f'{filter}\nORDER BY {CATFeaturesMeta.feature_name}',
         }
-
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return (
-            CATComponentsFeaturesMeta.feature_id,
-            CATComponentsFeaturesMeta.feature_name,
-        )

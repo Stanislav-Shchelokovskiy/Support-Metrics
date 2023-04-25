@@ -1,5 +1,6 @@
-from typing import Iterable
-from toolbox.sql.repository_queries import RepositoryQueries
+from collections.abc import Mapping
+from toolbox.sql_async import AsyncQueryDescriptor
+from toolbox.sql import MetaData
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
     CustomersActivityDBIndex,
@@ -12,41 +13,43 @@ import repository.customers_activity.local.generators.filters_generators.convers
 
 
 # yapf: disable
-class LicenseStatuses(RepositoryQueries):
+class LicenseStatuses(AsyncQueryDescriptor):
     """
     Query to a local table storing license statuses.
     """
 
-    def get_main_query_path(self, **kwargs) -> str:
+    def get_path(self, kwargs: Mapping) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return LicenseStatusesMeta
+
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'columns': ', '.join(self.get_must_have_columns(**kwargs)),
+            'columns': ', '.join(self.get_fields(kwargs)),
             'table_name': CustomersActivityDBIndex.get_license_statuses_name(),
             'filter_group_limit_clause': '',
         }
 
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return LicenseStatusesMeta.get_values()
 
 
-class ConversionStatuses(RepositoryQueries):
+
+class ConversionStatuses(AsyncQueryDescriptor):
     """
     Query to a local table storing conversion statuses.
     """
 
-    def get_main_query_path(self, **kwargs) -> str:
+    def get_path(self, kwargs: Mapping) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return ConversionStatusesMeta
+
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'columns': ', '.join(self.get_must_have_columns(**kwargs)),
+            'columns': ', '.join(self.get_fields(kwargs)),
             'table_name': CustomersActivityDBIndex.get_conversion_statuses_name(),
             'filter_group_limit_clause': ConversionStatusesSqlFilterClauseGenerator.generate_conversion_filter(
                     license_status_ids=kwargs['license_status_ids']
                 ),
         }
-
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return ConversionStatusesMeta.get_values()

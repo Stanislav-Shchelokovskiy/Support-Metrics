@@ -199,6 +199,6 @@ def test_generate_conversion_filter(
 ):
     with pytest.MonkeyPatch.context() as monkeypatch:
         monkeypatch.setattr(DisplayFilterGenerator, '__repository_type', MockSqliteRepository)
-        assert DisplayFilterGenerator.generate_display_filter(
+        assert DisplayFilterGenerator.__generate_display_filter(
             node=node,
         ) == output

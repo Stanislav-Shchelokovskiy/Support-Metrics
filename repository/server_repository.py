@@ -1,151 +1,148 @@
 from repository.factory import RepositoryFactory
-from toolbox.utils.converters import DF_to_JSON
-from toolbox.utils.converters import Object_to_JSON
 
 
 # yapf: disable
-def customers_activity_get_group_by_periods() -> str:
+async def customers_activity_get_group_by_periods() -> str:
     generator = RepositoryFactory.customers_activity.local.create_periods_generator()
-    return generator.get_group_by_periods_json()
+    return await generator.get_group_by_periods_json()
 
 
-def customers_activity_get_tickets_with_iterations_period() -> str:
+async def customers_activity_get_tickets_with_iterations_period() -> str:
     repository = RepositoryFactory.customers_activity.local.create_tickets_with_iterations_period_repository()
-    df = repository.get_data()
-    return DF_to_JSON.convert(df.iloc[0], orient='index')
+    return await repository.get_data()
 
 
-def customers_activity_get_customers_groups() -> str:
+async def customers_activity_get_customers_groups() -> str:
     repository = RepositoryFactory.customers_activity.local.create_customers_groups_repository()
-    return repository.get_data_json()
+    return await repository.get_data()
 
 
-def customers_activity_get_tracked_customers_groups() -> str:
+async def customers_activity_get_tracked_customers_groups() -> str:
     repository = RepositoryFactory.customers_activity.local.create_tracked_customers_groups_repository()
-    return repository.get_data_json()
+    return await repository.get_data()
 
 
-def customers_activity_get_tickets_types() -> str:
+async def customers_activity_get_tickets_types() -> str:
     repository = RepositoryFactory.customers_activity.local.create_tickets_types_repository()
-    return repository.get_data_json()
+    return await repository.get_data()
 
 
-def customers_activity_get_tickets_tags() -> str:
+async def customers_activity_get_tickets_tags() -> str:
     repository = RepositoryFactory.customers_activity.local.create_tickets_tags_repository()
-    return repository.get_data_json()
+    return await repository.get_data()
 
 
-def customers_activity_get_replies_types() -> str:
+async def customers_activity_get_replies_types() -> str:
     repository = RepositoryFactory.customers_activity.local.create_reply_types_repository()
-    return repository.get_data_json()
+    return await repository.get_data()
 
 
-def customers_activity_get_frameworks() -> str:
+async def customers_activity_get_frameworks() -> str:
     repository = RepositoryFactory.customers_activity.local.create_frameworks_repository()
-    return repository.get_data_json()
+    return await repository.get_data()
 
 
-def customers_activity_get_operating_systems() -> str:
+async def customers_activity_get_operating_systems() -> str:
     repository = RepositoryFactory.customers_activity.local.create_operating_systems_repository()
-    return repository.get_data_json()
+    return await repository.get_data()
 
 
-def customers_activity_get_builds() -> str:
+async def customers_activity_get_builds() -> str:
     repository = RepositoryFactory.customers_activity.local.create_builds_repository()
-    return repository.get_data_json()
+    return await repository.get_data()
 
 
-def customers_activity_get_severity_values() -> str:
+async def customers_activity_get_severity_values() -> str:
     repository = RepositoryFactory.customers_activity.local.create_severity_repository()
-    return repository.get_data_json()
+    return await repository.get_data()
 
 
-def customers_activity_get_ticket_statuses() -> str:
+async def customers_activity_get_ticket_statuses() -> str:
     repository = RepositoryFactory.customers_activity.local.create_ticket_statuses_repository()
-    return repository.get_data_json()
+    return await repository.get_data()
 
 
-def customers_activity_get_ides() -> str:
+async def customers_activity_get_ides() -> str:
     repository = RepositoryFactory.customers_activity.local.create_ides_repository()
-    return repository.get_data_json()
+    return await repository.get_data()
 
 
-def customers_activity_get_license_statuses() -> str:
+async def customers_activity_get_license_statuses() -> str:
     repository = RepositoryFactory.customers_activity.local.create_license_statuses_repository()
-    return repository.get_data_json()
+    return await repository.get_data()
 
 
-def customers_activity_get_conversion_statuses(**kwargs) -> str:
+async def customers_activity_get_conversion_statuses(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_conversion_statuses_repository()
-    return repository.get_data_json(**kwargs)
+    return await repository.get_data(**kwargs)
 
 
-def customers_activity_get_platforms(**kwargs) -> str:
+async def customers_activity_get_platforms(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_platforms_repository()
-    return repository.get_data_json(**kwargs)
+    return await repository.get_data(**kwargs)
 
 
-def customers_activity_get_products(**kwargs) -> str:
+async def customers_activity_get_products(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_products_repository()
-    return repository.get_data_json(**kwargs)
+    return await repository.get_data(**kwargs)
 
 
-def customers_activity_get_components(**kwargs) -> str:
+async def customers_activity_get_components(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_components_repository()
-    return repository.get_data_json(**kwargs)
+    return await repository.get_data(**kwargs)
 
 
-def customers_activity_get_features(**kwargs) -> str:
+async def customers_activity_get_features(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_features_repository()
-    return repository.get_data_json(**kwargs)
+    return await repository.get_data(**kwargs)
 
 
-def customers_activity_get_emp_positions() -> str:
+async def customers_activity_get_emp_positions() -> str:
     repository = RepositoryFactory.customers_activity.local.create_emp_positions_repository()
-    return repository.get_data_json()
+    return await repository.get_data()
 
 
-def customers_activity_get_emp_tribes() -> str:
+async def customers_activity_get_emp_tribes() -> str:
     repository = RepositoryFactory.customers_activity.local.create_emp_tribes_repository()
-    return repository.get_data_json()
+    return await repository.get_data()
 
 
-def customers_activity_get_emp_tents() -> str:
+async def customers_activity_get_emp_tents() -> str:
     repository = RepositoryFactory.customers_activity.local.create_emp_tents_repository()
-    return repository.get_data_json()
+    return await repository.get_data()
 
 
-def customers_activity_get_employees(**kwargs) -> str:
+async def customers_activity_get_employees(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_employees_repository()
-    return repository.get_data_json(**kwargs)
+    return await repository.get_data(**kwargs)
 
 
-def customers_activity_get_customers(**kwargs) -> str:
+async def customers_activity_get_customers(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_customers_repository()
-    return repository.get_data_json(**kwargs)
+    return await repository.get_data(**kwargs)
 
 
-def customers_activity_validate_customers(**kwargs) -> str:
+async def customers_activity_validate_customers(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_customers_validation_repository()
-    return repository.get_data_json(**kwargs)
+    return await repository.get_data(**kwargs)
 
 
-def customers_activity_get_tickets_with_iterations_aggregates(**kwargs) -> str:
+async def customers_activity_get_tickets_with_iterations_aggregates(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_tickets_with_iterations_aggregates_repository()
-    return repository.get_data_json(**kwargs)
+    return await repository.get_data(**kwargs)
 
 
-def customers_activity_get_tickets_with_iterations_raw(**kwargs) -> str:
+async def customers_activity_get_tickets_with_iterations_raw(**kwargs) -> str:
     repository = RepositoryFactory.customers_activity.local.create_tickets_with_iterations_raw_repository()
-    return repository.get_data_json(**kwargs)
+    return await repository.get_data(**kwargs)
 
 
-def customers_activity_get_display_filter(*args) -> str:
+async def customers_activity_get_display_filter(*args) -> str:
     generator = RepositoryFactory.customers_activity.local.create_display_filter_generator()
-    return Object_to_JSON.convert(generator.generate_display_filter(*args))
+    return await generator.generate_display_filter(*args)
 
 
-def customers_activity_get_periods_array(**kwargs) -> str:
+async def customers_activity_get_periods_array(**kwargs) -> str:
     generator = RepositoryFactory.customers_activity.local.create_periods_generator()
-    return generator.generate_periods(**kwargs)
+    return await generator.generate_periods(**kwargs)
 # yapf: enable

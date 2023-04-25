@@ -1,12 +1,13 @@
-from typing import Iterable
-from toolbox.sql.repository_queries import RepositoryQueries
+from collections.abc import Mapping
+from toolbox.sql_async import AsyncQueryDescriptor
+from toolbox.sql import MetaData
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
     CustomersActivityDBIndex,
 )
 from sql_queries.customers_activity.meta import (
     CustomersGroupsMeta,
-    BaselineAlignedCustomersGroupsMeta,
+    TrackedCustomersGroupsMeta,
     CustomersMeta,
 )
 
@@ -14,30 +15,30 @@ from repository.customers_activity.local.validation_repository import Validation
 
 
 # yapf: disable
-class Customers(RepositoryQueries):
+class Customers(AsyncQueryDescriptor):
     """
     Query to a local table storing available customers.
     """
 
-    def get_main_query_path(self, **kwargs) -> str:
+    def get_path(self, kwargs: Mapping) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return CustomersMeta
+
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         search_param = kwargs['search']
         filter_values = kwargs['filter_values']
         ids_filter = '\nOR '.join([f"{CustomersMeta.id} = '{value}'" for value in filter_values])
         return {
-            'columns': ', '.join(self.get_must_have_columns(**kwargs)),
+            'columns': ', '.join(self.get_fields(kwargs)),
             'table_name': CustomersActivityDBIndex.get_customers_name(),
             'filter_group_limit_clause': f'WHERE\n{ids_filter}' if ids_filter else f"WHERE {CustomersMeta.name} LIKE '{search_param}%'\nLIMIT {kwargs['take']} OFFSET {kwargs['skip']}",
         }
 
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return (CustomersMeta.id, CustomersMeta.name,)
-
 
 class CustomersValidation(ValidationRepositoryQueries):
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'values': ',\n'.join([f"('{value}')" for value in kwargs['values']]),
             'field': CustomersMeta.id,
@@ -45,43 +46,40 @@ class CustomersValidation(ValidationRepositoryQueries):
         }
 
 
-class CustomersGroups(RepositoryQueries):
+class CustomersGroups(AsyncQueryDescriptor):
     """
     Query to a local table storing customers groups.
     """
 
-    def get_main_query_path(self, **kwargs) -> str:
+    def get_path(self, kwargs: Mapping) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'columns': ', '.join(self.get_must_have_columns(**kwargs)),
+            'columns': ', '.join(self.get_fields(kwargs)),
             'table_name': CustomersActivityDBIndex.get_customers_groups_name(),
             'filter_group_limit_clause': f'ORDER BY {CustomersGroupsMeta.name}',
         }
 
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return CustomersGroupsMeta.get_values()
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return CustomersGroupsMeta
 
 
-class TrackedCustomersGroups(RepositoryQueries):
+class TrackedCustomersGroups(AsyncQueryDescriptor):
     """
     Query to a local table storing customers groups we track and work with.
     """
 
-    def get_main_query_path(self, **kwargs) -> str:
+    def get_path(self, kwargs: Mapping) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
-        cols = ', '.join(self.get_must_have_columns(**kwargs))
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
+        cols = ', '.join(self.get_fields(kwargs))
         return {
             'columns': cols,
             'table_name': CustomersActivityDBIndex.get_tracked_customers_groups_name(),
-            'filter_group_limit_clause': f'GROUP BY {cols}\nORDER BY {BaselineAlignedCustomersGroupsMeta.name}',
+            'filter_group_limit_clause': f'GROUP BY {cols}\nORDER BY {TrackedCustomersGroupsMeta.name}',
         }
 
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return (
-            BaselineAlignedCustomersGroupsMeta.id,
-            BaselineAlignedCustomersGroupsMeta.name,
-        )
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return TrackedCustomersGroupsMeta

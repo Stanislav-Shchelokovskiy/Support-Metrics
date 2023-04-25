@@ -1,5 +1,6 @@
-from typing import Iterable
-from toolbox.sql.repository_queries import RepositoryQueries
+from collections.abc import Mapping
+from toolbox.sql_async import AsyncQueryDescriptor
+from toolbox.sql import MetaData
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
     CustomersActivityDBIndex,
@@ -17,128 +18,129 @@ from sql_queries.customers_activity.meta import (
 
 
 # yapf: disable
-class TicketsTypes(RepositoryQueries):
+class TicketsTypes(AsyncQueryDescriptor):
 
-    def get_main_query_path(self, **kwargs) -> str:
+    def get_path(self, kwargs: Mapping) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return TicketsTypesMeta
+
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'columns': ', '.join(self.get_must_have_columns(**kwargs)),
+            'columns': ', '.join(self.get_fields(kwargs)),
             'table_name': CustomersActivityDBIndex.get_tickets_types_name(),
             'filter_group_limit_clause': '',
         }
 
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return TicketsTypesMeta.get_values()
 
+class TicketsTags(AsyncQueryDescriptor):
 
-class TicketsTags(RepositoryQueries):
-
-    def get_main_query_path(self, **kwargs) -> str:
+    def get_path(self, kwargs: Mapping) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return TicketsTagsMeta
+
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'columns': ', '.join(self.get_must_have_columns(**kwargs)),
+            'columns': ', '.join(self.get_fields(kwargs)),
             'table_name': CustomersActivityDBIndex.get_tickets_tags_name(),
             'filter_group_limit_clause': f'ORDER BY {TicketsTagsMeta.name}',
         }
 
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return TicketsTagsMeta.get_values()
 
+class Frameworks(AsyncQueryDescriptor):
 
-class Frameworks(RepositoryQueries):
-
-    def get_main_query_path(self, **kwargs) -> str:
+    def get_path(self, kwargs: Mapping) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return FrameworksMeta
+
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'columns': ', '.join(self.get_must_have_columns(**kwargs)),
+            'columns': ', '.join(self.get_fields(kwargs)),
             'table_name': CustomersActivityDBIndex.get_frameworks_name(),
             'filter_group_limit_clause': f'ORDER BY {FrameworksMeta.name}',
         }
 
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return FrameworksMeta.get_values()
 
+class OperatingSystems(AsyncQueryDescriptor):
 
-class OperatingSystems(RepositoryQueries):
-
-    def get_main_query_path(self, **kwargs) -> str:
+    def get_path(self, kwargs: Mapping) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return OperatingSystemsMeta
+
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'columns': ', '.join(self.get_must_have_columns(**kwargs)),
+            'columns': ', '.join(self.get_fields(kwargs)),
             'table_name': CustomersActivityDBIndex.get_operating_systems_name(),
             'filter_group_limit_clause': f'ORDER BY {OperatingSystemsMeta.name}',
         }
 
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return OperatingSystemsMeta.get_values()
 
+class Builds(AsyncQueryDescriptor):
 
-class BuildsRepositoryQueries(RepositoryQueries):
-
-    def get_main_query_path(self, **kwargs) -> str:
+    def get_path(self, kwargs: Mapping) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return BuildsMeta
+
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'columns': ', '.join(self.get_must_have_columns(**kwargs)),
+            'columns': ', '.join(self.get_fields(kwargs)),
             'table_name': CustomersActivityDBIndex.get_builds_name(),
             'filter_group_limit_clause': f'ORDER BY {BuildsMeta.name} DESC',
         }
 
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return BuildsMeta.get_values()
 
-class Severity(RepositoryQueries):
+class Severity(AsyncQueryDescriptor):
 
-    def get_main_query_path(self, **kwargs) -> str:
+    def get_path(self, kwargs: Mapping) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return SeverityMeta
+
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'columns': ', '.join(self.get_must_have_columns(**kwargs)),
+            'columns': ', '.join(self.get_fields(kwargs)),
             'table_name': CustomersActivityDBIndex.get_severity_name(),
             'filter_group_limit_clause': '',
         }
 
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return SeverityMeta.get_values()
 
+class TicketStatuses(AsyncQueryDescriptor):
 
-class TicketStatuses(RepositoryQueries):
-
-    def get_main_query_path(self, **kwargs) -> str:
+    def get_path(self, kwargs: Mapping) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return TicketStatusesMeta
+
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'columns': ', '.join(self.get_must_have_columns(**kwargs)),
+            'columns': ', '.join(self.get_fields(kwargs)),
             'table_name': CustomersActivityDBIndex.get_ticket_statuses_name(),
             'filter_group_limit_clause': '',
         }
 
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return TicketStatusesMeta.get_values()
 
+class IDEs(AsyncQueryDescriptor):
 
-class IDEs(RepositoryQueries):
-
-    def get_main_query_path(self, **kwargs) -> str:
+    def get_path(self, kwargs: Mapping) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return IDEsMeta
+
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'columns': ', '.join(self.get_must_have_columns(**kwargs)),
+            'columns': ', '.join(self.get_fields(kwargs)),
             'table_name': CustomersActivityDBIndex.get_ides_name(),
             'filter_group_limit_clause': f'ORDER BY {IDEsMeta.name}',
         }
-
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return IDEsMeta.get_values()

@@ -1,4 +1,6 @@
+import asyncio
 from typing import Any
+from toolbox.utils.converters import Object_to_JSON
 from toolbox.sql.repository import SqliteRepository
 from toolbox.sql.repository_queries import RepositoryQueries
 from toolbox.sql.generators import NULL_FILTER_VALUE
@@ -192,8 +194,16 @@ __query_params_store = {
 }
 
 
+async def generate_display_filter(node: BaseNode) -> str:
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(None, __generate_display_filter_json, node)
+
+def __generate_display_filter_json(node: BaseNode):
+    filter = __generate_display_filter(node)
+    return Object_to_JSON.convert(filter)
+
 # yapf: disable
-def generate_display_filter(node: BaseNode) -> list[list]:
+def __generate_display_filter(node: BaseNode) -> list[list]:
     filters = []
     filter_node: BaseNode | FilterParametersNode | FilterParameterNode | Percentile
     for field_name, filter_node in node.get_field_values().items():
@@ -225,7 +235,7 @@ def generate_display_filter(node: BaseNode) -> list[list]:
                 )
                 filter = [int(clause) if clause.isdigit() else clause for clause in percentile_filter.split(' ')]
             case _:
-                filter = generate_display_filter(node=filter_node)
+                filter = __generate_display_filter(node=filter_node)
         __append_filter(filters, filter, node)
 
     if len(filters) == 1:
