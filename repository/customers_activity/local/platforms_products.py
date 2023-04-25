@@ -1,25 +1,32 @@
-from typing import Iterable
-from toolbox.sql.repository_queries import RepositoryQueries
+from collections.abc import Mapping
+from toolbox.sql_async import AsyncQueryDescriptor
+from toolbox.sql import MetaData
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
     CustomersActivityDBIndex,
 )
-from sql_queries.customers_activity.meta import PlatformsProductsMeta
+from sql_queries.customers_activity.meta import (
+    PlatformsMeta,
+    ProductsMeta,
+)
 from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import FilterParametersNode
 import repository.customers_activity.local.generators.filters_generators.platforms_products as PlatformsProductsSqlFilterClauseGenerator
 
 
 # yapf: disable
-class Platforms(RepositoryQueries):
+class Platforms(AsyncQueryDescriptor):
     """
     Query to a local table storing available platforms.
     """
 
-    def get_main_query_path(self, **kwargs) -> str:
+    def get_path(self, kwargs: Mapping) -> str:
         return CustomersActivitySqlPathIndex.get_general_select_path()
 
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
-        cols = ', '.join(self.get_must_have_columns(**kwargs))
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return PlatformsMeta
+
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
+        cols = ', '.join(self.get_fields(kwargs))
         filter = self.get_filter(tent_ids=kwargs['tent_ids'])
         return {
             'columns': cols,
@@ -30,14 +37,8 @@ class Platforms(RepositoryQueries):
     def get_filter(self, tent_ids: FilterParametersNode) -> str:
         return PlatformsProductsSqlFilterClauseGenerator.generate_platforms_filter(tent_ids=tent_ids)
 
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return (
-            PlatformsProductsMeta.platform_id,
-            PlatformsProductsMeta.platform_name,
-        )
-
     def get_order_by_column(self) -> str:
-        return PlatformsProductsMeta.platform_name
+        return PlatformsMeta.platform_name
 
 
 class Products(Platforms):
@@ -48,11 +49,8 @@ class Products(Platforms):
     def get_filter(self, tent_ids: FilterParametersNode) -> str:
         return PlatformsProductsSqlFilterClauseGenerator.generate_products_filter(tent_ids=tent_ids)
 
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return (
-            PlatformsProductsMeta.product_id,
-            PlatformsProductsMeta.product_name,
-        )
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return ProductsMeta
 
     def get_order_by_column(self) -> str:
-        return PlatformsProductsMeta.product_name
+        return ProductsMeta.product_name
