@@ -24,6 +24,7 @@ SELECT
 	t.{ticket_status},
 	t.{closed_by},
 	t.{closed_on},
+    t.{converted_to_bug_on},
 	t.{severity},
 	CAST(t.{duplicated_to_ticket_type} AS INT) AS {duplicated_to_ticket_type},
 	t.{duplicated_to_ticket_scid},
