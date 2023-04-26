@@ -57,6 +57,7 @@ SELECT
       FROM   {severity_table}
       WHERE  id = t.severity
       LIMIT 1 )  AS {severity},
+    t.{converted_to_bug_on},
     ( SELECT name 
       FROM   {tickets_types_table}
       WHERE  id = t.duplicated_to_ticket_type

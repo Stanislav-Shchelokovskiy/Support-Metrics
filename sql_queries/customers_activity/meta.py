@@ -154,6 +154,7 @@ class TicketsWithPropertiesMeta(MetaData):
     closed_by = 'closed_by'
     closed_on = 'closed_on'
     severity = 'severity'
+    converted_to_bug_on = 'converted_to_bug_on'
     duplicated_to_ticket_type = 'duplicated_to_ticket_type'
     duplicated_to_ticket_scid = 'duplicated_to_ticket_scid'
     assigned_to = 'assigned_to'
@@ -256,6 +257,7 @@ class TicketsWithIterationsRawMeta(MetaData):
     closed_by = TicketsWithIterationsMeta.closed_by
     closed_on = TicketsWithIterationsMeta.closed_on
     severity = TicketsWithIterationsMeta.severity
+    converted_to_bug_on = TicketsWithIterationsMeta.converted_to_bug_on
     duplicated_to_ticket_type = TicketsWithIterationsMeta.duplicated_to_ticket_type
     duplicated_to_ticket_scid = TicketsWithIterationsMeta.duplicated_to_ticket_scid
     assigned_to = TicketsWithIterationsMeta.assigned_to

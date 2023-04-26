@@ -228,7 +228,7 @@ SELECT
 		END									AS license_status
 INTO #TicketsWithLicenses
 FROM (	SELECT	Id, FriendlyId, EntityType, CAST(Created AS DATE) AS creation_date, Owner, IsPrivate
-		FROM   SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].Tickets
+		FROM   	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].Tickets
 		WHERE 	Created BETWEEN @start_date AND @end_date ) AS tickets
 		OUTER APPLY (
 			SELECT 	

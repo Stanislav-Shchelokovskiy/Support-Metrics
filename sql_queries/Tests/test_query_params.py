@@ -1,11 +1,9 @@
 import pytest
-import toolbox.sql.index as RootPath
-from typing import Callable
 from os import getcwd
-from sql_queries.index import (
-    CustomersActivitySqlPathIndex,
-)
-from toolbox.sql.sql_query import SqlQuery
+from typing import Callable
+from pathlib import Path
+import toolbox.sql.index as RootPath
+from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.customers_activity.meta import (
     TicketsWithPropertiesMeta,
     CustomersGroupsMeta,
@@ -75,8 +73,7 @@ tickets_with_iterations_common_params = {
             },
         ),
         (
-            CustomersActivitySqlPathIndex.
-            get_tickets_with_iterations_aggregates_path,
+            CustomersActivitySqlPathIndex.get_tickets_with_iterations_aggregates_path,
             {
                 **TicketsWithIterationsAggregatesMeta.get_attrs(),
                 **tickets_with_iterations_common_params,
@@ -223,10 +220,10 @@ def test_query_params(
 ):
     with pytest.MonkeyPatch.context() as monkeypatch:
         prepare_env(monkeypatch)
-        SqlQuery(
-            query_file_path=get_query_file_path(),
-            format_params=format_params,
-        ).get_script()
+        query = Path(get_query_file_path()).read_text(encoding='utf-8')
+        for key in format_params:
+            assert f'{{{key}}}' in query
+
 
 
 def prepare_env(monkeypatch: pytest.MonkeyPatch):

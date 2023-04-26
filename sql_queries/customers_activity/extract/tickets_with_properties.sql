@@ -7,6 +7,8 @@ DECLARE @trial			TINYINT = 11
 DECLARE @converted_paid	TINYINT = 0
 DECLARE @converted_free	TINYINT = 1
 
+DECLARE @bug			TINYINT = 2
+
 SELECT
 	ti.user_crmid						AS {user_crmid},
 	ti.user_id							AS {user_id},
@@ -32,6 +34,7 @@ SELECT
 	closed_status_info.closed_by		AS {closed_by},
 	closed_status_info.closed_on		AS {closed_on},
 	single_selectors.Severity			AS {severity},
+	conversion_to_bug.happened_on		AS {converted_to_bug_on},
 	dups.ticket_type					AS {duplicated_to_ticket_type},
 	dups.ticket_scid					AS {duplicated_to_ticket_scid},
 	CAST(single_selectors.Assignee		  AS UNIQUEIDENTIFIER) AS {assigned_to},
@@ -95,6 +98,13 @@ FROM #TicketsWithLicenses AS ti
 		WHERE	 Ticket_Id = ti.ticket_id AND Name = 'FixedInBuild'
 		ORDER BY EntityModified DESC
 	) AS fixed_info
+	OUTER APPLY (
+		SELECT TOP 1 CAST(Modified AS DATE) AS happened_on
+		FROM 	scpaid_audit.[c1f0951c-3885-44cf-accb-1a390f34c342].scworkflow_Tickets
+		WHERE 	ChangedProperties LIKE '%EntityType%'
+			AND EntityOid = ti.ticket_id
+			AND	EntityType = @bug
+	) AS conversion_to_bug
 	OUTER APPLY (
 		SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), tribes_inner.id) , @separator)   AS tribes_ids,
 				STRING_AGG(CONVERT(NVARCHAR(MAX), tribes_inner.name) , @separator) AS tribes_names	
