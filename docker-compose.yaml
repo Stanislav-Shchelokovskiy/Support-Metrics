@@ -56,7 +56,7 @@ services:
     container_name: support_analytics_server
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
-    command: uvicorn server:app --host 0.0.0.0 --port $SERVER_PORT --reload
+    command: uvicorn server:app --host 0.0.0.0 --port $SERVER_PORT --reload --log-level critical
     volumes:
       - support_analytics-volume:${DB_HOME}
 
