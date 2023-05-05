@@ -127,7 +127,7 @@ FROM #TicketsWithLicenses AS ti
 						      WHERE  Name = 'Duplicate' AND Ticket_Id = ti.ticket_id)
 	) AS dups
 	OUTER APPLY (
-		SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), Tags), @separator) AS tags
+		SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), CONCAT('(', Tags, ')')), @separator) AS tags
 		FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketTags
 		WHERE	Tickets = ti.ticket_id
 	) AS ticket_tags

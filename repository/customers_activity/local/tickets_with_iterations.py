@@ -66,6 +66,7 @@ class TicketsWithIterationsRaw(AsyncQueryDescriptor):
             'operating_systems_table': CustomersActivityDBIndex.get_operating_systems_name(),
             'ides_table': CustomersActivityDBIndex.get_ides_name(),
             'platforms_products_table': CustomersActivityDBIndex.get_platforms_products_name(),
+            'tickets_tags_table': CustomersActivityDBIndex.get_tickets_tags_name(),
             **TicketsWithIterationsRawMeta.get_attrs(),
             'baseline_aligned_mode_fields': self.get_baseline_aligned_mode_fields(**kwargs),
             **self.get_general_format_params(**kwargs)

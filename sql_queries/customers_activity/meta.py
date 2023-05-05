@@ -239,6 +239,7 @@ class TicketsWithIterationsRawMeta(MetaData):
     tent_name = TicketsWithIterationsMeta.tent_name
     platforms = TicketsWithIterationsMeta.platforms
     products = TicketsWithIterationsMeta.products
+    ticket_tags = TicketsWithIterationsMeta.ticket_tags
     is_private = TicketsWithIterationsMeta.is_private
     creation_date = TicketsWithIterationsMeta.creation_date
     license_name = 'most_appropriate_license'
