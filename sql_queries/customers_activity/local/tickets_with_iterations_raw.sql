@@ -15,6 +15,10 @@ SELECT
       FROM (SELECT DISTINCT product_name 
             FROM {platforms_products_table}
             WHERE product_id IN (SELECT value FROM JSON_EACH('["' || replace(t.products, ';', '", "') || '"]')))) AS {products},
+    ( SELECT GROUP_CONCAT(name, '; ')
+      FROM (SELECT name
+            FROM {tickets_tags_table}
+            WHERE id IN (SELECT value FROM JSON_EACH('["' || replace(t.ticket_tags, ';', '", "') || '"]')))) AS {ticket_tags},
     t.{is_private},
     t.{creation_date},
     t.license_name AS {license_name},
