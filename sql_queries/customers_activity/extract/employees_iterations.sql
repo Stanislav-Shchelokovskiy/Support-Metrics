@@ -17,5 +17,5 @@ SELECT DISTINCT
 	position_name	AS {position_name},
 	user_tribe_name	AS {tribe_name},
 	user_tent_name	AS {tent_name}
-FROM DXStatisticsV2.dbo.get_tribe_replies(@start_date, @end_date, DEFAULT) AS tr
+FROM DXStatisticsV2.dbo.get_tribe_replies(@start_date, @end_date, DEFAULT, DEFAULT) AS tr
 WHERE tr.line != @no_line
