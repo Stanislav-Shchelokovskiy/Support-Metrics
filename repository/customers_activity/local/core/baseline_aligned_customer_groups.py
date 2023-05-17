@@ -64,7 +64,7 @@ def get_creation_date_and_tickets_filters(kwargs):
 def get_min_customers_groups_creation_date(kwargs):
     return f"""SELECT MIN({CustomersGroupsMeta.creation_date}) AS start
                 FROM {CustomersActivityDBIndex.get_customers_groups_name()}
-                WHERE {CustomersSqlFilterClauseGenerator.generate_tracked_customer_groups_filter(
+                {CustomersSqlFilterClauseGenerator.generate_tracked_customer_groups_filter(
                     params=kwargs['customers_groups'],
                     col=CustomersGroupsMeta.id,
-                    filter_prefix='')}"""
+                    filter_prefix='WHERE')}"""

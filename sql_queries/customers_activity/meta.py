@@ -132,6 +132,7 @@ class TicketTribeMeta(MetaData):
 class TicketsWithPropertiesMeta(MetaData):
     user_crmid = 'user_crmid'
     user_id = 'user_id'
+    user_register_date = 'user_register_date'
     ticket_id = 'ticket_id'
     ticket_scid = 'ticket_scid'
     ticket_type = 'ticket_type'

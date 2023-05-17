@@ -1,6 +1,6 @@
 import os
 import json
-from toolbox.utils.network import Network
+import toolbox.utils.network as Network
 from pandas import DataFrame
 from toolbox.sql.sqlite_db import get_or_create_db
 from sql_queries.index import CustomersActivityDBIndex
