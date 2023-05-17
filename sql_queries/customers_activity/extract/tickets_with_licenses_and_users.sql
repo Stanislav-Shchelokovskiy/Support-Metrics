@@ -193,6 +193,7 @@ licenses AS (
 
 SELECT
 		customers.user_crmid				AS user_crmid,
+		customers.register_date				AS user_register_date,
 		users.FriendlyId					AS user_id,
 		tickets.Id							AS ticket_id,
 		tickets.FriendlyId					AS ticket_scid,
@@ -247,7 +248,7 @@ FROM (	SELECT	Id, FriendlyId, EntityType, CAST(Created AS DATE) AS creation_date
 			WHERE	Id = tickets.Owner AND FriendlyId != 'A2151720'
 		)  AS users
 		CROSS APPLY (
-			SELECT	Id AS user_crmid
+			SELECT	Id AS user_crmid, CAST(ISNULL(RegisterDate, '1990-01-01') AS DATE) AS register_date
 			FROM	CRM.dbo.Customers
 			WHERE	FriendlyId = users.FriendlyId
 		) AS customers
