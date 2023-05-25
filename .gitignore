@@ -10,3 +10,4 @@
 **Tests/responses
 **.ruff_cache
 **.mypy*
+**tmp.py

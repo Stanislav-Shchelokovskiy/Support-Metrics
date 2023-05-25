@@ -53,6 +53,8 @@ def load_tracked_groups(start_date: str, end_date: str):
     _save_table(
         tbl_name=CustomersActivityDBIndex.get_tracked_customers_groups_name(),
         repository=RepositoryFactory.customers_activity.remote.create_tracked_customers_groups_repository(),
+        start_date=start_date,
+        end_date=end_date,
     )
 
 
