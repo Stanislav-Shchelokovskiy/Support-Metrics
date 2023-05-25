@@ -282,8 +282,3 @@ class BaselineAlignedCustomersGroupsMeta(MetaData):
 
 class BaselineAlignedModeMeta(BaselineAlignedCustomersGroupsMeta):
     days_since_baseline = 'days_since_baseline'
-
-
-class PeriodsMeta(MetaData):
-    start = 'start'
-    period = 'period'
