@@ -2,117 +2,154 @@ import os
 import json
 import toolbox.utils.network as Network
 from pandas import DataFrame
-from toolbox.sql.sqlite_db import get_or_create_db
+from toolbox.sql.connections import SqliteConnection
+from toolbox.sql.crud_queries.protocols import CRUDQuery
+from toolbox.sql.db_operations import SaveTableOperationDF, DFToCRUDQueryMapper
+from toolbox.sql.repository import Repository
 from sql_queries.index import CustomersActivityDBIndex
 from repository.factory import RepositoryFactory, TablesBuilder
 from repository.customers_activity.local.db_statements.indexes import get_create_index_statements
 from repository.customers_activity.local.db_statements.table_defs import get_create_table_statements
 
 
-# yapf: disable
-def _save_tables(tables: dict[str, DataFrame]):
-    sqlitedb = get_or_create_db()
-    sqlitedb.save_tables(
-        tables=tables,
-        tables_defs=get_create_table_statements(),
-        create_index_statements=get_create_index_statements(),
+def _save_tables(*queries: CRUDQuery):
+    [
+        SaveTableOperationDF(
+            conn=SqliteConnection(),
+            query=query,
+            tables_defs=get_create_table_statements(),
+            create_index_statements=get_create_index_statements(),
+        )() for query in queries
+    ]
+
+
+def _save_table(tbl_name: str, repository: Repository, **kwargs):
+    _save_tables(
+        DFToCRUDQueryMapper(
+            tbl_name=tbl_name,
+            df=repository.get_data(**kwargs),
+        )
     )
 
 
+# yapf: disable
+
+
 def load_tags():
-    repository = RepositoryFactory.customers_activity.remote.create_tags_repository()
-    df = repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_tickets_tags_name(): df})
+    _save_table(
+        tbl_name=CustomersActivityDBIndex.get_tickets_tags_name(),
+        repository=RepositoryFactory.customers_activity.remote.create_tickets_tags_repository(),
+    )
 
 
 def load_groups():
-    repository = RepositoryFactory.customers_activity.remote.create_groups_repository()
-    df = repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_customers_groups_name(): df})
+    _save_table(
+        tbl_name=CustomersActivityDBIndex.get_customers_groups_name(),
+        repository=RepositoryFactory.customers_activity.remote.create_customers_groups_repository(),
+    )
 
 
 def load_tracked_groups(start_date: str, end_date: str):
-    repository = RepositoryFactory.customers_activity.remote.create_tracked_groups_repository()
-    df = repository.get_data(start_date=start_date, end_date=end_date)
-    _save_tables(tables={CustomersActivityDBIndex.get_tracked_customers_groups_name(): df})
+    _save_table(
+        tbl_name=CustomersActivityDBIndex.get_tracked_customers_groups_name(),
+        repository=RepositoryFactory.customers_activity.remote.create_tracked_customers_groups_repository(),
+    )
 
 
 def load_replies_types():
-    repository = RepositoryFactory.customers_activity.remote.create_replies_types_repository()
-    df = repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_cat_replies_types_name(): df})
+    _save_table(
+        tbl_name=CustomersActivityDBIndex.get_cat_replies_types_name(),
+        repository=RepositoryFactory.customers_activity.remote.create_cat_replies_types_repository(),
+    )
 
 
 def load_components_features():
-    repository = RepositoryFactory.customers_activity.remote.create_components_features_repository()
-    df = repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_cat_components_features_name(): df})
+    _save_table(
+        tbl_name=CustomersActivityDBIndex.get_cat_components_features_name(),
+        repository=RepositoryFactory.customers_activity.remote.create_cat_components_features_repository(),
+    )
 
 
 def load_platforms_products():
-    repository = RepositoryFactory.customers_activity.remote.create_platforms_products_repository()
-    df = repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_platforms_products_name(): df})
+    _save_table(
+        tbl_name=CustomersActivityDBIndex.get_platforms_products_name(),
+        repository=RepositoryFactory.customers_activity.remote.create_platforms_products_repository(),
+    )
 
 
 def load_customers_tickets(start_date: str, end_date: str):
-    repository = RepositoryFactory.customers_activity.remote.create_customers_tickets_repository()
-    df = repository.get_data(start_date=start_date, end_date=end_date)
-    _save_tables(tables={CustomersActivityDBIndex.get_customers_tickets_name(): df})
+    _save_table(
+        tbl_name=CustomersActivityDBIndex.get_customers_tickets_name(),
+        repository=RepositoryFactory.customers_activity.remote.create_customers_tickets_repository(),
+        start_date=start_date,
+        end_date=end_date,
+    )
 
 
 def load_employees_iterations(start_date: str, end_date: str):
-    repository = RepositoryFactory.customers_activity.remote.create_employees_iterations_repository()
-    df = repository.get_data(start_date=start_date, end_date=end_date)
-    _save_tables(tables={CustomersActivityDBIndex.get_employees_iterations_name(): df})
+    _save_table(
+        tbl_name=CustomersActivityDBIndex.get_employees_iterations_name(),
+        repository=RepositoryFactory.customers_activity.remote.create_employees_iterations_repository(),
+        start_date=start_date,
+        end_date=end_date,
+    )
 
 
 def load_employees(start_date: str):
-    repository = RepositoryFactory.customers_activity.remote.create_employees_repository()
-    df = repository.get_data(start_date=start_date)
-    _save_tables(tables={CustomersActivityDBIndex.get_employees_name(): df})
+    _save_table(
+        tbl_name=CustomersActivityDBIndex.get_employees_name(),
+        repository=RepositoryFactory.customers_activity.remote.create_employees_repository(),
+        start_date=start_date,
+    )
 
 
 def load_tickets_types():
-    repository = RepositoryFactory.customers_activity.remote.create_tickets_types_repository()
-    df = repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_tickets_types_name(): df})
+    _save_table(
+        tbl_name=CustomersActivityDBIndex.get_tickets_types_name(),
+        repository=RepositoryFactory.customers_activity.remote.create_tickets_types_repository(),
+    )
 
 
 def load_frameworks():
-    repository = RepositoryFactory.customers_activity.remote.create_frameworks_repository()
-    df = repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_frameworks_name(): df})
+    _save_table(
+        tbl_name=CustomersActivityDBIndex.get_frameworks_name(),
+        repository=RepositoryFactory.customers_activity.remote.create_frameworks_repository(),
+    )
 
 
 def load_operating_systems():
-    repository = RepositoryFactory.customers_activity.remote.create_operating_systems_repository()
-    df = repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_operating_systems_name(): df})
+    _save_table(
+        tbl_name=CustomersActivityDBIndex.get_operating_systems_name(),
+        repository=RepositoryFactory.customers_activity.remote.create_operating_systems_repository(),
+    )
 
 
 def load_builds():
-    repository = RepositoryFactory.customers_activity.remote.create_builds_repository()
-    df = repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_builds_name(): df})
+    _save_table(
+        tbl_name=CustomersActivityDBIndex.get_builds_name(),
+        repository=RepositoryFactory.customers_activity.remote.create_builds_repository(),
+    )
 
 
 def load_severity_values():
-    repository = RepositoryFactory.customers_activity.remote.create_severity_repository()
-    df = repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_severity_name(): df})
+    _save_table(
+        tbl_name=CustomersActivityDBIndex.get_severity_name(),
+        repository=RepositoryFactory.customers_activity.remote.create_severity_repository(),
+    )
 
 
 def load_ticket_statuses():
-    repository = RepositoryFactory.customers_activity.remote.create_ticket_statuses_repository()
-    df = repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_ticket_statuses_name(): df})
+    _save_table(
+        tbl_name=CustomersActivityDBIndex.get_ticket_statuses_name(),
+        repository=RepositoryFactory.customers_activity.remote.create_ticket_statuses_repository(),
+    )
 
 
 def load_ides():
-    repository = RepositoryFactory.customers_activity.remote.create_ides_repository()
-    df = repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_ides_name(): df})
+    _save_table(
+        tbl_name=CustomersActivityDBIndex.get_ides_name(),
+        repository=RepositoryFactory.customers_activity.remote.create_ides_repository(),
+    )
 
 
 def load_tribes():
@@ -120,7 +157,11 @@ def load_tribes():
     tribes = json.loads(tribes_str)
     df = DataFrame.from_records(data=tribes)
     df = df.reset_index(drop=True)
-    _save_tables(tables={CustomersActivityDBIndex.get_tribes_name(): df})
+    _save_tables(DFToCRUDQueryMapper(
+            tbl_name=CustomersActivityDBIndex.get_tribes_name(),
+            df=df,
+        )
+    )
 
 
 def load_tents():
@@ -128,19 +169,25 @@ def load_tents():
     tents = json.loads(tents_str)
     df = DataFrame.from_records(data=tents)
     df = df.reset_index(drop=True)
-    _save_tables(tables={CustomersActivityDBIndex.get_tents_name(): df})
+    _save_tables(DFToCRUDQueryMapper(
+            tbl_name=CustomersActivityDBIndex.get_tents_name(),
+            df=df,
+        )
+    )
 
 
 def load_license_statuses():
-    repository = RepositoryFactory.customers_activity.remote.create_license_statuses_repository()
-    df = repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_license_statuses_name(): df})
+    _save_table(
+        tbl_name=CustomersActivityDBIndex.get_license_statuses_name(),
+        repository=RepositoryFactory.customers_activity.remote.create_license_statuses_repository(),
+    )
 
 
 def load_conversion_statuses():
-    repository = RepositoryFactory.customers_activity.remote.create_conversion_statuses_repository()
-    df = repository.get_data()
-    _save_tables(tables={CustomersActivityDBIndex.get_conversion_statuses_name(): df})
+    _save_table(
+        tbl_name=CustomersActivityDBIndex.get_conversion_statuses_name(),
+        repository=RepositoryFactory.customers_activity.remote.create_conversion_statuses_repository(),
+    )
 
 
 def process_staged_data(rank_period_offset: str):

@@ -26,7 +26,7 @@ import repository.customers_activity.local.tickets_with_iterations as sqlite_tic
 import repository.customers_activity.local.employees as sqlite_employees
 
 import repository.customers_activity.local.generators.filters_generators.display_filter as DisplayFilterGenerator
-import repository.customers_activity.local.generators.periods as PeriodsGenerator
+import toolbox.sql.generators.sqlite_periods_generator as PeriodsGenerator
 
 
 # yapf: disable
@@ -34,19 +34,19 @@ class SqlServerFactory:
     def _create_repository(self, queries: RepositoryQueries) -> Repository:
         return SqlServerRepository(queries=queries)
 
-    def create_groups_repository(self) -> Repository:
+    def create_customers_groups_repository(self) -> Repository:
         return self._create_repository(queries=customers_groups.CustomersGroups())
 
-    def create_tracked_groups_repository(self) -> Repository:
+    def create_tracked_customers_groups_repository(self) -> Repository:
         return self._create_repository(queries=customers_groups.TrackedCustomersGroups())
 
-    def create_tags_repository(self) -> Repository:
+    def create_tickets_tags_repository(self) -> Repository:
         return self._create_repository(queries=tickets.TicketsTags())
 
-    def create_replies_types_repository(self) -> Repository:
+    def create_cat_replies_types_repository(self) -> Repository:
         return self._create_repository(queries=cat.CATRepliesTypes())
 
-    def create_components_features_repository(self) -> Repository:
+    def create_cat_components_features_repository(self) -> Repository:
         return self._create_repository(queries=cat.CATComponentsFeatures())
 
     def create_customers_tickets_repository(self) -> Repository:
