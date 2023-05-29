@@ -49,6 +49,5 @@ COPY tasks ./tasks
 COPY toolbox ./toolbox
 COPY help ./help
 COPY server_models.py .
-COPY server_cache.py .
 COPY server.py .
 COPY worker.py .
