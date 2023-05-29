@@ -3,7 +3,7 @@ from pathlib import Path
 from toolbox.utils.converters import Object_to_JSON
 
 
-async def get_customers_activity_descriptions() -> str:
+async def get_descriptions() -> str:
     loop = asyncio.get_running_loop()
     return await loop.run_in_executor(None, __get_customers_activity_descriptions_json)
 

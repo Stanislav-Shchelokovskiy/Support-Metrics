@@ -9,14 +9,14 @@ from Tests.utils import (
 @pytest.mark.e2e
 def test_get_tickets_with_iterations_period():
     assert network_get(
-        url='get_tickets_with_iterations_period'
+        url='TicketsWithIterationsPeriod'
     ) == '[{"period_start":"2022-07-01","period_end":"2022-12-31"}]'
 
 
 @pytest.mark.e2e
 def test_get_customers_activity_display_filter():
     response = network_post(
-        url='get_customers_activity_display_filter',
+        url='DisplayFilter',
         body='display_filter',
     )
     assert response_is_valid(
@@ -28,7 +28,7 @@ def test_get_customers_activity_display_filter():
 @pytest.mark.e2e
 def test_get_customers_activity_validate_customers():
     response = network_post(
-        url='validate_customers',
+        url='ValidateCustomers',
         body='validate_customers',
     )
     assert response_is_valid(
@@ -59,7 +59,7 @@ def test_get_customers_activity_validate_customers():
 )
 def test_get_tickets_with_iterations_aggregates(file_name, bam):
     response = network_post(
-        url=r'get_tickets_with_iterations_aggregates?group_by_period=%Y-%m&range_start={start_date}&range_end={end_date}&baseline_aligned_mode_enabled='
+        url=r'TicketsWithIterationsAggregates?group_by_period=%Y-%m&range_start={start_date}&range_end={end_date}&baseline_aligned_mode_enabled='
         + str(bam),
         body=f'tickets_with_iterations/{file_name}',
     )
@@ -91,7 +91,7 @@ def test_get_tickets_with_iterations_aggregates(file_name, bam):
 )
 def test_get_tickets_with_iterations_raw(file_name, bam):
     response = network_post(
-        url=r'get_tickets_with_iterations_raw?range_start={start_date}&range_end={end_date}&baseline_aligned_mode_enabled='
+        url=r'TicketsWithIterationsRaw?range_start={start_date}&range_end={end_date}&baseline_aligned_mode_enabled='
         + str(bam),
         body=f'tickets_with_iterations/{file_name}',
     )
@@ -111,7 +111,7 @@ def test_get_tickets_with_iterations_raw(file_name, bam):
 ])
 def test_get_periods_array(file_name):
     response = network_get(
-        url='get_periods_array',
+        url='PeriodsArray',
         params=f'periods_array/{file_name}',
     )
     assert response_is_valid(
