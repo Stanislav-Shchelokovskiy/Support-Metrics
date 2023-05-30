@@ -1,4 +1,4 @@
-from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import FilterParameterNode
+from toolbox.sql.generators.filter_clause_generator_factory import FilterParameterNode
 
 
 def generate_percentile_filter(

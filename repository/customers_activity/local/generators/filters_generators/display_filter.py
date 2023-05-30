@@ -4,7 +4,7 @@ from toolbox.utils.converters import Object_to_JSON
 from toolbox.sql.repository import SqliteRepository
 from toolbox.sql.repository_queries import RepositoryQueries
 from toolbox.sql.generators import NULL_FILTER_VALUE
-from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import (
+from toolbox.sql.generators.filter_clause_generator_factory import (
     BaseNode,
     FilterParametersNode,
     FilterParameterNode,

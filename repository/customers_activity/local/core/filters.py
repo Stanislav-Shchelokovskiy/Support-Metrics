@@ -1,5 +1,5 @@
 from typing import Iterable
-from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import FilterParametersNode
+from toolbox.sql.generators.filter_clause_generator_factory import FilterParametersNode
 import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.common as common
 import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.platforms_products as platforms_products
 import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.tickets as tickets

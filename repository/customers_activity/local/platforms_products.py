@@ -9,7 +9,7 @@ from sql_queries.customers_activity.meta import (
     PlatformsMeta,
     ProductsMeta,
 )
-from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import FilterParametersNode
+from toolbox.sql.generators.filter_clause_generator_factory import FilterParametersNode
 import repository.customers_activity.local.generators.filters_generators.platforms_products as PlatformsProductsSqlFilterClauseGenerator
 
 
