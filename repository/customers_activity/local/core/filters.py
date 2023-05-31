@@ -1,4 +1,4 @@
-from typing import Iterable
+from toolbox.sql.generators.utils import build_filter_string
 from toolbox.sql.generators.filter_clause_generator_factory import FilterParametersNode
 import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.common as common
 import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.platforms_products as platforms_products
@@ -103,7 +103,3 @@ def try_get_customer_groups_filter(
     if ignore_groups_filter:
         return ''
     return customers.generate_customer_groups_filter(params=customers_groups)
-
-
-def build_filter_string(filters: Iterable[str]) -> str:
-    return '\n\t'.join(filter(None, filters))

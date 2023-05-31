@@ -4,10 +4,8 @@ from sql_queries.customers_activity.meta import (
     CustomersGroupsMeta,
 )
 from sql_queries.index import CustomersActivityDBIndex
-from repository.customers_activity.local.core.filters import (
-    build_filter_string,
-    get_tickets_filter,
-)
+from toolbox.sql.generators.utils import build_filter_string
+from repository.customers_activity.local.core.filters import get_tickets_filter
 import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.customers as CustomersSqlFilterClauseGenerator
 
 
@@ -57,9 +55,10 @@ def get_creation_date_and_tickets_filters(kwargs):
                                                 UNION ALL
                                                 SELECT '{kwargs['range_start']}'
                                             )   ) AND '{kwargs['range_end']}'""",
-                get_tickets_filter(ignore_groups_filter=False, **kwargs)
+            get_tickets_filter(ignore_groups_filter=False, **kwargs)
         ]
     )
+
 
 def get_min_customers_groups_creation_date(kwargs):
     return f"""SELECT MIN({CustomersGroupsMeta.creation_date}) AS start
