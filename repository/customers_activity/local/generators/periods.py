@@ -1,3 +1,6 @@
+import toolbox.sql.generators.sqlite_periods_generator as periods_generator
+
+
 def generate_group_by_period(
     format: str,
     field: str,
@@ -8,16 +11,10 @@ def generate_group_by_period(
             format=format,
             field=field,
         )
-    return generate_regular_group_by_period(
+    return periods_generator.generate_group_by_period(
         format=format,
         field=field,
     )
-
-
-def generate_regular_group_by_period(format: str, field: str) -> str:
-    if format == '%Y-%W':
-        return f"STRFTIME('%Y-%m-%d', {field}, 'WEEKDAY 0', '-6 DAYS')"
-    return f"STRFTIME('{format}', {field})"
 
 
 def generate_bam_group_by_period(format: str, field: str) -> str:

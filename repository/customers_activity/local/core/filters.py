@@ -36,7 +36,7 @@ def get_creation_date_and_tickets_filters(
 ) -> str:
     return build_filter_string(
         (
-            get_creation_date_filter(filter_prefix=filter_prefix, **kwargs),
+            get_creation_date_filter(filter_prefix=filter_prefix, kwargs=kwargs),
             get_tickets_filter(**kwargs),
         )
     )
@@ -44,13 +44,11 @@ def get_creation_date_and_tickets_filters(
 
 def get_creation_date_filter(
     filter_prefix: str,
-    range_start: str,
-    range_end: str,
-    **kwargs,
+    kwargs: dict,
 ) -> str:
     return common.generate_creation_date_filter(
-        range_start=range_start,
-        range_end=range_end,
+        range_start=kwargs['range_start'],
+        range_end=kwargs['range_end'],
         filter_prefix=filter_prefix,
     )
 
