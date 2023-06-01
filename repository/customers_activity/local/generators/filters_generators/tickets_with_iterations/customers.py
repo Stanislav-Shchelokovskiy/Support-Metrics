@@ -1,6 +1,6 @@
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta, BaselineAlignedModeMeta
 from sql_queries.index import CustomersActivityDBIndex
-from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import (
+from toolbox.sql.generators.filter_clause_generator_factory import (
     FilterParametersNode,
     SqlFilterClauseFromFilterParametersGeneratorFactory,
     params_guard,

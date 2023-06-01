@@ -1,5 +1,5 @@
-from typing import Iterable
-from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import FilterParametersNode
+from toolbox.sql.generators.utils import build_filter_string
+from toolbox.sql.generators.filter_clause_generator_factory import FilterParametersNode
 import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.common as common
 import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.platforms_products as platforms_products
 import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.tickets as tickets
@@ -36,7 +36,7 @@ def get_creation_date_and_tickets_filters(
 ) -> str:
     return build_filter_string(
         (
-            get_creation_date_filter(filter_prefix=filter_prefix, **kwargs),
+            get_creation_date_filter(filter_prefix=filter_prefix, kwargs=kwargs),
             get_tickets_filter(**kwargs),
         )
     )
@@ -44,13 +44,11 @@ def get_creation_date_and_tickets_filters(
 
 def get_creation_date_filter(
     filter_prefix: str,
-    range_start: str,
-    range_end: str,
-    **kwargs,
+    kwargs: dict,
 ) -> str:
     return common.generate_creation_date_filter(
-        range_start=range_start,
-        range_end=range_end,
+        range_start=kwargs['range_start'],
+        range_end=kwargs['range_end'],
         filter_prefix=filter_prefix,
     )
 
@@ -103,7 +101,3 @@ def try_get_customer_groups_filter(
     if ignore_groups_filter:
         return ''
     return customers.generate_customer_groups_filter(params=customers_groups)
-
-
-def build_filter_string(filters: Iterable[str]) -> str:
-    return '\n\t'.join(filter(None, filters))

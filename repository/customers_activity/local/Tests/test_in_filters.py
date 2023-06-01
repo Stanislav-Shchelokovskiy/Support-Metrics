@@ -1,5 +1,5 @@
 import pytest
-from repository.customers_activity.local.Tests.mocks import MockFilterParametersNode
+from toolbox.sql.generators.Tests.mocks import MockFilterParametersNode
 import repository.customers_activity.local.generators.filters_generators.cat as CATSqlFilterClauseGenerator
 import repository.customers_activity.local.generators.filters_generators.conversion_statuses as ConversionStatusesSqlFilterClauseGenerator
 import repository.customers_activity.local.generators.filters_generators.employees as EmployeesSqlFilterClauseGenerator

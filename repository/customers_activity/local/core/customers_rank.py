@@ -1,7 +1,7 @@
 from typing import Protocol, Literal, runtime_checkable
 from sql_queries.customers_activity.meta import TicketsWithIterationsMeta
 from sql_queries.index import CustomersActivityDBIndex
-from repository.customers_activity.local.generators.filters_generators.sql_filter_clause_generator_factory import FilterParameterNode
+from toolbox.sql.generators.filter_clause_generator_factory import FilterParameterNode
 import repository.customers_activity.local.generators.filters_generators.tickets_with_iterations.limit as LimitsSqlFilterClauseGenerator
 import repository.customers_activity.local.core.filters as filters
 
