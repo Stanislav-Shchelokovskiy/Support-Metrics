@@ -1,39 +1,36 @@
-import pytest
 import os
-import requests
 import filecmp
+from fastapi.testclient import TestClient
+from httpx import Response
 from pathlib import Path
 from toolbox.utils.converters import JSON_to_object
-from Tests.env import prepare_env
+from Tests.env import with_env
 
 
-def network_get(url: str, params: str = '') -> str:
-    with pytest.MonkeyPatch.context() as monkeypatch:
-        prepare_env(monkeypatch)
-        return requests.get(
-            url=f"http://localhost:{os.environ['SERVER_PORT']}/{url}{get_obj_from_file(params)}",
-            headers={
-                'content-type': 'application/json'
-            },
-        ).text
+@with_env
+def network_get(client: TestClient, url: str, params: str = '') -> str:
+    res: Response = client.get(
+        url=f'/{url}{get_obj_from_file(params)}',
+        headers={
+            'content-type': 'application/json'
+        },
+    )
+    return res.text
 
 
-def network_post(url: str, body) -> str:
-    with pytest.MonkeyPatch.context() as monkeypatch:
-        prepare_env(monkeypatch)
-        if 'start_date' in url:
-            url = url.format(
-                start_date=os.environ['customers_activity_start_date'],
-                end_date=os.environ['customers_activity_end_date'],
-            )
-
-        return requests.post(
-            url=f"http://localhost:{os.environ['SERVER_PORT']}/{url}",
-            json=get_json_obj_from_file(body),
-            headers={
-                'content-type': 'application/json'
-            },
-        ).text
+@with_env
+def network_post(client: TestClient, url: str, body) -> str:
+    if 'start_date' in url:
+        url = url.format(
+            start_date=os.environ['customers_activity_start_date'],
+            end_date=os.environ['customers_activity_end_date'],
+        )
+    res: Response = client.post(
+        url=url,
+        json=get_json_obj_from_file(body),
+        headers={'content-type': 'application/json'},
+    )
+    return res.text
 
 
 def get_json_obj_from_file(file):
