@@ -9,11 +9,8 @@ import tasks.tasks as tasks
 from configs.config import Config
 
 
-app = Celery(
-    __name__,
-    broker=os.environ['CELERY_BROKER_URL'],
-    backend=os.environ['CELERY_RESULT_BACKEND'],
-)
+app = Celery(__name__)
+app.conf.setdefault('broker_connection_retry_on_startup', True)
 
 
 @worker_ready.connect
@@ -34,7 +31,7 @@ def on_startup(sender, **kwargs):
         'load_employees',
     ]
     if int(os.environ['UPDATE_ON_STARTUP']):
-        tasks.append('update_customers_activity')
+        tasks.append('update_support_metrics')
 
     sender_app: Celery = sender.app
     with sender_app.connection() as conn:
@@ -53,23 +50,23 @@ def setup_periodic_tasks(sender, **kwargs):
             hour=1,
             day_of_week=(1, 3, 5),
         ),
-        update_customers_activity.s(),
+        update_support_metrics.s(),
     )
 
 
-@app.task(name='update_customers_activity')
-def update_customers_activity(**kwargs):
+@app.task(name='update_support_metrics')
+def update_support_metrics(**kwargs):
     chord(
         [
-            customers_activity_load_tags.si(),
-            customers_activity_load_groups.si(),
-            customers_activity_load_tracked_groups.si(),
-            customers_activity_load_builds.si(),
-            customers_activity_load_components_features.si(),
-            customers_activity_load_customers_tickets.si(),
+            load_tags.si(),
+            load_groups.si(),
+            load_tracked_groups.si(),
+            load_builds.si(),
+            load_components_features.si(),
+            load_customers_tickets.si(),
             load_employees_iterations.si(),
         ]
-    )(customers_activity_process_staged_data.si())
+    )(process_staged_data.si())
 
 
 @app.task(name='load_tickets_types', bind=True)
@@ -96,8 +93,8 @@ def load_operating_systems(self, **kwargs):
     )
 
 
-@app.task(name='customers_activity_load_builds', bind=True)
-def customers_activity_load_builds(self, **kwargs):
+@app.task(name='load_builds', bind=True)
+def load_builds(self, **kwargs):
     return run_retriable_task(
         self,
         tasks.load_builds,
@@ -160,24 +157,24 @@ def load_conversion_statuses(self, **kwargs):
     )
 
 
-@app.task(name='customers_activity_load_tags', bind=True)
-def customers_activity_load_tags(self, **kwargs):
+@app.task(name='load_tags', bind=True)
+def load_tags(self, **kwargs):
     return run_retriable_task(
         self,
         tasks.load_tags,
     )
 
 
-@app.task(name='customers_activity_load_groups', bind=True)
-def customers_activity_load_groups(self, **kwargs):
+@app.task(name='load_groups', bind=True)
+def load_groups(self, **kwargs):
     return run_retriable_task(
         self,
         tasks.load_groups,
     )
 
 
-@app.task(name='customers_activity_load_tracked_groups', bind=True)
-def customers_activity_load_tracked_groups(self, **kwargs):
+@app.task(name='load_tracked_groups', bind=True)
+def load_tracked_groups(self, **kwargs):
     return run_retriable_task(
         self,
         tasks.load_tracked_groups,
@@ -194,8 +191,8 @@ def load_replies_types(self, **kwargs):
     )
 
 
-@app.task(name='customers_activity_load_components_features', bind=True)
-def customers_activity_load_components_features(self, **kwargs):
+@app.task(name='load_components_features', bind=True)
+def load_components_features(self, **kwargs):
     return run_retriable_task(
         self,
         tasks.load_components_features,
@@ -210,8 +207,8 @@ def load_platforms_products(self, **kwargs):
     )
 
 
-@app.task(name='customers_activity_load_customers_tickets', bind=True)
-def customers_activity_load_customers_tickets(self, **kwargs):
+@app.task(name='load_customers_tickets', bind=True)
+def load_customers_tickets(self, **kwargs):
     return run_retriable_task(
         self,
         tasks.load_customers_tickets,
@@ -237,8 +234,8 @@ def load_employees(self, **kwargs):
     )
 
 
-@app.task(name='customers_activity_process_staged_data', bind=True)
-def customers_activity_process_staged_data(self, **kwargs):
+@app.task(name='process_staged_data', bind=True)
+def process_staged_data(self, **kwargs):
     return run_retriable_task(
         self,
         tasks.process_staged_data,
