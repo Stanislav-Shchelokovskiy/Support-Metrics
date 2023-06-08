@@ -14,8 +14,8 @@ def __prepare_env(monkeypatch: pytest.MonkeyPatch):
             monkeypatch.setenv(name, value)
     monkeypatch.setenv('SQLITE_DATABASE', f'{getcwd()}/Tests/test_db')
     monkeypatch.setenv('QUERY_SERVICE', 'localhost:11005')
-    monkeypatch.setenv('customers_activity_start_date', '2022-01-01')
-    monkeypatch.setenv('customers_activity_end_date', '2023-01-01')
+    monkeypatch.setenv('start_date', '2022-01-01')
+    monkeypatch.setenv('end_date', '2023-01-01')
 
 
 @decorator

@@ -5,10 +5,10 @@ from toolbox.utils.converters import Object_to_JSON
 
 async def get_descriptions() -> str:
     loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(None, __get_customers_activity_descriptions_json)
+    return await loop.run_in_executor(None, __get_descriptions_json)
 
 
-def __get_customers_activity_descriptions_json():
+def __get_descriptions_json():
     path = Path('help/customers_activity')
     return Object_to_JSON.convert(__get_files_in_folder(path))
 

@@ -1,8 +1,8 @@
 version: '3.4'
 
-x-support_analytics_service:
-  &support_analytics_service
-  image: shchelokovskiy/support_analytics_service:latest
+x-support_metrics:
+  &support_metrics
+  image: shchelokovskiy/support_metrics:latest
   restart: always
   environment:
     - SQL_SERVER
@@ -21,14 +21,14 @@ x-support_analytics_service:
     - DB_HOME
     - SQLITE_DATABASE=${DB_HOME}/db
     - LD_LIBRARY_PATH=/usr/lib #https://stackoverflow.com/questions/49920444/upgrading-sqlite3-version-used-in-python3-on-linux
-    - UPDATE_CUSTOMERS_ACTIVITY_ON_STARTUP
+    - UPDATE_ON_STARTUP
     - PRODUCTION
 
 services:
-  support_analytics_dashboard:
-    <<: *support_analytics_service
-    hostname: support_analytics_dashboard
-    container_name: support_analytics_dashboard
+  support_metrics_dashboard:
+    <<: *support_metrics
+    hostname: support_metrics_dashboard
+    container_name: support_metrics_dashboard
     command: celery -A worker flower --port=${FLOWER_PORT}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:${FLOWER_PORT}/healthcheck"]
@@ -39,21 +39,21 @@ services:
     ports:
       - "${FLOWER_PORT}:${FLOWER_PORT}"
 
-  support_analytics_worker:
-    <<: *support_analytics_service
-    hostname: support_analytics_worker
-    container_name: support_analytics_worker
+  support_metrics_worker:
+    <<: *support_metrics
+    hostname: support_metrics_worker
+    container_name: support_metrics_worker
     command: celery --app worker worker --beat --loglevel=INFO --concurrency 7 #--logfile=logs/celery.log
     volumes:
       - support_analytics-volume:${DB_HOME}
     depends_on:
-      support_analytics_dashboard:
+      support_metrics_dashboard:
         condition: service_healthy
 
-  support_analytics_server:
-    <<: *support_analytics_service
-    hostname: support_analytics_server
-    container_name: support_analytics_server
+  support_metrics_server:
+    <<: *support_metrics
+    hostname: support_metrics_server
+    container_name: support_metrics_server
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
     command: uvicorn server:app --host 0.0.0.0 --port $SERVER_PORT --log-level critical
