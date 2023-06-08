@@ -30,6 +30,7 @@ toml = "^0.10.2"
 yapf = "^0.32.0"
 dvc = { extras = ["gdrive"], version = "^2.43.1" }
 mypy = "^1.1.1"
+httpx = "^0.24.1"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"

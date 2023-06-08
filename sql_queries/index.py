@@ -5,7 +5,7 @@ class CustomersActivitySqlPathIndex:
 
     @staticmethod
     def get_root_path() -> str:
-        return RootPath.get_cwd() + '/customers_activity'
+        return RootPath.get_cwd()
 
     @staticmethod
     def get_extract_path() -> str:

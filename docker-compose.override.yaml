@@ -1,18 +1,18 @@
 version: '3.4'
 
-x-support_analytics_service:
-  &support_analytics_service
+x-support_metrics:
+  &support_metrics
   build:
     context: .
     dockerfile: Dockerfile
 
 services:
 
-  support_analytics_worker:
-    <<: *support_analytics_service
+  support_metrics_worker:
+    <<: *support_metrics
 
-  support_analytics_dashboard:
-    <<: *support_analytics_service
+  support_metrics_dashboard:
+    <<: *support_metrics
 
-  support_analytics_server:
-    <<: *support_analytics_service
+  support_metrics_server:
+    <<: *support_metrics

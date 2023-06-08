@@ -12,7 +12,7 @@ Add **.env** file containing the following env vars:
 - DB_HOME=/root/app/data
 - CORS_ORIGINS=["http://ubuntu-support.corp.devexpress.com","http://localhost:3000"]
 - QUERY_SERVICE=query_service_server:11005
-- UPDATE_CUSTOMERS_ACTIVITY_ON_STARTUP=0
+- UPDATE_ON_STARTUP=0
 - PRODUCTION=1
 
 Make sure:

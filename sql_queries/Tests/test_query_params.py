@@ -4,7 +4,7 @@ from typing import Callable
 from pathlib import Path
 import toolbox.sql.index as RootPath
 from sql_queries.index import CustomersActivitySqlPathIndex
-from sql_queries.customers_activity.meta import (
+from sql_queries.meta import (
     TicketsWithPropertiesMeta,
     CustomersGroupsMeta,
     TicketsTagsMeta,
