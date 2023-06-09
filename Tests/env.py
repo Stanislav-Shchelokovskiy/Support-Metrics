@@ -33,13 +33,19 @@ def with_env(
 
 # yapf: disable
 def mock_TicketsWithIterationsAggregates(monkeypatch: pytest.MonkeyPatch):
-    from sql_queries.meta import TicketsWithIterationsAggregatesOnlyMeta, BaselineAlignedModeMeta, TicketsWithIterationsMeta
+    from toolbox.sql.meta_data import MetaData
     from repository.local.tickets_with_iterations import TicketsWithIterationsAggregates
     import repository.local.generators.periods as PeriodsGenerator
     from repository.local.aggs import get_metrics
     from repository.local.core.tickets_with_iterations_table import get_tickets_with_iterations_table
     from toolbox.sql.generators.utils import build_multiline_string_ignore_empties
     from repository.local.core.filters import try_get_creation_date_and_tickets_filters
+
+    class TicketsWithIterationsAggregatesOnlyMeta(MetaData):
+        period = 'period'
+        people = 'people'
+        tickets = 'tickets'
+        iterations = 'iterations'
 
     def get_fields_meta(self, kwargs):
         return TicketsWithIterationsAggregatesOnlyMeta
@@ -56,7 +62,8 @@ def mock_TicketsWithIterationsAggregates(monkeypatch: pytest.MonkeyPatch):
         groupby_period = PeriodsGenerator.generate_group_by_period(kwargs)
 
         metrics = get_metrics().values()
-        cols = f'{groupby_period} AS {period}, {", ".join(f"{metric} AS {metric.name}" for metric in metrics)}'
+        format = lambda metric: f'{metric} AS "{metric.name}"'
+        cols = f'{groupby_period} AS {period}, {", ".join(format(metric) for metric in metrics)}'
         return {
             'select': cols,
             'from':  get_tickets_with_iterations_table(**kwargs),

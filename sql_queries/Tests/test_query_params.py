@@ -10,7 +10,6 @@ from sql_queries.meta import (
     TicketsTagsMeta,
     CATRepliesTypesMeta,
     CATComponentsFeaturesMeta,
-    TicketsWithIterationsAggregatesMeta,
     TicketsWithIterationsRawMeta,
     PlatformsProductsMeta,
     TicketsWithIterationsMeta,
@@ -69,14 +68,6 @@ tickets_with_iterations_common_params = {
                 'ides_table': 'ides_table',
                 'platforms_products_table': 'platforms_products_table',
                 'baseline_aligned_mode_fields': 'baseline_aligned_mode_fields'
-            },
-        ),
-        (
-            CustomersActivitySqlPathIndex.get_tickets_with_iterations_aggregates_path,
-            {
-                **TicketsWithIterationsAggregatesMeta.get_attrs(),
-                **tickets_with_iterations_common_params,
-                'group_by_period': 'group_by_period',
             },
         ),
         (

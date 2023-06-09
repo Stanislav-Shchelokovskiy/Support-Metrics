@@ -215,23 +215,6 @@ class TicketsWithIterationsMeta(TicketsWithPropertiesMeta):
     emp_tent_name = 'emp_tent_name'
 
 
-class TicketsWithIterationsAggregatesOnlyMeta(MetaData):
-    period = 'period'
-    people = 'people'
-    tickets = 'tickets'
-    iterations = 'iterations'
-
-
-class TicketsWithIterationsAggregatesMeta(MetaData):
-    period = TicketsWithIterationsAggregatesOnlyMeta.period
-    user_id = TicketsWithIterationsMeta.user_id
-    people = TicketsWithIterationsAggregatesOnlyMeta.people
-    ticket_scid = TicketsWithIterationsMeta.ticket_scid
-    tickets = TicketsWithIterationsAggregatesOnlyMeta.tickets
-    emp_post_id = TicketsWithIterationsMeta.emp_post_id
-    iterations = TicketsWithIterationsAggregatesOnlyMeta.iterations
-
-
 class TicketsWithIterationsRawMeta(MetaData):
     user_id = TicketsWithIterationsMeta.user_id
     ticket_scid = TicketsWithIterationsMeta.ticket_scid

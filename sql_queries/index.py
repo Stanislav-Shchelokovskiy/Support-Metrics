@@ -130,13 +130,6 @@ class CustomersActivitySqlPathIndex:
         )
 
     @staticmethod
-    def get_tickets_with_iterations_aggregates_path() -> str:
-        return (
-            CustomersActivitySqlPathIndex.get_local_path()
-            + '/tickets_with_iterations_aggregates.sql'
-        )
-
-    @staticmethod
     def get_tickets_with_iterations_raw_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_local_path()
@@ -185,7 +178,7 @@ class CustomersActivitySqlPathIndex:
             CustomersActivitySqlPathIndex.get_transform_load_path()
             + '/emps.sql'
         )
-    
+
     @staticmethod
     def get_custs_groups_path() -> str:
         """Local table def sql."""
