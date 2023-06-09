@@ -1,4 +1,3 @@
-from typing import Literal, Any
 from pydantic import Field
 from toolbox.server_models import (
     ServerModel,
@@ -31,7 +30,7 @@ class CustomersParams(ServerModel):
 
 
 class Percentile(ServerModel):
-    metric: Literal['tickets', 'iterations']
+    metric: str
     value: FilterParameterNode
 
 

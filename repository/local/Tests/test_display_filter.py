@@ -17,6 +17,7 @@ from server_models import (
     TicketsWithIterationsParams,
     Percentile,
 )
+from repository.local.aggs import tickets
 
 
 class Connection:
@@ -46,7 +47,7 @@ class MockSqlQueryExecutor(SqlQueryExecutor):
     'node, output', [
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=40)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=40)),
                 'Tribes': FilterParametersNode(include=True, values=['CE832BA0-1D68-421D-8DD5-5E2522462A2F']),
                 'Ticket tags': FilterParametersNode(include=False, values=[],),
                 'Ticket types': FilterParametersNode(include=False, values=[2]),
@@ -69,7 +70,7 @@ class MockSqlQueryExecutor(SqlQueryExecutor):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Ticket types': FilterParametersNode(include=True, values=[2]),
             }
             ),
@@ -81,7 +82,7 @@ class MockSqlQueryExecutor(SqlQueryExecutor):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Ticket types': FilterParametersNode(include=True, values=[2]),
                 'Duplicated to ticket types': FilterParametersNode(include=True, values=[2]),
             }),
@@ -95,7 +96,7 @@ class MockSqlQueryExecutor(SqlQueryExecutor):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Ticket types': FilterParametersNode(include=True, values=[2]),
                 'Duplicated to ticket types': FilterParametersNode(include=False, values=[2]),
             }),
@@ -112,7 +113,7 @@ class MockSqlQueryExecutor(SqlQueryExecutor):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Ticket types': FilterParametersNode(include=False, values=[2]),
                 'Duplicated to ticket types': FilterParametersNode(include=False, values=[2]),
             }),
@@ -132,7 +133,7 @@ class MockSqlQueryExecutor(SqlQueryExecutor):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Ticket types': FilterParametersNode(include=False, values=[2, NULL_FILTER_VALUE]),
             }),
             [
@@ -146,7 +147,7 @@ class MockSqlQueryExecutor(SqlQueryExecutor):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Ticket types': FilterParametersNode(include=True, values=[2, NULL_FILTER_VALUE]),
             }),
             [
@@ -160,7 +161,7 @@ class MockSqlQueryExecutor(SqlQueryExecutor):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Platforms': FilterParametersNode(include=True, values=[NULL_FILTER_VALUE]),
             }),
             [
@@ -171,7 +172,7 @@ class MockSqlQueryExecutor(SqlQueryExecutor):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Platforms': FilterParametersNode(include=False, values=[NULL_FILTER_VALUE]),
             }),
             [
@@ -182,7 +183,7 @@ class MockSqlQueryExecutor(SqlQueryExecutor):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Versions': FilterParametersNode(include=True, values=[NULL_FILTER_VALUE]),
             }),
             [
@@ -193,7 +194,7 @@ class MockSqlQueryExecutor(SqlQueryExecutor):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Versions': FilterParametersNode(include=False, values=[NULL_FILTER_VALUE]),
             }),
             [

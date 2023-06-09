@@ -4,6 +4,7 @@ from sql_queries.index import CustomersActivityDBIndex
 from toolbox.sql.generators.filter_clause_generator_factory import FilterParameterNode
 import repository.local.generators.filters_generators.tickets_with_iterations.limit as LimitsSqlFilterClauseGenerator
 import repository.local.core.filters as filters
+from repository.local.aggs import tickets
 
 
 @runtime_checkable
@@ -33,6 +34,6 @@ def get_ranked_tickets_with_iterations_query(**kwargs) -> str:
 
 
 def get_rank_field(percentile: Percentile) -> str:
-    if percentile.metric == 'tickets':
+    if percentile.metric == tickets.name:
         return TicketsWithIterationsMeta.ticket_scid
     return TicketsWithIterationsMeta.emp_post_id
