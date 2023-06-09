@@ -8,9 +8,7 @@ from toolbox.sql.generators.filter_clause_generator_factory import (
 
 @params_guard
 def generate_components_filter(tent_ids: FilterParametersNode) -> str:
-    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
-        params=tent_ids
-    )
+    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(tent_ids)
     return generate_filter(
         col=CATComponentsFeaturesMeta.tent_id,
         values=tent_ids.values,
@@ -24,9 +22,7 @@ def generate_features_filter(
     component_ids: FilterParametersNode,
 ) -> str:
     components_fitler = generate_components_filter(tent_ids=tent_ids)
-    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
-        params=component_ids
-    )
+    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(component_ids)
     features_filter = generate_filter(
         col=CATComponentsFeaturesMeta.component_id,
         values=component_ids.values,

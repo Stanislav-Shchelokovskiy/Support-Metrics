@@ -207,7 +207,7 @@ def __generate_display_filter(node: BaseNode) -> list[list]:
     filters = []
     filter_node: BaseNode | FilterParametersNode | FilterParameterNode | Percentile
     for field_name, filter_node in node.get_field_values().items():
-        if not filter_node:
+        if filter_node is None:
             continue
         field_alias = node.get_field_alias(field_name)
         filter = None
@@ -259,6 +259,7 @@ def __generate_filter_from_filter_parameters(
         if not filter_node.include:
             return [alias, '=', 'NULL']
         return ''
+    print(filter_node)
     values_contains_null = NULL_FILTER_VALUE in filter_node.values
     values = [value for value in filter_node.values if value != NULL_FILTER_VALUE]
 

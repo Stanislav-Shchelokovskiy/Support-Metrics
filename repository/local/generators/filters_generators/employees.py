@@ -8,9 +8,7 @@ from toolbox.sql.generators.filter_clause_generator_factory import (
 
 @params_guard
 def generate_positions_filter(position_ids: FilterParametersNode) -> str:
-    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
-        params=position_ids
-    )
+    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(position_ids)
     return generate_filter(
         col=EmployeesMeta.position_id,
         values=position_ids.values,
@@ -25,12 +23,8 @@ def generate_positions_tribes_tents_filter(
     tent_ids: FilterParametersNode,
 ) -> str:
     positions_fitler = generate_positions_filter(position_ids=position_ids)
-    generate_tribes_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
-        params=tribe_ids
-    )
-    generate_tents_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
-        params=tent_ids
-    )
+    generate_tribes_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(tribe_ids)
+    generate_tents_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(tent_ids)
 
     tribes_filter = generate_tribes_filter(
         col=EmployeesMeta.tribe_id,

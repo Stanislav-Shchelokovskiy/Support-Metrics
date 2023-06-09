@@ -10,9 +10,7 @@ from toolbox.sql.generators.filter_clause_generator_factory import (
 def generate_conversion_filter(
     license_status_ids: FilterParametersNode
 ) -> str:
-    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
-        params=license_status_ids
-    )
+    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(license_status_ids)
     return generate_filter(
         col=ConversionStatusesMeta.license_status_id,
         values=license_status_ids.values,

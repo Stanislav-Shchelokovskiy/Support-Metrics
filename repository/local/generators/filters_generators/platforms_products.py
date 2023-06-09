@@ -12,9 +12,7 @@ def generate_tents_filter(
     col: str,
     filter_prefix: str,
 ) -> str:
-    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
-        params=tents_ids
-    )
+    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(tents_ids)
     return generate_filter(
         col=col,
         values=tents_ids.values,
