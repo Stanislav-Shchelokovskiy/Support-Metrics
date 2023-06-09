@@ -1,10 +1,7 @@
 from collections.abc import Mapping
-from toolbox.sql_async import AsyncQueryDescriptor
+from toolbox.sql_async import GeneralSelectAsyncQueryDescriptor
 from toolbox.sql import MetaData
-from sql_queries.index import (
-    CustomersActivitySqlPathIndex,
-    CustomersActivityDBIndex,
-)
+from sql_queries.index import CustomersActivityDBIndex
 from sql_queries.meta import (
     LicenseStatusesMeta,
     ConversionStatusesMeta,
@@ -13,43 +10,29 @@ import repository.local.generators.filters_generators.conversion_statuses as Con
 
 
 # yapf: disable
-class LicenseStatuses(AsyncQueryDescriptor):
-    """
-    Query to a local table storing license statuses.
-    """
-
-    def get_path(self, kwargs: Mapping) -> str:
-        return CustomersActivitySqlPathIndex.get_general_select_path()
+class LicenseStatuses(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
         return LicenseStatusesMeta
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'columns': ', '.join(self.get_fields(kwargs)),
-            'table_name': CustomersActivityDBIndex.get_license_statuses_name(),
-            'filter_group_limit_clause': '',
+            'select': ', '.join(self.get_fields(kwargs)),
+            'from': CustomersActivityDBIndex.get_license_statuses_name(),
+            'where_group_limit': '',
         }
 
 
-
-
-class ConversionStatuses(AsyncQueryDescriptor):
-    """
-    Query to a local table storing conversion statuses.
-    """
-
-    def get_path(self, kwargs: Mapping) -> str:
-        return CustomersActivitySqlPathIndex.get_general_select_path()
+class ConversionStatuses(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
         return ConversionStatusesMeta
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'columns': ', '.join(self.get_fields(kwargs)),
-            'table_name': CustomersActivityDBIndex.get_conversion_statuses_name(),
-            'filter_group_limit_clause': ConversionStatusesSqlFilterClauseGenerator.generate_conversion_filter(
+            'select': ', '.join(self.get_fields(kwargs)),
+            'from': CustomersActivityDBIndex.get_conversion_statuses_name(),
+            'where_group_limit': ConversionStatusesSqlFilterClauseGenerator.generate_conversion_filter(
                     license_status_ids=kwargs['license_status_ids']
                 ),
         }

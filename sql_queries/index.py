@@ -116,13 +116,6 @@ class CustomersActivitySqlPathIndex:
         )
 
     @staticmethod
-    def get_tickets_period_path() -> str:
-        return (
-            CustomersActivitySqlPathIndex.get_local_path()
-            + '/get_tickets_period.sql'
-        )
-
-    @staticmethod
     def get_tickets_with_licenses_and_users_path() -> str:
         return (
             CustomersActivitySqlPathIndex.get_extract_path()
@@ -134,13 +127,6 @@ class CustomersActivitySqlPathIndex:
         return (
             CustomersActivitySqlPathIndex.get_extract_path()
             + '/tickets_with_properties.sql'
-        )
-
-    @staticmethod
-    def get_general_select_path() -> str:
-        return (
-            CustomersActivitySqlPathIndex.get_local_path()
-            + '/general_select.sql'
         )
 
     @staticmethod

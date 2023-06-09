@@ -1,10 +1,7 @@
 from collections.abc import Mapping
-from toolbox.sql_async import AsyncQueryDescriptor
+from toolbox.sql_async import GeneralSelectAsyncQueryDescriptor
 from toolbox.sql import MetaData
-from sql_queries.index import (
-    CustomersActivitySqlPathIndex,
-    CustomersActivityDBIndex,
-)
+from sql_queries.index import CustomersActivityDBIndex
 from sql_queries.meta import (
     CustomersGroupsMeta,
     TrackedCustomersGroupsMeta,
@@ -15,13 +12,7 @@ from repository.local.validation_repository import ValidationRepositoryQueries
 
 
 # yapf: disable
-class Customers(AsyncQueryDescriptor):
-    """
-    Query to a local table storing available customers.
-    """
-
-    def get_path(self, kwargs: Mapping) -> str:
-        return CustomersActivitySqlPathIndex.get_general_select_path()
+class Customers(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
         return CustomersMeta
@@ -31,9 +22,9 @@ class Customers(AsyncQueryDescriptor):
         filter_values = kwargs['filter_values']
         ids_filter = '\nOR '.join([f"{CustomersMeta.id} = '{value}'" for value in filter_values])
         return {
-            'columns': ', '.join(self.get_fields(kwargs)),
-            'table_name': CustomersActivityDBIndex.get_customers_name(),
-            'filter_group_limit_clause': f'WHERE\n{ids_filter}' if ids_filter else f"WHERE {CustomersMeta.name} LIKE '{search_param}%'\nLIMIT {kwargs['take']} OFFSET {kwargs['skip']}",
+            'select': ', '.join(self.get_fields(kwargs)),
+            'from': CustomersActivityDBIndex.get_customers_name(),
+            'where_group_limit': f'WHERE\n{ids_filter}' if ids_filter else f"WHERE {CustomersMeta.name} LIKE '{search_param}%'\nLIMIT {kwargs['take']} OFFSET {kwargs['skip']}",
         }
 
 
@@ -46,40 +37,28 @@ class CustomersValidation(ValidationRepositoryQueries):
         }
 
 
-class CustomersGroups(AsyncQueryDescriptor):
-    """
-    Query to a local table storing customers groups.
-    """
-
-    def get_path(self, kwargs: Mapping) -> str:
-        return CustomersActivitySqlPathIndex.get_general_select_path()
-
-    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
-        return {
-            'columns': ', '.join(self.get_fields(kwargs)),
-            'table_name': CustomersActivityDBIndex.get_customers_groups_name(),
-            'filter_group_limit_clause': f'ORDER BY {CustomersGroupsMeta.name}',
-        }
+class CustomersGroups(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
         return CustomersGroupsMeta
 
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
+        return {
+            'select': ', '.join(self.get_fields(kwargs)),
+            'from': CustomersActivityDBIndex.get_customers_groups_name(),
+            'where_group_limit': f'ORDER BY {CustomersGroupsMeta.name}',
+        }
 
-class TrackedCustomersGroups(AsyncQueryDescriptor):
-    """
-    Query to a local table storing customers groups we track and work with.
-    """
 
-    def get_path(self, kwargs: Mapping) -> str:
-        return CustomersActivitySqlPathIndex.get_general_select_path()
+class TrackedCustomersGroups(GeneralSelectAsyncQueryDescriptor):
+
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return TrackedCustomersGroupsMeta
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         cols = ', '.join(self.get_fields(kwargs))
         return {
-            'columns': cols,
-            'table_name': CustomersActivityDBIndex.get_tracked_customers_groups_name(),
-            'filter_group_limit_clause': f'GROUP BY {cols}\nORDER BY {TrackedCustomersGroupsMeta.name}',
+            'select': cols,
+            'from': CustomersActivityDBIndex.get_tracked_customers_groups_name(),
+            'where_group_limit': f'GROUP BY {cols}\nORDER BY {TrackedCustomersGroupsMeta.name}',
         }
-
-    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return TrackedCustomersGroupsMeta

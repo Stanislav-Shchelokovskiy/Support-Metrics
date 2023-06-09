@@ -69,7 +69,7 @@ class CustomersMeta(KnotMeta):
     pass
 
 
-class TicketsWithIterationsPeriodMeta(MetaData):
+class PeriodMeta(MetaData):
     period_start = 'period_start'
     period_end = 'period_end'
 
