@@ -1,4 +1,5 @@
-from pydantic import Field
+from pydantic import Field, validator
+from repository.local.core.customers_rank import Percentile as percentile_validator
 from toolbox.server_models import (
     ServerModel,
     FilterParameterNode,
@@ -32,6 +33,10 @@ class CustomersParams(ServerModel):
 class Percentile(ServerModel):
     metric: str
     value: FilterParameterNode
+
+    @validator('metric')
+    def to_valid_literal(cls, v: str):
+        return percentile_validator.to_valid_literal(v)
 
 
 # yapf: disable
