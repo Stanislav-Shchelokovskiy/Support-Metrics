@@ -1,6 +1,6 @@
 import pytest
 from pandas import DataFrame
-from toolbox.sql.repository import Repository
+from toolbox.sql.query_executors.sql_query_executor import SqlQueryExecutor
 from toolbox.sql.generators import NULL_FILTER_VALUE
 import repository.local.generators.filters_generators.display_filter as DisplayFilterGenerator
 from sql_queries.index import CustomersActivityDBIndex
@@ -17,12 +17,24 @@ from server_models import (
     TicketsWithIterationsParams,
     Percentile,
 )
+from repository.local.aggs import tickets
 
 
-class MockSqliteRepository(Repository):
+class Connection:
+
+    def begin_transaction(self):
+        return None
+
+
+class MockSqlQueryExecutor(SqlQueryExecutor):
+
+    def __init__(self) -> None:
+        super().__init__(Connection())
+
     # yapf: disable
-    def get_data(self, **kwargs):
-        table_name = self.queries.get_main_query_format_params()['table_name']
+    def execute(self, **kwargs):
+        query = kwargs['main_query']
+        table_name = query.format_params['from']
         return {
             CustomersActivityDBIndex.get_tribes_name(): DataFrame(data={TribesMeta.name: ['XAML United Team']}),
             CustomersActivityDBIndex.get_tickets_types_name(): DataFrame(data={TicketsTypesMeta.name: ['Question']}),
@@ -35,7 +47,7 @@ class MockSqliteRepository(Repository):
     'node, output', [
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=40)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=40)),
                 'Tribes': FilterParametersNode(include=True, values=['CE832BA0-1D68-421D-8DD5-5E2522462A2F']),
                 'Ticket tags': FilterParametersNode(include=False, values=[],),
                 'Ticket types': FilterParametersNode(include=False, values=[2]),
@@ -58,7 +70,7 @@ class MockSqliteRepository(Repository):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Ticket types': FilterParametersNode(include=True, values=[2]),
             }
             ),
@@ -70,7 +82,7 @@ class MockSqliteRepository(Repository):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Ticket types': FilterParametersNode(include=True, values=[2]),
                 'Duplicated to ticket types': FilterParametersNode(include=True, values=[2]),
             }),
@@ -84,7 +96,7 @@ class MockSqliteRepository(Repository):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Ticket types': FilterParametersNode(include=True, values=[2]),
                 'Duplicated to ticket types': FilterParametersNode(include=False, values=[2]),
             }),
@@ -101,7 +113,7 @@ class MockSqliteRepository(Repository):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Ticket types': FilterParametersNode(include=False, values=[2]),
                 'Duplicated to ticket types': FilterParametersNode(include=False, values=[2]),
             }),
@@ -121,7 +133,7 @@ class MockSqliteRepository(Repository):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Ticket types': FilterParametersNode(include=False, values=[2, NULL_FILTER_VALUE]),
             }),
             [
@@ -135,7 +147,7 @@ class MockSqliteRepository(Repository):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Ticket types': FilterParametersNode(include=True, values=[2, NULL_FILTER_VALUE]),
             }),
             [
@@ -149,7 +161,7 @@ class MockSqliteRepository(Repository):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Platforms': FilterParametersNode(include=True, values=[NULL_FILTER_VALUE]),
             }),
             [
@@ -160,7 +172,7 @@ class MockSqliteRepository(Repository):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Platforms': FilterParametersNode(include=False, values=[NULL_FILTER_VALUE]),
             }),
             [
@@ -171,7 +183,7 @@ class MockSqliteRepository(Repository):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Versions': FilterParametersNode(include=True, values=[NULL_FILTER_VALUE]),
             }),
             [
@@ -182,7 +194,7 @@ class MockSqliteRepository(Repository):
         ),
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric='tickets', value=FilterParameterNode(include=True, value=100)),
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
                 'Versions': FilterParametersNode(include=False, values=[NULL_FILTER_VALUE]),
             }),
             [
@@ -198,7 +210,7 @@ def test_generate_conversion_filter(
     output: list[str | int],
 ):
     with pytest.MonkeyPatch.context() as monkeypatch:
-        monkeypatch.setattr(DisplayFilterGenerator, '__repository_type', MockSqliteRepository)
+        monkeypatch.setattr(DisplayFilterGenerator, '__query_executor', MockSqlQueryExecutor)
         assert DisplayFilterGenerator.__generate_display_filter(
             node=node,
         ) == output

@@ -1,8 +1,8 @@
 import asyncio
 from typing import Any
 from toolbox.utils.converters import Object_to_JSON
-from toolbox.sql.repository import SqliteRepository
-from toolbox.sql.repository_queries import RepositoryQueries
+from toolbox.sql.query_executors.sqlite_query_executor import SQLiteQueryExecutor
+from toolbox.sql.sql_query import GeneralSelectSqlQuery
 from toolbox.sql.generators import NULL_FILTER_VALUE
 from toolbox.sql.generators.filter_clause_generator_factory import (
     BaseNode,
@@ -10,10 +10,7 @@ from toolbox.sql.generators.filter_clause_generator_factory import (
     FilterParameterNode,
 )
 from repository.local.core.customers_rank import Percentile
-from sql_queries.index import (
-    CustomersActivityDBIndex,
-    CustomersActivitySqlPathIndex,
-)
+from sql_queries.index import CustomersActivityDBIndex
 from sql_queries.meta import (
     PlatformsProductsMeta,
     TicketsTagsMeta,
@@ -198,16 +195,18 @@ async def generate_display_filter(node: BaseNode) -> str:
         loop = asyncio.get_running_loop()
         return await loop.run_in_executor(None, __generate_display_filter_json, node)
 
+
 def __generate_display_filter_json(node: BaseNode):
     filter = __generate_display_filter(node)
     return Object_to_JSON.convert(filter)
+
 
 # yapf: disable
 def __generate_display_filter(node: BaseNode) -> list[list]:
     filters = []
     filter_node: BaseNode | FilterParametersNode | FilterParameterNode | Percentile
     for field_name, filter_node in node.get_field_values().items():
-        if not filter_node:
+        if filter_node is None:
             continue
         field_alias = node.get_field_alias(field_name)
         filter = None
@@ -259,6 +258,7 @@ def __generate_filter_from_filter_parameters(
         if not filter_node.include:
             return [alias, '=', 'NULL']
         return ''
+    print(filter_node)
     values_contains_null = NULL_FILTER_VALUE in filter_node.values
     values = [value for value in filter_node.values if value != NULL_FILTER_VALUE]
 
@@ -290,23 +290,18 @@ def __generate_isnull_fitler(alias, values_filter, isnull_op, union_op):
     return isnull_filter
 
 
-__repository_type = SqliteRepository
+__query_executor = SQLiteQueryExecutor
 def __get_display_values(
     field: str,
     values: list,
 ):
     if query_params := __query_params_store.get(field):
         values = ', '.join(f"'{value}'" for value in values)
-        return __repository_type(
-            queries=RepositoryQueries(
-                main_query_path=CustomersActivitySqlPathIndex.get_general_select_path(),
-                main_query_format_params={
-                    'columns': query_params.display_field,
-                    'table_name': query_params.table,
-                    'filter_group_limit_clause': f'WHERE {query_params.value_field} IN ({values})\nGROUP BY {query_params.display_field}',
-                }
-            )
-        ).get_data().reset_index(drop=True)[query_params.display_field].values.tolist()
+        return __query_executor().execute(main_query=GeneralSelectSqlQuery(format_params={
+                    'select': query_params.display_field,
+                    'from': query_params.table,
+                    'where_group_limit': f'WHERE {query_params.value_field} IN ({values})\nGROUP BY {query_params.display_field}',
+                })).reset_index(drop=True)[query_params.display_field].values.tolist()
     return values
 
 

@@ -1,42 +1,39 @@
 from collections.abc import Mapping, Iterable
 from itertools import chain
-from toolbox.sql_async import AsyncQueryDescriptor
+from toolbox.sql_async import (
+    AsyncQueryDescriptor,
+    MetricAsyncQueryDescriptor,
+    GeneralSelectAsyncQueryDescriptor,
+)
 from toolbox.sql import MetaData
 from sql_queries.index import (
     CustomersActivitySqlPathIndex,
     CustomersActivityDBIndex,
 )
 from sql_queries.meta import (
-    TicketsWithIterationsAggregatesOnlyMeta,
-    TicketsWithIterationsAggregatesMeta,
     TicketsWithIterationsRawMeta,
     TicketsWithIterationsMeta,
-    TicketsWithIterationsPeriodMeta,
+    PeriodMeta,
     BaselineAlignedModeMeta,
 )
 from configs.config import Config
 from repository.local.core.tickets_with_iterations_table import get_tickets_with_iterations_table
 from repository.local.core.filters import try_get_creation_date_and_tickets_filters
 import repository.local.generators.periods as PeriodsGenerator
+from repository.local.aggs import get_metric
+from toolbox.sql.generators.utils import build_multiline_string_ignore_empties
 
 
-# yapf: disable
-class TicketsPeriod(AsyncQueryDescriptor):
-    """
-    Query to a local table storing min and max boundarise
-    for tickets and iterations.
-    """
-
-    def get_path(self, kwargs: Mapping) -> str:
-        return CustomersActivitySqlPathIndex.get_tickets_period_path()
+class TicketsPeriod(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return TicketsWithIterationsPeriodMeta
+        return PeriodMeta
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'table_name': CustomersActivityDBIndex.get_customers_tickets_name(),
-            'rank_period_offset': Config.get_rank_period_offset(),
+            'select': f"DATE(MIN({TicketsWithIterationsMeta.creation_date}), '+{Config.get_rank_period_offset()}') AS {PeriodMeta.period_start}, MAX({TicketsWithIterationsMeta.creation_date}) AS {PeriodMeta.period_end}",
+            'from': CustomersActivityDBIndex.get_customers_tickets_name(),
+            'where_group_limit': '',
         }
 
 
@@ -87,28 +84,20 @@ class TicketsWithIterationsRaw(AsyncQueryDescriptor):
         return res
 
 
-class TicketsWithIterationsAggregates(TicketsWithIterationsRaw):
-    """
-    Query to a local table storing aggregated tickets with iterations data.
-    """
-
-    def get_path(self, kwargs: Mapping) -> str:
-        return CustomersActivitySqlPathIndex.get_tickets_with_iterations_aggregates_path()
-
-    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return TicketsWithIterationsAggregatesOnlyMeta
-
-    def get_fields(self, kwargs: Mapping) -> Iterable[str]:
-        return self.get_fields_meta(kwargs).get_values()
+class TicketsWithIterationsAggregates(MetricAsyncQueryDescriptor):
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
-        group_by_period = PeriodsGenerator.generate_group_by_period(
-            format=kwargs['group_by_period'],
-            field=BaselineAlignedModeMeta.days_since_baseline if kwargs['use_baseline_aligned_mode'] else TicketsWithIterationsMeta.creation_date,
-            use_baseline_aligned_mode=kwargs['use_baseline_aligned_mode'],
-        )
+        period, agg, agg_name, *_ = self.get_fields(kwargs)
+        groupby_period = PeriodsGenerator.generate_group_by_period(kwargs)
+        metric = get_metric(kwargs['metric'])
         return {
-            **TicketsWithIterationsAggregatesMeta.get_attrs(),
-            'group_by_period': group_by_period,
-            **TicketsWithIterationsRaw.get_general_format_params(self, **kwargs)
+            'select': f'{groupby_period} AS {period}, {metric} AS {agg}, "{metric.name}" AS {agg_name}',
+            'from':  get_tickets_with_iterations_table(**kwargs),
+            'where_group_limit': build_multiline_string_ignore_empties(
+                (
+                    try_get_creation_date_and_tickets_filters(**kwargs),
+                    f'GROUP BY {groupby_period}',
+                    f'ORDER BY {period}'
+                )
+            )
         }

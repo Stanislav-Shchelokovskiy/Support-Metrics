@@ -1,10 +1,7 @@
 from collections.abc import Mapping
-from toolbox.sql_async import AsyncQueryDescriptor
+from toolbox.sql_async import GeneralSelectAsyncQueryDescriptor
 from toolbox.sql import MetaData
-from sql_queries.index import (
-    CustomersActivitySqlPathIndex,
-    CustomersActivityDBIndex,
-)
+from sql_queries.index import CustomersActivityDBIndex
 from sql_queries.meta import (
     PlatformsMeta,
     ProductsMeta,
@@ -14,13 +11,7 @@ import repository.local.generators.filters_generators.platforms_products as Plat
 
 
 # yapf: disable
-class Platforms(AsyncQueryDescriptor):
-    """
-    Query to a local table storing available platforms.
-    """
-
-    def get_path(self, kwargs: Mapping) -> str:
-        return CustomersActivitySqlPathIndex.get_general_select_path()
+class Platforms(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
         return PlatformsMeta
@@ -29,9 +20,9 @@ class Platforms(AsyncQueryDescriptor):
         cols = ', '.join(self.get_fields(kwargs))
         filter = self.get_filter(tent_ids=kwargs['tent_ids'])
         return {
-            'columns': cols,
-            'table_name': CustomersActivityDBIndex.get_platforms_products_name(),
-            'filter_group_limit_clause': f'{filter}\nGROUP BY {cols}\nORDER BY {self.get_order_by_column()}',
+            'select': cols,
+            'from': CustomersActivityDBIndex.get_platforms_products_name(),
+            'where_group_limit': f'{filter}\nGROUP BY {cols}\nORDER BY {self.get_order_by_column()}',
         }
 
     def get_filter(self, tent_ids: FilterParametersNode) -> str:
@@ -42,10 +33,6 @@ class Platforms(AsyncQueryDescriptor):
 
 
 class Products(Platforms):
-    """
-    Query to a local table storing products
-    available for specified tribes.
-    """
     def get_filter(self, tent_ids: FilterParametersNode) -> str:
         return PlatformsProductsSqlFilterClauseGenerator.generate_products_filter(tent_ids=tent_ids)
 

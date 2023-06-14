@@ -254,6 +254,7 @@ async def get_tickets_with_iterations_aggregates(
     range_end: str,
     baseline_aligned_mode_enabled: bool,
     body: TicketsWithIterationsParams,
+    metric: str = None,
 ):
     return await get_repsonse_async(
         server_repository.get_tickets_with_iterations_aggregates(
@@ -261,6 +262,7 @@ async def get_tickets_with_iterations_aggregates(
             range_start=range_start,
             range_end=range_end,
             use_baseline_aligned_mode=baseline_aligned_mode_enabled,
+            metric=metric,
             **body.get_field_values(),
         )
     )

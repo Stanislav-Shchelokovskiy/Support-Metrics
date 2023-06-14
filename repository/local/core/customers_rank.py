@@ -11,6 +11,12 @@ class Percentile(Protocol):
     metric: Literal['tickets', 'iterations']
     value: FilterParameterNode
 
+    @classmethod
+    def to_valid_literal(cls, v: str):
+        if v.lower() == 'tickets':
+            return 'tickets'
+        return 'iterations'
+
 
 def get_ranked_tickets_with_iterations_query(**kwargs) -> str:
     percentile: Percentile = kwargs['percentile']

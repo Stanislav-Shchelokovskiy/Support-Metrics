@@ -8,10 +8,8 @@ from sql_queries.meta import (
     TicketsWithPropertiesMeta,
     CustomersGroupsMeta,
     TicketsTagsMeta,
-    TicketsWithIterationsPeriodMeta,
     CATRepliesTypesMeta,
     CATComponentsFeaturesMeta,
-    TicketsWithIterationsAggregatesMeta,
     TicketsWithIterationsRawMeta,
     PlatformsProductsMeta,
     TicketsWithIterationsMeta,
@@ -73,14 +71,6 @@ tickets_with_iterations_common_params = {
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_tickets_with_iterations_aggregates_path,
-            {
-                **TicketsWithIterationsAggregatesMeta.get_attrs(),
-                **tickets_with_iterations_common_params,
-                'group_by_period': 'group_by_period',
-            },
-        ),
-        (
             CustomersActivitySqlPathIndex.get_customers_groups_path,
             CustomersGroupsMeta.get_attrs(),
         ),
@@ -107,22 +97,6 @@ tickets_with_iterations_common_params = {
         (
             CustomersActivitySqlPathIndex.get_platforms_products_path,
             PlatformsProductsMeta.get_attrs(),
-        ),
-        (
-            CustomersActivitySqlPathIndex.get_tickets_period_path,
-            {
-                'table_name': 'test',
-                **TicketsWithIterationsPeriodMeta.get_attrs(),
-                'rank_period_offset': 'rank_period_offset',
-            },
-        ),
-        (
-            CustomersActivitySqlPathIndex.get_general_select_path,
-            {
-                'columns': 'qwe, asd',
-                'table_name': 'test',
-                'filter_group_limit_clause': '',
-            },
         ),
         (
             CustomersActivitySqlPathIndex.get_tickets_with_iterations_path,
