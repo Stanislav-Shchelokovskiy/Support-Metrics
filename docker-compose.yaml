@@ -29,13 +29,21 @@ services:
     <<: *support_metrics
     hostname: support_metrics_dashboard
     container_name: support_metrics_dashboard
-    command: celery -A worker flower --url_prefix=SupportMetricsDash
+    command: celery -A worker flower --url_prefix=SupportMetricsDash --port=5555
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5555/SupportMetricsDash/healthcheck"]
+      test:
+        [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:5555/SupportMetricsDash/healthcheck"
+        ]
       interval: 5s
       timeout: 5s
       retries: 3
       start_period: 5s
+    expose:
+      - "5555"
 
   support_metrics_worker:
     <<: *support_metrics
@@ -55,6 +63,8 @@ services:
     command: uvicorn server:app --host 0.0.0.0 --port 80 --log-level critical
     volumes:
       - support_analytics-volume:${DB_HOME}
+    expose:
+      - "80"
 
 networks:
   default:
