@@ -8,3 +8,4 @@ export REDIS_DB=SUPPORT_ANALYTICS
 export QUERY_SERVICE=localhost:11005
 # 0 = false, 1 = true
 export UPDATE_ON_STARTUP=1
+export SERVER_PORT=11001
