@@ -277,7 +277,7 @@ FROM (	SELECT	Id, FriendlyId, EntityType, CAST(Created AS DATE) AS creation_date
 											INNER JOIN STRING_SPLIT(licenses_inner.licensed_platforms, @separator) AS lp ON lp.value = tp.value))
 			ORDER BY suitability, lic_origin, free	
 		) AS licenses
-WHERE IsEmployee = 0 OR EntityType=2
+WHERE IsEmployee = 0 OR EntityType IN (2 /* Bug Report */, 6 /* Breaking Change */ )
 
 CREATE NONCLUSTERED INDEX idx_userid_ls ON #TicketsWithLicenses(user_id, license_status)
 CREATE CLUSTERED INDEX idx_tickettype_ticketscid ON #TicketsWithLicenses(ticket_id)

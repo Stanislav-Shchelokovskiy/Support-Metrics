@@ -1,4 +1,4 @@
-from collections.abc import Iterable, Callable, Mapping
+from collections.abc import Callable, Mapping
 from toolbox.sql.aggs import Metric, COUNT_DISTINCT, COUNT, none_metric
 from sql_queries.meta import TicketsWithIterationsMeta
 
@@ -30,7 +30,7 @@ def get_metric(metric: str) -> Metric:
     return get_metrics().get(metric, none_metric)
 
 
-def get_metrics_names(formatter: Callable[[Metric], str] = lambda x: x.name) -> Iterable:
+def get_metrics_names(formatter: Callable[[Metric], str] = lambda x: x.name) -> list[str]:
     return [formatter(x) for x in get_metrics().values()]
 
 
