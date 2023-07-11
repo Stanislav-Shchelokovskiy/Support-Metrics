@@ -265,4 +265,4 @@ def push_state(params: ViewState):
 @app.get('/PullState')
 def pull_state(state_id: str):
     state = view_state_cache.pull_state(state_id)
-    return get_response(json_data=state)
+    return get_response(json_data=state or '{}')
