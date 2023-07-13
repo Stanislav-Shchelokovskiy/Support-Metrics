@@ -6,7 +6,7 @@ from toolbox.sql_async import (
     QueryDescriptor,
 )
 from toolbox.utils.converters import Object_to_JSON
-from repository.local.aggs import get_metrics_names
+from repository.local.aggs import get_metrics_projections
 import repository.local.customers as sqlite_customers
 import repository.local.tickets as sqlite_tickets
 import repository.local.licenses_conversion as sqlite_licenses_conversion
@@ -17,6 +17,8 @@ import repository.local.employees as sqlite_employees
 import repository.local.generators.filters_generators.display_filter as DisplayFilterGenerator
 import toolbox.sql.generators.sqlite_periods_generator as PeriodsGenerator
 
+
+# yapf: disable
 def create_repository(query_descriptor: QueryDescriptor) -> AsyncRepository:
     return AsyncRepository(
         queries=AsyncRepositoryQueries[AsyncSqlQuery](main_query=query_descriptor),
@@ -60,5 +62,15 @@ async def get_display_filter(*args) -> str:
 async def get_periods_array(**kwargs) -> str:
     return await PeriodsGenerator.generate_periods(**kwargs)
 
+
+# yapf: enable
 async def get_metrics() -> str:
-    return Object_to_JSON.convert(get_metrics_names(formatter=lambda x: {'name' : x.name, 'context': 0}))
+    return Object_to_JSON.convert(
+        get_metrics_projections(
+            projector=lambda x: {
+                'name': x.name,
+                'group': x.group,
+                'context': 0,
+            }
+        )
+    )

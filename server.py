@@ -2,7 +2,7 @@ import os
 import help.index as help_index
 from repository import LocalRepository
 import toolbox.cache.view_state_cache as view_state_cache
-from fastapi import FastAPI
+from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 
@@ -35,10 +35,14 @@ app.add_middleware(
 )
 
 
-def get_response(json_data: str) -> Response:
+def get_response(
+    json_data: str,
+    status_code: status = status.HTTP_200_OK,
+) -> Response:
     return Response(
         content=json_data,
         media_type='application/json',
+        status_code=status_code,
     )
 
 
@@ -265,4 +269,7 @@ def push_state(params: ViewState):
 @app.get('/PullState')
 def pull_state(state_id: str):
     state = view_state_cache.pull_state(state_id)
-    return get_response(json_data=state or '{}')
+    return get_response(
+        json_data=state or '{}',
+        status_code=status.HTTP_404_NOT_FOUND if state is None else status.HTTP_200_OK,
+    )
