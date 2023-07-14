@@ -62,7 +62,7 @@ class Employees(GeneralSelectAsyncQueryDescriptor):
             tent_ids=kwargs['tent_ids'],
         )
         return {
-            'select': ', '.join(self.get_fields(kwargs)),
+            'select': f"DISTINCT {', '.join(self.get_fields(kwargs))}",
             'from': CustomersActivityDBIndex.get_employees_name(),
             'where_group_limit': f'{filter}\nORDER BY {EmployeeMeta.name}'
         }
