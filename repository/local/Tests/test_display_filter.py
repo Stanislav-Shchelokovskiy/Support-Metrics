@@ -1,8 +1,8 @@
 import pytest
+import toolbox.sql.generators.display_filter as DisplayFilterGenerator
 from pandas import DataFrame
 from toolbox.sql.query_executors.sql_query_executor import SqlQueryExecutor
 from toolbox.sql.generators import NULL_FILTER_VALUE
-import repository.local.generators.filters_generators.display_filter as DisplayFilterGenerator
 from sql_queries.index import CustomersActivityDBIndex
 from sql_queries.meta import (
     TicketsTypesMeta,
@@ -18,6 +18,7 @@ from server_models import (
     Percentile,
 )
 from repository.local.aggs import tickets
+from repository.local.generators.filters_generators.display_filter import custom_display_filter, DisplayValuesStore
 
 
 class Connection:
@@ -213,4 +214,6 @@ def test_generate_conversion_filter(
         monkeypatch.setattr(DisplayFilterGenerator, '__query_executor', MockSqlQueryExecutor)
         assert DisplayFilterGenerator.__generate_display_filter(
             node=node,
+            custom_display_filter=custom_display_filter,
+            display_values_store=DisplayValuesStore,
         ) == output
