@@ -1,5 +1,5 @@
 import asyncio
-from typing import Any
+from typing import Any, NamedTuple
 from toolbox.utils.converters import Object_to_JSON
 from toolbox.sql.query_executors.sqlite_query_executor import SQLiteQueryExecutor
 from toolbox.sql.sql_query import GeneralSelectSqlQuery
@@ -34,17 +34,10 @@ from sql_queries.meta import (
 import repository.local.generators.filters_generators.tickets_with_iterations.limit as limit
 
 
-class QueryParams:
-
-    def __init__(
-        self,
-        table: str,
-        value_field: str = 'id',
-        display_field: str = 'name',
-    ) -> None:
-        self.table = table
-        self.value_field = value_field
-        self.display_field = display_field
+class QueryParams(NamedTuple):
+    table: str
+    value_field: str = 'id'
+    display_field: str = 'name'
 
 
 def __get_emps_params():
