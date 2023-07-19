@@ -1,14 +1,12 @@
 import pytest
+import toolbox.sql.generators.display_filter as DisplayFilterGenerator
 from pandas import DataFrame
 from toolbox.sql.query_executors.sql_query_executor import SqlQueryExecutor
-from toolbox.sql.generators import NULL_FILTER_VALUE
-import repository.local.generators.filters_generators.display_filter as DisplayFilterGenerator
 from sql_queries.index import CustomersActivityDBIndex
 from sql_queries.meta import (
     TicketsTypesMeta,
     LicenseStatusesMeta,
     TribesMeta,
-    PlatformsProductsMeta,
 )
 
 from server_models import (
@@ -18,6 +16,7 @@ from server_models import (
     Percentile,
 )
 from repository.local.aggs import tickets
+from repository.local.generators.filters_generators.display_filter import custom_display_filter, DisplayValuesStore
 
 
 class Connection:
@@ -39,7 +38,6 @@ class MockSqlQueryExecutor(SqlQueryExecutor):
             CustomersActivityDBIndex.get_tribes_name(): DataFrame(data={TribesMeta.name: ['XAML United Team']}),
             CustomersActivityDBIndex.get_tickets_types_name(): DataFrame(data={TicketsTypesMeta.name: ['Question']}),
             CustomersActivityDBIndex.get_license_statuses_name(): DataFrame(data={LicenseStatusesMeta.name: ['Licensed', 'Free']}),
-            CustomersActivityDBIndex.get_platforms_products_name(): DataFrame(data={PlatformsProductsMeta.platform_name: []}),
         }[table_name]
 
 
@@ -68,141 +66,19 @@ class MockSqlQueryExecutor(SqlQueryExecutor):
                 ['User types', 'in', ['Licensed', 'Free']]
             ],
         ),
-        (
-            TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
-                'Ticket types': FilterParametersNode(include=True, values=[2]),
-            }
-            ),
-            [
-                ['Percentile', '<=', 100],
-                'and',
-                ['Ticket types', 'in', ['Question']]
-            ]
-        ),
-        (
-            TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
-                'Ticket types': FilterParametersNode(include=True, values=[2]),
-                'Duplicated to ticket types': FilterParametersNode(include=True, values=[2]),
+        (TicketsWithIterationsParams(**{
+                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=False, value=40)),
+                'Tribes': FilterParametersNode(include=True, values=['CE832BA0-1D68-421D-8DD5-5E2522462A2F']),
+                'Ticket tags': FilterParametersNode(include=False, values=[],),
             }),
             [
-                ['Percentile', '<=', 100],
+                ['Percentile', '>', 40],
                 'and',
-                ['Ticket types', 'in', ['Question']],
+                ['Tribes', 'in', ['XAML United Team']],
                 'and',
-                ['Duplicated to ticket types', 'in', ['Question']]
-            ]
+                ['Ticket tags', '=', 'NULL'],
+            ],
         ),
-        (
-            TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
-                'Ticket types': FilterParametersNode(include=True, values=[2]),
-                'Duplicated to ticket types': FilterParametersNode(include=False, values=[2]),
-            }),
-            [
-                ['Percentile', '<=', 100],
-                'and',
-                ['Ticket types', 'in', ['Question']],
-                'and',
-                [
-                    ['Duplicated to ticket types', '=', 'NULL'], 'or',
-                    ['Duplicated to ticket types', 'notin', ['Question']]
-                ]
-            ]
-        ),
-        (
-            TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
-                'Ticket types': FilterParametersNode(include=False, values=[2]),
-                'Duplicated to ticket types': FilterParametersNode(include=False, values=[2]),
-            }),
-            [
-                ['Percentile', '<=', 100],
-                'and',
-                [
-                    ['Ticket types', '=', 'NULL'], 'or',
-                    ['Ticket types', 'notin', ['Question']]
-                ],
-                'and',
-                [
-                    ['Duplicated to ticket types', '=', 'NULL'], 'or',
-                    ['Duplicated to ticket types', 'notin', ['Question']]
-                ]
-            ]
-        ),
-        (
-            TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
-                'Ticket types': FilterParametersNode(include=False, values=[2, NULL_FILTER_VALUE]),
-            }),
-            [
-                ['Percentile', '<=', 100],
-                'and',
-                [
-                    ['Ticket types', '!=', 'NULL'], 'and',
-                    ['Ticket types', 'notin', ['Question']]
-                ],
-            ]
-        ),
-        (
-            TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
-                'Ticket types': FilterParametersNode(include=True, values=[2, NULL_FILTER_VALUE]),
-            }),
-            [
-                ['Percentile', '<=', 100],
-                'and',
-                [
-                    ['Ticket types', '=', 'NULL'], 'or',
-                    ['Ticket types', 'in', ['Question']]
-                ],
-            ]
-        ),
-        (
-            TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
-                'Platforms': FilterParametersNode(include=True, values=[NULL_FILTER_VALUE]),
-            }),
-            [
-                ['Percentile', '<=', 100],
-                'and',
-                ['Platforms', '=', 'NULL'],
-            ]
-        ),
-        (
-            TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
-                'Platforms': FilterParametersNode(include=False, values=[NULL_FILTER_VALUE]),
-            }),
-            [
-                ['Percentile', '<=', 100],
-                'and',
-                ['Platforms', '!=', 'NULL'],
-            ]
-        ),
-        (
-            TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
-                'Versions': FilterParametersNode(include=True, values=[NULL_FILTER_VALUE]),
-            }),
-            [
-                ['Percentile', '<=', 100],
-                'and',
-                ['Versions', '=', 'NULL'],
-            ]
-        ),
-        (
-            TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=100)),
-                'Versions': FilterParametersNode(include=False, values=[NULL_FILTER_VALUE]),
-            }),
-            [
-                ['Percentile', '<=', 100],
-                'and',
-                ['Versions', '!=', 'NULL'],
-            ]
-        )
     ]
 )
 def test_generate_conversion_filter(
@@ -213,4 +89,6 @@ def test_generate_conversion_filter(
         monkeypatch.setattr(DisplayFilterGenerator, '__query_executor', MockSqlQueryExecutor)
         assert DisplayFilterGenerator.__generate_display_filter(
             node=node,
+            custom_display_filter=custom_display_filter,
+            display_values_store=DisplayValuesStore,
         ) == output
