@@ -106,6 +106,27 @@ GROUP BY	SaleItemBuild_Id, Platform_Id
 CREATE CLUSTERED INDEX sib_product_cnt ON #SaleItemBuildProductCount (sib_Id, platform_id)
 
 
+DROP TABLE IF EXISTS #LisencesOnly
+SELECT	*
+INTO	#LisencesOnly
+FROM	(
+	SELECT	Id					AS id,
+			Owner_Id			AS owner_crmid,
+			EndUser_Id			AS end_user_crmid,
+			OrderItem_Id		AS order_item_id,
+			@actual_lic_origin	AS lic_origin,
+			NULL				AS revoked_since
+	FROM	CRM.dbo.Licenses
+	UNION
+	SELECT	EntityOid,
+			Owner_Id,
+			EndUser_Id,
+			OrderItem_Id,
+			@historical_lic_origin,
+			IIF(ChangedProperties LIKE '%EndUser%', CONVERT(DATE, EntityModified), NULL)
+	FROM 	CRMAudit.dxcrm.Licenses
+) AS l
+
 
 DROP TABLE IF EXISTS #TicketsWithLicenses;
 WITH enterprise_clients AS (
@@ -114,81 +135,57 @@ WITH enterprise_clients AS (
 	WHERE	UserGroup_Id = '943B96B1-7C80-11E5-BF27-6470020143F0' --Barclays licensed customers
 ),
 
-licenses_only AS (
-	SELECT
-		Id,
-		Owner_Id			AS owner_crmid,
-		EndUser_Id			AS end_user_crmid,
-		OrderItem_Id		AS order_item_id,
-		@actual_lic_origin	AS lic_origin,
-		NULL				AS revoked_since
-	FROM
-		CRM.dbo.Licenses
-	UNION
-	SELECT
-		EntityOid,
-		Owner_Id,
-		EndUser_Id,
-		OrderItem_Id,
-		@historical_lic_origin,
-		IIF(ChangedProperties LIKE '%EndUser%', CONVERT(DATE, EntityModified), NULL)
-	FROM 
-		CRMAudit.dxcrm.Licenses
-),
-
 licenses AS (
-	SELECT
-		owner_crmid,
-		end_user_crmid,
-		lic_origin,
-		revoked_since,
-		oi.subscription_start,
-		oi.expiration_date,
-		o.free,
-		si.license_name,
-		platforms.licensed_platforms,
-		products.licensed_products
-	FROM
-		licenses_only AS lcs 
-		CROSS APPLY (
-			SELECT	CONVERT(DATE, SubscriptionStart) AS subscription_start,
-					CONVERT(DATE, DATEADD(DAY, ISNULL(HoldingPeriod, 99999), SubscriptionStart)) AS expiration_date,
-					SaleItem_Id, 
-					Order_Id
-			FROM	CRM.dbo.OrderItems
-			WHERE	Id = lcs.order_item_id
-		) AS oi
-		CROSS APPLY ( 
-			SELECT	FreeSaleItem_Id
-			FROM	CRM.dbo.License_FreeSaleItem
-			WHERE	License_Id = lcs.Id 
-		) AS bundled_skus
-		CROSS APPLY(
-			SELECT	Status AS free
-			FROM	CRM.dbo.Orders
-			WHERE	Id = oi.Order_Id AND Status IN (@paid, @free_license) 
-		) AS o
-		CROSS APPLY(
-			SELECT	name AS license_name, items 
-			FROM	#SaleItemsFlat
-			WHERE	id IN (oi.SaleItem_Id, bundled_skus.FreeSaleItem_Id)
-		) AS si
-		OUTER APPLY (
-			SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), p.Platform_Id), @separator) AS licensed_platforms
-			FROM (	SELECT		sibpc.Platform_Id
-					FROM		(SELECT Id FROM CRM.dbo.SaleItem_Build WHERE SaleItem_Id IN (SELECT value FROM STRING_SPLIT(si.items, @separator))) AS sib
-								INNER JOIN #SaleItemBuildProductCount AS sibpc ON sibpc.sib_id = sib.Id
-								INNER JOIN #PlatformProductCount AS ppc ON ppc.platform_id = sibpc.platform_id AND sibpc.product_cnt > ppc.product_cnt_boundary
-					GROUP BY	sibpc.Platform_Id) AS p
-		) AS platforms
-		OUTER APPLY (
-			SELECT STRING_AGG(CONVERT(NVARCHAR(MAX), p.Product_Id), @separator) AS licensed_products
-			FROM (	SELECT		sibpp.Product_Id
-					FROM		CRM.dbo.SaleItem_Build AS sib
-								INNER JOIN CRM.dbo.SaleItemBuild_Product_Plaform AS sibpp ON sibpp.SaleItemBuild_Id = sib.Id
-					WHERE		sib.SaleItem_Id IN (SELECT value FROM STRING_SPLIT(si.items, @separator)) 
-					GROUP BY	sibpp.Product_Id) AS p
-		) AS products
+	SELECT	owner_crmid,
+			end_user_crmid,
+			lic_origin,
+			revoked_since,
+			oi.subscription_start,
+			oi.expiration_date,
+			o.free,
+			si.license_name,
+			platforms.licensed_platforms,
+			products.licensed_products
+	FROM	#LisencesOnly AS lcs 
+			CROSS APPLY (
+				SELECT	CONVERT(DATE, SubscriptionStart) AS subscription_start,
+						CONVERT(DATE, DATEADD(DAY, ISNULL(HoldingPeriod, 99999), SubscriptionStart)) AS expiration_date,
+						SaleItem_Id, 
+						Order_Id
+				FROM	CRM.dbo.OrderItems
+				WHERE	Id = lcs.order_item_id
+			) AS oi
+			CROSS APPLY ( 
+				SELECT	FreeSaleItem_Id
+				FROM	CRM.dbo.License_FreeSaleItem
+				WHERE	License_Id = lcs.id 
+			) AS bundled_skus
+			CROSS APPLY(
+				SELECT	Status AS free
+				FROM	CRM.dbo.Orders
+				WHERE	Id = oi.Order_Id AND Status IN (@paid, @free_license) 
+			) AS o
+			CROSS APPLY(
+				SELECT	name AS license_name, items 
+				FROM	#SaleItemsFlat
+				WHERE	id IN (oi.SaleItem_Id, bundled_skus.FreeSaleItem_Id)
+			) AS si
+			OUTER APPLY (
+				SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), p.Platform_Id), @separator) AS licensed_platforms
+				FROM (	SELECT		sibpc.Platform_Id
+						FROM		(SELECT Id FROM CRM.dbo.SaleItem_Build WHERE SaleItem_Id IN (SELECT value FROM STRING_SPLIT(si.items, @separator))) AS sib
+									INNER JOIN #SaleItemBuildProductCount AS sibpc ON sibpc.sib_id = sib.Id
+									INNER JOIN #PlatformProductCount AS ppc ON ppc.platform_id = sibpc.platform_id AND sibpc.product_cnt > ppc.product_cnt_boundary
+						GROUP BY	sibpc.Platform_Id) AS p
+			) AS platforms
+			OUTER APPLY (
+				SELECT STRING_AGG(CONVERT(NVARCHAR(MAX), p.Product_Id), @separator) AS licensed_products
+				FROM (	SELECT		sibpp.Product_Id
+						FROM		CRM.dbo.SaleItem_Build AS sib
+									INNER JOIN CRM.dbo.SaleItemBuild_Product_Plaform AS sibpp ON sibpp.SaleItemBuild_Id = sib.Id
+						WHERE		sib.SaleItem_Id IN (SELECT value FROM STRING_SPLIT(si.items, @separator)) 
+						GROUP BY	sibpp.Product_Id) AS p
+			) AS products
 )
 
 SELECT
