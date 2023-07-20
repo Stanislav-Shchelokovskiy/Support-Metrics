@@ -1,10 +1,10 @@
 from typing import Iterable
 from toolbox.sql.repository_queries import RepositoryAlchemyQueries
-from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.meta import (
     CustomersGroupsMeta,
     BaselineAlignedCustomersGroupsMeta,
 )
+import sql_queries.index.path.extract as ExtractPathIndex
 
 
 class CustomersGroups(RepositoryAlchemyQueries):
@@ -13,7 +13,7 @@ class CustomersGroups(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return CustomersActivitySqlPathIndex.get_customers_groups_path()
+        return ExtractPathIndex.customers_groups
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return CustomersGroupsMeta.get_attrs()
@@ -28,7 +28,7 @@ class TrackedCustomersGroups(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return CustomersActivitySqlPathIndex.get_tracked_customers_groups_path()
+        return ExtractPathIndex.tracked_customers_groups
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return {

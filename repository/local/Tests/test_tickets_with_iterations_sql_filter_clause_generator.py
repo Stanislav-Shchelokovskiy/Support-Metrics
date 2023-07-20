@@ -9,12 +9,12 @@ import repository.local.generators.filters_generators.tickets_with_iterations.ca
 import repository.local.generators.filters_generators.tickets_with_iterations.customers as customers
 import repository.local.generators.filters_generators.tickets_with_iterations.employees as employees
 from sql_queries.meta import TicketsWithIterationsMeta, BaselineAlignedModeMeta
-from sql_queries.index import CustomersActivityDBIndex
 from toolbox.sql.generators.Tests.mocks import (
     MockFilterParameterNode,
     MockPercentile,
 )
 from configs.config import Config
+import sql_queries.index.db as DbIndex
 
 
 @pytest.mark.parametrize(
@@ -228,7 +228,7 @@ def test_single_like_filters(
         ),
         (
             customers.generate_customers_filter,
-            f'{CustomersActivityDBIndex.get_tickets_with_iterations_name()}.{TicketsWithIterationsMeta.user_crmid}',
+            f'{DbIndex.tickets_with_iterations}.{TicketsWithIterationsMeta.user_crmid}',
             None,
         ),
         (

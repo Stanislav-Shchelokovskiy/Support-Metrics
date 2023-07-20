@@ -1,14 +1,13 @@
 from collections.abc import Mapping
 from toolbox.sql_async import GeneralSelectAsyncQueryDescriptor
 from toolbox.sql import MetaData
-from sql_queries.index import CustomersActivityDBIndex
 from sql_queries.meta import (
     CustomersGroupsMeta,
     TrackedCustomersGroupsMeta,
     CustomersMeta,
 )
-
 from repository.local.validation_repository import ValidationRepositoryQueries
+import sql_queries.index.db as DbIndex
 
 
 # yapf: disable
@@ -23,7 +22,7 @@ class Customers(GeneralSelectAsyncQueryDescriptor):
         ids_filter = '\nOR '.join([f"{CustomersMeta.id} = '{value}'" for value in filter_values])
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': CustomersActivityDBIndex.get_customers_name(),
+            'from': DbIndex.customers,
             'where_group_limit': f'WHERE\n{ids_filter}' if ids_filter else f"WHERE {CustomersMeta.name} LIKE '{search_param}%'\nLIMIT {kwargs['take']} OFFSET {kwargs['skip']}",
         }
 
@@ -33,7 +32,7 @@ class CustomersValidation(ValidationRepositoryQueries):
         return {
             'values': ',\n'.join([f"('{value}')" for value in kwargs['values']]),
             'field': CustomersMeta.id,
-            'table': CustomersActivityDBIndex.get_customers_name(),
+            'table': DbIndex.customers,
         }
 
 
@@ -45,7 +44,7 @@ class CustomersGroups(GeneralSelectAsyncQueryDescriptor):
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': CustomersActivityDBIndex.get_customers_groups_name(),
+            'from': DbIndex.customers_groups,
             'where_group_limit': f'ORDER BY {CustomersGroupsMeta.name}',
         }
 
@@ -59,6 +58,6 @@ class TrackedCustomersGroups(GeneralSelectAsyncQueryDescriptor):
         cols = ', '.join(self.get_fields(kwargs))
         return {
             'select': cols,
-            'from': CustomersActivityDBIndex.get_tracked_customers_groups_name(),
+            'from': DbIndex.tracked_customers_groups,
             'where_group_limit': f'GROUP BY {cols}\nORDER BY {TrackedCustomersGroupsMeta.name}',
         }

@@ -1,10 +1,10 @@
 from typing import Iterable
 from toolbox.sql.repository_queries import RepositoryAlchemyQueries
-from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.meta import (
     CATRepliesTypesMeta,
     CATComponentsFeaturesMeta,
 )
+import sql_queries.index.path.extract as ExtractPathIndex
 
 
 class CATRepliesTypes(RepositoryAlchemyQueries):
@@ -13,7 +13,7 @@ class CATRepliesTypes(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return CustomersActivitySqlPathIndex.get_replies_types_path()
+        return ExtractPathIndex.replies_types
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return {**kwargs, **CATRepliesTypesMeta.get_attrs()}
@@ -28,7 +28,7 @@ class CATComponentsFeatures(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return CustomersActivitySqlPathIndex.get_components_features_path()
+        return ExtractPathIndex.components_features
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return {**kwargs, **CATComponentsFeaturesMeta.get_attrs()}

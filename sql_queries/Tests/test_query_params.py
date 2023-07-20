@@ -3,7 +3,6 @@ from os import getcwd
 from typing import Callable
 from pathlib import Path
 import toolbox.sql.index as RootPath
-from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.meta import (
     TicketsWithPropertiesMeta,
     CustomersGroupsMeta,
@@ -29,6 +28,9 @@ from sql_queries.meta import (
     TicketStatusesMeta,
     IDEsMeta,
 )
+import sql_queries.index.path.extract as ExtractPathIndex
+import sql_queries.index.path.local as LocalPathIndex
+import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
 
 
 tickets_with_iterations_common_params = {
@@ -42,18 +44,18 @@ tickets_with_iterations_common_params = {
     'get_query_file_path, format_params',
     [
         (
-            CustomersActivitySqlPathIndex.get_tickets_with_licenses_and_users_path,
+            ExtractPathIndex.tickets_with_licenses_and_users,
             {
                 'start_date': 'qwe',
                 'end_date': 'asd',
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_tickets_with_properties_path,
+            ExtractPathIndex.tickets_with_properties,
             TicketsWithPropertiesMeta.get_attrs(),
         ),
         (
-            CustomersActivitySqlPathIndex.get_tickets_with_iterations_raw_path,
+            LocalPathIndex.tickets_with_iterations_raw,
             {
                 **TicketsWithIterationsRawMeta.get_attrs(),
                 **tickets_with_iterations_common_params,
@@ -71,11 +73,11 @@ tickets_with_iterations_common_params = {
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_customers_groups_path,
+            ExtractPathIndex.customers_groups,
             CustomersGroupsMeta.get_attrs(),
         ),
         (
-            CustomersActivitySqlPathIndex.get_tracked_customers_groups_path,
+            ExtractPathIndex.tracked_customers_groups,
             {
                 **BaselineAlignedCustomersGroupsMeta.get_attrs(),
                 'start_date': 'qwe',
@@ -83,23 +85,23 @@ tickets_with_iterations_common_params = {
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_ticket_tags_path,
+            ExtractPathIndex.ticket_tags,
             TicketsTagsMeta.get_attrs(),
         ),
         (
-            CustomersActivitySqlPathIndex.get_replies_types_path,
+            ExtractPathIndex.replies_types,
             CATRepliesTypesMeta.get_attrs(),
         ),
         (
-            CustomersActivitySqlPathIndex.get_components_features_path,
+            ExtractPathIndex.components_features,
             CATComponentsFeaturesMeta.get_attrs(),
         ),
         (
-            CustomersActivitySqlPathIndex.get_platforms_products_path,
+            ExtractPathIndex.platforms_products,
             PlatformsProductsMeta.get_attrs(),
         ),
         (
-            CustomersActivitySqlPathIndex.get_tickets_with_iterations_path,
+            TransofrmLoadPathIndex.tickets_with_iterations,
             {
                 **TicketsWithIterationsMeta.get_attrs(),
                 **EmployeesIterationsMeta.get_attrs(),
@@ -110,7 +112,7 @@ tickets_with_iterations_common_params = {
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_emp_positions_path,
+            TransofrmLoadPathIndex.emp_positions,
             {
                 **PositionsMeta.get_attrs(),
                 'EmployeesIterations': 'EmployeesIterations',
@@ -120,7 +122,7 @@ tickets_with_iterations_common_params = {
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_emp_tribes_path, {
+            TransofrmLoadPathIndex.emp_tribes, {
                 **TribeMeta.get_attrs(),
                 **TribesMeta.get_attrs(),
                 'EmpTribes': 'EmpTribes',
@@ -128,14 +130,14 @@ tickets_with_iterations_common_params = {
             }
         ),
         (
-            CustomersActivitySqlPathIndex.get_employees_path,
+            ExtractPathIndex.employees,
             {
                 **EmployeesMeta.get_attrs(),
                 'start_date': 'start_date',
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_customers_path,
+            TransofrmLoadPathIndex.customers,
             {
                 **CustomersMeta.get_attrs(),
                 'Users': 'Users',
@@ -143,7 +145,7 @@ tickets_with_iterations_common_params = {
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_validate_path,
+            LocalPathIndex.validate,
             {
                 'values': 'values',
                 'field': 'field',
@@ -151,7 +153,7 @@ tickets_with_iterations_common_params = {
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_knot_path,
+            TransofrmLoadPathIndex.knot,
             {
                 **KnotMeta.get_attrs(),
                 'table': 'table',
@@ -159,42 +161,42 @@ tickets_with_iterations_common_params = {
             },
         ),
         (
-            CustomersActivitySqlPathIndex.get_tickets_types_path,
+            ExtractPathIndex.tickets_types,
             TicketsTypesMeta.get_attrs(),
         ),
         (
-            CustomersActivitySqlPathIndex.get_frameworks_path,
+            ExtractPathIndex.frameworks,
             FrameworksMeta.get_attrs(),
         ),
         (
-            CustomersActivitySqlPathIndex.get_operating_systems_path,
+            ExtractPathIndex.operating_systems,
             OperatingSystemsMeta.get_attrs(),
         ),
         (
-            CustomersActivitySqlPathIndex.get_builds_path,
+            ExtractPathIndex.builds,
             BuildsMeta.get_attrs(),
         ),
         (
-            CustomersActivitySqlPathIndex.get_severity_path,
+            ExtractPathIndex.severity,
             SeverityMeta.get_attrs(),
         ),
         (
-            CustomersActivitySqlPathIndex.get_ticket_statuses_path,
+            ExtractPathIndex.ticket_statuses,
             TicketStatusesMeta.get_attrs(),
         ),
         (
-            CustomersActivitySqlPathIndex.get_ides_path,
+            ExtractPathIndex.ides,
             IDEsMeta.get_attrs(),
         ),
     ],
 )
 def test_query_params(
-    get_query_file_path: Callable[[], str],
+    get_query_file_path: str,
     format_params: dict,
 ):
     with pytest.MonkeyPatch.context() as monkeypatch:
         prepare_env(monkeypatch)
-        query = Path(get_query_file_path()).read_text(encoding='utf-8')
+        query = Path(get_query_file_path).read_text(encoding='utf-8')
         for key in format_params:
             assert f'{{{key}}}' in query
 

@@ -1,7 +1,6 @@
 from collections.abc import Mapping
 from toolbox.sql_async import GeneralSelectAsyncQueryDescriptor
 from toolbox.sql import MetaData
-from sql_queries.index import CustomersActivityDBIndex
 from sql_queries.meta import (
     PositionsMeta,
     TribesMeta,
@@ -9,6 +8,7 @@ from sql_queries.meta import (
     TentsMeta,
 )
 import repository.local.generators.filters_generators.employees as EmployeesSqlFilterClauseGenerator
+import sql_queries.index.db as DbIndex
 
 
 class EmpPositions(GeneralSelectAsyncQueryDescriptor):
@@ -19,7 +19,7 @@ class EmpPositions(GeneralSelectAsyncQueryDescriptor):
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': CustomersActivityDBIndex.get_emp_positions_name(),
+            'from': DbIndex.emp_positions,
             'where_group_limit': f'ORDER BY {PositionsMeta.name}',
         }
 
@@ -32,7 +32,7 @@ class EmpTribes(GeneralSelectAsyncQueryDescriptor):
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': CustomersActivityDBIndex.get_emp_tribes_name(),
+            'from': DbIndex.emp_tribes,
             'where_group_limit': f'ORDER BY {TribesMeta.name}',
         }
 
@@ -45,7 +45,7 @@ class EmpTents(GeneralSelectAsyncQueryDescriptor):
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': CustomersActivityDBIndex.get_emp_tents_name(),
+            'from': DbIndex.emp_tents,
             'where_group_limit': f'ORDER BY {TentsMeta.name}',
         }
 
@@ -63,6 +63,6 @@ class Employees(GeneralSelectAsyncQueryDescriptor):
         )
         return {
             'select': f"DISTINCT {', '.join(self.get_fields(kwargs))}",
-            'from': CustomersActivityDBIndex.get_employees_name(),
+            'from': DbIndex.employees,
             'where_group_limit': f'{filter}\nORDER BY {EmployeeMeta.name}'
         }

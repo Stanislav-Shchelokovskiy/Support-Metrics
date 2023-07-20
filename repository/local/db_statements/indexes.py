@@ -1,5 +1,4 @@
 from typing import Iterable
-from sql_queries.index import CustomersActivityDBIndex
 from sql_queries.meta import (
     CATComponentsFeaturesMeta,
     BaselineAlignedCustomersGroupsMeta,
@@ -7,6 +6,7 @@ from sql_queries.meta import (
     PlatformsProductsMeta,
     TicketsWithPropertiesMeta,
 )
+import sql_queries.index.db as DbIndex
 
 
 def _create_index_statement(tbl: str, cols: Iterable[str]) -> str:
@@ -18,27 +18,27 @@ def get_create_index_statements() -> dict[str, tuple[str]]:
     return __create_index_statements
 
 __create_index_statements = {
-        CustomersActivityDBIndex.get_customers_tickets_name():
+        DbIndex.customers_tickets:
             (
                 _create_index_statement(
-                    tbl=CustomersActivityDBIndex.get_customers_tickets_name(),
+                    tbl=DbIndex.customers_tickets,
                     cols=(
                         TicketsWithPropertiesMeta.user_crmid,
                         TicketsWithPropertiesMeta.creation_date,
                     )
                 ),
             ),
-        CustomersActivityDBIndex.get_employees_iterations_name():
+        DbIndex.employees_iterations:
             (
                 _create_index_statement(
-                    tbl=CustomersActivityDBIndex.get_employees_iterations_name(),
+                    tbl=DbIndex.employees_iterations,
                     cols=(EmployeesIterationsMeta.ticket_id,)
                 ),
             ),
-        CustomersActivityDBIndex.get_cat_components_features_name():
+        DbIndex.cat_components_features:
             (
                 _create_index_statement(
-                    tbl=CustomersActivityDBIndex.get_cat_components_features_name(),
+                    tbl=DbIndex.cat_components_features,
                     cols=(
                         CATComponentsFeaturesMeta.tent_id,
                         CATComponentsFeaturesMeta.component_id,
@@ -46,7 +46,7 @@ __create_index_statements = {
                     )
                 ),
                 _create_index_statement(
-                    tbl=CustomersActivityDBIndex.get_cat_components_features_name(),
+                    tbl=DbIndex.cat_components_features,
                     cols=(
                         CATComponentsFeaturesMeta.tent_id,
                         CATComponentsFeaturesMeta.component_id,
@@ -55,24 +55,24 @@ __create_index_statements = {
                     )
                 ),
                 _create_index_statement(
-                    tbl=CustomersActivityDBIndex.get_cat_components_features_name(),
+                    tbl=DbIndex.cat_components_features,
                     cols=(
                         CATComponentsFeaturesMeta.component_id,
                         CATComponentsFeaturesMeta.component_name,
                     )
                 ),
                 _create_index_statement(
-                    tbl=CustomersActivityDBIndex.get_cat_components_features_name(),
+                    tbl=DbIndex.cat_components_features,
                     cols=(
                         CATComponentsFeaturesMeta.feature_id,
                         CATComponentsFeaturesMeta.feature_name,
                     )
                 ),
             ),
-        CustomersActivityDBIndex.get_platforms_products_name():
+        DbIndex.platforms_products:
             (
                 _create_index_statement(
-                    tbl=CustomersActivityDBIndex.get_platforms_products_name(),
+                    tbl=DbIndex.platforms_products,
                     cols=(
                         PlatformsProductsMeta.product_tent_id,
                         PlatformsProductsMeta.product_id,
@@ -80,7 +80,7 @@ __create_index_statements = {
                     )
                 ),
                 _create_index_statement(
-                    tbl=CustomersActivityDBIndex.get_platforms_products_name(),
+                    tbl=DbIndex.platforms_products,
                     cols=(
                         PlatformsProductsMeta.platform_tent_id,
                         PlatformsProductsMeta.platform_id,
@@ -88,24 +88,24 @@ __create_index_statements = {
                     )
                 ),
                 _create_index_statement(
-                    tbl=CustomersActivityDBIndex.get_platforms_products_name(),
+                    tbl=DbIndex.platforms_products,
                     cols=(
                         PlatformsProductsMeta.platform_id,
                         PlatformsProductsMeta.platform_name,
                     )
                 ),
                 _create_index_statement(
-                    tbl=CustomersActivityDBIndex.get_platforms_products_name(),
+                    tbl=DbIndex.platforms_products,
                     cols=(
                         PlatformsProductsMeta.product_id,
                         PlatformsProductsMeta.product_name,
                     )
                 ),
             ),
-        CustomersActivityDBIndex.get_tracked_customers_groups_name():
+        DbIndex.tracked_customers_groups:
             (
                 _create_index_statement(
-                    tbl=CustomersActivityDBIndex.get_tracked_customers_groups_name(),
+                    tbl=DbIndex.tracked_customers_groups,
                     cols=(
                         BaselineAlignedCustomersGroupsMeta.assignment_date,
                         BaselineAlignedCustomersGroupsMeta.id,
@@ -114,7 +114,7 @@ __create_index_statements = {
                     )
                 ),
                 _create_index_statement(
-                    tbl=CustomersActivityDBIndex.get_tracked_customers_groups_name(),
+                    tbl=DbIndex.tracked_customers_groups,
                     cols=(
                         BaselineAlignedCustomersGroupsMeta.user_crmid,
                         BaselineAlignedCustomersGroupsMeta.assignment_date,
@@ -122,7 +122,7 @@ __create_index_statements = {
                     )
                 ),
                 _create_index_statement(
-                    tbl=CustomersActivityDBIndex.get_tracked_customers_groups_name(),
+                    tbl=DbIndex.tracked_customers_groups,
                     cols=(
                         BaselineAlignedCustomersGroupsMeta.id,
                         BaselineAlignedCustomersGroupsMeta.name,

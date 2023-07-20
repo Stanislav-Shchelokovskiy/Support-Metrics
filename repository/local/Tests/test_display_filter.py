@@ -2,7 +2,6 @@ import pytest
 import toolbox.sql.generators.display_filter as DisplayFilterGenerator
 from pandas import DataFrame
 from toolbox.sql.query_executors.sql_query_executor import SqlQueryExecutor
-from sql_queries.index import CustomersActivityDBIndex
 from sql_queries.meta import (
     TicketsTypesMeta,
     LicenseStatusesMeta,
@@ -17,6 +16,7 @@ from server_models import (
 )
 from repository.local.aggs import tickets
 from repository.local.generators.filters_generators.display_filter import custom_display_filter, DisplayValuesStore
+import sql_queries.index.db as DbIndex
 
 
 class Connection:
@@ -35,9 +35,9 @@ class MockSqlQueryExecutor(SqlQueryExecutor):
         query = kwargs['main_query']
         table_name = query.format_params['from']
         return {
-            CustomersActivityDBIndex.get_tribes_name(): DataFrame(data={TribesMeta.name: ['XAML United Team']}),
-            CustomersActivityDBIndex.get_tickets_types_name(): DataFrame(data={TicketsTypesMeta.name: ['Question']}),
-            CustomersActivityDBIndex.get_license_statuses_name(): DataFrame(data={LicenseStatusesMeta.name: ['Licensed', 'Free']}),
+            DbIndex.tribes: DataFrame(data={TribesMeta.name: ['XAML United Team']}),
+            DbIndex.tickets_types: DataFrame(data={TicketsTypesMeta.name: ['Question']}),
+            DbIndex.license_statuses: DataFrame(data={LicenseStatusesMeta.name: ['Licensed', 'Free']}),
         }[table_name]
 
 

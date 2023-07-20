@@ -1,5 +1,4 @@
 from repository.local.core.customers_rank import Percentile
-from sql_queries.index import CustomersActivityDBIndex
 from sql_queries.meta import (
     PlatformsProductsMeta,
     TicketsTagsMeta,
@@ -24,11 +23,12 @@ from toolbox.sql.generators.display_filter import QueryParams
 from toolbox.sql.generators.filter_clause_generator_factory import BaseNode
 import toolbox.sql.generators.display_filter as DisplayFilterGenerator
 import repository.local.generators.filters_generators.tickets_with_iterations.limit as limit
+import sql_queries.index.db as DbIndex
 
 
 def __get_emps_params():
     return QueryParams(
-        table=CustomersActivityDBIndex.get_employees_name(),
+        table=DbIndex.employees,
         value_field=EmployeesIterationsMeta.scid,
         display_field=EmployeesIterationsMeta.name,
     )
@@ -36,7 +36,7 @@ def __get_emps_params():
 
 def __get_tickets_types_params():
     return QueryParams(
-        table=CustomersActivityDBIndex.get_tickets_types_name(),
+        table=DbIndex.tickets_types,
         value_field=TicketsTypesMeta.id,
         display_field=TicketsTypesMeta.name,
     )
@@ -46,31 +46,31 @@ def __get_tickets_types_params():
 _query_params_store = {
     'tribe_ids':
         QueryParams(
-            table=CustomersActivityDBIndex.get_tribes_name(),
+            table=DbIndex.tribes,
             value_field=TribesMeta.id,
             display_field=TribesMeta.name,
         ),
     'tent_ids':
         QueryParams(
-            table=CustomersActivityDBIndex.get_tents_name(),
+            table=DbIndex.tents,
             value_field=TentsMeta.id,
             display_field=TentsMeta.name,
         ),
     'platforms_ids':
         QueryParams(
-            table=CustomersActivityDBIndex.get_platforms_products_name(),
+            table=DbIndex.platforms_products,
             value_field=PlatformsProductsMeta.platform_id,
             display_field=PlatformsProductsMeta.platform_name,
         ),
     'products_ids':
         QueryParams(
-            table=CustomersActivityDBIndex.get_platforms_products_name(),
+            table=DbIndex.platforms_products,
             value_field=PlatformsProductsMeta.product_id,
             display_field=PlatformsProductsMeta.product_name,
         ),
     'tickets_tags':
         QueryParams(
-            table=CustomersActivityDBIndex.get_tickets_tags_name(),
+            table=DbIndex.tickets_tags,
             value_field=TicketsTagsMeta.id,
             display_field=TicketsTagsMeta.name,
         ),
@@ -78,67 +78,67 @@ _query_params_store = {
     'duplicated_to_tickets_types': __get_tickets_types_params(),
     'severity':
         QueryParams(
-            table=CustomersActivityDBIndex.get_severity_name(),
+            table=DbIndex.severity,
             value_field=SeverityMeta.id,
             display_field=SeverityMeta.name,
         ),
     'ticket_status':
         QueryParams(
-            table=CustomersActivityDBIndex.get_ticket_statuses_name(),
+            table=DbIndex.ticket_statuses,
             value_field=TicketStatusesMeta.id,
             display_field=TicketStatusesMeta.name,
         ),
     'frameworks':
         QueryParams(
-            table=CustomersActivityDBIndex.get_frameworks_name(),
+            table=DbIndex.frameworks,
             value_field=FrameworksMeta.id,
             display_field=FrameworksMeta.name,
         ),
     'operating_system_id':
         QueryParams(
-            table=CustomersActivityDBIndex.get_operating_systems_name(),
+            table=DbIndex.operating_systems,
             value_field=OperatingSystemsMeta.id,
             display_field=OperatingSystemsMeta.name,
         ),
     'ide_id':
         QueryParams(
-            table=CustomersActivityDBIndex.get_ides_name(),
+            table=DbIndex.ides,
             value_field=IDEsMeta.id,
             display_field=IDEsMeta.name,
         ),
     'customers_groups':
         QueryParams(
-            table=CustomersActivityDBIndex.get_customers_groups_name(),
+            table=DbIndex.customers_groups,
             value_field=CustomersGroupsMeta.id,
             display_field=CustomersGroupsMeta.name,
         ),
     'license_statuses':
         QueryParams(
-            table=CustomersActivityDBIndex.get_license_statuses_name(),
+            table=DbIndex.license_statuses,
             value_field=LicenseStatusesMeta.id,
             display_field=LicenseStatusesMeta.name,
         ),
     'conversion_statuses':
         QueryParams(
-            table=CustomersActivityDBIndex.get_conversion_statuses_name(),
+            table=DbIndex.conversion_statuses,
             value_field=ConversionStatusesMeta.id,
             display_field=ConversionStatusesMeta.name,
         ),
     'positions_ids':
         QueryParams(
-            table=CustomersActivityDBIndex.get_emp_positions_name(),
+            table=DbIndex.emp_positions,
             value_field=PositionsMeta.id,
             display_field=PositionsMeta.name,
         ),
     'emp_tribe_ids':
         QueryParams(
-            table=CustomersActivityDBIndex.get_emp_tribes_name(),
+            table=DbIndex.emp_tribes,
             value_field=TribesMeta.id,
             display_field=TribesMeta.name,
         ),
     'emp_tent_ids':
         QueryParams(
-            table=CustomersActivityDBIndex.get_emp_tents_name(),
+            table=DbIndex.emp_tents,
             value_field=TentsMeta.id,
             display_field=TentsMeta.name,
         ),
@@ -148,25 +148,25 @@ _query_params_store = {
     'fixed_by_ids': __get_emps_params(),
     'reply_ids':
         QueryParams(
-            table=CustomersActivityDBIndex.get_cat_replies_types_name(),
+            table=DbIndex.cat_replies_types,
             value_field=CATRepliesTypesMeta.id,
             display_field=CATRepliesTypesMeta.name,
         ),
     'components_ids':
         QueryParams(
-            table=CustomersActivityDBIndex.get_cat_components_features_name(),
+            table=DbIndex.cat_components_features,
             value_field=CATComponentsFeaturesMeta.component_id,
             display_field=CATComponentsFeaturesMeta.component_name,
         ),
     'feature_ids':
         QueryParams(
-            table=CustomersActivityDBIndex.get_cat_components_features_name(),
+            table=DbIndex.cat_components_features,
             value_field=CATComponentsFeaturesMeta.feature_id,
             display_field=CATComponentsFeaturesMeta.feature_name,
         ),
     'customers_crmids':
         QueryParams(
-            table=CustomersActivityDBIndex.get_customers_name(),
+            table=DbIndex.customers,
             value_field=CustomersMeta.id,
             display_field=CustomersMeta.name,
         ),

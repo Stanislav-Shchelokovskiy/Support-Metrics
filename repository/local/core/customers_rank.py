@@ -1,9 +1,9 @@
 from typing import Protocol, Literal, runtime_checkable
 from sql_queries.meta import TicketsWithIterationsMeta
-from sql_queries.index import CustomersActivityDBIndex
 from toolbox.sql.generators.filter_clause_generator_factory import FilterParameterNode
 import repository.local.generators.filters_generators.tickets_with_iterations.limit as LimitsSqlFilterClauseGenerator
 import repository.local.core.filters as filters
+import sql_queries.index.db as DbIndex
 
 
 @runtime_checkable
@@ -20,7 +20,7 @@ class Percentile(Protocol):
 
 def get_ranked_tickets_with_iterations_query(**kwargs) -> str:
     percentile: Percentile = kwargs['percentile']
-    tbl = CustomersActivityDBIndex.get_tickets_with_iterations_name()
+    tbl = DbIndex.tickets_with_iterations
     return (
         f"""{tbl}
     INNER JOIN (
