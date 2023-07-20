@@ -63,6 +63,7 @@ def update_support_metrics(**kwargs):
             load_tracked_groups.si(),
             load_builds.si(),
             load_components_features.si(),
+            load_csi.si(),
             load_customers_tickets.si(),
             load_employees_iterations.si(),
         ]
@@ -231,6 +232,14 @@ def load_employees(self, **kwargs):
         self,
         tasks.load_employees,
         start_date=Config.get_tickets_period()['start_date'],
+    )
+
+
+@app.task(name='load_csi', bind=True)
+def load_csi(self, **kwargs):
+    return run_retriable_task(
+        self,
+        tasks.load_csi,
     )
 
 

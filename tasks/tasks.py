@@ -195,6 +195,12 @@ def load_conversion_statuses():
         repository=RepositoryFactory.remote.create_conversion_statuses_repository(),
     )
 
+def load_csi():
+    _save_table(
+        tbl_name=DbIndex.csi,
+        repository=RepositoryFactory.remote.create_csi_repository(),
+    )
+
 
 def process_staged_data(rank_period_offset: str):
     TablesBuilder.build_tickets_with_iterations(rank_period_offset=rank_period_offset)

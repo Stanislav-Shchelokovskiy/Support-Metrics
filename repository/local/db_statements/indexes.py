@@ -5,6 +5,7 @@ from sql_queries.meta import (
     EmployeesIterationsMeta,
     PlatformsProductsMeta,
     TicketsWithPropertiesMeta,
+    CSIMeta,
 )
 import sql_queries.index.db as DbIndex
 
@@ -129,4 +130,15 @@ __create_index_statements = {
                     )
                 ),
             ),
+        DbIndex.csi:
+        (
+            _create_index_statement(
+                    tbl=DbIndex.csi,
+                    cols=(
+                        CSIMeta.ticket_scid,
+                        CSIMeta.date,
+                        CSIMeta.rating,
+                    )
+                ),
+        )
     }

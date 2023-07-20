@@ -1,6 +1,5 @@
 import pytest
 from os import getcwd
-from typing import Callable
 from pathlib import Path
 import toolbox.sql.index as RootPath
 from sql_queries.meta import (
@@ -27,6 +26,7 @@ from sql_queries.meta import (
     SeverityMeta,
     TicketStatusesMeta,
     IDEsMeta,
+    CSIMeta
 )
 import sql_queries.index.path.extract as ExtractPathIndex
 import sql_queries.index.path.local as LocalPathIndex
@@ -187,6 +187,10 @@ tickets_with_iterations_common_params = {
         (
             ExtractPathIndex.ides,
             IDEsMeta.get_attrs(),
+        ),
+        (
+            ExtractPathIndex.csi,
+            CSIMeta.get_attrs(),
         ),
     ],
 )

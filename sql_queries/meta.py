@@ -265,3 +265,9 @@ class BaselineAlignedCustomersGroupsMeta(MetaData):
 
 class BaselineAlignedModeMeta(BaselineAlignedCustomersGroupsMeta):
     days_since_baseline = 'days_since_baseline'
+
+
+class CSIMeta(MetaData):
+    ticket_scid = TicketsWithIterationsMeta.ticket_scid
+    date = 'date'
+    rating = 'rating'
