@@ -7,6 +7,7 @@ import repository.remote.cat as cat
 import repository.remote.platforms_products as platforms_products
 import repository.remote.licenses_conversion as licenses_conversion
 import repository.remote.employees as employees
+import repository.remote.csi as csi
 
 def __create_repository(queries: RepositoryQueries) -> Repository:
     return SqlServerRepository(queries=queries)
@@ -65,3 +66,6 @@ def create_ticket_statuses_repository() -> Repository:
 
 def create_ides_repository() -> Repository:
     return __create_repository(queries=tickets.IDEs())
+
+def create_csi_repository() -> Repository:
+    return __create_repository(queries=csi.CSI())

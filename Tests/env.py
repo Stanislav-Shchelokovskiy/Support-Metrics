@@ -36,7 +36,7 @@ def mock_TicketsWithIterationsAggregates(monkeypatch: pytest.MonkeyPatch):
     from toolbox.sql.meta_data import MetaData
     from repository.local.tickets_with_iterations import TicketsWithIterationsAggregates
     import repository.local.generators.periods as PeriodsGenerator
-    from repository.local.aggs import get_metrics
+    from repository.local.aggs import get_metrics, csi
     from repository.local.core.tickets_with_iterations_table import get_tickets_with_iterations_table
     from toolbox.sql.generators.utils import build_multiline_string_ignore_empties
     from repository.local.core.filters import try_get_creation_date_and_tickets_filters
@@ -61,7 +61,7 @@ def mock_TicketsWithIterationsAggregates(monkeypatch: pytest.MonkeyPatch):
 
         groupby_period = PeriodsGenerator.generate_group_by_period(kwargs)
 
-        metrics = get_metrics().values()
+        metrics = [metric for metric in get_metrics().values() if metric != csi]
         format = lambda metric: f'{metric} AS "{metric.name}"'
         cols = f'{groupby_period} AS {period}, {", ".join(format(metric) for metric in metrics)}'
         return {
@@ -69,7 +69,6 @@ def mock_TicketsWithIterationsAggregates(monkeypatch: pytest.MonkeyPatch):
             'from':  get_tickets_with_iterations_table(**kwargs),
             'where_group_limit': build_multiline_string_ignore_empties(
                 (
-                    try_get_creation_date_and_tickets_filters(**kwargs),
                     f'GROUP BY {groupby_period}',
                     f'ORDER BY {period}'
                 )

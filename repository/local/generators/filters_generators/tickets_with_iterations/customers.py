@@ -1,5 +1,4 @@
 from sql_queries.meta import TicketsWithIterationsMeta, BaselineAlignedModeMeta
-from sql_queries.index import CustomersActivityDBIndex
 from toolbox.sql.generators.filter_clause_generator_factory import (
     FilterParametersNode,
     SqlFilterClauseFromFilterParametersGeneratorFactory,
@@ -71,7 +70,7 @@ def generate_customers_filter(params: FilterParametersNode) -> str:
         params
     )
     return generate_filter(
-        col=f'{CustomersActivityDBIndex.get_tickets_with_iterations_name()}.{TicketsWithIterationsMeta.user_crmid}',
+        col=TicketsWithIterationsMeta.user_crmid,
         values=params.values,
         filter_prefix='AND',
     )

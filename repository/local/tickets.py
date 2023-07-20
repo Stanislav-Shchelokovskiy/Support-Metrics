@@ -1,7 +1,6 @@
 from collections.abc import Mapping
 from toolbox.sql_async import GeneralSelectAsyncQueryDescriptor
 from toolbox.sql import MetaData
-from sql_queries.index import CustomersActivityDBIndex
 from sql_queries.meta import (
     TicketsTagsMeta,
     TicketsTypesMeta,
@@ -12,6 +11,7 @@ from sql_queries.meta import (
     TicketStatusesMeta,
     IDEsMeta,
 )
+import sql_queries.index.db as DbIndex
 
 
 # yapf: disable
@@ -23,7 +23,7 @@ class TicketsTypes(GeneralSelectAsyncQueryDescriptor):
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': CustomersActivityDBIndex.get_tickets_types_name(),
+            'from': DbIndex.tickets_types,
             'where_group_limit': '',
         }
 
@@ -36,7 +36,7 @@ class TicketsTags(GeneralSelectAsyncQueryDescriptor):
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': CustomersActivityDBIndex.get_tickets_tags_name(),
+            'from': DbIndex.tickets_tags,
             'where_group_limit': f'ORDER BY {TicketsTagsMeta.name}',
         }
 
@@ -49,7 +49,7 @@ class Frameworks(GeneralSelectAsyncQueryDescriptor):
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': CustomersActivityDBIndex.get_frameworks_name(),
+            'from': DbIndex.frameworks,
             'where_group_limit': f'ORDER BY {FrameworksMeta.name}',
         }
 
@@ -62,7 +62,7 @@ class OperatingSystems(GeneralSelectAsyncQueryDescriptor):
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': CustomersActivityDBIndex.get_operating_systems_name(),
+            'from': DbIndex.operating_systems,
             'where_group_limit': f'ORDER BY {OperatingSystemsMeta.name}',
         }
 
@@ -75,7 +75,7 @@ class Builds(GeneralSelectAsyncQueryDescriptor):
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': CustomersActivityDBIndex.get_builds_name(),
+            'from': DbIndex.builds,
             'where_group_limit': f'ORDER BY {BuildsMeta.name} DESC',
         }
 
@@ -88,7 +88,7 @@ class Severity(GeneralSelectAsyncQueryDescriptor):
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': CustomersActivityDBIndex.get_severity_name(),
+            'from': DbIndex.severity,
             'where_group_limit': '',
         }
 
@@ -101,7 +101,7 @@ class TicketStatuses(GeneralSelectAsyncQueryDescriptor):
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': CustomersActivityDBIndex.get_ticket_statuses_name(),
+            'from': DbIndex.ticket_statuses,
             'where_group_limit': '',
         }
 
@@ -114,6 +114,6 @@ class IDEs(GeneralSelectAsyncQueryDescriptor):
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': CustomersActivityDBIndex.get_ides_name(),
+            'from': DbIndex.ides,
             'where_group_limit': f'ORDER BY {IDEsMeta.name}',
         }

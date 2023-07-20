@@ -1,6 +1,5 @@
 from typing import Iterable
 from toolbox.sql.repository_queries import RepositoryAlchemyQueries
-from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.meta import (
     TicketsTagsMeta,
     TicketsTypesMeta,
@@ -11,6 +10,7 @@ from sql_queries.meta import (
     TicketStatusesMeta,
     IDEsMeta,
 )
+import sql_queries.index.path.extract as ExtractPathIndex
 
 
 class TicketsTags(RepositoryAlchemyQueries):
@@ -19,7 +19,7 @@ class TicketsTags(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return CustomersActivitySqlPathIndex.get_ticket_tags_path()
+        return ExtractPathIndex.ticket_tags
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return TicketsTagsMeta.get_attrs()
@@ -34,7 +34,7 @@ class TicketsTypes(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return CustomersActivitySqlPathIndex.get_tickets_types_path()
+        return ExtractPathIndex.tickets_types
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return TicketsTypesMeta.get_attrs()
@@ -49,7 +49,7 @@ class Frameworks(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return CustomersActivitySqlPathIndex.get_frameworks_path()
+        return ExtractPathIndex.frameworks
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return FrameworksMeta.get_attrs()
@@ -64,7 +64,7 @@ class OperatingSystems(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return CustomersActivitySqlPathIndex.get_operating_systems_path()
+        return ExtractPathIndex.operating_systems
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return OperatingSystemsMeta.get_attrs()
@@ -79,7 +79,7 @@ class Builds(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return CustomersActivitySqlPathIndex.get_builds_path()
+        return ExtractPathIndex.builds
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return BuildsMeta.get_attrs()
@@ -94,7 +94,7 @@ class Severity(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return CustomersActivitySqlPathIndex.get_severity_path()
+        return ExtractPathIndex.severity
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return SeverityMeta.get_attrs()
@@ -109,7 +109,7 @@ class TicketStatuses(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return CustomersActivitySqlPathIndex.get_ticket_statuses_path()
+        return ExtractPathIndex.ticket_statuses
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return TicketStatusesMeta.get_attrs()
@@ -124,7 +124,7 @@ class IDEs(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return CustomersActivitySqlPathIndex.get_ides_path()
+        return ExtractPathIndex.ides
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return IDEsMeta.get_attrs()

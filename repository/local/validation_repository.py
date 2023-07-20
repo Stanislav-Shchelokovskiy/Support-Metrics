@@ -1,13 +1,13 @@
 from collections.abc import Mapping
 from toolbox.sql_async import AsyncQueryDescriptor
-from sql_queries.index import CustomersActivitySqlPathIndex
 from toolbox.sql import ValidationMeta, MetaData
+import sql_queries.index.path.local as LocalPathIndex
 
 
 class ValidationRepositoryQueries(AsyncQueryDescriptor):
 
     def get_path(self, kwargs) -> str:
-        return CustomersActivitySqlPathIndex.get_validate_path()
+        return LocalPathIndex.validate
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
         return ValidationMeta

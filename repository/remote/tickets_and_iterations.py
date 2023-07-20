@@ -1,11 +1,11 @@
 from typing import Iterable
 from toolbox.sql.repository_queries import RepositoryAlchemyQueries
 from toolbox.sql.sql_query import SqlQuery
-from sql_queries.index import CustomersActivitySqlPathIndex
 from sql_queries.meta import (
     TicketsWithPropertiesMeta,
     EmployeesIterationsMeta,
 )
+import sql_queries.index.path.extract as ExtractPathIndex
 
 
 class EmployeesIterations(RepositoryAlchemyQueries):
@@ -14,7 +14,7 @@ class EmployeesIterations(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return CustomersActivitySqlPathIndex.get_employees_iterations_path()
+        return ExtractPathIndex.employees_iterations
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return {**kwargs, **EmployeesIterationsMeta.get_attrs()}
@@ -31,13 +31,13 @@ class CustomersTickets(RepositoryAlchemyQueries):
     def get_prep_queries(self, **kwargs) -> Iterable[SqlQuery]:
         return (
             self.sql_query_type(
-                query_file_path=CustomersActivitySqlPathIndex.get_tickets_with_licenses_and_users_path(),
+                query_file_path=ExtractPathIndex.tickets_with_licenses_and_users,
                 format_params=kwargs,
             ),
         )
 
     def get_main_query_path(self, **kwargs) -> str:
-        return CustomersActivitySqlPathIndex.get_tickets_with_properties_path()
+        return ExtractPathIndex.tickets_with_properties
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return TicketsWithPropertiesMeta.get_attrs()

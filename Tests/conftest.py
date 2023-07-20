@@ -64,4 +64,5 @@ def build_test_db():
         start_date=start_date,
         end_date=end_date,
     )
+    tasks.load_csi()
     tasks.process_staged_data(rank_period_offset='6 MONTHS')
