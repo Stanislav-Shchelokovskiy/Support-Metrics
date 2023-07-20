@@ -28,10 +28,12 @@ def on_startup(sender, **kwargs):
         'load_replies_types',
         'load_platforms_products',
         'load_ides',
-        'load_employees',
     ]
     if int(os.environ['UPDATE_ON_STARTUP']):
         tasks.append('update_support_metrics')
+    else:
+        tasks.append('load_employees'),
+        tasks.append('load_csi'),
 
     sender_app: Celery = sender.app
     with sender_app.connection() as conn:
@@ -63,6 +65,7 @@ def update_support_metrics(**kwargs):
             load_tracked_groups.si(),
             load_builds.si(),
             load_components_features.si(),
+            load_employees.si(),
             load_csi.si(),
             load_customers_tickets.si(),
             load_employees_iterations.si(),
