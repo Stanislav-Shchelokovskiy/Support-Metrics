@@ -14,7 +14,6 @@ from toolbox.sql.generators.Tests.mocks import (
     MockPercentile,
 )
 from configs.config import Config
-import sql_queries.index.db as DbIndex
 
 
 @pytest.mark.parametrize(
@@ -228,7 +227,7 @@ def test_single_like_filters(
         ),
         (
             customers.generate_customers_filter,
-            f'{DbIndex.tickets_with_iterations}.{TicketsWithIterationsMeta.user_crmid}',
+            TicketsWithIterationsMeta.user_crmid,
             None,
         ),
         (

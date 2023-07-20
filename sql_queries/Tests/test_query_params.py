@@ -26,17 +26,11 @@ from sql_queries.meta import (
     SeverityMeta,
     TicketStatusesMeta,
     IDEsMeta,
-    CSIMeta
+    CSIMeta,
 )
 import sql_queries.index.path.extract as ExtractPathIndex
 import sql_queries.index.path.local as LocalPathIndex
 import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
-
-
-tickets_with_iterations_common_params = {
-    'tickets_with_iterations_table': 'table_name',
-    'tickets_filter': 'tickets_filter',
-}
 
 
 # yapf: disable
@@ -58,7 +52,6 @@ tickets_with_iterations_common_params = {
             LocalPathIndex.tickets_with_iterations_raw,
             {
                 **TicketsWithIterationsRawMeta.get_attrs(),
-                **tickets_with_iterations_common_params,
                 'tickets_types_table': 'tickets_types_table',
                 'license_statuses_table': 'license_statuses_table',
                 'conversion_statuses_table': 'conversion_statuses_table',
@@ -69,7 +62,9 @@ tickets_with_iterations_common_params = {
                 'operating_systems_table': 'operating_systems_table',
                 'ides_table': 'ides_table',
                 'platforms_products_table': 'platforms_products_table',
-                'baseline_aligned_mode_fields': 'baseline_aligned_mode_fields'
+                'baseline_aligned_mode_fields': 'baseline_aligned_mode_fields',
+                'tickets_with_iterations_table': 'table_name',
+                'tbl_alias': 'tbl',
             },
         ),
         (

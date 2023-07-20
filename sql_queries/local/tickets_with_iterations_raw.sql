@@ -1,88 +1,87 @@
 SELECT
-    t.{user_id},
-    t.{ticket_scid},
+    {tbl_alias}.{user_id},
+    {tbl_alias}.{ticket_scid},
     ( SELECT name 
       FROM   {tickets_types_table}
-      WHERE  id = t.ticket_type
+      WHERE  id = {tbl_alias}.ticket_type
       LIMIT 1 )  AS {ticket_type},
-    t.{tribes_names},
-    t.{tent_name},
+    {tbl_alias}.{tribes_names},
+    {tbl_alias}.{tent_name},
     ( SELECT GROUP_CONCAT(platform_name, '; ')
       FROM (SELECT DISTINCT platform_name
             FROM {platforms_products_table}
-            WHERE platform_id IN (SELECT value FROM JSON_EACH('["' || replace(t.platforms, ';', '", "') || '"]')))) AS {platforms},
+            WHERE platform_id IN (SELECT value FROM JSON_EACH('["' || replace({tbl_alias}.platforms, ';', '", "') || '"]')))) AS {platforms},
     ( SELECT GROUP_CONCAT(product_name, '; ')
       FROM (SELECT DISTINCT product_name 
             FROM {platforms_products_table}
-            WHERE product_id IN (SELECT value FROM JSON_EACH('["' || replace(t.products, ';', '", "') || '"]')))) AS {products},
+            WHERE product_id IN (SELECT value FROM JSON_EACH('["' || replace({tbl_alias}.products, ';', '", "') || '"]')))) AS {products},
     ( SELECT GROUP_CONCAT(name, '; ')
       FROM (SELECT name
             FROM {tickets_tags_table}
-            WHERE id IN (SELECT value FROM JSON_EACH('["' || replace(t.ticket_tags, ';', '", "') || '"]')))) AS {ticket_tags},
-    t.{is_private},
-    t.{creation_date},
-    t.license_name AS {license_name},
-    t.{subscription_start},
-    t.{expiration_date},
+            WHERE id IN (SELECT value FROM JSON_EACH('["' || replace({tbl_alias}.ticket_tags, ';', '", "') || '"]')))) AS {ticket_tags},
+    {tbl_alias}.{is_private},
+    {tbl_alias}.{creation_date},
+    {tbl_alias}.license_name AS {license_name},
+    {tbl_alias}.{subscription_start},
+    {tbl_alias}.{expiration_date},
     ( SELECT name 
       FROM   {license_statuses_table}
-      WHERE  id = t.license_status
+      WHERE  id = {tbl_alias}.license_status
       LIMIT 1 )  AS {license_status},
     ( SELECT name 
       FROM   {conversion_statuses_table}
-      WHERE  id = t.conversion_status
+      WHERE  id = {tbl_alias}.conversion_status
       LIMIT 1 ) AS {conversion_status},
     ( SELECT name 
       FROM   {replies_types_table}
-      WHERE  id = t.reply_id
+      WHERE  id = {tbl_alias}.reply_id
       LIMIT 1 ) AS {reply},
     ( SELECT component_name 
       FROM   {components_features_table}
-      WHERE  component_id = t.component_id
+      WHERE  component_id = {tbl_alias}.component_id
       LIMIT 1 ) AS {component},
     ( SELECT feature_name 
       FROM   {components_features_table}
-      WHERE  feature_id = t.feature_id
+      WHERE  feature_id = {tbl_alias}.feature_id
       LIMIT 1 ) AS {feature},
-    t.{builds},
-    t.{fixed_in_builds},
+    {tbl_alias}.{builds},
+    {tbl_alias}.{fixed_in_builds},
     ( SELECT name 
       FROM   {employees_table}
-      WHERE  scid = t.fixed_by
+      WHERE  scid = {tbl_alias}.fixed_by
       LIMIT 1 )  AS {fixed_by},
-    t.{fixed_on},
-    t.{ticket_status},
+    {tbl_alias}.{fixed_on},
+    {tbl_alias}.{ticket_status},
     ( SELECT name 
       FROM   {employees_table}
-      WHERE  scid = t.closed_by
+      WHERE  scid = {tbl_alias}.closed_by
       LIMIT 1 )  AS {closed_by},
-    t.{closed_on},
+    {tbl_alias}.{closed_on},
     ( SELECT name 
       FROM   {severity_table}
-      WHERE  id = t.severity
+      WHERE  id = {tbl_alias}.severity
       LIMIT 1 )  AS {severity},
-    t.{converted_to_bug_on},
+    {tbl_alias}.{converted_to_bug_on},
     ( SELECT name 
       FROM   {tickets_types_table}
-      WHERE  id = t.duplicated_to_ticket_type
+      WHERE  id = {tbl_alias}.duplicated_to_ticket_type
       LIMIT 1 )  AS {duplicated_to_ticket_type},
-    t.{duplicated_to_ticket_scid},
+    {tbl_alias}.{duplicated_to_ticket_scid},
     ( SELECT name 
       FROM   {employees_table}
-      WHERE  scid = t.assigned_to
+      WHERE  scid = {tbl_alias}.assigned_to
       LIMIT 1 )  AS {assigned_to},
      ( SELECT name 
       FROM   {operating_systems_table}
-      WHERE  id = t.operating_system_id
+      WHERE  id = {tbl_alias}.operating_system_id
       LIMIT 1 )  AS {operating_system},
     ( SELECT name 
       FROM   {ides_table}
-      WHERE  id = t.ide_id
+      WHERE  id = {tbl_alias}.ide_id
       LIMIT 1 )  AS {ide},
-    t.{emp_post_id},
-    t.{emp_name},
-    t.{emp_position_name},
-    t.{emp_tribe_name},
-    t.{emp_tent_name}{baseline_aligned_mode_fields}
-FROM ({tickets_with_iterations_table}) AS t
-{tickets_filter}
+    {tbl_alias}.{emp_post_id},
+    {tbl_alias}.{emp_name},
+    {tbl_alias}.{emp_position_name},
+    {tbl_alias}.{emp_tribe_name},
+    {tbl_alias}.{emp_tent_name}{baseline_aligned_mode_fields}
+FROM {tickets_with_iterations_table}

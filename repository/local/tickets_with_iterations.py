@@ -14,7 +14,6 @@ from sql_queries.meta import (
 )
 from configs.config import Config
 from repository.local.core.tickets_with_iterations_table import get_tickets_with_iterations_table
-from repository.local.core.filters import try_get_creation_date_and_tickets_filters
 from repository.local.aggs import get_metric
 from toolbox.sql.generators.utils import build_multiline_string_ignore_empties
 import sql_queries.index.path.local as LocalPathIndex
@@ -43,12 +42,6 @@ class TicketsWithIterationsRaw(AsyncQueryDescriptor):
     def get_path(self, kwargs: Mapping) -> str:
         return LocalPathIndex.tickets_with_iterations_raw
 
-    def get_general_format_params(self, **kwargs) -> dict[str, str]:
-        return {
-            'tickets_with_iterations_table': get_tickets_with_iterations_table(**kwargs),
-            'tickets_filter': try_get_creation_date_and_tickets_filters(**kwargs),
-        }
-
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'replies_types_table': DbIndex.cat_replies_types,
@@ -64,7 +57,8 @@ class TicketsWithIterationsRaw(AsyncQueryDescriptor):
             'tickets_tags_table': DbIndex.tickets_tags,
             **TicketsWithIterationsRawMeta.get_attrs(),
             'baseline_aligned_mode_fields': self.get_baseline_aligned_mode_fields(**kwargs),
-            **self.get_general_format_params(**kwargs)
+            'tickets_with_iterations_table': get_tickets_with_iterations_table(**kwargs),
+            'tbl_alias': DbIndex.tickets_with_iterations_alias,
         }
 
     def get_baseline_aligned_mode_fields(self, **kwargs) -> str:
@@ -92,9 +86,9 @@ class TicketsWithIterationsAggregates(MetricAsyncQueryDescriptor):
             'select': f'{groupby_period} AS {period}, {metric} AS {agg}, "{metric.name}" AS {agg_name}',
             'from':  get_tickets_with_iterations_table(**kwargs),
             'where_group_limit': build_multiline_string_ignore_empties(
-                    (
-                        try_get_creation_date_and_tickets_filters(**kwargs),
-                        f'GROUP BY {groupby_period}', f'ORDER BY {period}'
-                    )
+                (
+                    f'GROUP BY {groupby_period}', 
+                    f'ORDER BY {period}',
                 )
+            )
         }

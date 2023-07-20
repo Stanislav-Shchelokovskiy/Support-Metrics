@@ -42,7 +42,7 @@ LEFT JOIN (
         col=BaselineAlignedModeMeta.id, filter_prefix='WHERE')}
 ) AS tcg ON tcg.user_crmid = twi.user_crmid
 WHERE tcg.user_crmid IS NULL
-)"""
+) AS {DbIndex.tickets_with_iterations_alias}"""
 
 
 def get_creation_date_and_tickets_filters(kwargs):

@@ -26,7 +26,7 @@ iterations_to_tickets = Metric.from_metric(
 csi = Metric(
     'Satisfaction Index',
     'Activity',
-    SUM(f'IIF({CSIMeta.rating}=1, 1, 0)') / COUNT('*') * 100,
+    SUM(f'IIF({CSIMeta.rating} = 1, 1, 0)') / COUNT('*') * 100,
 )
 
 metrics = {

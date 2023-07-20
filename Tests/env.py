@@ -69,7 +69,6 @@ def mock_TicketsWithIterationsAggregates(monkeypatch: pytest.MonkeyPatch):
             'from':  get_tickets_with_iterations_table(**kwargs),
             'where_group_limit': build_multiline_string_ignore_empties(
                 (
-                    try_get_creation_date_and_tickets_filters(**kwargs),
                     f'GROUP BY {groupby_period}',
                     f'ORDER BY {period}'
                 )
