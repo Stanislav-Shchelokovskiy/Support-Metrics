@@ -69,6 +69,7 @@ async def get_metrics() -> str:
         get_metrics_projections(
             projector=lambda x: {
                 'name': x.name,
+                'displayName': x.display_name or x.name,
                 'group': x.group,
                 'context': 0,
             }
