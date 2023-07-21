@@ -5,26 +5,31 @@ from sql_queries.meta import TicketsWithIterationsMeta, CSIMeta
 
 people = Metric(
     'People',
+    '',
     'Activity',
     COUNT_DISTINCT(TicketsWithIterationsMeta.user_id),
 )
 tickets = Metric(
     'Tickets',
+    '',
     'Activity',
     COUNT_DISTINCT(TicketsWithIterationsMeta.ticket_scid),
 )
 iterations = Metric(
     'Iterations',
+    '',
     'Activity',
     COUNT(TicketsWithIterationsMeta.emp_post_id),
 )
 iterations_to_tickets = Metric.from_metric(
     'Iterations / Tickets',
+    '',
     'Activity',
     iterations / tickets,
 )
 csi = Metric(
     'Satisfaction Index',
+    'Customer Satisfaction Index',
     'Activity',
     SUM(f'IIF({CSIMeta.rating} = 1, 1, 0)') / COUNT('*') * 100,
 )
