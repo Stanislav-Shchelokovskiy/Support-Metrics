@@ -1,6 +1,6 @@
 import asyncio
 from pathlib import Path
-from toolbox.utils.converters import Object_to_JSON
+from toolbox.utils.converters import Object_to_JSON, file_to_dict
 
 
 async def get_descriptions() -> str:
@@ -15,12 +15,12 @@ def __get_descriptions_json():
 
 def __get_files_in_folder(folder: Path) -> list[dict[str, str]]:
     res = []
+
+    def title_converter(title: str) -> str:
+        return title[title.find('$') + 1:]
+
     for obj in sorted(folder.iterdir()):
         if (obj.is_file()):
-            title = obj.stem
-            title = title[title.find('$') + 1:]
-            file = {}
-            file['title'] = title
-            file['content'] = obj.read_text()
-            res.append(file)
+            desc = file_to_dict(obj, title_converter)
+            res.append(desc)
     return res
