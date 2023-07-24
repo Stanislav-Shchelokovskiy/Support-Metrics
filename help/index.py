@@ -1,11 +1,33 @@
 import asyncio
 from pathlib import Path
+from collections.abc import Callable
+from toolbox.sql.aggs.metrics import Metric
 from toolbox.utils.converters import Object_to_JSON, file_to_dict
+from repository.local.aggs import get_metric
 
 
 async def get_descriptions() -> str:
+    return await __run_in_executor(__get_descriptions_json)
+
+
+async def get_description(metric: str) -> str:
+    metric = get_metric(metric=metric)
+    return await __run_in_executor(__get_description_json, metric)
+
+
+async def __run_in_executor(fn: Callable[..., str], *args):
     loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(None, __get_descriptions_json)
+    return await loop.run_in_executor(None, fn, *args)
+
+
+def __get_description_json(metric: Metric):
+
+    def converter(title):
+        return metric.display_name or title
+
+    path = Path(f'help/metrics_descriptions/{metric.name}.MD')
+    desc = file_to_dict(path, converter)
+    return Object_to_JSON.convert(desc)
 
 
 def __get_descriptions_json():
