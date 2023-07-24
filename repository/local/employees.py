@@ -1,6 +1,7 @@
 from collections.abc import Mapping
 from toolbox.sql_async import GeneralSelectAsyncQueryDescriptor
 from toolbox.sql import MetaData
+from toolbox.sql.generators.utils import build_multiline_string_ignore_empties
 from sql_queries.meta import (
     PositionsMeta,
     TribesMeta,
@@ -64,5 +65,10 @@ class Employees(GeneralSelectAsyncQueryDescriptor):
         return {
             'select': f"DISTINCT {', '.join(self.get_fields(kwargs))}",
             'from': DbIndex.employees,
-            'where_group_limit': f'{filter}\nORDER BY {EmployeeMeta.name}'
+            'where_group_limit':  build_multiline_string_ignore_empties(
+                (
+                    filter,
+                    f'ORDER BY {EmployeeMeta.name}',
+                )
+            )
         }
