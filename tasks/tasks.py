@@ -159,7 +159,7 @@ def load_ides():
 
 
 def load_tribes():
-    tribes_str = Network.get_data(end_point=f'http://{os.environ["QUERY_SERVICE"]}/get_available_tribes')
+    tribes_str = Network.get_data(end_point=f'{os.environ["QUERY_SERVICE"]}/get_available_tribes')
     tribes = json.loads(tribes_str)
     df = DataFrame.from_records(data=tribes)
     df = df.reset_index(drop=True)
@@ -171,7 +171,7 @@ def load_tribes():
 
 
 def load_tents():
-    tents_str = Network.get_data(end_point=f'http://{os.environ["QUERY_SERVICE"]}/get_tents')
+    tents_str = Network.get_data(end_point=f'{os.environ["QUERY_SERVICE"]}/get_tents')
     tents = json.loads(tents_str)
     df = DataFrame.from_records(data=tents)
     df = df.reset_index(drop=True)

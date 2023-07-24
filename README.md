@@ -9,7 +9,7 @@ Add **.env** file containing the following env vars:
 - REDIS_PORT=6379
 - DB_HOME=/root/app/data
 - CORS_ORIGINS=["https://ubuntu-support.corp.devexpress.com","http://localhost:3000"]
-- QUERY_SERVICE=query_service
+- QUERY_SERVICE=http://query_service
 - UPDATE_ON_STARTUP=0
 - PRODUCTION=1
 
