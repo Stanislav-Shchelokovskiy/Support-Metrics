@@ -255,6 +255,11 @@ async def get_help():
     return await help_index.get_descriptions()
 
 
+@app.get('/Help/MetricDescription')
+async def get_metric_description(metric: str):
+    return await help_index.get_description(metric)
+
+
 @app.get('/Metrics')
 async def get_metrics():
     return await LocalRepository.get_metrics()
@@ -271,5 +276,6 @@ def pull_state(state_id: str):
     state = view_state_cache.pull_state(state_id)
     return get_response(
         json_data=state or '{}',
-        status_code=status.HTTP_404_NOT_FOUND if state is None else status.HTTP_200_OK,
+        status_code=status.HTTP_404_NOT_FOUND
+        if state is None else status.HTTP_200_OK,
     )
