@@ -44,6 +44,7 @@ class TicketsWithIterationsRaw(AsyncQueryDescriptor):
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
+            'sci_table': DbIndex.csi,
             'replies_types_table': DbIndex.cat_replies_types,
             'components_features_table': DbIndex.cat_components_features,
             'license_statuses_table': DbIndex.license_statuses,

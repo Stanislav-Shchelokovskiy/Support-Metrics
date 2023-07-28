@@ -218,6 +218,7 @@ class TicketsWithIterationsMeta(TicketsWithPropertiesMeta):
 class TicketsWithIterationsRawMeta(MetaData):
     user_id = TicketsWithIterationsMeta.user_id
     ticket_scid = TicketsWithIterationsMeta.ticket_scid
+    csi = 'csi'
     ticket_type = TicketsWithIterationsMeta.ticket_type
     tribes_names = TicketsWithIterationsMeta.tribes_names
     tent_name = TicketsWithIterationsMeta.tent_name
