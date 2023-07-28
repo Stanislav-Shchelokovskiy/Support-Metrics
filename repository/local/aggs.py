@@ -17,13 +17,13 @@ tickets = Metric(
 )
 iterations = Metric(
     'Iterations',
-    '',
+    'Replies',
     'Activity',
     COUNT(TicketsWithIterationsMeta.emp_post_id),
 )
 iterations_to_tickets = Metric.from_metric(
     'Iterations / Tickets',
-    '',
+    'Replies / Tickets',
     'Activity',
     iterations / tickets,
 )
