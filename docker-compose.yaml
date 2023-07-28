@@ -2,7 +2,7 @@ version: '3.4'
 
 x-support_metrics:
   &support_metrics
-  image: shchelokovskiy/support_metrics:latest
+  image: dxservices/support_metrics:latest
   restart: always
   environment:
     - SQL_SERVER
