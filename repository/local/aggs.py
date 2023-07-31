@@ -47,8 +47,8 @@ def get_metric(metric: str) -> Metric:
     return get_metrics().get(metric, NONE_METRIC)
 
 
-def get_metrics_projections(
-    projector: Callable[[Metric], str] = lambda x: x.name
+def select_metrics(
+    projector: Callable[[Metric], str] = lambda x: x,
 ) -> list[str]:
     return [projector(x) for x in get_metrics().values()]
 

@@ -73,7 +73,7 @@ class TicketsWithIterationsRaw(AsyncQueryDescriptor):
     def get_fields(self, kwargs: Mapping) -> Iterable[str]:
         res = self.get_fields_meta(kwargs).get_values()
         if kwargs['use_baseline_aligned_mode']:
-            return chain(res, (BaselineAlignedModeMeta.days_since_baseline, ))
+            return tuple(chain(res, (BaselineAlignedModeMeta.days_since_baseline, )))
         return res
 
 
@@ -84,7 +84,7 @@ class TicketsWithIterationsAggregates(MetricAsyncQueryDescriptor):
         groupby_period = PeriodsGenerator.generate_group_by_period(kwargs)
         metric = get_metric(kwargs['metric'])
         return {
-            'select': f'{groupby_period} AS {period}, {metric} AS {agg}, "{metric.name}" AS {agg_name}',
+            'select': f"{groupby_period} AS {period}, {metric} AS {agg}, '{metric.get_display_name()}' AS {agg_name}",
             'from':  get_tickets_with_iterations_table(**kwargs),
             'where_group_limit': build_multiline_string_ignore_empties(
                 (

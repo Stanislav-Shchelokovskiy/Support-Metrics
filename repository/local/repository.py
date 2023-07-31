@@ -6,7 +6,7 @@ from toolbox.sql_async import (
     QueryDescriptor,
 )
 from toolbox.utils.converters import Object_to_JSON
-from repository.local.aggs import get_metrics_projections
+from repository.local.aggs import select_metrics
 import repository.local.customers as sqlite_customers
 import repository.local.tickets as sqlite_tickets
 import repository.local.licenses_conversion as sqlite_licenses_conversion
@@ -66,11 +66,11 @@ async def get_periods_array(**kwargs) -> str:
 # yapf: enable
 async def get_metrics() -> str:
     return Object_to_JSON.convert(
-        get_metrics_projections(
-            projector=lambda x: {
-                'name': x.name,
-                'displayName': x.display_name or x.name,
-                'group': x.group,
+        select_metrics(
+            projector=lambda metric: {
+                'name': metric.name,
+                'displayName': metric.get_display_name(),
+                'group': metric.group,
                 'context': 0,
             }
         )
