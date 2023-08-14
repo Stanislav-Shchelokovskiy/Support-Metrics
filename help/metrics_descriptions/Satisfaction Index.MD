@@ -1,11 +1,8 @@
-CSI is based on tickets feedbacks: positive, negative, neutral.<br><br>
-Here are the details of the calculation:<br>
-1. Since there can be a lot of feedbacks following each other, we need to split them into 30 minutes groups first - if next feedback is posted within 30 minutes from the previous one, both these feedbacks fall within the same time goup.<br>
-2. Next we select the most frequent feedback within each time group and take it as the group feedback value.<br>
-If we cannot select the most frequent feedback because they have the same frequence (ex. there are two feedbacks in a group 1 and -1. their frequency = 1), we take the most recent from them.<br>
-3. Finally, we calculate average by all groups within the same ticket and round it as follows:<br>
-    - [-1; -0.3) = negative (-1)
-    - [-0.3; 0.3] = neutral (0)
-    - (0.3; 1] = positive (1)
-
-Graph displays % of positive feedbacks to all feedbacks.
+CSI is a key measure of customer satisfaction with a support service. It is determined by analyzing feedback received from customers in the Support Center after they have received a response from the support team. The feedback can be categorized as positive, negative, or neutral. The CSI metric graph displays the percentage of positive feedbacks out of all feedbacks received. This graph provides a visual representation of customer satisfaction levels.<br><br>
+To calculate the CSI, the following steps are taken:<br>
+1. Duplicate feedback that occurs within 30 minutes of each other is grouped together. This is because users may click the feedback icon multiple times, resulting in duplicate feedback. By grouping them, we can avoid counting duplicates multiple times.
+2. Within each time group, the most frequently occurring feedback is selected as the group feedback value. In cases where multiple feedbacks have the same frequency, the most recent feedback is chosen.
+3. Finally, the average value of all groups within the same ticket is calculated and rounded according to the following criteria:<br>
+    - Feedback scores ranging from [-1 to -0.3) are considered negative and rounded to -1.
+   - Feedback scores ranging from [-0.3 to 0.3] are considered neutral and rounded to 0.
+   - Feedback scores ranging from (0.3 to 1] are considered positive and rounded to 1.
