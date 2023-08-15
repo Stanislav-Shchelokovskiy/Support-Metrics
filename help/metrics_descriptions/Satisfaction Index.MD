@@ -4,5 +4,5 @@ To calculate the CSI, the following steps are taken:<br>
 2. Within each time group, the most frequently occurring feedback is selected as the group feedback value. In cases where multiple feedbacks have the same frequency, the most recent feedback is chosen.
 3. Finally, the average value of all groups within the same ticket is calculated and rounded according to the following criteria:<br>
     - Feedback scores ranging from [-1 to -0.3) are considered negative and rounded to -1.
-   - Feedback scores ranging from [-0.3 to 0.3] are considered neutral and rounded to 0.
-   - Feedback scores ranging from (0.3 to 1] are considered positive and rounded to 1.
+    - Feedback scores ranging from [-0.3 to 0.3] are considered neutral and rounded to 0.
+    - Feedback scores ranging from (0.3 to 1] are considered positive and rounded to 1.
