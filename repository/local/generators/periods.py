@@ -1,4 +1,4 @@
-import toolbox.sql.generators.sqlite_periods_generator as periods_generator
+import toolbox.sql.generators.sqlite.periods_generator as periods_generator
 from repository.local.aggs import is_csi
 from sql_queries.meta import (
     TicketsWithIterationsMeta,

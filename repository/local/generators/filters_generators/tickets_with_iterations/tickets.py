@@ -12,7 +12,14 @@ def generate_privacy_filter(
     params: FilterParameterNode,
     col: str = TicketsWithIterationsMeta.is_private,
 ) -> str:
-    return f'AND {col} = {params.value}'
+    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_equals_filter_generator(
+        params
+    )
+    return generate_filter(
+        col=col,
+        value=params.value,
+        filter_prefix='AND',
+    )
 
 
 @params_guard

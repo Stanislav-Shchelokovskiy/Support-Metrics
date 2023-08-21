@@ -15,7 +15,7 @@ import repository.local.cat as sqlite_cat
 import repository.local.tickets_with_iterations as sqlite_tickets_with_iterations
 import repository.local.employees as sqlite_employees
 import repository.local.generators.filters_generators.display_filter as DisplayFilterGenerator
-import toolbox.sql.generators.sqlite_periods_generator as PeriodsGenerator
+import toolbox.sql.generators.sqlite.periods_generator as PeriodsGenerator
 
 
 # yapf: disable
