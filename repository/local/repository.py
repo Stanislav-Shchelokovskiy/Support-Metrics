@@ -14,8 +14,10 @@ import repository.local.platforms_products as sqlite_platforms_products
 import repository.local.cat as sqlite_cat
 import repository.local.tickets_with_iterations as sqlite_tickets_with_iterations
 import repository.local.employees as sqlite_employees
+import repository.local.tents as sqlite_tents
+import repository.local.tribes as sqlite_tribes
 import repository.local.generators.filters_generators.display_filter as DisplayFilterGenerator
-import toolbox.sql.generators.sqlite_periods_generator as PeriodsGenerator
+import toolbox.sql.generators.sqlite.periods_generator as PeriodsGenerator
 
 
 # yapf: disable
@@ -52,6 +54,8 @@ emp_tents = create_repository(sqlite_employees.EmpTents())
 employees = create_repository(sqlite_employees.Employees())
 customers = create_repository(sqlite_customers.Customers())
 customers_validation = create_repository(sqlite_customers.CustomersValidation())
+tents = create_repository(sqlite_tents.Tents())
+tribes = create_repository(sqlite_tribes.Tribes())
 
 async def get_group_by_periods() -> str:
     return await PeriodsGenerator.get_group_by_periods_json()
