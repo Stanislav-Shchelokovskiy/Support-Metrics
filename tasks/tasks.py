@@ -1,7 +1,3 @@
-import os
-import json
-import toolbox.utils.network as Network
-from pandas import DataFrame
 from toolbox.sql.connections import SqliteConnection
 from toolbox.sql.crud_queries.protocols import CRUDQuery
 from toolbox.sql.db_operations import SaveTableOperationDF, DFToCRUDQueryMapper
@@ -13,7 +9,6 @@ from repository import (
     get_create_table_statements,
 )
 import sql_queries.index.db as DbIndex
-
 
 
 def _save_tables(*queries: CRUDQuery):
@@ -159,26 +154,16 @@ def load_ides():
 
 
 def load_tribes():
-    tribes_str = Network.get_data(end_point=f'{os.environ["QUERY_SERVICE"]}/get_available_tribes')
-    tribes = json.loads(tribes_str)
-    df = DataFrame.from_records(data=tribes)
-    df = df.reset_index(drop=True)
-    _save_tables(DFToCRUDQueryMapper(
-            tbl_name=DbIndex.tribes,
-            df=df,
-        )
+    _save_table(
+        tbl_name=DbIndex.tribes,
+        repository=RepositoryFactory.remote.create_tribes_repository(),
     )
 
 
 def load_tents():
-    tents_str = Network.get_data(end_point=f'{os.environ["QUERY_SERVICE"]}/get_tents')
-    tents = json.loads(tents_str)
-    df = DataFrame.from_records(data=tents)
-    df = df.reset_index(drop=True)
-    _save_tables(DFToCRUDQueryMapper(
-            tbl_name=DbIndex.tents,
-            df=df,
-        )
+    _save_table(
+        tbl_name=DbIndex.tents,
+        repository=RepositoryFactory.remote.create_tents_repository(),
     )
 
 

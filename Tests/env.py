@@ -13,7 +13,6 @@ def __prepare_env(monkeypatch: pytest.MonkeyPatch):
             name, value = line.split('=')
             monkeypatch.setenv(name, value)
     monkeypatch.setenv('SQLITE_DATABASE', f'{getcwd()}/Tests/test_db')
-    monkeypatch.setenv('QUERY_SERVICE', 'localhost:11005')
     monkeypatch.setenv('start_date', '2022-01-01')
     monkeypatch.setenv('end_date', '2023-01-01')
 
@@ -39,7 +38,6 @@ def mock_TicketsWithIterationsAggregates(monkeypatch: pytest.MonkeyPatch):
     from repository.local.aggs import get_metrics, csi
     from repository.local.core.tickets_with_iterations_table import get_tickets_with_iterations_table
     from toolbox.sql.generators.utils import build_multiline_string_ignore_empties
-    from repository.local.core.filters import try_get_creation_date_and_tickets_filters
 
     class TicketsWithIterationsAggregatesOnlyMeta(MetaData):
         period = 'period'

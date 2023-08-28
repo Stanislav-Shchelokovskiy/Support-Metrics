@@ -2,21 +2,18 @@ version: '3.4'
 
 x-support_metrics:
   &support_metrics
-  image: dxservices/support_metrics:latest
+  image: devexpress/support:support_metrics
   restart: always
   environment:
     - SQL_SERVER
     - SQL_DATABASE
     - SQL_USER
     - SQL_PASSWORD
-    - SERVER_PORT
-    - FLOWER_PORT
     - CORS_ORIGINS
-    - QUERY_SERVICE
-    - REDIS_SERVICE
-    - REDIS_PORT
-    - CELERY_BROKER_URL=redis://${REDIS_SERVICE}:${REDIS_PORT}/1
-    - CELERY_RESULT_BACKEND=redis://${REDIS_SERVICE}:${REDIS_PORT}/1
+    - REDIS_SERVICE=support_metrics_redis${VERSION}
+    - REDIS_PORT=6379
+    - CELERY_BROKER_URL=redis://support_metrics_redis${VERSION}:6379/0
+    - CELERY_RESULT_BACKEND=redis://support_metrics_redis${VERSION}:6379/0
     - REDIS_DB=SUPPORT_ANALYTICS
     - DB_HOME
     - SQLITE_DATABASE=${DB_HOME}/db
@@ -27,8 +24,8 @@ x-support_metrics:
 services:
   support_metrics_dashboard:
     <<: *support_metrics
-    hostname: support_metrics_dashboard
-    container_name: support_metrics_dashboard
+    hostname: support_metrics_dashboard${VERSION}
+    container_name: support_metrics_dashboard${VERSION}
     command: celery -A worker flower --url_prefix=SupportMetricsDash --port=5555
     healthcheck:
       test:
@@ -44,32 +41,53 @@ services:
       start_period: 5s
     expose:
       - "5555"
+    depends_on:
+      support_metrics_redis:
+        condition: service_healthy
 
   support_metrics_worker:
     <<: *support_metrics
-    hostname: support_metrics_worker
-    container_name: support_metrics_worker
+    hostname: support_metrics_worker${VERSION}
+    container_name: support_metrics_worker${VERSION}
     command: celery --app worker worker --beat --loglevel=INFO --concurrency 7 #--logfile=logs/celery.log
     volumes:
-      - support_analytics-volume:${DB_HOME}
+      - support_metrics${VERSION}:${DB_HOME}
     depends_on:
       support_metrics_dashboard:
+        condition: service_healthy
+      support_metrics_redis:
         condition: service_healthy
 
   support_metrics_server:
     <<: *support_metrics
-    hostname: support_metrics_server
-    container_name: support_metrics_server
+    hostname: support_metrics_server${VERSION}
+    container_name: support_metrics_server${VERSION}
     command: uvicorn server:app --host 0.0.0.0 --port 80 --log-level critical
     volumes:
-      - support_analytics-volume:${DB_HOME}
+      - support_metrics${VERSION}:${DB_HOME}
     expose:
       - "80"
+
+  support_metrics_redis:
+    image: redis/redis-stack-server:latest
+    hostname: support_metrics_redis${VERSION}
+    container_name: support_metrics_redis${VERSION}
+    restart: always
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    volumes:
+      - support_metrics${VERSION}:/data
+
+volumes:
+  support_metrics:
+  support_metrics_rc:
+
 
 networks:
   default:
     name: support_analytics
     external: true
-
-volumes:
-  support_analytics-volume:
