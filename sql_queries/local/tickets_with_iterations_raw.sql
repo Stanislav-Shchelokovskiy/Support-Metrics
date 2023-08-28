@@ -5,7 +5,7 @@ SELECT
                   WHEN AVG(rating) > 0.3  THEN 1
                   WHEN AVG(rating) BETWEEN -0.3 AND 0.3 THEN 0
                   ELSE NULL END
-      FROM   {sci_table}
+      FROM   {csi_table}
       WHERE  ticket_scid = {tbl_alias}.{ticket_scid} 
       LIMIT 1 ) AS {csi},
     ( SELECT name 

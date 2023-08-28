@@ -65,6 +65,8 @@ import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
                 'baseline_aligned_mode_fields': 'baseline_aligned_mode_fields',
                 'tickets_with_iterations_table': 'table_name',
                 'tbl_alias': 'tbl',
+                'csi_table': 'tbl',
+                'tickets_tags_table': 'tbl',
             },
         ),
         (
@@ -187,6 +189,14 @@ import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
             ExtractPathIndex.csi,
             CSIMeta.get_attrs(),
         ),
+        (
+            ExtractPathIndex.tents,
+            KnotMeta.get_attrs(),
+        ),
+        (
+            ExtractPathIndex.tribes,
+            KnotMeta.get_attrs(),
+        ),
     ],
 )
 def test_query_params(
@@ -198,6 +208,7 @@ def test_query_params(
         query = Path(get_query_file_path).read_text(encoding='utf-8')
         for key in format_params:
             assert f'{{{key}}}' in query
+        query.format(**format_params)
 
 
 
