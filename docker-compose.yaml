@@ -13,7 +13,7 @@ x-support_metrics:
     - REDIS_SERVICE=support_metrics_redis${VERSION}
     - REDIS_PORT=6379
     - CELERY_BROKER_URL=redis://support_metrics_redis${VERSION}:6379/0
-    - CELERY_RESULT_BACKEND=redis://support_metrics_redis${VERSION}6379/0
+    - CELERY_RESULT_BACKEND=redis://support_metrics_redis${VERSION}:6379/0
     - REDIS_DB=SUPPORT_ANALYTICS
     - DB_HOME
     - SQLITE_DATABASE=${DB_HOME}/db
