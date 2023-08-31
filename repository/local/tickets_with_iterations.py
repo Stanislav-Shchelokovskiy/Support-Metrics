@@ -5,11 +5,10 @@ from toolbox.sql_async import (
     MetricAsyncQueryDescriptor,
     GeneralSelectAsyncQueryDescriptor,
 )
-from toolbox.sql import MetaData
+from toolbox.sql import MetaData, PeriodMeta
 from sql_queries.meta import (
     TicketsWithIterationsRawMeta,
     TicketsWithIterationsMeta,
-    PeriodMeta,
     BaselineAlignedModeMeta,
 )
 from configs.config import Config
@@ -28,7 +27,7 @@ class TicketsPeriod(GeneralSelectAsyncQueryDescriptor):
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'select': f"DATE(MIN({TicketsWithIterationsMeta.creation_date}), '+{Config.get_rank_period_offset()}') AS {PeriodMeta.period_start}, MAX({TicketsWithIterationsMeta.creation_date}) AS {PeriodMeta.period_end}",
+            'select': f"DATE(MIN({TicketsWithIterationsMeta.creation_date}), '+{Config.get_rank_period_offset()}') AS {PeriodMeta.start}, MAX({TicketsWithIterationsMeta.creation_date}) AS {PeriodMeta.end}",
             'from': DbIndex.customers_tickets,
             'where_group_limit': '',
         }
