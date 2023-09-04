@@ -12,7 +12,7 @@ def test_get_tickets_with_iterations_period(test_client):
         client=test_client,
         url='TicketsWithIterationsPeriod',
     )
-    assert response == '[{"period_start":"2022-07-01","period_end":"2022-12-31"}]'
+    assert response == '[{"start":"2022-07-01","end":"2022-12-31"}]'
 
 
 @pytest.mark.e2e
