@@ -48,8 +48,9 @@ class CATFeatures(GeneralSelectAsyncQueryDescriptor):
                     tent_ids=kwargs['tent_ids'],
                     component_ids=kwargs['component_ids'],
                 )
+        cols = ', '.join(self.get_fields(kwargs))
         return {
-            'select': ', '.join(self.get_fields(kwargs)),
+            'select': cols,
             'from': DbIndex.cat_components_features,
-            'where_group_limit': f'{filter}\nORDER BY {CATFeaturesMeta.feature_name}',
+            'where_group_limit': f'{filter}\nGROUP BY {cols}\nORDER BY {CATFeaturesMeta.feature_name}',
         }
