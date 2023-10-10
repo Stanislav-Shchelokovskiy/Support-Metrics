@@ -43,7 +43,7 @@ def build_test_db():
     tasks.load_employees(start_date=start_date, )
     tasks.load_operating_systems()
     tasks.load_frameworks(),
-    tasks.load_severity_values()
+    tasks.load_severity()
     tasks.load_ticket_statuses()
     tasks.load_replies_types()
     tasks.load_platforms_products()

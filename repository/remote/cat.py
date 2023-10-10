@@ -1,10 +1,8 @@
 from typing import Iterable
+from toolbox.sql import KnotMeta
 from toolbox.sql.repository_queries import RepositoryAlchemyQueries
-from sql_queries.meta import (
-    CATRepliesTypesMeta,
-    CATComponentsFeaturesMeta,
-)
-import sql_queries.index.path.extract as ExtractPathIndex
+from sql_queries.meta import CATComponentsFeaturesMeta
+import sql_queries.index.path.extract as RemotePathIndex
 
 
 class CATRepliesTypes(RepositoryAlchemyQueries):
@@ -13,13 +11,10 @@ class CATRepliesTypes(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return ExtractPathIndex.replies_types
+        return RemotePathIndex.replies_types
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
-        return {**kwargs, **CATRepliesTypesMeta.get_attrs()}
-
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return CATRepliesTypesMeta.get_values()
+        return {**kwargs, **KnotMeta.get_attrs()}
 
 
 class CATComponentsFeatures(RepositoryAlchemyQueries):
@@ -28,7 +23,7 @@ class CATComponentsFeatures(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return ExtractPathIndex.components_features
+        return RemotePathIndex.components_features
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return {**kwargs, **CATComponentsFeaturesMeta.get_attrs()}

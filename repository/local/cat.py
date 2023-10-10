@@ -1,8 +1,7 @@
 from collections.abc import Mapping
 from toolbox.sql_async import GeneralSelectAsyncQueryDescriptor
-from toolbox.sql import MetaData
+from toolbox.sql import MetaData, KnotMeta
 from sql_queries.meta import (
-    CATRepliesTypesMeta,
     CATComponentsMeta,
     CATFeaturesMeta,
 )
@@ -13,13 +12,13 @@ import sql_queries.index.db as DbIndex
 class CATRepliesTypes(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return CATRepliesTypesMeta
+        return KnotMeta
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
             'from': DbIndex.cat_replies_types,
-            'where_group_limit': f'ORDER BY {CATRepliesTypesMeta.name}',
+            'where_group_limit': f'ORDER BY {KnotMeta.name}',
         }
 
 

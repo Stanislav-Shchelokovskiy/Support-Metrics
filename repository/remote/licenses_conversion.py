@@ -1,8 +1,6 @@
 from pandas import DataFrame
-from sql_queries.meta import (
-    TicketsTypesMeta,
-    ConversionStatusesMeta,
-)
+from toolbox.sql import KnotMeta
+from sql_queries.meta import ConversionStatusesMeta
 
 
 class LicenseStatusesRepository:
@@ -10,8 +8,8 @@ class LicenseStatusesRepository:
     def get_data(self, **kwargs) -> DataFrame:
         return DataFrame(
             data={
-                TicketsTypesMeta.id: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                TicketsTypesMeta.name:
+                KnotMeta.id.name: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                KnotMeta.name.name:
                     [
                         'Licensed',
                         'Free',
@@ -35,13 +33,14 @@ class ConversionStatusesRepository:
     def get_data(self, **kwargs) -> DataFrame:
         return DataFrame(
             data={
-                ConversionStatusesMeta.license_status_id: [0, 1, 11, 11],
-                ConversionStatusesMeta.id: [0, 1, 0, 1],
-                ConversionStatusesMeta.name: [
-                    'Paid',
-                    'Free',
-                    'Paid',
-                    'Free',
-                ]
+                ConversionStatusesMeta.license_status_id.name: [0, 1, 11, 11],
+                ConversionStatusesMeta.id.name: [0, 1, 0, 1],
+                ConversionStatusesMeta.name.name:
+                    [
+                        'Paid',
+                        'Free',
+                        'Paid',
+                        'Free',
+                    ]
             }
         )

@@ -1,16 +1,6 @@
 from collections.abc import Mapping
 from toolbox.sql_async import GeneralSelectAsyncQueryDescriptor
-from toolbox.sql import MetaData
-from sql_queries.meta import (
-    TicketsTagsMeta,
-    TicketsTypesMeta,
-    FrameworksMeta,
-    OperatingSystemsMeta,
-    BuildsMeta,
-    SeverityMeta,
-    TicketStatusesMeta,
-    IDEsMeta,
-)
+from toolbox.sql import MetaData, KnotMeta
 import sql_queries.index.db as DbIndex
 
 
@@ -18,7 +8,7 @@ import sql_queries.index.db as DbIndex
 class TicketsTypes(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return TicketsTypesMeta
+        return KnotMeta
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
@@ -31,59 +21,59 @@ class TicketsTypes(GeneralSelectAsyncQueryDescriptor):
 class TicketsTags(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return TicketsTagsMeta
+        return KnotMeta
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
             'from': DbIndex.tickets_tags,
-            'where_group_limit': f'ORDER BY {TicketsTagsMeta.name}',
+            'where_group_limit': f'ORDER BY {KnotMeta.name}',
         }
 
 
 class Frameworks(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return FrameworksMeta
+        return KnotMeta
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
             'from': DbIndex.frameworks,
-            'where_group_limit': f'ORDER BY {FrameworksMeta.name}',
+            'where_group_limit': f'ORDER BY {KnotMeta.name}',
         }
 
 
 class OperatingSystems(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return OperatingSystemsMeta
+        return KnotMeta
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
             'from': DbIndex.operating_systems,
-            'where_group_limit': f'ORDER BY {OperatingSystemsMeta.name}',
+            'where_group_limit': f'ORDER BY {KnotMeta.name}',
         }
 
 
 class Builds(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return BuildsMeta
+        return KnotMeta
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
             'from': DbIndex.builds,
-            'where_group_limit': f'ORDER BY {BuildsMeta.name} DESC',
+            'where_group_limit': f'ORDER BY {KnotMeta.name} DESC',
         }
 
 
 class Severity(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return SeverityMeta
+        return KnotMeta
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
@@ -96,7 +86,7 @@ class Severity(GeneralSelectAsyncQueryDescriptor):
 class TicketStatuses(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return TicketStatusesMeta
+        return KnotMeta
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
@@ -109,11 +99,11 @@ class TicketStatuses(GeneralSelectAsyncQueryDescriptor):
 class IDEs(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return IDEsMeta
+        return KnotMeta
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
             'from': DbIndex.ides,
-            'where_group_limit': f'ORDER BY {IDEsMeta.name}',
+            'where_group_limit': f'ORDER BY {KnotMeta.name}',
         }

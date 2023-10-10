@@ -1,7 +1,7 @@
 from collections.abc import Mapping
 from toolbox.sql_async import GeneralSelectAsyncQueryDescriptor
 from toolbox.sql import MetaData
-from sql_queries.meta import KnotMeta
+from toolbox.sql import KnotMeta
 import sql_queries.index.db as DbIndex
 
 

@@ -1,16 +1,5 @@
-from typing import Iterable
 from toolbox.sql.repository_queries import RepositoryAlchemyQueries
-from sql_queries.meta import (
-    TicketsTagsMeta,
-    TicketsTypesMeta,
-    FrameworksMeta,
-    OperatingSystemsMeta,
-    BuildsMeta,
-    SeverityMeta,
-    TicketStatusesMeta,
-    IDEsMeta,
-)
-import sql_queries.index.path.extract as ExtractPathIndex
+import sql_queries.index.path.extract as RemotePathIndex
 
 
 class TicketsTags(RepositoryAlchemyQueries):
@@ -19,13 +8,7 @@ class TicketsTags(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return ExtractPathIndex.ticket_tags
-
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
-        return TicketsTagsMeta.get_attrs()
-
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return TicketsTagsMeta.get_values()
+        return RemotePathIndex.ticket_tags
 
 
 class TicketsTypes(RepositoryAlchemyQueries):
@@ -34,13 +17,7 @@ class TicketsTypes(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return ExtractPathIndex.tickets_types
-
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
-        return TicketsTypesMeta.get_attrs()
-
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return TicketsTypesMeta.get_values()
+        return RemotePathIndex.tickets_types
 
 
 class Frameworks(RepositoryAlchemyQueries):
@@ -49,13 +26,7 @@ class Frameworks(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return ExtractPathIndex.frameworks
-
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
-        return FrameworksMeta.get_attrs()
-
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return FrameworksMeta.get_values()
+        return RemotePathIndex.frameworks
 
 
 class OperatingSystems(RepositoryAlchemyQueries):
@@ -64,13 +35,7 @@ class OperatingSystems(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return ExtractPathIndex.operating_systems
-
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
-        return OperatingSystemsMeta.get_attrs()
-
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return OperatingSystemsMeta.get_values()
+        return RemotePathIndex.operating_systems
 
 
 class Builds(RepositoryAlchemyQueries):
@@ -79,13 +44,7 @@ class Builds(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return ExtractPathIndex.builds
-
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
-        return BuildsMeta.get_attrs()
-
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return BuildsMeta.get_values()
+        return RemotePathIndex.builds
 
 
 class Severity(RepositoryAlchemyQueries):
@@ -94,13 +53,7 @@ class Severity(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return ExtractPathIndex.severity
-
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
-        return SeverityMeta.get_attrs()
-
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return SeverityMeta.get_values()
+        return RemotePathIndex.severity
 
 
 class TicketStatuses(RepositoryAlchemyQueries):
@@ -109,13 +62,7 @@ class TicketStatuses(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return ExtractPathIndex.ticket_statuses
-
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
-        return TicketStatusesMeta.get_attrs()
-
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return TicketStatusesMeta.get_values()
+        return RemotePathIndex.ticket_statuses
 
 
 class IDEs(RepositoryAlchemyQueries):
@@ -124,10 +71,4 @@ class IDEs(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return ExtractPathIndex.ides
-
-    def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
-        return IDEsMeta.get_attrs()
-
-    def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return IDEsMeta.get_values()
+        return RemotePathIndex.ides
