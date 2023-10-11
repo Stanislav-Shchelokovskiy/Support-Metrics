@@ -109,7 +109,7 @@ def load_builds(self, **kwargs):
 def load_severity_values(self, **kwargs):
     return run_retriable_task(
         self,
-        tasks.load_severity_values,
+        tasks.load_severity,
     )
 
 

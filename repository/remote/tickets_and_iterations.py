@@ -5,7 +5,7 @@ from sql_queries.meta import (
     TicketsWithPropertiesMeta,
     EmployeesIterationsMeta,
 )
-import sql_queries.index.path.extract as ExtractPathIndex
+import sql_queries.index.path.extract as RemotePathIndex
 
 
 class EmployeesIterations(RepositoryAlchemyQueries):
@@ -14,7 +14,7 @@ class EmployeesIterations(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return ExtractPathIndex.employees_iterations
+        return RemotePathIndex.employees_iterations
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return {**kwargs, **EmployeesIterationsMeta.get_attrs()}
@@ -31,13 +31,13 @@ class CustomersTickets(RepositoryAlchemyQueries):
     def get_prep_queries(self, **kwargs) -> Iterable[SqlQuery]:
         return (
             self.sql_query_type(
-                query_file_path=ExtractPathIndex.tickets_with_licenses_and_users,
+                query_file_path=RemotePathIndex.tickets_with_licenses_and_users,
                 format_params=kwargs,
             ),
         )
 
     def get_main_query_path(self, **kwargs) -> str:
-        return ExtractPathIndex.tickets_with_properties
+        return RemotePathIndex.tickets_with_properties
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return TicketsWithPropertiesMeta.get_attrs()

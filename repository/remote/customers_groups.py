@@ -4,7 +4,7 @@ from sql_queries.meta import (
     CustomersGroupsMeta,
     BaselineAlignedCustomersGroupsMeta,
 )
-import sql_queries.index.path.extract as ExtractPathIndex
+import sql_queries.index.path.extract as RemotePathIndex
 
 
 class CustomersGroups(RepositoryAlchemyQueries):
@@ -13,7 +13,7 @@ class CustomersGroups(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return ExtractPathIndex.customers_groups
+        return RemotePathIndex.customers_groups
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return CustomersGroupsMeta.get_attrs()
@@ -28,7 +28,7 @@ class TrackedCustomersGroups(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return ExtractPathIndex.tracked_customers_groups
+        return RemotePathIndex.tracked_customers_groups
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return {

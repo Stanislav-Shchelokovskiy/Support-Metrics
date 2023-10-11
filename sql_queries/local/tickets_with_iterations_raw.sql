@@ -29,6 +29,7 @@ SELECT
     {tbl_alias}.{is_private},
     {tbl_alias}.{creation_date},
     {tbl_alias}.license_name AS {license_name},
+    {tbl_alias}.parent_license_name AS {parent_license_name},
     {tbl_alias}.{subscription_start},
     {tbl_alias}.{expiration_date},
     ( SELECT name 

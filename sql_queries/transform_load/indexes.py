@@ -1,4 +1,4 @@
-from typing import Iterable
+import toolbox.sql.generators.sqlite.index as sqlite_index
 from sql_queries.meta import (
     CATComponentsFeaturesMeta,
     BaselineAlignedCustomersGroupsMeta,
@@ -10,10 +10,6 @@ from sql_queries.meta import (
 import sql_queries.index.db as DbIndex
 
 
-def _create_index_statement(tbl: str, cols: Iterable[str]) -> str:
-    return f'CREATE INDEX idx_{tbl}_{"_".join(cols)} ON {tbl}({",".join(cols)});'
-
-
 # yapf: disable
 def get_create_index_statements() -> dict[str, tuple[str]]:
     return __create_index_statements
@@ -21,7 +17,7 @@ def get_create_index_statements() -> dict[str, tuple[str]]:
 __create_index_statements = {
         DbIndex.customers_tickets:
             (
-                _create_index_statement(
+               sqlite_index.generate_create_index_statement(
                     tbl=DbIndex.customers_tickets,
                     cols=(
                         TicketsWithPropertiesMeta.user_crmid,
@@ -31,14 +27,14 @@ __create_index_statements = {
             ),
         DbIndex.employees_iterations:
             (
-                _create_index_statement(
+                sqlite_index.generate_create_index_statement(
                     tbl=DbIndex.employees_iterations,
                     cols=(EmployeesIterationsMeta.ticket_id,)
                 ),
             ),
         DbIndex.cat_components_features:
             (
-                _create_index_statement(
+                sqlite_index.generate_create_index_statement(
                     tbl=DbIndex.cat_components_features,
                     cols=(
                         CATComponentsFeaturesMeta.tent_id,
@@ -46,7 +42,7 @@ __create_index_statements = {
                         CATComponentsFeaturesMeta.component_name,
                     )
                 ),
-                _create_index_statement(
+                sqlite_index.generate_create_index_statement(
                     tbl=DbIndex.cat_components_features,
                     cols=(
                         CATComponentsFeaturesMeta.tent_id,
@@ -55,14 +51,14 @@ __create_index_statements = {
                         CATComponentsFeaturesMeta.feature_name,
                     )
                 ),
-                _create_index_statement(
+                sqlite_index.generate_create_index_statement(
                     tbl=DbIndex.cat_components_features,
                     cols=(
                         CATComponentsFeaturesMeta.component_id,
                         CATComponentsFeaturesMeta.component_name,
                     )
                 ),
-                _create_index_statement(
+                sqlite_index.generate_create_index_statement(
                     tbl=DbIndex.cat_components_features,
                     cols=(
                         CATComponentsFeaturesMeta.feature_id,
@@ -72,7 +68,7 @@ __create_index_statements = {
             ),
         DbIndex.platforms_products:
             (
-                _create_index_statement(
+                sqlite_index.generate_create_index_statement(
                     tbl=DbIndex.platforms_products,
                     cols=(
                         PlatformsProductsMeta.product_tent_id,
@@ -80,7 +76,7 @@ __create_index_statements = {
                         PlatformsProductsMeta.product_name,
                     )
                 ),
-                _create_index_statement(
+                sqlite_index.generate_create_index_statement(
                     tbl=DbIndex.platforms_products,
                     cols=(
                         PlatformsProductsMeta.platform_tent_id,
@@ -88,14 +84,14 @@ __create_index_statements = {
                         PlatformsProductsMeta.platform_name,
                     )
                 ),
-                _create_index_statement(
+                sqlite_index.generate_create_index_statement(
                     tbl=DbIndex.platforms_products,
                     cols=(
                         PlatformsProductsMeta.platform_id,
                         PlatformsProductsMeta.platform_name,
                     )
                 ),
-                _create_index_statement(
+                sqlite_index.generate_create_index_statement(
                     tbl=DbIndex.platforms_products,
                     cols=(
                         PlatformsProductsMeta.product_id,
@@ -105,7 +101,7 @@ __create_index_statements = {
             ),
         DbIndex.tracked_customers_groups:
             (
-                _create_index_statement(
+                sqlite_index.generate_create_index_statement(
                     tbl=DbIndex.tracked_customers_groups,
                     cols=(
                         BaselineAlignedCustomersGroupsMeta.assignment_date,
@@ -114,7 +110,7 @@ __create_index_statements = {
                         BaselineAlignedCustomersGroupsMeta.removal_date,
                     )
                 ),
-                _create_index_statement(
+                sqlite_index.generate_create_index_statement(
                     tbl=DbIndex.tracked_customers_groups,
                     cols=(
                         BaselineAlignedCustomersGroupsMeta.user_crmid,
@@ -122,7 +118,7 @@ __create_index_statements = {
                         BaselineAlignedCustomersGroupsMeta.id,
                     )
                 ),
-                _create_index_statement(
+                sqlite_index.generate_create_index_statement(
                     tbl=DbIndex.tracked_customers_groups,
                     cols=(
                         BaselineAlignedCustomersGroupsMeta.id,
@@ -132,7 +128,7 @@ __create_index_statements = {
             ),
         DbIndex.csi:
         (
-            _create_index_statement(
+            sqlite_index.generate_create_index_statement(
                     tbl=DbIndex.csi,
                     cols=(
                         CSIMeta.ticket_scid,

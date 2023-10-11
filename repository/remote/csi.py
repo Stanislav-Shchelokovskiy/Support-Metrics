@@ -1,7 +1,7 @@
 from typing import Iterable
 from toolbox.sql.repository_queries import RepositoryAlchemyQueries
 from sql_queries.meta import CSIMeta
-import sql_queries.index.path.extract as ExtractPathIndex
+import sql_queries.index.path.extract as RemotePathIndex
 
 
 class CSI(RepositoryAlchemyQueries):
@@ -10,7 +10,7 @@ class CSI(RepositoryAlchemyQueries):
     """
 
     def get_main_query_path(self, **kwargs) -> str:
-        return ExtractPathIndex.csi
+        return RemotePathIndex.csi
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return CSIMeta.get_attrs()

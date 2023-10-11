@@ -1,101 +1,54 @@
+from collections.abc import Sequence, Callable
+from typing import Any
 from toolbox.sql.meta_data import MetaData, KnotMeta
+from toolbox.sql.field import Field, TEXT, INTEGER
 
 
-class TribesMeta(KnotMeta):
-    pass
+class CustomersGroupsMeta(MetaData):
+    id = KnotMeta.id
+    name = KnotMeta.name
+    creation_date = Field(TEXT)
+
+    @classmethod
+    def get_key_fields(
+        cls,
+        projector: Callable[[Field], Any] = str,
+        *exfields: Field,
+    ) -> Sequence[str]:
+        return MetaData.get_key_fields(
+            projector,
+            cls.id,
+        )
 
 
-class TentsMeta(KnotMeta):
-    pass
+class ConversionStatusesMeta(MetaData):
+    id = KnotMeta.id
+    name = KnotMeta.name
+    license_status_id = Field(INTEGER)
 
 
-class PositionsMeta(KnotMeta):
-    pass
+class TribesMeta(MetaData):
+    tribe_id = Field(TEXT)
+    tribe_name = Field(TEXT)
 
 
-class CustomersGroupsMeta(KnotMeta):
-    creation_date = 'creation_date'
-
-
-class TrackedCustomersGroupsMeta(KnotMeta):
-    pass
-
-
-class TicketsTagsMeta(KnotMeta):
-    pass
-
-
-class LicenseStatusesMeta(KnotMeta):
-    pass
-
-
-class ConversionStatusesMeta(KnotMeta):
-    license_status_id = 'license_status_id'
-
-
-class TicketsTypesMeta(KnotMeta):
-    pass
-
-
-class FrameworksMeta(KnotMeta):
-    pass
-
-
-class OperatingSystemsMeta(KnotMeta):
-    pass
-
-
-class BuildsMeta(KnotMeta):
-    pass
-
-
-class SeverityMeta(KnotMeta):
-    pass
-
-
-class TicketStatusesMeta(KnotMeta):
-    pass
-
-
-class IDEsMeta(KnotMeta):
-    pass
-
-
-class CATRepliesTypesMeta(KnotMeta):
-    pass
-
-
-class CustomersMeta(KnotMeta):
-    pass
-
-
-class PeriodMeta(MetaData):
-    period_start = 'period_start'
-    period_end = 'period_end'
-
-
-class TribeMeta(MetaData):
-    tribe_id = 'tribe_id'
-    tribe_name = 'tribe_name'
-
-
-class TentMeta(MetaData):
-    tent_id = 'tent_id'
-    tent_name = 'tent_name'
+class TentsMeta(MetaData):
+    tent_id = Field(TEXT)
+    tent_name = Field(TEXT)
 
 
 class CATComponentsMeta(MetaData):
-    component_id = 'component_id'
-    component_name = 'component_name'
+    component_id = Field(TEXT)
+    component_name = Field(TEXT)
 
 
 class CATFeaturesMeta(MetaData):
-    feature_id = 'feature_id'
-    feature_name = 'feature_name'
+    feature_id = Field(TEXT)
+    feature_name = Field(TEXT)
 
 
 class CATComponentsFeaturesMeta(MetaData):
-    tent_id = TentMeta.tent_id
+    tent_id = TentsMeta.tent_id
     component_id = CATComponentsMeta.component_id
     feature_id = CATFeaturesMeta.feature_id
     component_name = CATComponentsMeta.component_name
@@ -103,86 +56,87 @@ class CATComponentsFeaturesMeta(MetaData):
 
 
 class PlatformsMeta(MetaData):
-    platform_id = 'platform_id'
-    platform_name = 'platform_name'
+    platform_id = Field(TEXT)
+    platform_name = Field(TEXT)
 
 
 class ProductsMeta(MetaData):
-    product_id = 'product_id'
-    product_name = 'product_name'
+    product_id = Field(TEXT)
+    product_name = Field(TEXT)
 
 
 class PlatformsProductsMeta(MetaData):
-    platform_tent_id = 'platform_tent_id'
+    platform_tent_id = Field(TEXT)
     platform_id = PlatformsMeta.platform_id
-    product_tent_id = 'product_tent_id'
+    product_tent_id = Field(TEXT)
     product_id = ProductsMeta.product_id
-    platform_tent_name = 'platform_tent_name'
+    platform_tent_name = Field(TEXT)
     platform_name = PlatformsMeta.platform_name
-    product_tent_name = 'product_tent_name'
+    product_tent_name = Field(TEXT)
     product_name = ProductsMeta.product_name
 
 
 class TicketTribeMeta(MetaData):
-    ticket_id = 'ticket_id'
-    tribe_id = TribeMeta.tribe_id
-    tribe_name = TribeMeta.tribe_name
+    ticket_id = Field(TEXT)
+    tribe_id = TribesMeta.tribe_id
+    tribe_name = TribesMeta.tribe_name
 
 
 class TicketsWithPropertiesMeta(MetaData):
-    user_crmid = 'user_crmid'
-    user_id = 'user_id'
-    user_register_date = 'user_register_date'
-    ticket_id = 'ticket_id'
-    ticket_scid = 'ticket_scid'
-    ticket_type = 'ticket_type'
-    tribes_ids = 'tribes_ids'
-    tribes_names = 'tribes_names'
-    tent_id = 'tent_id'
-    tent_name = 'tent_name'
-    creation_date = 'creation_date'
-    is_private = 'is_private'
-    user_groups = 'user_groups'
-    ticket_tags = 'ticket_tags'
-    platforms = 'platforms'
-    products = 'products'
-    frameworks = 'frameworks'
-    builds = 'builds'
-    fixed_in_builds = 'fixed_in_builds'
-    fixed_by = 'fixed_by'
-    fixed_on = 'fixed_on'
-    ticket_status = 'ticket_status'
-    closed_by = 'closed_by'
-    closed_on = 'closed_on'
-    severity = 'severity'
-    converted_to_bug_on = 'converted_to_bug_on'
-    duplicated_to_ticket_type = 'duplicated_to_ticket_type'
-    duplicated_to_ticket_scid = 'duplicated_to_ticket_scid'
-    assigned_to = 'assigned_to'
-    operating_system_id = 'operating_system_id'
-    ide_id = 'ide_id'
-    reply_id = 'reply_id'
-    component_id = 'component_id'
-    feature_id = 'feature_id'
-    license_name = 'license_name'
-    subscription_start = 'subscription_start'
-    expiration_date = 'expiration_date'
-    license_status = 'license_status'
-    conversion_status = 'conversion_status'
+    user_crmid = Field(TEXT)
+    user_id = Field(TEXT)
+    user_register_date = Field(TEXT)
+    ticket_id = Field(TEXT)
+    ticket_scid = Field(TEXT)
+    ticket_type = Field(INTEGER)
+    tribes_ids = Field(TEXT)
+    tribes_names = Field(TEXT)
+    tent_id = TentsMeta.tent_id
+    tent_name = TentsMeta.tent_name
+    creation_date = Field(TEXT)
+    is_private = Field(INTEGER)
+    user_groups = Field(TEXT)
+    ticket_tags = Field(TEXT)
+    platforms = Field(TEXT)
+    products = Field(TEXT)
+    frameworks = Field(TEXT)
+    builds = Field(TEXT)
+    fixed_in_builds = Field(TEXT)
+    fixed_by = Field(TEXT)
+    fixed_on = Field(TEXT)
+    ticket_status = Field(TEXT)
+    closed_by = Field(TEXT)
+    closed_on = Field(TEXT)
+    severity = Field(TEXT)
+    converted_to_bug_on = Field(TEXT)
+    duplicated_to_ticket_type = Field(INTEGER)
+    duplicated_to_ticket_scid = Field(TEXT)
+    assigned_to = Field(TEXT)
+    operating_system_id = Field(TEXT)
+    ide_id = Field(TEXT)
+    reply_id = Field(TEXT)
+    component_id = CATComponentsMeta.component_id
+    feature_id = CATFeaturesMeta.feature_id
+    license_name = Field(TEXT)
+    parent_license_name = Field(TEXT)
+    subscription_start = Field(TEXT)
+    expiration_date = Field(TEXT)
+    license_status = Field(INTEGER)
+    conversion_status = Field(INTEGER)
 
 
 class EmployeesIterationsMeta(MetaData):
     ticket_id = TicketTribeMeta.ticket_id
-    post_id = 'post_id'
-    crmid = 'crmid'
-    scid = 'scid'
+    post_id = Field(TEXT)
+    crmid = Field(TEXT)
+    scid = Field(TEXT)
     tribe_id = TicketTribeMeta.tribe_id
-    tent_id = TentMeta.tent_id
-    position_id = 'position_id'
-    name = 'name'
-    position_name = 'position_name'
+    tent_id = TentsMeta.tent_id
+    position_id = Field(TEXT)
+    name = Field(TEXT)
+    position_name = Field(TEXT)
     tribe_name = TicketTribeMeta.tribe_name
-    tent_name = TentMeta.tent_name
+    tent_name = TentsMeta.tent_name
 
 
 class EmployeeMeta(MetaData):
@@ -192,33 +146,33 @@ class EmployeeMeta(MetaData):
 
 class EmployeesMeta(MetaData):
     tribe_id = EmployeesIterationsMeta.tribe_id
-    tent_id = TentMeta.tent_id
+    tent_id = TentsMeta.tent_id
     position_id = EmployeesIterationsMeta.position_id
     crmid = EmployeesIterationsMeta.crmid
     scid = EmployeeMeta.scid
     name = EmployeeMeta.name
-    tribe_name = TribeMeta.tribe_name
-    tent_name = TentMeta.tent_name
-    position_name = 'position_name'
+    tribe_name = TribesMeta.tribe_name
+    tent_name = TentsMeta.tent_name
+    position_name = EmployeesIterationsMeta.position_name
 
 
 class TicketsWithIterationsMeta(TicketsWithPropertiesMeta):
-    emp_post_id = 'emp_post_id'
-    emp_crmid = 'emp_crmid'
-    emp_scid = 'emp_scid'
-    emp_tribe_id = 'emp_tribe_id'
-    emp_tent_id = 'emp_tent_id'
-    emp_position_id = 'emp_position_id'
-    emp_name = 'emp_name'
-    emp_position_name = 'emp_position_name'
-    emp_tribe_name = 'emp_tribe_name'
-    emp_tent_name = 'emp_tent_name'
+    emp_post_id = Field(TEXT)
+    emp_crmid = Field(TEXT)
+    emp_scid = Field(TEXT)
+    emp_tribe_id = Field(TEXT)
+    emp_tent_id = Field(TEXT)
+    emp_position_id = Field(TEXT)
+    emp_name = Field(TEXT)
+    emp_position_name = Field(TEXT)
+    emp_tribe_name = Field(TEXT)
+    emp_tent_name = Field(TEXT)
 
 
 class TicketsWithIterationsRawMeta(MetaData):
     user_id = TicketsWithIterationsMeta.user_id
     ticket_scid = TicketsWithIterationsMeta.ticket_scid
-    csi = 'csi'
+    csi = Field(TEXT)
     ticket_type = TicketsWithIterationsMeta.ticket_type
     tribes_names = TicketsWithIterationsMeta.tribes_names
     tent_name = TicketsWithIterationsMeta.tent_name
@@ -227,14 +181,15 @@ class TicketsWithIterationsRawMeta(MetaData):
     ticket_tags = TicketsWithIterationsMeta.ticket_tags
     is_private = TicketsWithIterationsMeta.is_private
     creation_date = TicketsWithIterationsMeta.creation_date
-    license_name = 'most_appropriate_license'
+    license_name = Field(TEXT, alias='most_appropriate_license')
+    parent_license_name = Field(TEXT, alias='parent_license')
     subscription_start = TicketsWithIterationsMeta.subscription_start
     expiration_date = TicketsWithIterationsMeta.expiration_date
     license_status = TicketsWithIterationsMeta.license_status
     conversion_status = TicketsWithIterationsMeta.conversion_status
-    reply = 'reply'
-    component = 'component'
-    feature = 'feature'
+    reply = Field(TEXT)
+    component = Field(TEXT)
+    feature = Field(TEXT)
     builds = TicketsWithIterationsMeta.builds
     fixed_in_builds = TicketsWithIterationsMeta.fixed_in_builds
     fixed_by = TicketsWithIterationsMeta.fixed_by
@@ -247,8 +202,8 @@ class TicketsWithIterationsRawMeta(MetaData):
     duplicated_to_ticket_type = TicketsWithIterationsMeta.duplicated_to_ticket_type
     duplicated_to_ticket_scid = TicketsWithIterationsMeta.duplicated_to_ticket_scid
     assigned_to = TicketsWithIterationsMeta.assigned_to
-    operating_system = 'operating_system'
-    ide = 'ide'
+    operating_system = Field(TEXT)
+    ide = Field(TEXT)
     emp_post_id = TicketsWithIterationsMeta.emp_post_id
     emp_name = TicketsWithIterationsMeta.emp_name
     emp_position_name = TicketsWithIterationsMeta.emp_position_name
@@ -258,17 +213,17 @@ class TicketsWithIterationsRawMeta(MetaData):
 
 class BaselineAlignedCustomersGroupsMeta(MetaData):
     user_crmid = TicketsWithPropertiesMeta.user_crmid
-    id = TrackedCustomersGroupsMeta.id
-    name = TrackedCustomersGroupsMeta.name
-    assignment_date = 'assignment_date'
-    removal_date = 'removal_date'
+    id = KnotMeta.id
+    name = KnotMeta.name
+    assignment_date = Field(TEXT)
+    removal_date = Field(TEXT)
 
 
 class BaselineAlignedModeMeta(BaselineAlignedCustomersGroupsMeta):
-    days_since_baseline = 'days_since_baseline'
+    days_since_baseline = Field(INTEGER)
 
 
 class CSIMeta(MetaData):
     ticket_scid = TicketsWithIterationsMeta.ticket_scid
-    date = 'date'
-    rating = 'rating'
+    date = Field(TEXT)
+    rating = Field(INTEGER)
