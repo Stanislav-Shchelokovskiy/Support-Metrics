@@ -50,7 +50,7 @@ def setup_periodic_tasks(sender, **kwargs):
         crontab(
             minute=0,
             hour=1,
-            day_of_week=(1, 3, 5),
+            day_of_week=(6),
         ),
         update_support_metrics.s(),
     )
