@@ -36,6 +36,7 @@ SELECT
 	t.{component_id},
 	t.{feature_id},
 	t.{license_name},
+    t.{parent_license_name},
 	t.{subscription_start},
 	t.{expiration_date},
 	t.{license_status},

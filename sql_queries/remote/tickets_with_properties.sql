@@ -45,6 +45,7 @@ SELECT
 	CAST(single_selectors.ControlId		  AS UNIQUEIDENTIFIER) AS {component_id},
 	CAST(single_selectors.FeatureId		  AS UNIQUEIDENTIFIER) AS {feature_id},
 	ti.license_name						AS {license_name},
+	ti.parent_license_name				AS {parent_license_name},
 	ti.subscription_start				AS {subscription_start},
 	ti.expiration_date					AS {expiration_date},
 	ti.license_status					AS {license_status},

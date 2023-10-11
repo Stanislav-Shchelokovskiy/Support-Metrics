@@ -118,6 +118,7 @@ class TicketsWithPropertiesMeta(MetaData):
     component_id = CATComponentsMeta.component_id
     feature_id = CATFeaturesMeta.feature_id
     license_name = Field(TEXT)
+    parent_license_name = Field(TEXT)
     subscription_start = Field(TEXT)
     expiration_date = Field(TEXT)
     license_status = Field(INTEGER)
@@ -180,7 +181,8 @@ class TicketsWithIterationsRawMeta(MetaData):
     ticket_tags = TicketsWithIterationsMeta.ticket_tags
     is_private = TicketsWithIterationsMeta.is_private
     creation_date = TicketsWithIterationsMeta.creation_date
-    most_appropriate_license = Field(TEXT)
+    license_name = Field(TEXT, alias='most_appropriate_license')
+    parent_license_name = Field(TEXT, alias='parent_license')
     subscription_start = TicketsWithIterationsMeta.subscription_start
     expiration_date = TicketsWithIterationsMeta.expiration_date
     license_status = TicketsWithIterationsMeta.license_status

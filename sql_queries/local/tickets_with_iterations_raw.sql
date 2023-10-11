@@ -28,7 +28,8 @@ SELECT
             WHERE id IN (SELECT value FROM JSON_EACH('["' || replace({tbl_alias}.ticket_tags, ';', '", "') || '"]')))) AS {ticket_tags},
     {tbl_alias}.{is_private},
     {tbl_alias}.{creation_date},
-    {tbl_alias}.license_name AS {most_appropriate_license},
+    {tbl_alias}.license_name AS {license_name},
+    {tbl_alias}.parent_license_name AS {parent_license_name},
     {tbl_alias}.{subscription_start},
     {tbl_alias}.{expiration_date},
     ( SELECT name 
