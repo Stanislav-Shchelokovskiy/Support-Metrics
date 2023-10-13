@@ -31,8 +31,6 @@ def _get_start():
 
 def _offset_in_days():
     days = recalculate_for_last_n_days()
-    print('recalculate_from_beginning', recalculate_from_beginning())
     if recalculate_from_beginning():
-        
         days = 365 * 5
     return relativedelta(days=days)
