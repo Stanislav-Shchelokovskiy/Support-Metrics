@@ -275,21 +275,16 @@ def __post_process():
     reset_recalculate_from_beginning()
 
 
-# yapf: enable
 def __build_temp_tickets_with_iterations(rank_period_offset: str):
     query = SqlQuery(
         query_file_path=TransformLoadPathIndex.tickets_with_iterations,
         format_params={
             **TicketsWithIterationsMeta.get_attrs(),
             **EmployeesIterationsMeta.get_attrs(),
-            'TicketsWithIterations':
-                name_index.tickets_with_iterations_temp,
-            'CustomersTickets':
-                name_index.customers_tickets,
-            'EmployeesIterations':
-                name_index.employees_iterations,
-            'rank_period_offset':
-                rank_period_offset,
+            'TicketsWithIterations': name_index.tickets_with_iterations_temp,
+            'CustomersTickets': name_index.customers_tickets,
+            'EmployeesIterations': name_index.employees_iterations,
+            'rank_period_offset': rank_period_offset,
         }
     )
     __execute(query)
@@ -301,11 +296,8 @@ def __update_tickets_with_iterations(years_of_history: str):
         SqliteCreateTableFromTableQuery(
             source_table_or_subquery=name_index.tickets_with_iterations_temp,
             target_table_name=name_index.tickets_with_iterations,
-            unique_key_fields=TicketsWithIterationsMeta.
-            get_key_fields(lambda x: x.as_query_field()),
-            values_fields=TicketsWithIterationsMeta.get_conflicting_fields(
-                lambda x: x.as_query_field(), preserve_order=True
-            ),
+            unique_key_fields=TicketsWithIterationsMeta.get_key_fields(lambda x: x.as_query_field()),
+            values_fields=TicketsWithIterationsMeta.get_conflicting_fields(lambda x: x.as_query_field(),preserve_order=True),
             recreate=False,
             keep_rows_for_last=DropRowsTriggerParams(
                 modifier=years_of_history,
@@ -320,54 +312,26 @@ def __update_knot_tables():
         SqliteCreateTableFromTableQuery(
             source_table_or_subquery=name_index.employees_iterations,
             target_table_name=name_index.emp_positions,
-            unique_key_fields=(
-                EmployeesIterationsMeta.position_id.as_query_field(
-                    KnotMeta.id
-                ),
-            ),
-            values_fields=(
-                EmployeesIterationsMeta.position_name.as_query_field(
-                    KnotMeta.name
-                ),
-            ),
+            unique_key_fields=(EmployeesIterationsMeta.position_id.as_query_field(KnotMeta.id),),
+            values_fields=(EmployeesIterationsMeta.position_name.as_query_field(KnotMeta.name),),
         ),
         SqliteCreateTableFromTableQuery(
             source_table_or_subquery=name_index.employees_iterations,
             target_table_name=name_index.emp_tribes,
-            unique_key_fields=(
-                EmployeesIterationsMeta.tribe_id.as_query_field(KnotMeta.id),
-            ),
-            values_fields=(
-                EmployeesIterationsMeta.tribe_name.as_query_field(
-                    KnotMeta.name
-                ),
-            ),
+            unique_key_fields=(EmployeesIterationsMeta.tribe_id.as_query_field(KnotMeta.id),),
+            values_fields=(EmployeesIterationsMeta.tribe_name.as_query_field(KnotMeta.name),),
         ),
         SqliteCreateTableFromTableQuery(
             source_table_or_subquery=name_index.employees_iterations,
             target_table_name=name_index.emp_tents,
-            unique_key_fields=(
-                EmployeesIterationsMeta.tent_id.as_query_field(KnotMeta.id),
-            ),
-            values_fields=(
-                EmployeesIterationsMeta.tent_name.as_query_field(
-                    KnotMeta.name
-                ),
-            ),
+            unique_key_fields=(EmployeesIterationsMeta.tent_id.as_query_field(KnotMeta.id),),
+            values_fields=(EmployeesIterationsMeta.tent_name.as_query_field(KnotMeta.name),),
         ),
         SqliteCreateTableFromTableQuery(
             source_table_or_subquery=name_index.tickets_with_iterations,
             target_table_name=name_index.customers,
-            unique_key_fields=(
-                TicketsWithPropertiesMeta.user_crmid.as_query_field(
-                    KnotMeta.id
-                ),
-            ),
-            values_fields=(
-                TicketsWithPropertiesMeta.user_id.as_query_field(
-                    KnotMeta.name
-                ),
-            ),
+            unique_key_fields=(TicketsWithPropertiesMeta.user_crmid.as_query_field(KnotMeta.id),),
+            values_fields=(TicketsWithPropertiesMeta.user_id.as_query_field(KnotMeta.name),),
         ),
     )
 
