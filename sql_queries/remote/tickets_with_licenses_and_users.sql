@@ -60,7 +60,7 @@ WHERE product_tribe_id = platform_tribe_id
 GROUP BY platform_id, platform_name )
 
 SELECT	sib.SaleItem_Id		AS sale_item_id,
-		STRING_AGG(CONVERT(NVARCHAR(MAX), sibpp.platform_id), @separator) AS platforms
+		sibpp.platform_id	AS platform_id
 INTO	#SaleItemPlatforms
 FROM	CRM.dbo.SaleItem_Build AS sib
 		CROSS APPLY (
@@ -72,18 +72,18 @@ FROM	CRM.dbo.SaleItem_Build AS sib
 		) AS sibpp
 		INNER JOIN platform_product_count AS ppc ON ppc.platform_id = sibpp.platform_id 
 												AND	ppc.product_cnt_boundary < sibpp.product_cnt
-GROUP BY sib.SaleItem_Id
-CREATE CLUSTERED INDEX sib_product_cnt ON #SaleItemPlatforms (sale_item_id)
+GROUP BY sib.SaleItem_Id, sibpp.platform_id
+CREATE CLUSTERED INDEX sib_product_cnt ON #SaleItemPlatforms (sale_item_id, platform_id)
 
 
 DROP TABLE IF EXISTS #SaleItemProducts
 SELECT	sib.SaleItem_Id		AS sale_item_id,
-		STRING_AGG(CONVERT(NVARCHAR(MAX), sibpp.Product_Id), @separator) AS products
+		sibpp.Product_Id	AS product_id
 INTO	#SaleItemProducts
 FROM	CRM.dbo.SaleItem_Build AS sib
 		INNER JOIN CRM.dbo.SaleItemBuild_Product_Plaform AS sibpp ON sibpp.SaleItemBuild_Id = sib.Id
-GROUP BY sib.SaleItem_Id
-CREATE CLUSTERED INDEX si_products ON #SaleItemProducts (sale_item_id)
+GROUP BY sib.SaleItem_Id, sibpp.Product_Id
+CREATE CLUSTERED INDEX si_products ON #SaleItemProducts (sale_item_id, product_id)
 
 
 DROP TABLE IF EXISTS #SaleItemsFlat;
@@ -189,12 +189,12 @@ licenses AS (
 				WHERE	id IN (oi.sale_item_id, bundled_skus.sale_item_id)
 			) AS si
 			OUTER APPLY (
-				SELECT	platforms AS licensed_platforms
+				SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), sip.platform_id), @separator) AS licensed_platforms
 				FROM	#SaleItemPlatforms AS sip
 				WHERE	sip.sale_item_id = si.item
 			) AS platforms
 			OUTER APPLY (
-				SELECT	products AS licensed_products
+				SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), sip.product_id), @separator) AS licensed_products
 				FROM	#SaleItemProducts AS sip
 				WHERE	sip.sale_item_id = si.item
 			) AS products

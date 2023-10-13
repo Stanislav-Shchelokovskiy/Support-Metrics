@@ -168,6 +168,19 @@ class TicketsWithIterationsMeta(TicketsWithPropertiesMeta):
     emp_tribe_name = Field(TEXT)
     emp_tent_name = Field(TEXT)
 
+    @classmethod
+    def get_key_fields(
+        cls,
+        projector: Callable[[Field], Any] = str,
+        *exfields: Field,
+    ) -> Sequence[str]:
+        return MetaData.get_key_fields(
+            projector,
+            cls.user_crmid,
+            cls.ticket_scid,
+            cls.emp_post_id,
+        )
+
 
 class TicketsWithIterationsRawMeta(MetaData):
     user_id = TicketsWithIterationsMeta.user_id

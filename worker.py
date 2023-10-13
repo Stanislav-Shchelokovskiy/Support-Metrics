@@ -6,7 +6,7 @@ from celery.schedules import crontab
 from celery.signals import worker_ready
 
 import tasks.tasks as tasks
-from configs.config import Config
+import configs.config as config
 
 
 app = Celery(__name__)
@@ -50,7 +50,7 @@ def setup_periodic_tasks(sender, **kwargs):
         crontab(
             minute=0,
             hour=1,
-            day_of_week=(6),
+            day_of_week=(1, 3, 5),
         ),
         update_support_metrics.s(),
     )
@@ -182,7 +182,7 @@ def load_tracked_groups(self, **kwargs):
     return run_retriable_task(
         self,
         tasks.load_tracked_groups,
-        start_date=Config.get_tickets_period()['start_date'],
+        start_date=config.get_tickets_period()['start_date'],
         end_date='9999-12-31',
     )
 
@@ -216,7 +216,7 @@ def load_customers_tickets(self, **kwargs):
     return run_retriable_task(
         self,
         tasks.load_customers_tickets,
-        **Config.get_tickets_period(),
+        **config.get_tickets_period(),
     )
 
 
@@ -225,7 +225,7 @@ def load_employees_iterations(self, **kwargs):
     return run_retriable_task(
         self,
         tasks.load_employees_iterations,
-        **Config.get_tickets_period(),
+        **config.get_tickets_period(),
     )
 
 
@@ -234,7 +234,7 @@ def load_employees(self, **kwargs):
     return run_retriable_task(
         self,
         tasks.load_employees,
-        start_date=Config.get_tickets_period()['start_date'],
+        start_date=config.get_tickets_period()['start_date'],
     )
 
 
@@ -251,7 +251,8 @@ def process_staged_data(self, **kwargs):
     return run_retriable_task(
         self,
         tasks.process_staged_data,
-        rank_period_offset=Config.get_rank_period_offset(),
+        rank_period_offset=config.get_rank_period_offset(),
+        years_of_history=config.years_of_history(),
     )
 
 

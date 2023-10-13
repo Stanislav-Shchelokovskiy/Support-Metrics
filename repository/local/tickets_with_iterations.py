@@ -11,13 +11,13 @@ from sql_queries.meta import (
     TicketsWithIterationsMeta,
     BaselineAlignedModeMeta,
 )
-from configs.config import Config
 from repository.local.core.tickets_with_iterations_table import get_tickets_with_iterations_table
 from repository.local.aggs import get_metric
 from toolbox.sql.generators.utils import build_multiline_string_ignore_empties
 import sql_queries.index.path.local as LocalPathIndex
-import sql_queries.index.db as DbIndex
+import sql_queries.index.name as name_index
 import repository.local.generators.periods as PeriodsGenerator
+import configs.config as config
 
 
 class TicketsPeriod(GeneralSelectAsyncQueryDescriptor):
@@ -27,8 +27,8 @@ class TicketsPeriod(GeneralSelectAsyncQueryDescriptor):
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'select': f"DATE(MIN({TicketsWithIterationsMeta.creation_date}), '+{Config.get_rank_period_offset()}') AS {PeriodMeta.start}, MAX({TicketsWithIterationsMeta.creation_date}) AS {PeriodMeta.end}",
-            'from': DbIndex.customers_tickets,
+            'select': f"DATE(MIN({TicketsWithIterationsMeta.creation_date}), '+{config.get_rank_period_offset()}') AS {PeriodMeta.start}, MAX({TicketsWithIterationsMeta.creation_date}) AS {PeriodMeta.end}",
+            'from': name_index.tickets_with_iterations,
             'where_group_limit': '',
         }
 
@@ -43,22 +43,22 @@ class TicketsWithIterationsRaw(AsyncQueryDescriptor):
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'csi_table': DbIndex.csi,
-            'replies_types_table': DbIndex.cat_replies_types,
-            'components_features_table': DbIndex.cat_components_features,
-            'license_statuses_table': DbIndex.license_statuses,
-            'conversion_statuses_table': DbIndex.conversion_statuses,
-            'tickets_types_table': DbIndex.tickets_types,
-            'employees_table': DbIndex.employees,
-            'severity_table': DbIndex.severity,
-            'operating_systems_table': DbIndex.operating_systems,
-            'ides_table': DbIndex.ides,
-            'platforms_products_table': DbIndex.platforms_products,
-            'tickets_tags_table': DbIndex.tickets_tags,
+            'csi_table': name_index.csi,
+            'replies_types_table': name_index.cat_replies_types,
+            'components_features_table': name_index.cat_components_features,
+            'license_statuses_table': name_index.license_statuses,
+            'conversion_statuses_table': name_index.conversion_statuses,
+            'tickets_types_table': name_index.tickets_types,
+            'employees_table': name_index.employees,
+            'severity_table': name_index.severity,
+            'operating_systems_table': name_index.operating_systems,
+            'ides_table': name_index.ides,
+            'platforms_products_table': name_index.platforms_products,
+            'tickets_tags_table': name_index.tickets_tags,
             **TicketsWithIterationsRawMeta.get_attrs(),
             'baseline_aligned_mode_fields': self.get_baseline_aligned_mode_fields(**kwargs),
             'tickets_with_iterations_table': get_tickets_with_iterations_table(**kwargs),
-            'tbl_alias': DbIndex.tickets_with_iterations_alias,
+            'tbl_alias': name_index.tickets_with_iterations_alias,
         }
 
     def get_baseline_aligned_mode_fields(self, **kwargs) -> str:
