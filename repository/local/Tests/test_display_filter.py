@@ -11,7 +11,7 @@ from server_models import (
 )
 from repository.local.aggs import tickets
 from repository.local.generators.filters_generators.display_filter import custom_display_filter, DisplayValuesStore
-import sql_queries.index.db as DbIndex
+import sql_queries.index.name as name_index
 
 
 class Connection:
@@ -30,9 +30,9 @@ class MockSqlQueryExecutor(SqlQueryExecutor):
         query = kwargs['main_query']
         table_name = query.format_params['from']
         return {
-            DbIndex.tribes: DataFrame(data={KnotMeta.name.name: ['XAML United Team']}),
-            DbIndex.tickets_types: DataFrame(data={KnotMeta.name.name: ['Question']}),
-            DbIndex.license_statuses: DataFrame(data={KnotMeta.name.name: ['Licensed', 'Free']}),
+            name_index.tribes: DataFrame(data={KnotMeta.name.name: ['XAML United Team']}),
+            name_index.tickets_types: DataFrame(data={KnotMeta.name.name: ['Question']}),
+            name_index.license_statuses: DataFrame(data={KnotMeta.name.name: ['Licensed', 'Free']}),
         }[table_name]
 
 

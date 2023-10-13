@@ -9,6 +9,8 @@ Add **.env** file containing the following env vars:
  - CORS_ORIGINS=["https://ubuntu-support.corp.devexpress.com","http://localhost:3000"]
  - # 0 = false, 1 = true
  - UPDATE_ON_STARTUP=0
+ - RECALCULATE_FOR_LAST_DAYS=3
+ - RECALCULATE_FROM_THE_BEGINNING=0
  - PRODUCTION=1
  - VERSION=""
 

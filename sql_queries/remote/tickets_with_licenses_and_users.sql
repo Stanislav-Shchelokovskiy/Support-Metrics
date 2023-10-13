@@ -33,9 +33,6 @@ DECLARE @better_suitable	TINYINT = 1
 DECLARE @suitable			TINYINT = 2
 DECLARE @least_suitable		TINYINT = 3
 
-DECLARE	@bundled_sku	TINYINT = 0
-DECLARE	@regular_sku	TINYINT = 1
-
 
 DROP TABLE IF EXISTS #SaleItemPlatforms;
 WITH platform_product_count AS (
@@ -159,7 +156,6 @@ licenses AS (
 			o.free,
 			si.license_name,
 			si.parent_license_name,
-			si.sku_group,
 			platforms.licensed_platforms,
 			products.licensed_products
 	FROM	#LisencesOnly AS lcs 
@@ -188,7 +184,6 @@ licenses AS (
 							(	SELECT TOP 1 name
 								FROM   #SaleItemsFlat
 								WHERE  id = oi.sale_item_id	))					AS parent_license_name,
-						IIF(id = oi.sale_item_id, @regular_sku, @bundled_sku)	AS sku_group,
 						item													AS item
 				FROM	#SaleItemsFlat
 				WHERE	id IN (oi.sale_item_id, bundled_skus.sale_item_id)
@@ -271,7 +266,7 @@ FROM (	SELECT	Id, FriendlyId, EntityType, CAST(Created AS DATE) AS creation_date
 			FROM	(	SELECT	licenses_most_inner.*,
 							CASE 
 								WHEN tickets.creation_date BETWEEN licenses_most_inner.subscription_start AND licenses_most_inner.expiration_date
-									THEN IIF(sku_group = @regular_sku, @best_suitable, @better_suitable)
+									THEN IIF(parent_license_name IS NULL, @best_suitable, @better_suitable)
 								WHEN licenses_most_inner.revoked_since IS NULL AND licenses_most_inner.expiration_date IS NOT NULL AND tickets.creation_date > licenses_most_inner.expiration_date
 									THEN @suitable
 								WHEN licenses_most_inner.revoked_since IS NOT NULL AND tickets.creation_date > licenses_most_inner.revoked_since
