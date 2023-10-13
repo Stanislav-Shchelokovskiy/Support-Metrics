@@ -19,7 +19,8 @@ x-support_metrics:
     - SQLITE_DATABASE=${DB_HOME}/db
     - LD_LIBRARY_PATH=/usr/lib #https://stackoverflow.com/questions/49920444/upgrading-sqlite3-version-used-in-python3-on-linux
     - UPDATE_ON_STARTUP
-    - RECALCULATE_FOR_LAST_MONTHS
+    - RECALCULATE_FOR_LAST_DAYS
+    - RECALCULATE_FROM_THE_BEGINNING
     - PRODUCTION
 
 services:
