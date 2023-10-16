@@ -1,34 +1,21 @@
 import pytest
 from os import getcwd
 from pathlib import Path
+from toolbox.sql import KnotMeta
 import toolbox.sql.index as RootPath
 from sql_queries.meta import (
     TicketsWithPropertiesMeta,
     CustomersGroupsMeta,
-    TicketsTagsMeta,
-    CATRepliesTypesMeta,
     CATComponentsFeaturesMeta,
     TicketsWithIterationsRawMeta,
     PlatformsProductsMeta,
     TicketsWithIterationsMeta,
-    PositionsMeta,
     EmployeesIterationsMeta,
-    TribeMeta,
-    TribesMeta,
     EmployeesMeta,
     BaselineAlignedCustomersGroupsMeta,
-    CustomersMeta,
-    KnotMeta,
-    TicketsTypesMeta,
-    FrameworksMeta,
-    OperatingSystemsMeta,
-    BuildsMeta,
-    SeverityMeta,
-    TicketStatusesMeta,
-    IDEsMeta,
     CSIMeta,
 )
-import sql_queries.index.path.extract as ExtractPathIndex
+import sql_queries.index.path.extract as RemotePathIndex
 import sql_queries.index.path.local as LocalPathIndex
 import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
 
@@ -38,14 +25,14 @@ import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
     'get_query_file_path, format_params',
     [
         (
-            ExtractPathIndex.tickets_with_licenses_and_users,
+            RemotePathIndex.tickets_with_licenses_and_users,
             {
                 'start_date': 'qwe',
                 'end_date': 'asd',
             },
         ),
         (
-            ExtractPathIndex.tickets_with_properties,
+            RemotePathIndex.tickets_with_properties,
             TicketsWithPropertiesMeta.get_attrs(),
         ),
         (
@@ -70,11 +57,11 @@ import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
             },
         ),
         (
-            ExtractPathIndex.customers_groups,
+            RemotePathIndex.customers_groups,
             CustomersGroupsMeta.get_attrs(),
         ),
         (
-            ExtractPathIndex.tracked_customers_groups,
+            RemotePathIndex.tracked_customers_groups,
             {
                 **BaselineAlignedCustomersGroupsMeta.get_attrs(),
                 'start_date': 'qwe',
@@ -82,19 +69,19 @@ import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
             },
         ),
         (
-            ExtractPathIndex.ticket_tags,
-            TicketsTagsMeta.get_attrs(),
+            RemotePathIndex.ticket_tags,
+            KnotMeta.get_attrs(),
         ),
         (
-            ExtractPathIndex.replies_types,
-            CATRepliesTypesMeta.get_attrs(),
+            RemotePathIndex.replies_types,
+            KnotMeta.get_attrs(),
         ),
         (
-            ExtractPathIndex.components_features,
+            RemotePathIndex.components_features,
             CATComponentsFeaturesMeta.get_attrs(),
         ),
         (
-            ExtractPathIndex.platforms_products,
+            RemotePathIndex.platforms_products,
             PlatformsProductsMeta.get_attrs(),
         ),
         (
@@ -109,36 +96,10 @@ import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
             },
         ),
         (
-            TransofrmLoadPathIndex.emp_positions,
-            {
-                **PositionsMeta.get_attrs(),
-                'EmployeesIterations': 'EmployeesIterations',
-                'EmpPositions': 'EmpPositions',
-                'position_id': EmployeesIterationsMeta.position_id,
-                'position_name': EmployeesIterationsMeta.position_name
-            },
-        ),
-        (
-            TransofrmLoadPathIndex.emp_tribes, {
-                **TribeMeta.get_attrs(),
-                **TribesMeta.get_attrs(),
-                'EmpTribes': 'EmpTribes',
-                'EmployeesIterations': 'EmployeesIterations',
-            }
-        ),
-        (
-            ExtractPathIndex.employees,
+            RemotePathIndex.employees,
             {
                 **EmployeesMeta.get_attrs(),
                 'start_date': 'start_date',
-            },
-        ),
-        (
-            TransofrmLoadPathIndex.customers,
-            {
-                **CustomersMeta.get_attrs(),
-                'Users': 'Users',
-                'TicketsWithIterations': 'TicketsWithIterations',
             },
         ),
         (
@@ -149,52 +110,45 @@ import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
                 'table': 'table',
             },
         ),
+
         (
-            TransofrmLoadPathIndex.knot,
-            {
-                **KnotMeta.get_attrs(),
-                'table': 'table',
-                'id_type': 'type',
-            },
-        ),
-        (
-            ExtractPathIndex.tickets_types,
-            TicketsTypesMeta.get_attrs(),
-        ),
-        (
-            ExtractPathIndex.frameworks,
-            FrameworksMeta.get_attrs(),
-        ),
-        (
-            ExtractPathIndex.operating_systems,
-            OperatingSystemsMeta.get_attrs(),
-        ),
-        (
-            ExtractPathIndex.builds,
-            BuildsMeta.get_attrs(),
-        ),
-        (
-            ExtractPathIndex.severity,
-            SeverityMeta.get_attrs(),
-        ),
-        (
-            ExtractPathIndex.ticket_statuses,
-            TicketStatusesMeta.get_attrs(),
-        ),
-        (
-            ExtractPathIndex.ides,
-            IDEsMeta.get_attrs(),
-        ),
-        (
-            ExtractPathIndex.csi,
-            CSIMeta.get_attrs(),
-        ),
-        (
-            ExtractPathIndex.tents,
+            RemotePathIndex.tickets_types,
             KnotMeta.get_attrs(),
         ),
         (
-            ExtractPathIndex.tribes,
+            RemotePathIndex.frameworks,
+            KnotMeta.get_attrs(),
+        ),
+        (
+            RemotePathIndex.operating_systems,
+            KnotMeta.get_attrs(),
+        ),
+        (
+            RemotePathIndex.builds,
+            KnotMeta.get_attrs(),
+        ),
+        (
+            RemotePathIndex.severity,
+            KnotMeta.get_attrs(),
+        ),
+        (
+            RemotePathIndex.ticket_statuses,
+            KnotMeta.get_attrs(),
+        ),
+        (
+            RemotePathIndex.ides,
+            KnotMeta.get_attrs(),
+        ),
+        (
+            RemotePathIndex.csi,
+            CSIMeta.get_attrs(),
+        ),
+        (
+            RemotePathIndex.tents,
+            KnotMeta.get_attrs(),
+        ),
+        (
+            RemotePathIndex.tribes,
             KnotMeta.get_attrs(),
         ),
     ],

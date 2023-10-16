@@ -28,103 +28,114 @@ DECLARE @trial						TINYINT = 11
 DECLARE @converted_paid	TINYINT = 0
 DECLARE @converted_free	TINYINT = 1
 
-DECLARE @best_suitable	TINYINT = 0
-DECLARE @suitable		TINYINT = 1
-DECLARE @least_suitable	TINYINT = 2
+DECLARE @best_suitable		TINYINT = 0
+DECLARE @better_suitable	TINYINT = 1
+DECLARE @suitable			TINYINT = 2
+DECLARE @least_suitable		TINYINT = 3
 
-DROP TABLE IF EXISTS #PlatformProductCount
-SELECT 
-	platform_id, 
-	CEILING(COUNT(product_id) * 2.0 / 3) AS product_cnt_boundary
-INTO #PlatformProductCount
-FROM (
-	SELECT
-		platforms.Id			AS platform_id,
-		products.Id				AS product_id,
-		platform_tribe.id		AS platform_tribe_id,
-		product_tribe.Id		AS product_tribe_id,
-		platform_tribe.Name		AS platform_tribe_name,
-		platforms.Name			AS platform_name,
-		product_tribe.Name		AS product_tribe_name,
-		products.Name			AS product_name
-	FROM (SELECT DISTINCT Product_Id, Platform_Id 
-		  FROM CRM.dbo.SaleItemBuild_Product_Plaform
-		  WHERE AuxiliaryPackage = 0)	AS sibpp
-		  INNER JOIN CRM.dbo.Platforms	AS platforms		ON platforms.Id = sibpp.Platform_Id
-		  INNER JOIN CRM.dbo.Products	AS products			ON products.Id = sibpp.Product_Id
-		  INNER JOIN CRM.dbo.Tribes		AS platform_tribe	ON platform_tribe.Id = platforms.DefaultTribe
-		  LEFT JOIN CRM.dbo.Tribes		AS product_tribe	ON product_tribe.Id = products.Tribe_Id
-	WHERE platforms.DefaultTribe IS NOT NULL OR products.Tribe_Id IS NOT NULL
-) AS PlatformsProductsTribes
+
+DROP TABLE IF EXISTS #SaleItemPlatforms;
+WITH platform_product_count AS (
+SELECT	platform_id								AS platform_id,
+		CEILING(COUNT(product_id) * 2.0 / 3)	AS product_cnt_boundary
+FROM (	SELECT	platforms.Id			AS platform_id,
+				products.Id				AS product_id,
+				platform_tribe.id		AS platform_tribe_id,
+				product_tribe.Id		AS product_tribe_id,
+				platform_tribe.Name		AS platform_tribe_name,
+				platforms.Name			AS platform_name,
+				product_tribe.Name		AS product_tribe_name,
+				products.Name			AS product_name
+		FROM (	SELECT DISTINCT Product_Id, Platform_Id 
+				FROM CRM.dbo.SaleItemBuild_Product_Plaform
+				WHERE AuxiliaryPackage = 0	
+			 )	AS sibpp
+			  INNER JOIN CRM.dbo.Platforms	AS platforms		ON platforms.Id = sibpp.Platform_Id
+			  INNER JOIN CRM.dbo.Products	AS products			ON products.Id = sibpp.Product_Id
+			  INNER JOIN CRM.dbo.Tribes		AS platform_tribe	ON platform_tribe.Id = platforms.DefaultTribe
+			  LEFT JOIN CRM.dbo.Tribes		AS product_tribe	ON product_tribe.Id = products.Tribe_Id
+		WHERE platforms.DefaultTribe IS NOT NULL OR products.Tribe_Id IS NOT NULL
+	) AS PlatformsProductsTribes
 WHERE product_tribe_id = platform_tribe_id
-GROUP BY platform_id
+GROUP BY platform_id, platform_name )
 
-CREATE CLUSTERED INDEX ppc_platform ON #PlatformProductCount(platform_id)
+SELECT	sib.SaleItem_Id		AS sale_item_id,
+		sibpp.platform_id	AS platform_id
+INTO	#SaleItemPlatforms
+FROM	CRM.dbo.SaleItem_Build AS sib
+		CROSS APPLY (
+			SELECT	Platform_Id			AS platform_id,
+					COUNT(Product_Id)	AS product_cnt
+			FROM	CRM.dbo.SaleItemBuild_Product_Plaform
+			WHERE	SaleItemBuild_Id = sib.Id
+			GROUP BY SaleItemBuild_Id, Platform_Id
+		) AS sibpp
+		INNER JOIN platform_product_count AS ppc ON ppc.platform_id = sibpp.platform_id 
+												AND	ppc.product_cnt_boundary < sibpp.product_cnt
+GROUP BY sib.SaleItem_Id, sibpp.platform_id
+CREATE CLUSTERED INDEX sib_product_cnt ON #SaleItemPlatforms (sale_item_id, platform_id)
+
+
+DROP TABLE IF EXISTS #SaleItemProducts
+SELECT	sib.SaleItem_Id		AS sale_item_id,
+		sibpp.Product_Id	AS product_id
+INTO	#SaleItemProducts
+FROM	CRM.dbo.SaleItem_Build AS sib
+		INNER JOIN CRM.dbo.SaleItemBuild_Product_Plaform AS sibpp ON sibpp.SaleItemBuild_Id = sib.Id
+GROUP BY sib.SaleItem_Id, sibpp.Product_Id
+CREATE CLUSTERED INDEX si_products ON #SaleItemProducts (sale_item_id, product_id)
 
 
 DROP TABLE IF EXISTS #SaleItemsFlat;
 WITH sale_items_flat AS (
-	SELECT 
-		Id AS id,
-		Parent AS parent,
-		Name AS name,
-		CONVERT(NVARCHAR(MAX), id) AS items,
-		0 AS level
-	FROM
-		CRM.dbo.SaleItems AS si
-	WHERE
-		IsTraining = 0
+	SELECT	Id AS id,
+			Parent AS parent,
+			Name AS name,
+			CONVERT(NVARCHAR(MAX), id) AS items,
+			0 AS level
+	FROM	CRM.dbo.SaleItems AS si
+	WHERE	IsTraining = 0
 	UNION ALL
-	SELECT
-		si.Id,
-		si.Parent,
-		si.Name,
-		sif.items + IIF(LEN(sif.items)>0, @separator, '') + CONVERT(NVARCHAR(MAX), si.id) AS items,
-		sif.level + 1
-	FROM 
-		sale_items_flat	AS sif
-		INNER JOIN CRM.dbo.SaleItems AS si ON si.Id = sif.parent
+	SELECT	si.Id,
+			si.Parent,
+			si.Name,
+			sif.items + IIF(LEN(sif.items)>0, @separator, '') + CONVERT(NVARCHAR(MAX), si.id) AS items,
+			sif.level + 1
+	FROM	sale_items_flat	AS sif
+			INNER JOIN CRM.dbo.SaleItems AS si ON si.Id = sif.parent
 )
 
-SELECT id, name, STRING_AGG(v.item, @separator) AS items
-INTO #SaleItemsFlat
-FROM (	SELECT id, name, STRING_AGG(items, @separator) AS items
-		FROM sale_items_flat
-		GROUP BY id, name	) AS si
-	 CROSS APPLY (SELECT DISTINCT value AS item FROM STRING_SPLIT(si.items, @separator)) AS v
-GROUP BY id, name
-
+SELECT	id			AS id,
+		name		AS name,
+		items.item	AS item
+INTO	#SaleItemsFlat
+FROM	sale_items_flat
+		CROSS APPLY (
+			SELECT DISTINCT CAST(value AS UNIQUEIDENTIFIER) AS item
+			FROM STRING_SPLIT(items, @separator)
+		) AS items
+GROUP BY id, name, items.item
 CREATE CLUSTERED INDEX idx_id ON #SaleItemsFlat (id)
-
-
-DROP TABLE IF EXISTS #SaleItemBuildProductCount
-SELECT		SaleItemBuild_Id AS sib_id, Platform_Id AS platform_id, COUNT(Product_Id) AS product_cnt
-INTO		#SaleItemBuildProductCount
-FROM		CRM.dbo.SaleItemBuild_Product_Plaform
-GROUP BY	SaleItemBuild_Id, Platform_Id
-
-CREATE CLUSTERED INDEX sib_product_cnt ON #SaleItemBuildProductCount (sib_Id, platform_id)
 
 
 DROP TABLE IF EXISTS #LisencesOnly
 SELECT	*
 INTO	#LisencesOnly
-FROM	(
-	SELECT	Id					AS id,
-			Owner_Id			AS owner_crmid,
-			EndUser_Id			AS end_user_crmid,
-			OrderItem_Id		AS order_item_id,
-			@actual_lic_origin	AS lic_origin,
-			NULL				AS revoked_since
-	FROM	CRM.dbo.Licenses
-	UNION
-	SELECT	EntityOid,
-			Owner_Id,
-			EndUser_Id,
-			OrderItem_Id,
-			@historical_lic_origin,
-			IIF(ChangedProperties LIKE '%EndUser%', CONVERT(DATE, EntityModified), NULL)
-	FROM 	CRMAudit.dxcrm.Licenses
+FROM (	SELECT	Id					AS id,
+				Owner_Id			AS owner_crmid,
+				EndUser_Id			AS end_user_crmid,
+				OrderItem_Id		AS order_item_id,
+				@actual_lic_origin	AS lic_origin,
+				NULL				AS revoked_since
+		FROM	CRM.dbo.Licenses
+		UNION
+		SELECT	EntityOid,
+				Owner_Id,
+				EndUser_Id,
+				OrderItem_Id,
+				@historical_lic_origin,
+				IIF(ChangedProperties LIKE '%EndUser%', CONVERT(DATE, EntityModified), NULL)
+		FROM 	CRMAudit.dxcrm.Licenses
 ) AS l
 
 
@@ -144,19 +155,20 @@ licenses AS (
 			oi.expiration_date,
 			o.free,
 			si.license_name,
+			si.parent_license_name,
 			platforms.licensed_platforms,
 			products.licensed_products
 	FROM	#LisencesOnly AS lcs 
 			CROSS APPLY (
-				SELECT	CONVERT(DATE, SubscriptionStart) AS subscription_start,
-						CONVERT(DATE, DATEADD(DAY, ISNULL(HoldingPeriod, 99999), SubscriptionStart)) AS expiration_date,
-						SaleItem_Id, 
-						Order_Id
+				SELECT	CONVERT(DATE, SubscriptionStart)												AS subscription_start,
+						CONVERT(DATE, DATEADD(DAY, ISNULL(HoldingPeriod, 99999), SubscriptionStart))	AS expiration_date,
+						SaleItem_Id	AS sale_item_id, 
+						Order_Id	AS order_id
 				FROM	CRM.dbo.OrderItems
 				WHERE	Id = lcs.order_item_id
 			) AS oi
 			CROSS APPLY ( 
-				SELECT	FreeSaleItem_Id
+				SELECT	FreeSaleItem_Id	AS sale_item_id
 				FROM	CRM.dbo.License_FreeSaleItem
 				WHERE	License_Id = lcs.id 
 			) AS bundled_skus
@@ -166,25 +178,25 @@ licenses AS (
 				WHERE	Id = oi.Order_Id AND Status IN (@paid, @free_license) 
 			) AS o
 			CROSS APPLY(
-				SELECT	name AS license_name, items 
+				SELECT	name													AS license_name,
+						IIF(id = oi.sale_item_id,
+							NULL,
+							(	SELECT TOP 1 name
+								FROM   #SaleItemsFlat
+								WHERE  id = oi.sale_item_id	))					AS parent_license_name,
+						item													AS item
 				FROM	#SaleItemsFlat
-				WHERE	id IN (oi.SaleItem_Id, bundled_skus.FreeSaleItem_Id)
+				WHERE	id IN (oi.sale_item_id, bundled_skus.sale_item_id)
 			) AS si
 			OUTER APPLY (
-				SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), p.Platform_Id), @separator) AS licensed_platforms
-				FROM (	SELECT		sibpc.Platform_Id
-						FROM		(SELECT Id FROM CRM.dbo.SaleItem_Build WHERE SaleItem_Id IN (SELECT value FROM STRING_SPLIT(si.items, @separator))) AS sib
-									INNER JOIN #SaleItemBuildProductCount AS sibpc ON sibpc.sib_id = sib.Id
-									INNER JOIN #PlatformProductCount AS ppc ON ppc.platform_id = sibpc.platform_id AND sibpc.product_cnt > ppc.product_cnt_boundary
-						GROUP BY	sibpc.Platform_Id) AS p
+				SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), sip.platform_id), @separator) AS licensed_platforms
+				FROM	#SaleItemPlatforms AS sip
+				WHERE	sip.sale_item_id = si.item
 			) AS platforms
 			OUTER APPLY (
-				SELECT STRING_AGG(CONVERT(NVARCHAR(MAX), p.Product_Id), @separator) AS licensed_products
-				FROM (	SELECT		sibpp.Product_Id
-						FROM		CRM.dbo.SaleItem_Build AS sib
-									INNER JOIN CRM.dbo.SaleItemBuild_Product_Plaform AS sibpp ON sibpp.SaleItemBuild_Id = sib.Id
-						WHERE		sib.SaleItem_Id IN (SELECT value FROM STRING_SPLIT(si.items, @separator)) 
-						GROUP BY	sibpp.Product_Id) AS p
+				SELECT	STRING_AGG(CONVERT(NVARCHAR(MAX), sip.product_id), @separator) AS licensed_products
+				FROM	#SaleItemProducts AS sip
+				WHERE	sip.sale_item_id = si.item
 			) AS products
 )
 
@@ -204,9 +216,9 @@ SELECT
 		multi_selectors.products_ids		AS ticket_products,
 		licenses.*,
 		CASE
-			WHEN suitability = @best_suitable	THEN IIF(licenses.free = @paid, @licensed, @free)
-			WHEN suitability = @suitable		THEN @expired
-			WHEN suitability = @least_suitable	THEN IIF(licenses.owner_crmid = customers.user_crmid, @assigned_to_someone, @revoked)
+			WHEN suitability IN (@best_suitable, @better_suitable)	THEN IIF(licenses.free = @paid, @licensed, @free)
+			WHEN suitability = @suitable							THEN @expired
+			WHEN suitability = @least_suitable						THEN IIF(licenses.owner_crmid = customers.user_crmid, @assigned_to_someone, @revoked)
 			ELSE ISNULL((	SELECT TOP 1 lic_status
 							FROM ( SELECT	CASE
 												WHEN tickets.creation_date < MIN(subscription_start) OVER ()
@@ -254,7 +266,7 @@ FROM (	SELECT	Id, FriendlyId, EntityType, CAST(Created AS DATE) AS creation_date
 			FROM	(	SELECT	licenses_most_inner.*,
 							CASE 
 								WHEN tickets.creation_date BETWEEN licenses_most_inner.subscription_start AND licenses_most_inner.expiration_date
-									THEN @best_suitable
+									THEN IIF(parent_license_name IS NULL, @best_suitable, @better_suitable)
 								WHEN licenses_most_inner.revoked_since IS NULL AND licenses_most_inner.expiration_date IS NOT NULL AND tickets.creation_date > licenses_most_inner.expiration_date
 									THEN @suitable
 								WHEN licenses_most_inner.revoked_since IS NOT NULL AND tickets.creation_date > licenses_most_inner.revoked_since

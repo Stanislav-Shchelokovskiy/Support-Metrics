@@ -1,13 +1,8 @@
 import pytest
 import toolbox.sql.generators.display_filter as DisplayFilterGenerator
 from pandas import DataFrame
+from toolbox.sql import KnotMeta
 from toolbox.sql.query_executors.sql_query_executor import SqlQueryExecutor
-from sql_queries.meta import (
-    TicketsTypesMeta,
-    LicenseStatusesMeta,
-    TribesMeta,
-)
-
 from server_models import (
     FilterParametersNode,
     FilterParameterNode,
@@ -16,7 +11,7 @@ from server_models import (
 )
 from repository.local.aggs import tickets
 from repository.local.generators.filters_generators.display_filter import custom_display_filter, DisplayValuesStore
-import sql_queries.index.db as DbIndex
+import sql_queries.index.name as name_index
 
 
 class Connection:
@@ -35,9 +30,9 @@ class MockSqlQueryExecutor(SqlQueryExecutor):
         query = kwargs['main_query']
         table_name = query.format_params['from']
         return {
-            DbIndex.tribes: DataFrame(data={TribesMeta.name: ['XAML United Team']}),
-            DbIndex.tickets_types: DataFrame(data={TicketsTypesMeta.name: ['Question']}),
-            DbIndex.license_statuses: DataFrame(data={LicenseStatusesMeta.name: ['Licensed', 'Free']}),
+            name_index.tribes: DataFrame(data={KnotMeta.name.name: ['XAML United Team']}),
+            name_index.tickets_types: DataFrame(data={KnotMeta.name.name: ['Question']}),
+            name_index.license_statuses: DataFrame(data={KnotMeta.name.name: ['Licensed', 'Free']}),
         }[table_name]
 
 

@@ -36,65 +36,29 @@ SELECT
 	t.{component_id},
 	t.{feature_id},
 	t.{license_name},
+    t.{parent_license_name},
 	t.{subscription_start},
 	t.{expiration_date},
 	t.{license_status},
 	CAST(t.{conversion_status} AS INT) AS {conversion_status},
-    ei.{post_id}       AS {emp_post_id},
-    ei.{crmid}         AS {emp_crmid},
-    ei.{scid}          AS {emp_scid},
-    ei.{tribe_id}      AS {emp_tribe_id},
-    ei.{tent_id}       AS {emp_tent_id},
-    ei.{position_id}   AS {emp_position_id},
-    ei.{name}          AS {emp_name},
-    ei.{position_name} AS {emp_position_name},
-    ei.{tribe_name}    AS {emp_tribe_name},
-    ei.{tent_name}     AS {emp_tent_name}
+    IFNULL(ei.{post_id}, '')	AS {emp_post_id},
+    ei.{crmid}         			AS {emp_crmid},
+    ei.{scid}          			AS {emp_scid},
+    ei.{tribe_id}      			AS {emp_tribe_id},
+    ei.{tent_id}       			AS {emp_tent_id},
+    ei.{position_id}   			AS {emp_position_id},
+    ei.{name}          			AS {emp_name},
+    ei.{position_name} 			AS {emp_position_name},
+    ei.{tribe_name}    			AS {emp_tribe_name},
+    ei.{tent_name}     			AS {emp_tent_name}
 FROM
     {CustomersTickets} AS t
-    INNER JOIN (
-        SELECT   {user_crmid} 
-        FROM     {CustomersTickets}
-        WHERE    {creation_date} >= (SELECT DATE(MIN({creation_date}), '+{rank_period_offset}') FROM {CustomersTickets})
-        GROUP BY {user_crmid}
-    ) AS actual_t ON actual_t.{user_crmid} = t.{user_crmid}
+	-- This makes sense only when period is greater than 6 months.
+	-- This code throws aways customers that wrote only during the rank_period_offset period.
+    -- INNER JOIN (
+    --     SELECT   {user_crmid} 
+    --     FROM     {CustomersTickets}
+    --     WHERE    {creation_date} >= (SELECT DATE(MIN({creation_date}), '+{rank_period_offset}') FROM {CustomersTickets})
+    --     GROUP BY {user_crmid}
+    -- ) AS actual_t ON actual_t.{user_crmid} = t.{user_crmid}
     LEFT JOIN {EmployeesIterations} AS ei ON ei.{ticket_id} = t.{ticket_id};
-
-
-CREATE INDEX idx_{TicketsWithIterations}_tickets_inner ON {TicketsWithIterations}(
-    {user_crmid}, 
-    {ticket_scid},
-    {creation_date},
-    {ticket_type},
-    {license_status},
-    {emp_position_id},
-    {is_private},
-    {tribes_ids},
-    {tent_id}
-);
-
-CREATE INDEX idx_{TicketsWithIterations}_iterations_inner ON {TicketsWithIterations}(
-    {user_crmid}, 
-    {emp_post_id},
-    {creation_date},
-    {ticket_type},
-    {license_status},
-    {emp_position_id},
-    {is_private},
-    {tribes_ids},
-    {tent_id}
-);
-
-CREATE INDEX idx_{TicketsWithIterations}_outer ON {TicketsWithIterations}(
-    {user_crmid},
-    {creation_date},
-    {ticket_type},
-    {license_status},
-    {emp_position_id},
-    {is_private},
-    {tribes_ids},
-    {tent_id},
-    {user_id},
-    {ticket_scid},
-    {emp_post_id}
-);

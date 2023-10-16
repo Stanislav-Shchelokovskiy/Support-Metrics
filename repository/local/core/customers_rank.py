@@ -3,7 +3,7 @@ from sql_queries.meta import TicketsWithIterationsMeta
 from toolbox.sql.generators.filter_clause_generator_factory import FilterParameterNode
 import repository.local.generators.filters_generators.tickets_with_iterations.limit as LimitsSqlFilterClauseGenerator
 import repository.local.core.filters as filters
-import sql_queries.index.db as DbIndex
+import sql_queries.index.name as name_index
 
 
 @runtime_checkable
@@ -20,9 +20,9 @@ class Percentile(Protocol):
 
 def get_ranked_tickets_with_iterations_query(**kwargs) -> str:
     percentile: Percentile = kwargs['percentile']
-    tbl = DbIndex.tickets_with_iterations
+    tbl = name_index.tickets_with_iterations
     return (
-        f"""{tbl} AS {DbIndex.tickets_with_iterations_alias}
+        f"""{tbl} AS {name_index.tickets_with_iterations_alias}
     INNER JOIN (
         SELECT {TicketsWithIterationsMeta.user_crmid} AS crmid
         FROM ( SELECT {TicketsWithIterationsMeta.user_crmid},
@@ -34,7 +34,7 @@ def get_ranked_tickets_with_iterations_query(**kwargs) -> str:
                     {filters.get_tickets_filter(**kwargs)}
                 GROUP BY {TicketsWithIterationsMeta.user_crmid} ) AS rnk
         WHERE {LimitsSqlFilterClauseGenerator.generate_percentile_filter(alias='percentile', percentile=percentile.value)}
-    ) AS usr_rnk ON usr_rnk.crmid = {DbIndex.tickets_with_iterations_alias}.{TicketsWithIterationsMeta.user_crmid}
+    ) AS usr_rnk ON usr_rnk.crmid = {name_index.tickets_with_iterations_alias}.{TicketsWithIterationsMeta.user_crmid}
     {filters.try_get_creation_date_and_tickets_filters(**kwargs)}"""
     )
 

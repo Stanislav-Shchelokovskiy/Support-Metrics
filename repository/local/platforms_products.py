@@ -7,7 +7,7 @@ from sql_queries.meta import (
 )
 from toolbox.sql.generators.filter_clause_generator_factory import FilterParametersNode
 import repository.local.generators.filters_generators.platforms_products as PlatformsProductsSqlFilterClauseGenerator
-import sql_queries.index.db as DbIndex
+import sql_queries.index.name as name_index
 
 
 # yapf: disable
@@ -21,7 +21,7 @@ class Platforms(GeneralSelectAsyncQueryDescriptor):
         filter = self.get_filter(tent_ids=kwargs['tent_ids'])
         return {
             'select': cols,
-            'from': DbIndex.platforms_products,
+            'from': name_index.platforms_products,
             'where_group_limit': f'{filter}\nGROUP BY {cols}\nORDER BY {self.get_order_by_column()}',
         }
 
