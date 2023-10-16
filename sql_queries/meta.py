@@ -155,6 +155,29 @@ class EmployeesMeta(MetaData):
     tent_name = TentsMeta.tent_name
     position_name = EmployeesIterationsMeta.position_name
 
+    @classmethod
+    def get_key_fields(
+        cls,
+        projector: Callable[[Field], Any] = str,
+        *exfields: Field,
+    ) -> Sequence[Field | str | Any]:
+        return MetaData.get_key_fields(
+            projector,
+            cls.scid,
+        )
+
+    @classmethod
+    def get_index_fields(
+        cls,
+        projector: Callable[[Field], Any] = str,
+    ) -> Sequence[Field]:
+        return super().get_index_fields(
+            projector,
+            cls.position_id,
+            cls.tribe_id,
+            cls.tent_id,
+        )
+
 
 class TicketsWithIterationsMeta(TicketsWithPropertiesMeta):
     emp_post_id = Field(TEXT)
@@ -173,7 +196,7 @@ class TicketsWithIterationsMeta(TicketsWithPropertiesMeta):
         cls,
         projector: Callable[[Field], Any] = str,
         *exfields: Field,
-    ) -> Sequence[str]:
+    ) -> Sequence[Field | str | Any]:
         return MetaData.get_key_fields(
             projector,
             cls.user_crmid,
@@ -230,6 +253,18 @@ class BaselineAlignedCustomersGroupsMeta(MetaData):
     name = KnotMeta.name
     assignment_date = Field(TEXT)
     removal_date = Field(TEXT)
+
+    @classmethod
+    def get_key_fields(
+        cls,
+        projector: Callable[[Field], Any] = str,
+        *exfields: Field,
+    ) -> Sequence[Field | str | Any]:
+        return MetaData.get_key_fields(
+            projector,
+            cls.user_crmid,
+            cls.id,
+        )
 
 
 class BaselineAlignedModeMeta(BaselineAlignedCustomersGroupsMeta):
