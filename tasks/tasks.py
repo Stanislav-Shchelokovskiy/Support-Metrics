@@ -8,7 +8,8 @@ from toolbox.sql.crud_queries import (
     SqliteUpsertQuery,
     SqliteCreateTableQuery,
     SqliteCreateTableFromTableQuery,
-    DropRowsTriggerParams,
+    DeleteRowsOlderThanQuery,
+    DropTableQuery,
 )
 from toolbox.sql.db_operations import SaveTableOperationDF, DFToCRUDQueryMapper, SaveTableOperation
 from toolbox.sql.repository import Repository
@@ -26,9 +27,12 @@ from sql_queries.meta import (
     CustomersGroupsMeta,
     ConversionStatusesMeta,
     TicketsWithIterationsMeta,
+    EmployeesMeta,
+    BaselineAlignedCustomersGroupsMeta,
 )
 import sql_queries.index.name as name_index
 import sql_queries.index.path.transform_load as TransformLoadPathIndex
+from toolbox.utils.env import recalculate_from_beginning
 
 
 def __save_tables(
@@ -57,6 +61,7 @@ def __save_table(tbl_name: str, repository: Repository, **kwargs):
 
 # yapf: disable
 def load_groups():
+    df = RepositoryFactory.remote.create_customers_groups_repository().get_data()
     __save_tables(
          SqliteCreateTableQuery(
             target_table_name=name_index.customers_groups,
@@ -64,19 +69,32 @@ def load_groups():
             values_fields=CustomersGroupsMeta.get_conflicting_fields(lambda x: x.as_query_field(), preserve_order=True),
             recreate=True,
         ),
-    )
-    __save_table(
-        tbl_name=name_index.customers_groups,
-        repository=RepositoryFactory.remote.create_customers_groups_repository(),
+        SqliteUpsertQuery(
+            table_name=name_index.customers_groups,
+            cols=df.columns,
+            key_cols=CustomersGroupsMeta.get_key_fields(),
+            confilcting_cols=CustomersGroupsMeta.get_conflicting_fields(),
+            rows=df.itertuples(index=False),
+        )
     )
 
 
 def load_tracked_groups(start_date: str, end_date: str):
-    __save_table(
-        tbl_name=name_index.tracked_customers_groups,
-        repository=RepositoryFactory.remote.create_tracked_customers_groups_repository(),
-        start_date=start_date,
-        end_date=end_date,
+    df = RepositoryFactory.remote.create_tracked_customers_groups_repository().get_data(start_date=start_date,end_date=end_date,)
+    __save_tables(
+        SqliteCreateTableQuery(
+            target_table_name=name_index.tracked_customers_groups,
+            unique_key_fields=BaselineAlignedCustomersGroupsMeta.get_key_fields(lambda x: x.as_query_field()),
+            values_fields=BaselineAlignedCustomersGroupsMeta.get_conflicting_fields(lambda x: x.as_query_field(), preserve_order=True),
+            recreate=recalculate_from_beginning(),
+        ),
+        SqliteUpsertQuery(
+            table_name=name_index.tracked_customers_groups,
+            cols=df.columns,
+            key_cols=BaselineAlignedCustomersGroupsMeta.get_key_fields(),
+            confilcting_cols=BaselineAlignedCustomersGroupsMeta.get_conflicting_fields(),
+            rows=df.itertuples(index=False),
+        )
     )
 
 
@@ -113,10 +131,21 @@ def load_employees_iterations(start_date: str, end_date: str):
 
 
 def load_employees(start_date: str):
-    __save_table(
-        tbl_name=name_index.employees,
-        repository=RepositoryFactory.remote.create_employees_repository(),
-        start_date=start_date,
+    df = RepositoryFactory.remote.create_employees_repository().get_data(start_date=start_date)
+    __save_tables(
+        SqliteCreateTableQuery(
+            target_table_name=name_index.employees,
+            unique_key_fields=EmployeesMeta.get_key_fields(lambda x: x.as_query_field()),
+            values_fields=EmployeesMeta.get_conflicting_fields(lambda x: x.as_query_field(), preserve_order=True),
+            recreate=recalculate_from_beginning(),
+        ),
+        SqliteUpsertQuery(
+            table_name=name_index.employees,
+            cols=df.columns,
+            key_cols=EmployeesMeta.get_key_fields(),
+            confilcting_cols=EmployeesMeta.get_conflicting_fields(),
+            rows=df.itertuples(index=False),
+        )
     )
 
 
@@ -258,15 +287,22 @@ def process_staged_data(
     years_of_history:str,
 ):
     __build_temp_tickets_with_iterations(rank_period_offset=rank_period_offset)
-    __update_tickets_with_iterations(years_of_history=years_of_history)
+    __update_tickets_with_iterations()
     __update_knot_tables()
-    __post_process()
+    __post_process(years_of_history=years_of_history)
 
 
-def __post_process():
-    __execute(f'DROP TABLE IF EXISTS {name_index.tickets_with_iterations_temp};')
-    __execute(f'DROP TABLE IF EXISTS {name_index.customers_tickets};')
-    __execute(f'DROP TABLE IF EXISTS {name_index.employees_iterations};')
+def __post_process(years_of_history: str):
+
+    __execute(DeleteRowsOlderThanQuery(
+            tbl=name_index.tickets_with_iterations,
+            date_field=TicketsWithIterationsMeta.creation_date,
+            modifier=years_of_history,
+        )
+    )
+    __execute(DropTableQuery(name_index.tickets_with_iterations_temp))
+    __execute(DropTableQuery(name_index.customers_tickets))
+    __execute(DropTableQuery(name_index.employees_iterations))
 
     __execute('vacuum;')
     __execute('pragma optimize;')
@@ -290,19 +326,15 @@ def __build_temp_tickets_with_iterations(rank_period_offset: str):
     __execute(query)
 
 
-def __update_tickets_with_iterations(years_of_history: str):
-
+def __update_tickets_with_iterations():
     __save_tables(
         SqliteCreateTableFromTableQuery(
             source_table_or_subquery=name_index.tickets_with_iterations_temp,
             target_table_name=name_index.tickets_with_iterations,
-            unique_key_fields=TicketsWithIterationsMeta.get_key_fields(lambda x: x.as_query_field()),
-            values_fields=TicketsWithIterationsMeta.get_conflicting_fields(lambda x: x.as_query_field(),preserve_order=True),
-            recreate=False,
-            keep_rows_for_last=DropRowsTriggerParams(
-                modifier=years_of_history,
-                date_field=TicketsWithIterationsMeta.creation_date,
-            ),
+            unique_key_fields=None,
+            values_fields=TicketsWithIterationsMeta.get_values(lambda x: x.as_query_field()),
+            unique_fields=TicketsWithIterationsMeta.get_key_fields(),
+            recreate=recalculate_from_beginning(),
         ),
     )
 
