@@ -32,7 +32,6 @@ def on_startup(sender, **kwargs):
     if int(os.environ['UPDATE_ON_STARTUP']):
         tasks.append('update_support_metrics')
     else:
-        tasks.append('load_employees'),
         tasks.append('load_csi'),
 
     sender_app: Celery = sender.app
@@ -65,7 +64,6 @@ def update_support_metrics(**kwargs):
             load_tracked_groups.si(),
             load_builds.si(),
             load_components_features.si(),
-            load_employees.si(),
             load_csi.si(),
             load_customers_tickets.si(),
             load_employees_iterations.si(),
@@ -226,15 +224,6 @@ def load_employees_iterations(self, **kwargs):
         self,
         tasks.load_employees_iterations,
         **config.get_tickets_period(),
-    )
-
-
-@app.task(name='load_employees', bind=True)
-def load_employees(self, **kwargs):
-    return run_retriable_task(
-        self,
-        tasks.load_employees,
-        start_date=config.get_tickets_period()['start_date'],
     )
 
 
