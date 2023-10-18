@@ -30,7 +30,7 @@ WHERE {build_filter_string([
             ])}
 UNION ALL
 SELECT  twi.*,
-        CAST(JULIANDAY({TicketsWithIterationsMeta.creation_date})-JULIANDAY(({get_min_customers_groups_creation_date(kwargs)})) AS INT) AS {BaselineAlignedModeMeta.days_since_baseline}
+        CAST(JULIANDAY({TicketsWithIterationsMeta.creation_date})-JULIANDAY({max_of_min_customers_groups_creation_date_and_param(kwargs, param=f'twi.{TicketsWithIterationsMeta.user_register_date}')}) AS INT) AS {BaselineAlignedModeMeta.days_since_baseline}
 FROM    ( SELECT *
           FROM   {name_index.tickets_with_iterations}
           WHERE  {get_creation_date_and_tickets_filters(kwargs)}) AS twi
@@ -50,13 +50,20 @@ def get_creation_date_and_tickets_filters(kwargs):
     min creation_date among these groups (*) and max between range_start and (*)."""
     return build_filter_string(
         [
-            f"""creation_date BETWEEN ( SELECT MAX(start)
-                                        FROM (  {get_min_customers_groups_creation_date(kwargs)}
-                                                UNION ALL
-                                                SELECT '{kwargs['range_start']}'
-                                            )   ) AND '{kwargs['range_end']}'""",
+            f"""creation_date BETWEEN {max_of_min_customers_groups_creation_date_and_param(kwargs)} AND '{kwargs['range_end']}'""",
             get_tickets_filter(ignore_groups_filter=False, **kwargs)
         ]
+    )
+
+
+def max_of_min_customers_groups_creation_date_and_param(kwargs, param=None):
+    param_or_range_start = param or f"'{kwargs['range_start']}'"
+    return (
+f"""(SELECT MAX(start)
+FROM (  {get_min_customers_groups_creation_date(kwargs)}
+        UNION ALL
+        SELECT {param_or_range_start}
+    ))"""
     )
 
 

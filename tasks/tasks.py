@@ -338,6 +338,26 @@ def __update_tickets_with_iterations():
         ),
     )
 
+    # align user_register_date with creation_date as they may mismatch
+    # due to account transferring/merging.
+    # user_register_date = MIN(creation_date, user_register_date)
+    # this is necessary for BAM
+    __execute(f"""
+        UPDATE {name_index.tickets_with_iterations} AS twi
+        SET {TicketsWithIterationsMeta.user_register_date} = (
+        SELECT MIN(d)
+        FROM (  
+                SELECT  MIN(twi_upper.{TicketsWithIterationsMeta.creation_date}) AS d
+                FROM    {name_index.tickets_with_iterations} AS twi_upper
+                WHERE   twi_upper.{TicketsWithIterationsMeta.user_crmid} =  twi.{TicketsWithIterationsMeta.user_crmid}
+                UNION
+                SELECT  MIN(twi_lower.{TicketsWithIterationsMeta.user_register_date})
+                FROM    {name_index.tickets_with_iterations} AS twi_lower
+                WHERE   twi_lower.{TicketsWithIterationsMeta.user_crmid} =  twi.{TicketsWithIterationsMeta.user_crmid}
+             )
+        )"""
+    )
+
 
 def __build_employee_attr_tables():
     __save_tables(
