@@ -6,6 +6,7 @@ import repository.remote.customers_groups as customers_groups
 import repository.remote.cat as cat
 import repository.remote.platforms_products as platforms_products
 import repository.remote.licenses_conversion as licenses_conversion
+import repository.remote.employees as employees
 import repository.remote.csi as csi
 import repository.remote.tents as tents
 import repository.remote.tribes as tribes
@@ -53,6 +54,10 @@ def create_platforms_products_repository() -> Repository:
 
 def create_employees_iterations_repository() -> Repository:
     return __create_repository(queries=tickets_and_iterations.EmployeesIterations())
+
+
+def create_employees_repository() -> Repository:
+    return __create_repository(queries=employees.Employees())
 
 
 def create_tickets_types_repository() -> Repository:
