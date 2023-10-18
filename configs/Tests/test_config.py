@@ -4,6 +4,9 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 
+five_years_in_days = 365 * 5
+
+
 @pytest.mark.parametrize(
     'envs, delta',
     (
@@ -19,7 +22,7 @@ from dateutil.relativedelta import relativedelta
                 ('RECALCULATE_FOR_LAST_DAYS', 36),
                 ('RECALCULATE_FROM_THE_BEGINNING', 1)
             ),
-            365 * 5,
+            five_years_in_days,
         ),
     ),
 )
@@ -41,3 +44,7 @@ def test_get_rank_period_offset():
 
 def test_years_of_history():
     assert config.years_of_history() == '5 YEARS'
+
+
+def test_get_emp_start():
+    assert config.get_emp_start() == (date.today() - relativedelta(days=five_years_in_days)).strftime('%Y-%m-%d')
