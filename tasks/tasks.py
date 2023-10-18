@@ -130,6 +130,25 @@ def load_employees_iterations(start_date: str, end_date: str):
     )
 
 
+def load_employees(start_date: str):
+    df = RepositoryFactory.remote.create_employees_repository().get_data(start_date=start_date)
+    __save_tables(
+        SqliteCreateTableQuery(
+            target_table_name=name_index.employees,
+            unique_key_fields=EmployeesMeta.get_key_fields(lambda x: x.as_query_field()),
+            values_fields=EmployeesMeta.get_conflicting_fields(lambda x: x.as_query_field(), preserve_order=True),
+            recreate=recalculate_from_beginning(),
+        ),
+        SqliteUpsertQuery(
+            table_name=name_index.employees,
+            cols=df.columns,
+            key_cols=EmployeesMeta.get_key_fields(),
+            confilcting_cols=EmployeesMeta.get_conflicting_fields(),
+            rows=df.itertuples(index=False),
+        )
+    )
+
+
 def load_csi():
     __save_table(
         tbl_name=name_index.csi,
@@ -269,7 +288,7 @@ def process_staged_data(
 ):
     __build_temp_tickets_with_iterations(rank_period_offset=rank_period_offset)
     __update_tickets_with_iterations()
-    __build_employees()
+    __build_employee_attr_tables()
     __build_customers()
     __post_process(years_of_history=years_of_history)
 
@@ -320,23 +339,8 @@ def __update_tickets_with_iterations():
     )
 
 
-def __build_employees():
+def __build_employee_attr_tables():
     __save_tables(
-        SqliteCreateTableFromTableQuery(
-            source_table_or_subquery=name_index.tickets_with_iterations,
-            target_table_name=name_index.employees,
-            unique_key_fields=(TicketsWithIterationsMeta.emp_scid.as_query_field(EmployeesMeta.scid),),
-            values_fields=(
-                TicketsWithIterationsMeta.emp_crmid.as_query_field(EmployeesMeta.crmid),
-                TicketsWithIterationsMeta.emp_position_id.as_query_field(EmployeesMeta.position_id),
-                TicketsWithIterationsMeta.emp_tribe_id.as_query_field(EmployeesMeta.tribe_id),
-                TicketsWithIterationsMeta.emp_tent_id.as_query_field(EmployeesMeta.tent_id),
-                TicketsWithIterationsMeta.emp_name.as_query_field(EmployeesMeta.name),
-                TicketsWithIterationsMeta.emp_position_name.as_query_field(EmployeesMeta.position_name),
-                TicketsWithIterationsMeta.emp_tribe_name.as_query_field(EmployeesMeta.tribe_name),
-                TicketsWithIterationsMeta.emp_tent_name.as_query_field(EmployeesMeta.tent_name),
-            ),
-        ),
         SqliteCreateTableFromTableQuery(
             source_table_or_subquery=name_index.employees,
             target_table_name=name_index.emp_positions,

@@ -11,6 +11,7 @@ from sql_queries.meta import (
     PlatformsProductsMeta,
     TicketsWithIterationsMeta,
     EmployeesIterationsMeta,
+    EmployeesMeta,
     BaselineAlignedCustomersGroupsMeta,
     CSIMeta,
 )
@@ -92,6 +93,13 @@ import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
                 'CustomersTickets': 'CustomersTickets',
                 'EmployeesIterations': 'EmployeesIterations',
                 'rank_period_offset': 'rank_period_offset',
+            },
+        ),
+        (
+            RemotePathIndex.employees,
+            {
+                **EmployeesMeta.get_attrs(),
+                'start_date': 'start_date',
             },
         ),
         (
