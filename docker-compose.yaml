@@ -22,7 +22,6 @@ x-support_metrics:
     - RECALCULATE_FOR_LAST_DAYS
     - RECALCULATE_FROM_THE_BEGINNING
     - PRODUCTION
-    - REDIS_ARGS="--save 10 10"
 
 services:
   support_metrics_dashboard:
@@ -84,6 +83,8 @@ services:
       start_period: 5s
     volumes:
       - support_metrics${VERSION}:/data
+    environment:
+      - REDIS_ARGS=--save 600 10
 
 volumes:
   support_metrics:
