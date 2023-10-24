@@ -83,6 +83,8 @@ services:
       start_period: 5s
     volumes:
       - support_metrics${VERSION}:/data
+    environment:
+      - REDIS_ARGS=--save 600 10
 
 volumes:
   support_metrics:
