@@ -167,7 +167,7 @@ licenses AS (
 				FROM	CRM.dbo.OrderItems
 				WHERE	Id = lcs.order_item_id
 			) AS oi
-			CROSS APPLY ( 
+			OUTER APPLY ( 
 				SELECT	FreeSaleItem_Id	AS sale_item_id
 				FROM	CRM.dbo.License_FreeSaleItem
 				WHERE	License_Id = lcs.id 
