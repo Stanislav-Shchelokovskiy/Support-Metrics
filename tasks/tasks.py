@@ -121,17 +121,21 @@ def load_customers_tickets(start_date: str, end_date: str):
     )
 
 
-def load_employees_iterations(start_date: str, end_date: str):
+def load_employees_iterations(start_date: str, end_date: str, employees_json: str):
     __save_table(
         tbl_name=name_index.employees_iterations,
         repository=RepositoryFactory.remote.create_employees_iterations_repository(),
         start_date=start_date,
         end_date=end_date,
+        employees_json=employees_json,
     )
 
 
-def load_employees(start_date: str):
-    df = RepositoryFactory.remote.create_employees_repository().get_data(start_date=start_date)
+def load_employees(start_date: str, employees_json: str):
+    df = RepositoryFactory.remote.create_employees_repository().get_data(
+        start_date=start_date,
+        employees_json=employees_json,
+    )
     __save_tables(
         SqliteCreateTableQuery(
             target_table_name=name_index.employees,

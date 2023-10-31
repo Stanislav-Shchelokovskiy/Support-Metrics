@@ -27,8 +27,8 @@ import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
         (
             RemotePathIndex.tickets_with_licenses_and_users,
             {
-                'start_date': 'qwe',
-                'end_date': 'asd',
+                'start_date': 'start_date',
+                'end_date': 'end_date',
             },
         ),
         (
@@ -64,8 +64,8 @@ import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
             RemotePathIndex.tracked_customers_groups,
             {
                 **BaselineAlignedCustomersGroupsMeta.get_attrs(),
-                'start_date': 'qwe',
-                'end_date': 'asd',
+                'start_date': 'start_date',
+                'end_date': 'end_date',
             },
         ),
         (
@@ -100,6 +100,16 @@ import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
             {
                 **EmployeesMeta.get_attrs(),
                 'start_date': 'start_date',
+                'employees_json': 'employees_json',
+            },
+        ),
+        (
+            RemotePathIndex.employees_iterations,
+            {
+                **EmployeesIterationsMeta.get_attrs(),
+                'start_date': 'start_date',
+                'end_date': 'end_date',
+                'employees_json': 'employees_json',
             },
         ),
         (

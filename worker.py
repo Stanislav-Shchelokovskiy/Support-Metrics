@@ -1,11 +1,12 @@
 import os
 from typing import Callable
 
-from celery import Celery, chord
+from celery import Celery, chord, chain, group
 from celery.schedules import crontab
 from celery.signals import worker_ready
 
 import tasks.tasks as tasks
+import tasks.employees as employees
 import configs.config as config
 
 
@@ -65,10 +66,16 @@ def update_support_metrics(**kwargs):
             load_tracked_groups.si(),
             load_builds.si(),
             load_components_features.si(),
-            load_employees.si(),
             load_csi.si(),
+            
+            chain(
+                get_employees.si(),
+                group(
+                    load_employees.s(),
+                    load_employees_iterations.s(),
+                )
+            ),
             load_customers_tickets.si(),
-            load_employees_iterations.si(),
         ]
     )(process_staged_data.si())
 
@@ -220,21 +227,31 @@ def load_customers_tickets(self, **kwargs):
     )
 
 
-@app.task(name='load_employees_iterations', bind=True)
-def load_employees_iterations(self, **kwargs):
+@app.task(name='get_employees', bind=True)
+def get_employees(self, **kwargs):
     return run_retriable_task(
         self,
-        tasks.load_employees_iterations,
-        **config.get_tickets_period(),
+        employees.get_employees,
     )
 
-    
+
 @app.task(name='load_employees', bind=True)
-def load_employees(self, **kwargs):
+def load_employees(self, *args, **kwargs):
     return run_retriable_task(
         self,
         tasks.load_employees,
         start_date=config.get_emp_start(),
+        employees_json=args[0],
+    )
+
+
+@app.task(name='load_employees_iterations', bind=True)
+def load_employees_iterations(self, *args, **kwargs):
+    return run_retriable_task(
+        self,
+        tasks.load_employees_iterations,
+        **config.get_tickets_period(),
+        employees_json=args[0],
     )
 
 
