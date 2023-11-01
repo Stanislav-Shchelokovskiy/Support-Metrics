@@ -33,7 +33,7 @@ def on_startup(sender, **kwargs):
     if int(os.environ['UPDATE_ON_STARTUP']):
         tasks.append('update_support_metrics')
     else:
-        tasks.append('load_employees'),
+        tasks.append('update_employees'),
         tasks.append('load_csi'),
 
     sender_app: Celery = sender.app
@@ -67,7 +67,6 @@ def update_support_metrics(**kwargs):
             load_builds.si(),
             load_components_features.si(),
             load_csi.si(),
-            
             chain(
                 get_employees.si(),
                 group(
@@ -243,6 +242,14 @@ def load_employees(self, *args, **kwargs):
         start_date=config.get_emp_start(),
         employees_json=args[0],
     )
+
+
+@app.task(name='update_employees', bind=True)
+def update_employees(self, **kwargs):
+    chain(
+        get_employees.si(),
+        load_employees.s(),
+    )()
 
 
 @app.task(name='load_employees_iterations', bind=True)
