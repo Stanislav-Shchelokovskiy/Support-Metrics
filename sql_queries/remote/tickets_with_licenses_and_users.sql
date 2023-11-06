@@ -48,7 +48,6 @@ FROM (	SELECT	platforms.Id			AS platform_id,
 				products.Name			AS product_name
 		FROM (	SELECT DISTINCT Product_Id, Platform_Id 
 				FROM CRM.dbo.SaleItemBuild_Product_Plaform
-				WHERE AuxiliaryPackage = 0	
 			 )	AS sibpp
 			  INNER JOIN CRM.dbo.Platforms	AS platforms		ON platforms.Id = sibpp.Platform_Id
 			  INNER JOIN CRM.dbo.Products	AS products			ON products.Id = sibpp.Product_Id
@@ -68,7 +67,7 @@ FROM	CRM.dbo.SaleItem_Build AS sib
 					COUNT(Product_Id)	AS product_cnt
 			FROM	CRM.dbo.SaleItemBuild_Product_Plaform
 			WHERE	SaleItemBuild_Id = sib.Id
-			GROUP BY SaleItemBuild_Id, Platform_Id
+			GROUP BY Platform_Id
 		) AS sibpp
 		INNER JOIN platform_product_count AS ppc ON ppc.platform_id = sibpp.platform_id 
 												AND	ppc.product_cnt_boundary < sibpp.product_cnt
