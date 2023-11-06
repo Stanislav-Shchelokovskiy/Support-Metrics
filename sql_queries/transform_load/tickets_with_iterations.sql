@@ -3,6 +3,7 @@ CREATE TABLE {TicketsWithIterations} AS
 SELECT
 	t.{user_crmid},
 	t.{user_id},
+	t.{is_employee},
     t.{user_register_date},
 	t.{tribes_ids},
 	t.{tribes_names},

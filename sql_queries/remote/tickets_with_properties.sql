@@ -12,6 +12,7 @@ DECLARE @bug			TINYINT = 2
 SELECT
 	ti.user_crmid						AS {user_crmid},
 	ti.user_id							AS {user_id},
+	ti.is_employee						AS {is_employee},
 	ti.user_register_date 				AS {user_register_date},
 	tribes.tribes_ids					AS {tribes_ids},
 	tribes.tribes_names					AS {tribes_names},

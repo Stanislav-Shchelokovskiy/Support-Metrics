@@ -1,5 +1,6 @@
 SELECT
     {tbl_alias}.{user_id},
+    {tbl_alias}.{is_employee},
     {tbl_alias}.{ticket_scid},
     ( SELECT CASE WHEN AVG(rating) < -0.3 THEN -1
                   WHEN AVG(rating) > 0.3  THEN 1

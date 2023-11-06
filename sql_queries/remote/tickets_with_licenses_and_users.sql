@@ -203,6 +203,7 @@ SELECT
 		customers.user_crmid				AS user_crmid,
 		customers.register_date				AS user_register_date,
 		users.FriendlyId					AS user_id,
+		users.IsEmployee					AS is_employee,
 		tickets.Id							AS ticket_id,
 		tickets.FriendlyId					AS ticket_scid,
 		tickets.EntityType					AS ticket_type,

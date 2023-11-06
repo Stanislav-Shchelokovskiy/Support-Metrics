@@ -85,6 +85,7 @@ class TicketTribeMeta(MetaData):
 class TicketsWithPropertiesMeta(MetaData):
     user_crmid = Field(TEXT)
     user_id = Field(TEXT)
+    is_employee = Field(INTEGER)
     user_register_date = Field(TEXT)
     ticket_id = Field(TEXT)
     ticket_scid = Field(TEXT)
@@ -207,6 +208,7 @@ class TicketsWithIterationsMeta(TicketsWithPropertiesMeta):
 
 class TicketsWithIterationsRawMeta(MetaData):
     user_id = TicketsWithIterationsMeta.user_id
+    is_employee = TicketsWithIterationsMeta.is_employee
     ticket_scid = TicketsWithIterationsMeta.ticket_scid
     csi = Field(TEXT)
     ticket_type = TicketsWithIterationsMeta.ticket_type
