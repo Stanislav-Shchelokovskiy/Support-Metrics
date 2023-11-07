@@ -97,6 +97,8 @@ class DisplayValuesStore:
     def get_display_value(field: str, alias: str, value) -> str:
         if field == 'is_private':
             value = 'Private' if value else 'Public'
+        if field == 'is_employee':
+            value = 'Employee' if value else 'Customer'
         return value
 
 
