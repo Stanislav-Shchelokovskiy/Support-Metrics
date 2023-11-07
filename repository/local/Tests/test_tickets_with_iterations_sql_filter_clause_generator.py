@@ -103,6 +103,12 @@ def test_generate_privacy_filter() -> str:
     ) == f'AND {TicketsWithIterationsMeta.is_private} = 100'
 
 
+def test_generate_is_employee_filter() -> str:
+    return tickets.generate_is_employee_filter(
+        params=MockFilterParameterNode(include=True, value=100)
+    ) == f'AND {TicketsWithIterationsMeta.is_employee} = 100'
+
+
 @pytest.mark.parametrize(
     'generator, field', [
         (

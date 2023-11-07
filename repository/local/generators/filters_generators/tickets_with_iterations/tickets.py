@@ -23,6 +23,22 @@ def generate_privacy_filter(
 
 
 @params_guard
+def generate_is_employee_filter(
+    params: FilterParameterNode,
+    col: str = TicketsWithIterationsMeta.is_employee,
+) -> str:
+    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_equals_filter_generator(
+        params
+    )
+    return generate_filter(
+        col=col,
+        value=params.value,
+        filter_prefix='AND',
+        value_converter=int,
+    )
+
+
+@params_guard
 def generate_tribes_filter(params: FilterParametersNode) -> str:
     generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_like_filter_generator(
         params

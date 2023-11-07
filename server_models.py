@@ -43,6 +43,7 @@ class Percentile(ServerModel):
 class TicketsWithIterationsParams(ServerModel):
     percentile: Percentile = Field(alias='Percentile')
     is_private: FilterParameterNode | None = Field(alias='Privacy')
+    is_employee: FilterParameterNode | None = Field(alias='Employee tickets')
     tribe_ids: FilterParametersNode | None = Field(alias='Tribes')
     tent_ids: FilterParametersNode | None = Field(alias='Tents')
     platforms_ids: FilterParametersNode | None = Field(alias='Platforms')
