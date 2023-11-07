@@ -19,6 +19,7 @@ def generate_privacy_filter(
         col=col,
         value=params.value,
         filter_prefix='AND',
+        value_converter=int,
     )
 
 
