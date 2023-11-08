@@ -124,3 +124,18 @@ def generate_ticket_tags_filter(params: FilterParametersNode) -> str:
         values=params.values,
         filter_prefix='AND',
     )
+
+@params_guard
+def generate_closed_for_n_days(
+    params: FilterParameterNode,
+    col: str = TicketsWithIterationsMeta.closed_on,
+) -> str:
+    generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_less_equals_filter_generator(
+        params
+    )
+    return generate_filter(
+        col=col,
+        value=params.value,
+        filter_prefix='AND',
+        value_converter=lambda x: f"DATE('now', '-{x} DAYS')",
+    )

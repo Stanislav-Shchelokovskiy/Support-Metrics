@@ -97,16 +97,51 @@ def test_get_percentile_filter(
     ) == output
 
 
-def test_generate_privacy_filter() -> str:
-    return tickets.generate_privacy_filter(
-        params=MockFilterParameterNode(include=True, value=100)
-    ) == f'AND {TicketsWithIterationsMeta.is_private} = 100'
+@pytest.mark.parametrize(
+    'generator, field, value_converter', [
+        (
+            tickets.generate_privacy_filter,
+            TicketsWithIterationsMeta.is_private,
+            int,
+        ),
+        (
+            tickets.generate_is_employee_filter,
+            TicketsWithIterationsMeta.is_employee,
+            int,
+        ),
+    ]
+)
+def test_equals_filters(
+    generator,
+    field: str,
+    value_converter,
+    equals_filter_cases,
+) -> str:
+    # yapf: disable
+    for value, output in equals_filter_cases(convert=value_converter, prefix='AND'):
+        assert generator(params=value) == output.format(field=field)
+    # yapf: enable
 
 
-def test_generate_is_employee_filter() -> str:
-    return tickets.generate_is_employee_filter(
-        params=MockFilterParameterNode(include=True, value=100)
-    ) == f'AND {TicketsWithIterationsMeta.is_employee} = 100'
+@pytest.mark.parametrize(
+    'generator, field, value_converter', [
+        (
+            tickets.generate_closed_for_n_days,
+            TicketsWithIterationsMeta.closed_on,
+            lambda x: f"DATE('now', '-{x} DAYS')"
+        ),
+    ]
+)
+def test_le_filters(
+    generator,
+    field: str,
+    value_converter,
+    less_equals_filter_cases,
+) -> str:
+    # yapf: disable
+    for value, output in less_equals_filter_cases(convert=value_converter, prefix='AND'):
+        assert generator(params=value) == output.format(field=field)
+    # yapf: enable
 
 
 @pytest.mark.parametrize(

@@ -99,6 +99,8 @@ class DisplayValuesStore:
             value = 'Private' if value else 'Public'
         if field == 'is_employee':
             value = 'Employee' if value else 'Customer'
+        if field == 'closed_for_n_days':
+            value = f'{value} day(s)'
         return value
 
 

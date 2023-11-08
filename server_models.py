@@ -68,6 +68,7 @@ class TicketsWithIterationsParams(ServerModel):
     assigned_to_ids: FilterParametersNode | None = Field(alias='Assigned to')
     closed_by_ids: FilterParametersNode | None = Field(alias='Closed by')
     closed_between: FilterParametersNode | None = Field(alias='Closed', positive_filter_op='between', negative_filter_op='notbetween')
+    closed_for_n_days: FilterParameterNode | None = Field(alias='Closed for', positive_filter_op='>=', negative_filter_op='<')
     fixed_by_ids: FilterParametersNode | None = Field(alias='Fixed by')
     fixed_between: FilterParametersNode | None = Field(alias='Fixed', positive_filter_op='between', negative_filter_op='notbetween')
     reply_ids: FilterParametersNode | None = Field(alias='CAT replies types')
