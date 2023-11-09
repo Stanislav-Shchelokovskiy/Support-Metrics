@@ -54,6 +54,14 @@ class CATComponentsFeaturesMeta(MetaData):
     component_name = CATComponentsMeta.component_name
     feature_name = CATFeaturesMeta.feature_name
 
+    @classmethod
+    def get_key_fields(
+        cls,
+        projector: Callable[[Field], Any] = str,
+        *exfields: Field,
+    ) -> Sequence[Field | str | Any]:
+        return tuple()
+
 
 class PlatformsMeta(MetaData):
     platform_id = Field(TEXT)
@@ -74,6 +82,14 @@ class PlatformsProductsMeta(MetaData):
     platform_name = PlatformsMeta.platform_name
     product_tent_name = Field(TEXT)
     product_name = ProductsMeta.product_name
+
+    @classmethod
+    def get_key_fields(
+        cls,
+        projector: Callable[[Field], Any] = str,
+        *exfields: Field,
+    ) -> Sequence[Field | str | Any]:
+        return tuple()
 
 
 class TicketTribeMeta(MetaData):
@@ -162,10 +178,7 @@ class EmployeesMeta(MetaData):
         projector: Callable[[Field], Any] = str,
         *exfields: Field,
     ) -> Sequence[Field | str | Any]:
-        return MetaData.get_key_fields(
-            projector,
-            cls.scid,
-        )
+        return tuple()
 
     @classmethod
     def get_index_fields(
@@ -277,3 +290,21 @@ class CSIMeta(MetaData):
     ticket_scid = TicketsWithIterationsMeta.ticket_scid
     date = Field(TEXT)
     rating = Field(INTEGER)
+
+
+class ResolutionTimeMeta(MetaData):
+    ticket_scid = TicketsWithIterationsMeta.ticket_scid
+    creation_date = TicketsWithIterationsMeta.creation_date
+    resolution_in_hours = Field(INTEGER)
+
+    @classmethod
+    def get_key_fields(
+        cls,
+        projector: Callable[[Field], Any] = str,
+        *exfields: Field,
+    ) -> Sequence[Field | str | Any]:
+        return MetaData.get_key_fields(
+            projector,
+            cls.ticket_scid,
+            cls.resolution_in_hours,
+        )

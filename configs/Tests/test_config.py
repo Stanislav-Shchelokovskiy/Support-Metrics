@@ -43,7 +43,8 @@ def test_get_rank_period_offset():
 
 
 def test_years_of_history():
-    assert config.years_of_history() == '5 YEARS'
+    assert config.years_of_history(config.SQLITE) == '5 YEARS'
+    assert config.years_of_history(config.TSQL) == 'YEAR, -5'
 
 
 def test_get_emp_start():

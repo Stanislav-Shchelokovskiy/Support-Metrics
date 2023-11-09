@@ -10,6 +10,7 @@ import repository.remote.employees as employees
 import repository.remote.csi as csi
 import repository.remote.tents as tents
 import repository.remote.tribes as tribes
+import repository.remote.resolution_time as resolution_time
 
 
 def __create_repository(queries: RepositoryQueries) -> Repository:
@@ -98,3 +99,6 @@ def create_tents_repository() -> Repository:
 
 def create_tribes_repository() -> Repository:
     return __create_repository(queries=tribes.Tribes())
+
+def create_resolution_time_repository() -> Repository:
+    return __create_repository(queries=resolution_time.ResolutionTime())

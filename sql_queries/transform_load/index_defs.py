@@ -7,7 +7,6 @@ from sql_queries.meta import (
     PlatformsProductsMeta,
     TicketsWithPropertiesMeta,
     TicketsWithIterationsMeta,
-    CSIMeta,
 )
 import sql_queries.index.name as name_index
 
@@ -184,7 +183,6 @@ __create_index_statements = {
                     )
                 ),
             ),
-
          name_index.employees:
             (
                 sqlite_index.create_index(
@@ -192,15 +190,4 @@ __create_index_statements = {
                     cols=EmployeesMeta.get_index_fields(),
                 ),
             ),
-        name_index.csi:
-        (
-            sqlite_index.create_index(
-                    tbl=name_index.csi,
-                    cols=(
-                        CSIMeta.ticket_scid,
-                        CSIMeta.date,
-                        CSIMeta.rating,
-                    )
-                ),
-        )
     }

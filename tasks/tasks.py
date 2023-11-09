@@ -11,7 +11,7 @@ from toolbox.sql.crud_queries import (
     DeleteRowsOlderThanQuery,
     DropTableQuery,
 )
-from toolbox.sql.db_operations import SaveTableOperationDF, DFToCRUDQueryMapper, SaveTableOperation
+from toolbox.sql.db_operations import SaveTableOperation
 from toolbox.sql.repository import Repository
 from toolbox.sql import KnotMeta, IntKnotMeta
 from repository import RepositoryFactory
@@ -29,18 +29,19 @@ from sql_queries.meta import (
     TicketsWithIterationsMeta,
     EmployeesMeta,
     BaselineAlignedCustomersGroupsMeta,
+    CSIMeta,
+    ResolutionTimeMeta,
+    CATComponentsFeaturesMeta,
+    PlatformsProductsMeta,
 )
 import sql_queries.index.name as name_index
 import sql_queries.index.path.transform_load as TransformLoadPathIndex
 from toolbox.utils.env import recalculate_from_beginning
 
 
-def __save_tables(
-    *queries: CRUDQuery,
-    op=SaveTableOperation,
-):
+def __save_tables(*queries: CRUDQuery):
     [
-        op(
+        SaveTableOperation(
             conn=SqliteConnection(),
             query=query,
             tables_defs=get_create_table_statements(),
@@ -49,136 +50,25 @@ def __save_tables(
     ]
 
 
-def __save_table(tbl_name: str, repository: Repository, **kwargs):
-    __save_tables(
-        DFToCRUDQueryMapper(
-            tbl_name=tbl_name,
-            df=repository.get_data(**kwargs),
-        ),
-        op=SaveTableOperationDF,
-    )
-
-
-# yapf: disable
-def load_groups():
-    df = RepositoryFactory.remote.create_customers_groups_repository().get_data()
-    __save_tables(
-         SqliteCreateTableQuery(
-            target_table_name=name_index.customers_groups,
-            unique_key_fields=CustomersGroupsMeta.get_key_fields(lambda x: x.as_query_field()),
-            values_fields=CustomersGroupsMeta.get_conflicting_fields(lambda x: x.as_query_field(), preserve_order=True),
-            recreate=True,
-        ),
-        SqliteUpsertQuery(
-            table_name=name_index.customers_groups,
-            cols=df.columns,
-            key_cols=CustomersGroupsMeta.get_key_fields(),
-            confilcting_cols=CustomersGroupsMeta.get_conflicting_fields(),
-            rows=df.itertuples(index=False),
-        )
-    )
-
-
-def load_tracked_groups(start_date: str, end_date: str):
-    df = RepositoryFactory.remote.create_tracked_customers_groups_repository().get_data(start_date=start_date,end_date=end_date,)
-    __save_tables(
-        SqliteCreateTableQuery(
-            target_table_name=name_index.tracked_customers_groups,
-            unique_key_fields=BaselineAlignedCustomersGroupsMeta.get_key_fields(lambda x: x.as_query_field()),
-            values_fields=BaselineAlignedCustomersGroupsMeta.get_conflicting_fields(lambda x: x.as_query_field(), preserve_order=True),
-            recreate=recalculate_from_beginning(),
-        ),
-        SqliteUpsertQuery(
-            table_name=name_index.tracked_customers_groups,
-            cols=df.columns,
-            key_cols=BaselineAlignedCustomersGroupsMeta.get_key_fields(),
-            confilcting_cols=BaselineAlignedCustomersGroupsMeta.get_conflicting_fields(),
-            rows=df.itertuples(index=False),
-        )
-    )
-
-
-def load_components_features():
-    __save_table(
-        tbl_name=name_index.cat_components_features,
-        repository=RepositoryFactory.remote.create_cat_components_features_repository(),
-    )
-
-
-def load_platforms_products():
-    __save_table(
-        tbl_name=name_index.platforms_products,
-        repository=RepositoryFactory.remote.create_platforms_products_repository(),
-    )
-
-
-def load_customers_tickets(start_date: str, end_date: str):
-    __save_table(
-        tbl_name=name_index.customers_tickets,
-        repository=RepositoryFactory.remote.create_customers_tickets_repository(),
-        start_date=start_date,
-        end_date=end_date,
-    )
-
-
-def load_employees_iterations(start_date: str, end_date: str, employees_json: str):
-    __save_table(
-        tbl_name=name_index.employees_iterations,
-        repository=RepositoryFactory.remote.create_employees_iterations_repository(),
-        start_date=start_date,
-        end_date=end_date,
-        employees_json=employees_json,
-    )
-
-
-def load_employees(start_date: str, employees_json: str):
-    df = RepositoryFactory.remote.create_employees_repository().get_data(
-        start_date=start_date,
-        employees_json=employees_json,
-    )
-    __save_tables(
-        SqliteCreateTableQuery(
-            target_table_name=name_index.employees,
-            unique_key_fields=EmployeesMeta.get_key_fields(lambda x: x.as_query_field()),
-            values_fields=EmployeesMeta.get_conflicting_fields(lambda x: x.as_query_field(), preserve_order=True),
-            recreate=recalculate_from_beginning(),
-        ),
-        SqliteUpsertQuery(
-            table_name=name_index.employees,
-            cols=df.columns,
-            key_cols=EmployeesMeta.get_key_fields(),
-            confilcting_cols=EmployeesMeta.get_conflicting_fields(),
-            rows=df.itertuples(index=False),
-        )
-    )
-
-
-def load_csi():
-    __save_table(
-        tbl_name=name_index.csi,
-        repository=RepositoryFactory.remote.create_csi_repository(),
-    )
-
-
-### Knots ###
 def __as_query_field(x: Field):
     return x.as_query_field()
 
 
-def __save_knot(
+# yapf: disable
+def __save_table(
     repository: Repository,
     table_name: str,
     cls=KnotMeta,
+    recreate=True,
     **kwargs,
 ):
     df: DataFrame = repository.get_data(**kwargs)
-
     __save_tables(
         SqliteCreateTableQuery(
             target_table_name=table_name,
             unique_key_fields=cls.get_key_fields(__as_query_field),
             values_fields=cls.get_conflicting_fields(__as_query_field, preserve_order=True),
-            recreate=True,
+            recreate=recreate,
         ),
         SqliteUpsertQuery(
             table_name=table_name,
@@ -190,79 +80,168 @@ def __save_knot(
     )
 
 
+def load_employees_iterations(
+    start_date: str,
+    end_date: str,
+    employees_json: str,
+):
+    __save_table(
+        repository=RepositoryFactory.remote.create_employees_iterations_repository(),
+        table_name=name_index.employees_iterations,
+        cls=EmployeesIterationsMeta,
+        recreate=recalculate_from_beginning(),
+        start_date=start_date,
+        end_date=end_date,
+        employees_json=employees_json,
+    )
+
+
+def load_customers_tickets(start_date: str, end_date: str):
+    __save_table(
+        repository=RepositoryFactory.remote.create_customers_tickets_repository(),
+        table_name=name_index.customers_tickets,
+        cls=TicketsWithPropertiesMeta,
+        recreate=recalculate_from_beginning(),
+        start_date=start_date,
+        end_date=end_date,
+    )
+
+
+def load_platforms_products():
+    __save_table(
+        repository=RepositoryFactory.remote.create_platforms_products_repository(),
+        table_name=name_index.platforms_products,
+        cls=PlatformsProductsMeta,
+    )
+
+
+def load_components_features():
+    __save_table(
+        repository=RepositoryFactory.remote.create_cat_components_features_repository(),
+        table_name=name_index.cat_components_features,
+        cls=CATComponentsFeaturesMeta,
+    )
+
+
+def load_groups():
+    __save_table(
+        repository=RepositoryFactory.remote.create_customers_groups_repository(),
+        table_name=name_index.customers_groups,
+        cls=CustomersGroupsMeta,
+    )
+
+
+def load_tracked_groups(start_date: str, end_date: str):
+    __save_table(
+        repository=RepositoryFactory.remote.create_tracked_customers_groups_repository(),
+        table_name=name_index.tracked_customers_groups,
+        cls=BaselineAlignedCustomersGroupsMeta,
+        recreate=recalculate_from_beginning(),
+        start_date=start_date,
+        end_date=end_date,
+    )
+
+
+def load_employees(start_date: str, employees_json: str):
+    __save_table(
+        repository=RepositoryFactory.remote.create_employees_repository(),
+        table_name=name_index.employees,
+        cls=EmployeesMeta,
+        recreate=recalculate_from_beginning(),
+        start_date=start_date,
+        employees_json=employees_json,
+    )
+
+
+def load_csi():
+    __save_table(
+        repository=RepositoryFactory.remote.create_csi_repository(),
+        table_name=name_index.csi,
+        cls=CSIMeta,
+    )
+
+
+def load_resolution_time(years_of_history: str,):
+    __save_table(
+        repository=RepositoryFactory.remote.create_resolution_time_repository(),
+        table_name=name_index.resolution_time,
+        cls=ResolutionTimeMeta,
+        years_of_history=years_of_history,
+    )
+
+
 def load_tags():
-    __save_knot(
+    __save_table(
         repository=RepositoryFactory.remote.create_tickets_tags_repository(),
         table_name=name_index.tickets_tags,
     )
 
 
 def load_replies_types():
-    __save_knot(
+    __save_table(
         repository=RepositoryFactory.remote.create_cat_replies_types_repository(),
         table_name=name_index.cat_replies_types,
     )
 
 
 def load_frameworks():
-    __save_knot(
+    __save_table(
         repository=RepositoryFactory.remote.create_frameworks_repository(),
         table_name=name_index.frameworks,
     )
 
 
 def load_operating_systems():
-    __save_knot(
+    __save_table(
         repository=RepositoryFactory.remote.create_operating_systems_repository(),
         table_name=name_index.operating_systems,
     )
 
 
 def load_builds():
-    __save_knot(
+    __save_table(
         repository=RepositoryFactory.remote.create_builds_repository(),
         table_name=name_index.builds,
     )
 
 
 def load_severity():
-    __save_knot(
+    __save_table(
         repository=RepositoryFactory.remote.create_severity_repository(),
         table_name=name_index.severity,
     )
 
 
 def load_ticket_statuses():
-    __save_knot(
+    __save_table(
         repository=RepositoryFactory.remote.create_ticket_statuses_repository(),
         table_name=name_index.ticket_statuses,
     )
 
 
 def load_ides():
-    __save_knot(
+    __save_table(
         repository=RepositoryFactory.remote.create_ides_repository(),
         table_name=name_index.ides,
     )
 
 
 def load_tribes():
-    __save_knot(
+    __save_table(
         repository=RepositoryFactory.remote.create_tribes_repository(),
         table_name=name_index.tribes,
     )
 
 
 def load_tents():
-    __save_knot(
+    __save_table(
         repository=RepositoryFactory.remote.create_tents_repository(),
         table_name=name_index.tents,
     )
 
 
-
 def load_tickets_types():
-    __save_knot(
+    __save_table(
         repository=RepositoryFactory.remote.create_tickets_types_repository(),
         table_name=name_index.tickets_types,
         cls=IntKnotMeta,
@@ -270,7 +249,7 @@ def load_tickets_types():
 
 
 def load_license_statuses():
-    __save_knot(
+    __save_table(
         repository=RepositoryFactory.remote.create_license_statuses_repository(),
         table_name=name_index.license_statuses,
         cls=IntKnotMeta,
@@ -278,7 +257,7 @@ def load_license_statuses():
 
 
 def load_conversion_statuses():
-    __save_knot(
+    __save_table(
         repository=RepositoryFactory.remote.create_conversion_statuses_repository(),
         table_name=name_index.conversion_statuses,
         cls=ConversionStatusesMeta,
@@ -288,7 +267,7 @@ def load_conversion_statuses():
 ### transform staged data ###
 def process_staged_data(
     rank_period_offset: str,
-    years_of_history:str,
+    years_of_history: str,
 ):
     __build_temp_tickets_with_iterations(rank_period_offset=rank_period_offset)
     __update_tickets_with_iterations()
@@ -298,7 +277,8 @@ def process_staged_data(
 
 
 def __post_process(years_of_history: str):
-    __execute(DeleteRowsOlderThanQuery(
+    __execute(
+        DeleteRowsOlderThanQuery(
             tbl=name_index.tickets_with_iterations,
             date_field=TicketsWithIterationsMeta.creation_date,
             modifier=years_of_history,
@@ -336,7 +316,7 @@ def __update_tickets_with_iterations():
             source_table_or_subquery=name_index.tickets_with_iterations_temp,
             target_table_name=name_index.tickets_with_iterations,
             unique_key_fields=None,
-            values_fields=TicketsWithIterationsMeta.get_values(lambda x: x.as_query_field()),
+            values_fields=TicketsWithIterationsMeta.get_values(__as_query_field),
             unique_fields=TicketsWithIterationsMeta.get_key_fields(),
             recreate=recalculate_from_beginning(),
         ),
@@ -346,7 +326,8 @@ def __update_tickets_with_iterations():
     # due to account transferring/merging.
     # user_register_date = MIN(creation_date, user_register_date)
     # this is necessary for BAM
-    __execute(f"""
+    __execute(
+        f"""
         UPDATE {name_index.tickets_with_iterations} AS twi
         SET {TicketsWithIterationsMeta.user_register_date} = (
         SELECT MIN(d)

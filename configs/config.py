@@ -4,6 +4,10 @@ from toolbox.utils.converters import DateTimeToSqlString
 from toolbox.utils.env import recalculate_for_last_n_days, recalculate_from_beginning
 
 
+SQLITE = 'sqlite'
+TSQL = 'tsql'
+
+
 def get_tickets_period() -> dict[str, str]:
     end = _get_end()
     start = _get_start()
@@ -21,8 +25,11 @@ def get_rank_period_offset() -> str:
     return '6 MONTHS'
 
 
-def years_of_history():
-    return '5 YEARS'
+def years_of_history(format: str):
+    return {
+        SQLITE: '5 YEARS',
+        TSQL: 'YEAR, -5',
+    }[format]
 
 
 def _get_end():

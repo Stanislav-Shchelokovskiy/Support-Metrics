@@ -14,6 +14,7 @@ from sql_queries.meta import (
     EmployeesMeta,
     BaselineAlignedCustomersGroupsMeta,
     CSIMeta,
+    ResolutionTimeMeta,
 )
 import sql_queries.index.path.extract as RemotePathIndex
 import sql_queries.index.path.local as LocalPathIndex
@@ -160,6 +161,13 @@ import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
         (
             RemotePathIndex.tribes,
             KnotMeta.get_attrs(),
+        ),
+        (
+            RemotePathIndex.resolution_time,
+            {  
+                **ResolutionTimeMeta.get_attrs(),
+                'years_of_history': 5,
+            }
         ),
     ],
 )
