@@ -1,6 +1,6 @@
 from typing import Iterable
 from toolbox.sql.repository_queries import RepositoryAlchemyQueries
-from sql_queries.meta import CSIMeta
+import sql_queries.meta.aggs as aggs
 import sql_queries.index.path.extract as RemotePathIndex
 
 
@@ -13,7 +13,7 @@ class CSI(RepositoryAlchemyQueries):
         return RemotePathIndex.csi
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
-        return CSIMeta.get_attrs()
+        return aggs.CSI.get_attrs()
 
     def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return CSIMeta.get_values()
+        return aggs.CSI.get_values()

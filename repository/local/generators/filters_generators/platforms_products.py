@@ -1,4 +1,4 @@
-from sql_queries.meta import PlatformsProductsMeta
+from sql_queries.meta.platforms_products import PlatformsProducts
 from toolbox.sql.generators.filter_clause_generator_factory import (
     FilterParametersNode,
     SqlFilterClauseFromFilterParametersGeneratorFactory,
@@ -26,7 +26,7 @@ def generate_platforms_filter(
 ) -> str:
     return generate_tents_filter(
         tents_ids=tent_ids,
-        col=PlatformsProductsMeta.platform_tent_id,
+        col=PlatformsProducts.platform_tent_id,
         filter_prefix=filter_prefix,
     )
 
@@ -34,7 +34,7 @@ def generate_platforms_filter(
 def generate_products_filter(tent_ids: FilterParametersNode, ) -> str:
     products_filter = generate_tents_filter(
         tents_ids=tent_ids,
-        col=PlatformsProductsMeta.product_tent_id,
+        col=PlatformsProducts.product_tent_id,
         filter_prefix='WHERE',
     )
 

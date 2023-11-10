@@ -1,7 +1,7 @@
 from typing import Iterable
 from toolbox.sql import KnotMeta
 from toolbox.sql.repository_queries import RepositoryAlchemyQueries
-from sql_queries.meta import CATComponentsFeaturesMeta
+import sql_queries.meta.cat as cat
 import sql_queries.index.path.extract as RemotePathIndex
 
 
@@ -26,7 +26,7 @@ class CATComponentsFeatures(RepositoryAlchemyQueries):
         return RemotePathIndex.components_features
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
-        return {**kwargs, **CATComponentsFeaturesMeta.get_attrs()}
+        return {**kwargs, **cat.CatComponentsFeatures.get_attrs()}
 
     def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return CATComponentsFeaturesMeta.get_values()
+        return cat.CatComponentsFeatures.get_values()

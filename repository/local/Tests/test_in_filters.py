@@ -1,15 +1,13 @@
 import pytest
 from toolbox.sql.generators.Tests.mocks import MockFilterParametersNode
+from sql_queries.meta.cat import CatComponentsFeatures
+from sql_queries.meta.customers import ConversionStatuses
+from sql_queries.meta.platforms_products import PlatformsProducts
+from sql_queries.meta.employees import Employees
 import repository.local.generators.filters_generators.cat as CATSqlFilterClauseGenerator
 import repository.local.generators.filters_generators.conversion_statuses as ConversionStatusesSqlFilterClauseGenerator
 import repository.local.generators.filters_generators.employees as EmployeesSqlFilterClauseGenerator
 import repository.local.generators.filters_generators.platforms_products as PlatformsProductsSqlFilterClauseGenerator
-from sql_queries.meta import (
-    CATComponentsFeaturesMeta,
-    ConversionStatusesMeta,
-    EmployeesMeta,
-    PlatformsProductsMeta,
-)
 
 
 # yapf: disable
@@ -17,25 +15,25 @@ from sql_queries.meta import (
     'generator, field, param_name, values_converter', [
         (
             CATSqlFilterClauseGenerator.generate_components_filter,
-            CATComponentsFeaturesMeta.tent_id,
+            CatComponentsFeatures.tent_id,
             'tent_ids',
             None,
         ),
         (
             ConversionStatusesSqlFilterClauseGenerator.generate_conversion_filter,
-            ConversionStatusesMeta.license_status_id,
+            ConversionStatuses.license_status_id,
             'license_status_ids',
             str,
         ),
         (
             EmployeesSqlFilterClauseGenerator.generate_positions_filter,
-            EmployeesMeta.position_id,
+            Employees.position_id,
             'position_ids',
             None,
         ),
         (
             PlatformsProductsSqlFilterClauseGenerator.generate_platforms_filter,
-            PlatformsProductsMeta.platform_tent_id,
+            PlatformsProducts.platform_tent_id,
             'tent_ids',
             None,
         ),
@@ -57,8 +55,8 @@ def test_single_in_filters(
     'generator, field1, field2, param_name1, param_name2, values_converter', [
         (
             CATSqlFilterClauseGenerator.generate_features_filter,
-            CATComponentsFeaturesMeta.tent_id,
-            CATComponentsFeaturesMeta.component_id,
+            CatComponentsFeatures.tent_id,
+            CatComponentsFeatures.component_id,
             'tent_ids',
             'component_ids',
             None,
@@ -93,23 +91,23 @@ def test_double_in_filter(
         ),
         (
             MockFilterParametersNode(include=False, values=[]),
-            f"WHERE {PlatformsProductsMeta.product_tent_id} IS NULL",
+            f"WHERE {PlatformsProducts.product_tent_id} IS NULL",
         ),
         (
             MockFilterParametersNode(include=True, values=['t1']),
-            f"WHERE {PlatformsProductsMeta.product_tent_id} IN ('t1') OR {PlatformsProductsMeta.platform_tent_id} IN ('t1')",
+            f"WHERE {PlatformsProducts.product_tent_id} IN ('t1') OR {PlatformsProducts.platform_tent_id} IN ('t1')",
         ),
         (
             MockFilterParametersNode(include=False, values=['t1']),
-            f"WHERE ({PlatformsProductsMeta.product_tent_id} IS NULL OR {PlatformsProductsMeta.product_tent_id} NOT IN ('t1'))",
+            f"WHERE ({PlatformsProducts.product_tent_id} IS NULL OR {PlatformsProducts.product_tent_id} NOT IN ('t1'))",
         ),
         (
             MockFilterParametersNode(include=True, values=['t1', 't2']),
-            f"WHERE {PlatformsProductsMeta.product_tent_id} IN ('t1','t2') OR {PlatformsProductsMeta.platform_tent_id} IN ('t1','t2')",
+            f"WHERE {PlatformsProducts.product_tent_id} IN ('t1','t2') OR {PlatformsProducts.platform_tent_id} IN ('t1','t2')",
         ),
         (
             MockFilterParametersNode(include=False, values=['t1', 't2']),
-            f"WHERE ({PlatformsProductsMeta.product_tent_id} IS NULL OR {PlatformsProductsMeta.product_tent_id} NOT IN ('t1','t2'))",
+            f"WHERE ({PlatformsProducts.product_tent_id} IS NULL OR {PlatformsProducts.product_tent_id} NOT IN ('t1','t2'))",
         ),
     ]
 )
@@ -139,19 +137,19 @@ def test_generate_products_filter(
             MockFilterParametersNode(include=True, values=[]),
             MockFilterParametersNode(include=True, values=[]),
             MockFilterParametersNode(include=True, values=['t1']),
-            f"WHERE {EmployeesMeta.tent_id} IN ('t1')",
+            f"WHERE {Employees.tent_id} IN ('t1')",
         ),
         (
             MockFilterParametersNode(include=True, values=[]),
             MockFilterParametersNode(include=True, values=['t1']),
             MockFilterParametersNode(include=True, values=['t1']),
-            f"WHERE {EmployeesMeta.tribe_id} IN ('t1') AND {EmployeesMeta.tent_id} IN ('t1')",
+            f"WHERE {Employees.tribe_id} IN ('t1') AND {Employees.tent_id} IN ('t1')",
         ),
         (
             MockFilterParametersNode(include=True, values=['t1']),
             MockFilterParametersNode(include=True, values=['t1']),
             MockFilterParametersNode(include=False, values=['t1']),
-            f"WHERE {EmployeesMeta.position_id} IN ('t1') AND {EmployeesMeta.tribe_id} IN ('t1') AND ({EmployeesMeta.tent_id} IS NULL OR {EmployeesMeta.tent_id} NOT IN ('t1'))",
+            f"WHERE {Employees.position_id} IN ('t1') AND {Employees.tribe_id} IN ('t1') AND ({Employees.tent_id} IS NULL OR {Employees.tent_id} NOT IN ('t1'))",
         )
     ]
 )

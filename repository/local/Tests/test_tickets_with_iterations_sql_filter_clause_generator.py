@@ -8,7 +8,8 @@ import repository.local.generators.filters_generators.tickets_with_iterations.bu
 import repository.local.generators.filters_generators.tickets_with_iterations.cat as cat
 import repository.local.generators.filters_generators.tickets_with_iterations.customers as customers
 import repository.local.generators.filters_generators.tickets_with_iterations.employees as employees
-from sql_queries.meta import TicketsWithIterationsMeta, BaselineAlignedModeMeta
+from sql_queries.meta.aggs import TicketsWithIterations
+from sql_queries.meta.customers import BaselineAlignedMode
 from toolbox.sql.generators.Tests.mocks import (
     MockFilterParameterNode,
     MockPercentile,
@@ -23,7 +24,7 @@ import configs.config as config
                 'range_start': 'qwe',
                 'range_end': 'asd',
             },
-            f"WHERE {TicketsWithIterationsMeta.creation_date} BETWEEN 'qwe' AND 'asd'",
+            f"WHERE {TicketsWithIterations.creation_date} BETWEEN 'qwe' AND 'asd'",
         ),
         (
             {
@@ -31,7 +32,7 @@ import configs.config as config
                 'range_end': 'asd',
                 'filter_prefix': 'AND',
             },
-            f"AND {TicketsWithIterationsMeta.creation_date} BETWEEN 'qwe' AND 'asd'",
+            f"AND {TicketsWithIterations.creation_date} BETWEEN 'qwe' AND 'asd'",
         ),
     ]
 )
@@ -49,7 +50,7 @@ def test_generate_creation_date_filter(
                 'range_start': 'qwe',
                 'range_end': 'asd',
             },
-            f"{TicketsWithIterationsMeta.creation_date} BETWEEN DATE('qwe', '-{config.get_rank_period_offset()}') AND 'asd'",
+            f"{TicketsWithIterations.creation_date} BETWEEN DATE('qwe', '-{config.get_rank_period_offset()}') AND 'asd'",
         ),
     ]
 )
@@ -101,12 +102,12 @@ def test_get_percentile_filter(
     'generator, field, value_converter', [
         (
             tickets.generate_privacy_filter,
-            TicketsWithIterationsMeta.is_private,
+            TicketsWithIterations.is_private,
             int,
         ),
         (
             tickets.generate_is_employee_filter,
-            TicketsWithIterationsMeta.is_employee,
+            TicketsWithIterations.is_employee,
             int,
         ),
     ]
@@ -127,7 +128,7 @@ def test_equals_filters(
     'generator, field, value_converter', [
         (
             tickets.generate_closed_for_n_days,
-            TicketsWithIterationsMeta.closed_on,
+            TicketsWithIterations.closed_on,
             lambda x: f"DATE('now', '-{x} DAYS')"
         ),
     ]
@@ -148,35 +149,35 @@ def test_le_filters(
     'generator, field', [
         (
             tickets.generate_tribes_filter,
-            TicketsWithIterationsMeta.tribes_ids,
+            TicketsWithIterations.tribes_ids,
         ),
         (
             platforms_products.generate_platforms_filter,
-            TicketsWithIterationsMeta.platforms,
+            TicketsWithIterations.platforms,
         ),
         (
             platforms_products.generate_products_filter,
-            TicketsWithIterationsMeta.products,
+            TicketsWithIterations.products,
         ),
         (
             tickets.generate_builds_filter,
-            TicketsWithIterationsMeta.builds,
+            TicketsWithIterations.builds,
         ),
         (
             bugs.generate_fixed_in_builds_filter,
-            TicketsWithIterationsMeta.fixed_in_builds,
+            TicketsWithIterations.fixed_in_builds,
         ),
         (
             tickets.generate_frameworks_filter,
-            TicketsWithIterationsMeta.frameworks,
+            TicketsWithIterations.frameworks,
         ),
         (
             tickets.generate_ticket_tags_filter,
-            TicketsWithIterationsMeta.ticket_tags,
+            TicketsWithIterations.ticket_tags,
         ),
         (
             customers.generate_customer_groups_filter,
-            TicketsWithIterationsMeta.user_groups,
+            TicketsWithIterations.user_groups,
         ),
     ]
 )
@@ -193,102 +194,102 @@ def test_single_like_filters(
     'generator, field, values_converter', [
         (
             tickets.generate_tents_filter,
-            TicketsWithIterationsMeta.tent_id,
+            TicketsWithIterations.tent_id,
             None,
         ),
         (
             ticket_types.generate_ticket_types_filter,
-            TicketsWithIterationsMeta.ticket_type,
+            TicketsWithIterations.ticket_type,
             str,
         ),
         (
             customers.generate_license_status_filter,
-            TicketsWithIterationsMeta.license_status,
+            TicketsWithIterations.license_status,
             str,
         ),
         (
             employees.generate_emp_positions_filter,
-            TicketsWithIterationsMeta.emp_position_id,
+            TicketsWithIterations.emp_position_id,
             None,
         ),
         (
             customers.generate_tracked_customer_groups_filter,
-            BaselineAlignedModeMeta.id,
+            BaselineAlignedMode.id,
             None,
         ),
         (
             ticket_types.generate_duplicated_to_ticket_types_filter,
-            TicketsWithIterationsMeta.duplicated_to_ticket_type,
+            TicketsWithIterations.duplicated_to_ticket_type,
             str,
         ),
         (
             cat.generate_components_filter,
-            TicketsWithIterationsMeta.component_id,
+            TicketsWithIterations.component_id,
             None,
         ),
         (
             cat.generate_features_filter,
-            TicketsWithIterationsMeta.feature_id,
+            TicketsWithIterations.feature_id,
             None,
         ),
         (
             customers.generate_conversion_status_filter,
-            TicketsWithIterationsMeta.conversion_status,
+            TicketsWithIterations.conversion_status,
             str,
         ),
         (
             employees.generate_emp_tribes_filter,
-            TicketsWithIterationsMeta.emp_tribe_id,
+            TicketsWithIterations.emp_tribe_id,
             None,
         ),
         (
             employees.generate_employees_filter,
-            TicketsWithIterationsMeta.emp_scid,
+            TicketsWithIterations.emp_scid,
             None,
         ),
         (
             bugs.generate_assigned_to_filter,
-            TicketsWithIterationsMeta.assigned_to,
+            TicketsWithIterations.assigned_to,
             None,
         ),
         (
             bugs.generate_closed_by_filter,
-            TicketsWithIterationsMeta.closed_by,
+            TicketsWithIterations.closed_by,
             None,
         ),
         (
             bugs.generate_fixed_by_filter,
-            TicketsWithIterationsMeta.fixed_by,
+            TicketsWithIterations.fixed_by,
             None,
         ),
         (
             cat.generate_reply_types_filter,
-            TicketsWithIterationsMeta.reply_id,
+            TicketsWithIterations.reply_id,
             None,
         ),
         (
             customers.generate_customers_filter,
-            TicketsWithIterationsMeta.user_crmid,
+            TicketsWithIterations.user_crmid,
             None,
         ),
         (
             bugs.generate_severity_filter,
-            TicketsWithIterationsMeta.severity,
+            TicketsWithIterations.severity,
             None,
         ),
         (
             bugs.generate_ticket_status_filter,
-            TicketsWithIterationsMeta.ticket_status,
+            TicketsWithIterations.ticket_status,
             None,
         ),
         (
             tickets.generate_operating_systems_filter,
-            TicketsWithIterationsMeta.operating_system_id,
+            TicketsWithIterations.operating_system_id,
             None,
         ),
         (
             tickets.generate_ides_filter,
-            TicketsWithIterationsMeta.ide_id,
+            TicketsWithIterations.ide_id,
             None,
         ),
     ]
@@ -309,12 +310,12 @@ def test_single_in_filters(
     'generator, field, values_converter', [
         (
             bugs.generate_closed_on_filter,
-            TicketsWithIterationsMeta.closed_on,
+            TicketsWithIterations.closed_on,
             None,
         ),
         (
             bugs.generate_fixed_on_filter,
-            TicketsWithIterationsMeta.fixed_on,
+            TicketsWithIterations.fixed_on,
             None,
         ),
     ]

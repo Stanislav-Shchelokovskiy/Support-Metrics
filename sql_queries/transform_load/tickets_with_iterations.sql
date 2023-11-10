@@ -26,6 +26,7 @@ SELECT
 	t.{ticket_status},
 	t.{closed_by},
 	t.{closed_on},
+	rt.{resolution_in_hours},
     t.{converted_to_bug_on},
 	t.{severity},
 	CAST(t.{duplicated_to_ticket_type} AS INT) AS {duplicated_to_ticket_type},
@@ -62,4 +63,5 @@ FROM
     --     WHERE    {creation_date} >= (SELECT DATE(MIN({creation_date}), '+{rank_period_offset}') FROM {CustomersTickets})
     --     GROUP BY {user_crmid}
     -- ) AS actual_t ON actual_t.{user_crmid} = t.{user_crmid}
-    LEFT JOIN {EmployeesIterations} AS ei ON ei.{ticket_id} = t.{ticket_id};
+    LEFT JOIN {EmployeesIterations} AS ei ON ei.{ticket_id} = t.{ticket_id}
+	LEFT JOIN {ResolutionTime} AS rt ON rt.{ticket_scid} = t.{ticket_scid};

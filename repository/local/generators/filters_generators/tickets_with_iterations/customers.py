@@ -1,4 +1,5 @@
-from sql_queries.meta import TicketsWithIterationsMeta, BaselineAlignedModeMeta
+from sql_queries.meta.aggs import TicketsWithIterations
+from sql_queries.meta.customers import BaselineAlignedMode
 from toolbox.sql.generators.filter_clause_generator_factory import (
     FilterParametersNode,
     SqlFilterClauseFromFilterParametersGeneratorFactory,
@@ -9,7 +10,7 @@ from toolbox.sql.generators.filter_clause_generator_factory import (
 @params_guard
 def generate_customer_groups_filter(
     params: FilterParametersNode | None,
-    col: str = TicketsWithIterationsMeta.user_groups,
+    col: str = TicketsWithIterations.user_groups,
     filter_prefix: str = 'AND'
 ) -> str:
     generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_like_filter_generator(
@@ -25,7 +26,7 @@ def generate_customer_groups_filter(
 @params_guard
 def generate_tracked_customer_groups_filter(
     params: FilterParametersNode | None,
-    col: str = BaselineAlignedModeMeta.id,
+    col: str = BaselineAlignedMode.id,
     filter_prefix: str = 'AND'
 ) -> str:
     generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_in_filter_generator(
@@ -44,7 +45,7 @@ def generate_license_status_filter(params: FilterParametersNode) -> str:
         params
     )
     return generate_filter(
-        col=TicketsWithIterationsMeta.license_status,
+        col=TicketsWithIterations.license_status,
         values=params.values,
         filter_prefix='AND',
         values_converter=str,
@@ -57,7 +58,7 @@ def generate_conversion_status_filter(params: FilterParametersNode) -> str:
         params
     )
     return generate_filter(
-        col=TicketsWithIterationsMeta.conversion_status,
+        col=TicketsWithIterations.conversion_status,
         values=params.values,
         filter_prefix='AND',
         values_converter=str,
@@ -70,7 +71,7 @@ def generate_customers_filter(params: FilterParametersNode) -> str:
         params
     )
     return generate_filter(
-        col=TicketsWithIterationsMeta.user_crmid,
+        col=TicketsWithIterations.user_crmid,
         values=params.values,
         filter_prefix='AND',
     )

@@ -1,6 +1,6 @@
 from pandas import DataFrame
 from toolbox.sql import KnotMeta
-from sql_queries.meta import ConversionStatusesMeta
+import sql_queries.meta.customers as customers
 
 
 class LicenseStatusesRepository:
@@ -33,9 +33,9 @@ class ConversionStatusesRepository:
     def get_data(self, **kwargs) -> DataFrame:
         return DataFrame(
             data={
-                ConversionStatusesMeta.license_status_id.name: [0, 1, 11, 11],
-                ConversionStatusesMeta.id.name: [0, 1, 0, 1],
-                ConversionStatusesMeta.name.name:
+                customers.ConversionStatuses.license_status_id.name: [0, 1, 11, 11],
+                customers.ConversionStatuses.id.name: [0, 1, 0, 1],
+                customers.ConversionStatuses.name.name:
                     [
                         'Paid',
                         'Free',

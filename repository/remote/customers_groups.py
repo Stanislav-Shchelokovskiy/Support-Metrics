@@ -1,9 +1,6 @@
 from typing import Iterable
 from toolbox.sql.repository_queries import RepositoryAlchemyQueries
-from sql_queries.meta import (
-    CustomersGroupsMeta,
-    BaselineAlignedCustomersGroupsMeta,
-)
+import sql_queries.meta.customers as customers
 import sql_queries.index.path.extract as RemotePathIndex
 
 
@@ -16,10 +13,10 @@ class CustomersGroups(RepositoryAlchemyQueries):
         return RemotePathIndex.customers_groups
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
-        return CustomersGroupsMeta.get_attrs()
+        return customers.CustomersGroups.get_attrs()
 
     def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return CustomersGroupsMeta.get_values()
+        return customers.CustomersGroups.get_values()
 
 
 class TrackedCustomersGroups(RepositoryAlchemyQueries):
@@ -33,8 +30,8 @@ class TrackedCustomersGroups(RepositoryAlchemyQueries):
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
         return {
             **kwargs,
-            **BaselineAlignedCustomersGroupsMeta.get_attrs(),
+            **customers.TrackedCustomersGroups.get_attrs(),
         }
 
     def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return BaselineAlignedCustomersGroupsMeta.get_values()
+        return customers.TrackedCustomersGroups.get_values()

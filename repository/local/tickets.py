@@ -1,19 +1,19 @@
 from collections.abc import Mapping
 from toolbox.sql_async import GeneralSelectAsyncQueryDescriptor
-from toolbox.sql import MetaData, KnotMeta
-import sql_queries.index.name as name_index
+from toolbox.sql import MetaData
+import sql_queries.meta.tickets as tickets
 
 
 # yapf: disable
 class TicketsTypes(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return KnotMeta
+        return tickets.TicketsTypes
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': name_index.tickets_types,
+            'from': tickets.TicketsTypes.get_name(),
             'where_group_limit': '',
         }
 
@@ -21,64 +21,64 @@ class TicketsTypes(GeneralSelectAsyncQueryDescriptor):
 class TicketsTags(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return KnotMeta
+        return tickets.TicketsTags
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': name_index.tickets_tags,
-            'where_group_limit': f'ORDER BY {KnotMeta.name}',
+            'from': tickets.TicketsTags.get_name(),
+            'where_group_limit': f'ORDER BY {tickets.TicketsTags.name}',
         }
 
 
 class Frameworks(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return KnotMeta
+        return tickets.Frameworks
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': name_index.frameworks,
-            'where_group_limit': f'ORDER BY {KnotMeta.name}',
+            'from': tickets.Frameworks.get_name(),
+            'where_group_limit': f'ORDER BY {tickets.Frameworks.name}',
         }
 
 
 class OperatingSystems(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return KnotMeta
+        return tickets.OperatingSystems
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': name_index.operating_systems,
-            'where_group_limit': f'ORDER BY {KnotMeta.name}',
+            'from': tickets.OperatingSystems.get_name(),
+            'where_group_limit': f'ORDER BY {tickets.OperatingSystems.name}',
         }
 
 
 class Builds(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return KnotMeta
+        return tickets.Builds
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': name_index.builds,
-            'where_group_limit': f'ORDER BY {KnotMeta.name} DESC',
+            'from': tickets.Builds.get_name(),
+            'where_group_limit': f'ORDER BY {tickets.Builds.name} DESC',
         }
 
 
 class Severity(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return KnotMeta
+        return tickets.Severity
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': name_index.severity,
+            'from': tickets.Severity.get_name(),
             'where_group_limit': '',
         }
 
@@ -86,12 +86,12 @@ class Severity(GeneralSelectAsyncQueryDescriptor):
 class TicketStatuses(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return KnotMeta
+        return tickets.TicketStatuses
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': name_index.ticket_statuses,
+            'from': tickets.TicketStatuses.get_name(),
             'where_group_limit': '',
         }
 
@@ -99,11 +99,11 @@ class TicketStatuses(GeneralSelectAsyncQueryDescriptor):
 class IDEs(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return KnotMeta
+        return tickets.IDEs
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': name_index.ides,
-            'where_group_limit': f'ORDER BY {KnotMeta.name}',
+            'from': tickets.IDEs.get_name(),
+            'where_group_limit': f'ORDER BY {tickets.IDEs.name}',
         }

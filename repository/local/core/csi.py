@@ -1,10 +1,9 @@
-from sql_queries.meta import CSIMeta, TicketsWithIterationsMeta
-import sql_queries.index.name as name_index
+from sql_queries.meta.aggs import CSI, TicketsWithIterations
 
 
 def get_csi_query(tbl: str, **kwargs) -> str:
     return (
-        f"""(SELECT DISTINCT {TicketsWithIterationsMeta.ticket_scid}
+        f"""(SELECT DISTINCT {TicketsWithIterations.ticket_scid}
     FROM {tbl}) AS tickets
-    INNER JOIN {name_index.csi} AS ratings ON ratings.{CSIMeta.ticket_scid} = tickets.{TicketsWithIterationsMeta.ticket_scid}"""
+    INNER JOIN {CSI.get_name()} AS ratings ON ratings.{CSI.ticket_scid} = tickets.{TicketsWithIterations.ticket_scid}"""
     )

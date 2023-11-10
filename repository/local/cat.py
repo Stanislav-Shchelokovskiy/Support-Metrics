@@ -1,46 +1,42 @@
 from collections.abc import Mapping
 from toolbox.sql_async import GeneralSelectAsyncQueryDescriptor
-from toolbox.sql import MetaData, KnotMeta
-from sql_queries.meta import (
-    CATComponentsMeta,
-    CATFeaturesMeta,
-)
+from toolbox.sql import MetaData
+import sql_queries.meta.cat as cat
 import repository.local.generators.filters_generators.cat as CATSqlFilterClauseGenerator
-import sql_queries.index.name as name_index
 
 
 class CATRepliesTypes(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return KnotMeta
+        return cat.CatRepliesTypes
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': name_index.cat_replies_types,
-            'where_group_limit': f'ORDER BY {KnotMeta.name}',
+            'from': cat.CatRepliesTypes.get_name(),
+            'where_group_limit': f'ORDER BY {cat.CatRepliesTypes.name}',
         }
 
 
 class CATComponents(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return CATComponentsMeta
+        return cat.Components
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         filter = CATSqlFilterClauseGenerator.generate_components_filter(tent_ids=kwargs['tent_ids'])
         cols = ', '.join(self.get_fields(kwargs))
         return {
             'select': cols,
-            'from': name_index.cat_components_features,
-            'where_group_limit': f'{filter}\nGROUP BY {cols}\nORDER BY {CATComponentsMeta.component_name}',
+            'from': cat.CatComponentsFeatures.get_name(),
+            'where_group_limit': f'{filter}\nGROUP BY {cols}\nORDER BY {cat.Components.component_name}',
         }
 
 
 class CATFeatures(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return CATFeaturesMeta
+        return cat.Features
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         filter = CATSqlFilterClauseGenerator.generate_features_filter(
@@ -50,6 +46,6 @@ class CATFeatures(GeneralSelectAsyncQueryDescriptor):
         cols = ', '.join(self.get_fields(kwargs))
         return {
             'select': cols,
-            'from': name_index.cat_components_features,
-            'where_group_limit': f'{filter}\nGROUP BY {cols}\nORDER BY {CATFeaturesMeta.feature_name}',
+            'from': cat.CatComponentsFeatures.get_name(),
+            'where_group_limit': f'{filter}\nGROUP BY {cols}\nORDER BY {cat.Features.feature_name}',
         }

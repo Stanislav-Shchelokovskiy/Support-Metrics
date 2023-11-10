@@ -1,4 +1,4 @@
-from sql_queries.meta import TicketsWithIterationsMeta
+from sql_queries.meta.aggs import TicketsWithIterations
 from toolbox.sql.generators.filter_clause_generator_factory import (
     FilterParametersNode,
     SqlFilterClauseFromFilterParametersGeneratorFactory,
@@ -12,7 +12,7 @@ def generate_reply_types_filter(params: FilterParametersNode) -> str:
         params
     )
     return generate_filter(
-        col=TicketsWithIterationsMeta.reply_id,
+        col=TicketsWithIterations.reply_id,
         values=params.values,
         filter_prefix='AND',
     )
@@ -24,7 +24,7 @@ def generate_components_filter(params: FilterParametersNode) -> str:
         params
     )
     return generate_filter(
-        col=TicketsWithIterationsMeta.component_id,
+        col=TicketsWithIterations.component_id,
         values=params.values,
         filter_prefix='AND',
     )
@@ -36,7 +36,7 @@ def generate_features_filter(params: FilterParametersNode) -> str:
         params
     )
     return generate_filter(
-        col=TicketsWithIterationsMeta.feature_id,
+        col=TicketsWithIterations.feature_id,
         values=params.values,
         filter_prefix='AND',
     )

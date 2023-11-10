@@ -1,25 +1,25 @@
 from collections.abc import Callable, Mapping
 from toolbox.sql.aggs import Metric, COUNT_DISTINCT, COUNT, SUM, NONE_METRIC
-from sql_queries.meta import TicketsWithIterationsMeta, CSIMeta
+from sql_queries.meta.aggs import TicketsWithIterations, CSI
 
 
 people = Metric(
     'People',
     '',
     'Activity',
-    COUNT_DISTINCT(TicketsWithIterationsMeta.user_id),
+    COUNT_DISTINCT(TicketsWithIterations.user_id),
 )
 tickets = Metric(
     'Tickets',
     '',
     'Activity',
-    COUNT_DISTINCT(TicketsWithIterationsMeta.ticket_scid),
+    COUNT_DISTINCT(TicketsWithIterations.ticket_scid),
 )
 iterations = Metric(
     'Iterations',
     'Replies',
     'Activity',
-    COUNT(TicketsWithIterationsMeta.emp_post_id),
+    COUNT(TicketsWithIterations.emp_post_id),
 )
 iterations_to_tickets = Metric.from_metric(
     'Iterations / Tickets',
@@ -31,7 +31,7 @@ csi = Metric(
     'Satisfaction Index',
     'Customer Satisfaction Index',
     'Activity',
-    SUM(f'IIF({CSIMeta.rating} = 1, 1, 0)') / COUNT('*') * 100,
+    SUM(f'IIF({CSI.rating} = 1, 1, 0)') / COUNT('*') * 100,
 )
 
 metrics = {

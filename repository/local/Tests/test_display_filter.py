@@ -9,10 +9,11 @@ from server_models import (
     TicketsWithIterationsParams,
     Percentile,
 )
-from repository.local.aggs import tickets
+from repository.local.aggs import tickets as tickets_metric
 from repository.local.generators.filters_generators.display_filter import custom_display_filter, DisplayValuesStore
-import sql_queries.index.name as name_index
-
+import sql_queries.meta.tribes_tents as tribes_tents
+import sql_queries.meta.tickets as tickets
+import sql_queries.meta.customers as customers
 
 class Connection:
 
@@ -30,9 +31,9 @@ class MockSqlQueryExecutor(SqlQueryExecutor):
         query = kwargs['main_query']
         table_name = query.format_params['from']
         return {
-            name_index.tribes: DataFrame(data={KnotMeta.name.name: ['XAML United Team']}),
-            name_index.tickets_types: DataFrame(data={KnotMeta.name.name: ['Question']}),
-            name_index.license_statuses: DataFrame(data={KnotMeta.name.name: ['Licensed', 'Free']}),
+            tribes_tents.Tribes.get_name(): DataFrame(data={KnotMeta.name.name: ['XAML United Team']}),
+            tickets.TicketsTypes.get_name(): DataFrame(data={KnotMeta.name.name: ['Question']}),
+            customers.LicenseStatuses.get_name(): DataFrame(data={KnotMeta.name.name: ['Licensed', 'Free']}),
         }[table_name]
 
 
@@ -40,7 +41,7 @@ class MockSqlQueryExecutor(SqlQueryExecutor):
     'node, output', [
         (
             TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=True, value=40)),
+                'Percentile': Percentile(metric=tickets_metric.name, value=FilterParameterNode(include=True, value=40)),
                 'Tribes': FilterParametersNode(include=True, values=['CE832BA0-1D68-421D-8DD5-5E2522462A2F']),
                 'Ticket tags': FilterParametersNode(include=False, values=[],),
                 'Ticket types': FilterParametersNode(include=False, values=[2]),
@@ -62,7 +63,7 @@ class MockSqlQueryExecutor(SqlQueryExecutor):
             ],
         ),
         (TicketsWithIterationsParams(**{
-                'Percentile': Percentile(metric=tickets.name, value=FilterParameterNode(include=False, value=40)),
+                'Percentile': Percentile(metric=tickets_metric.name, value=FilterParameterNode(include=False, value=40)),
                 'Tribes': FilterParametersNode(include=True, values=['CE832BA0-1D68-421D-8DD5-5E2522462A2F']),
                 'Ticket tags': FilterParametersNode(include=False, values=[],),
             }),

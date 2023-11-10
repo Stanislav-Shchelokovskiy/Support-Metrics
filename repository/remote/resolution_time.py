@@ -1,5 +1,5 @@
 from toolbox.sql.repository_queries import RepositoryAlchemyQueries
-from sql_queries.meta import ResolutionTimeMeta
+import sql_queries.meta.aggs as aggs
 import sql_queries.index.path.extract as RemotePathIndex
 
 
@@ -12,4 +12,4 @@ class ResolutionTime(RepositoryAlchemyQueries):
         return RemotePathIndex.resolution_time
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
-        return {**kwargs, **ResolutionTimeMeta.get_attrs()}
+        return {**kwargs, **aggs.ResolutionTime.get_attrs()}

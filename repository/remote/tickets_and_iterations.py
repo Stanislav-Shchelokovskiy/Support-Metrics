@@ -1,10 +1,8 @@
 from typing import Iterable
 from toolbox.sql.repository_queries import RepositoryAlchemyQueries
 from toolbox.sql.sql_query import SqlQuery
-from sql_queries.meta import (
-    TicketsWithPropertiesMeta,
-    EmployeesIterationsMeta,
-)
+import sql_queries.meta.aggs as aggs
+import sql_queries.meta.employees as employees
 import sql_queries.index.path.extract as RemotePathIndex
 
 
@@ -17,13 +15,13 @@ class EmployeesIterations(RepositoryAlchemyQueries):
         return RemotePathIndex.employees_iterations
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
-        return {**kwargs, **EmployeesIterationsMeta.get_attrs()}
+        return {**kwargs, **employees.EmployeesIterations.get_attrs()}
 
     def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return EmployeesIterationsMeta.get_values()
+        return employees.EmployeesIterations.get_values()
 
 
-class CustomersTickets(RepositoryAlchemyQueries):
+class Tickets(RepositoryAlchemyQueries):
     """
     Query to load customers with their tickets and licenses.
     """
@@ -40,7 +38,7 @@ class CustomersTickets(RepositoryAlchemyQueries):
         return RemotePathIndex.tickets_with_properties
 
     def get_main_query_format_params(self, **kwargs) -> dict[str, str]:
-        return TicketsWithPropertiesMeta.get_attrs()
+        return aggs.Tickets.get_attrs()
 
     def get_must_have_columns(self, **kwargs) -> Iterable[str]:
-        return TicketsWithPropertiesMeta.get_values()
+        return aggs.Tickets.get_values()

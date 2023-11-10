@@ -1,4 +1,4 @@
-from sql_queries.meta import TicketsWithIterationsMeta
+from sql_queries.meta.aggs import TicketsWithIterations
 from toolbox.sql.generators.filter_clause_generator_factory import (
     FilterParametersNode,
     FilterParameterNode,
@@ -10,7 +10,7 @@ from toolbox.sql.generators.filter_clause_generator_factory import (
 @params_guard
 def generate_privacy_filter(
     params: FilterParameterNode,
-    col: str = TicketsWithIterationsMeta.is_private,
+    col: str = TicketsWithIterations.is_private,
 ) -> str:
     generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_equals_filter_generator(
         params
@@ -26,7 +26,7 @@ def generate_privacy_filter(
 @params_guard
 def generate_is_employee_filter(
     params: FilterParameterNode,
-    col: str = TicketsWithIterationsMeta.is_employee,
+    col: str = TicketsWithIterations.is_employee,
 ) -> str:
     generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_equals_filter_generator(
         params
@@ -45,7 +45,7 @@ def generate_tribes_filter(params: FilterParametersNode) -> str:
         params
     )
     return generate_filter(
-        col=TicketsWithIterationsMeta.tribes_ids,
+        col=TicketsWithIterations.tribes_ids,
         values=params.values,
         filter_prefix='AND',
     )
@@ -57,7 +57,7 @@ def generate_tents_filter(params: FilterParametersNode) -> str:
         params
     )
     return generate_filter(
-        col=TicketsWithIterationsMeta.tent_id,
+        col=TicketsWithIterations.tent_id,
         values=params.values,
         filter_prefix='AND',
     )
@@ -66,7 +66,7 @@ def generate_tents_filter(params: FilterParametersNode) -> str:
 @params_guard
 def generate_builds_filter(
     params: FilterParametersNode,
-    col: str = TicketsWithIterationsMeta.builds
+    col: str = TicketsWithIterations.builds
 ) -> str:
     generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_like_filter_generator(
         params
@@ -84,7 +84,7 @@ def generate_operating_systems_filter(params: FilterParametersNode) -> str:
         params
     )
     return generate_filter(
-        col=TicketsWithIterationsMeta.operating_system_id,
+        col=TicketsWithIterations.operating_system_id,
         values=params.values,
         filter_prefix='AND',
     )
@@ -96,7 +96,7 @@ def generate_frameworks_filter(params: FilterParametersNode) -> str:
         params
     )
     return generate_filter(
-        col=TicketsWithIterationsMeta.frameworks,
+        col=TicketsWithIterations.frameworks,
         values=params.values,
         filter_prefix='AND',
     )
@@ -108,7 +108,7 @@ def generate_ides_filter(params: FilterParametersNode) -> str:
         params
     )
     return generate_filter(
-        col=TicketsWithIterationsMeta.ide_id,
+        col=TicketsWithIterations.ide_id,
         values=params.values,
         filter_prefix='AND',
     )
@@ -120,7 +120,7 @@ def generate_ticket_tags_filter(params: FilterParametersNode) -> str:
         params
     )
     return generate_filter(
-        col=TicketsWithIterationsMeta.ticket_tags,
+        col=TicketsWithIterations.ticket_tags,
         values=params.values,
         filter_prefix='AND',
     )
@@ -128,7 +128,7 @@ def generate_ticket_tags_filter(params: FilterParametersNode) -> str:
 @params_guard
 def generate_closed_for_n_days(
     params: FilterParameterNode,
-    col: str = TicketsWithIterationsMeta.closed_on,
+    col: str = TicketsWithIterations.closed_on,
 ) -> str:
     generate_filter = SqlFilterClauseFromFilterParametersGeneratorFactory.get_less_equals_filter_generator(
         params

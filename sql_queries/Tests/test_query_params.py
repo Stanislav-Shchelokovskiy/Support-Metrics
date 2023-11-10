@@ -2,23 +2,16 @@ import pytest
 from os import getcwd
 from pathlib import Path
 from toolbox.sql import KnotMeta
-import toolbox.sql.index as RootPath
-from sql_queries.meta import (
-    TicketsWithPropertiesMeta,
-    CustomersGroupsMeta,
-    CATComponentsFeaturesMeta,
-    TicketsWithIterationsRawMeta,
-    PlatformsProductsMeta,
-    TicketsWithIterationsMeta,
-    EmployeesIterationsMeta,
-    EmployeesMeta,
-    BaselineAlignedCustomersGroupsMeta,
-    CSIMeta,
-    ResolutionTimeMeta,
-)
+from sql_queries.meta.aggs import Tickets, TicketsWithIterationsRaw, TicketsWithIterations, CSI, ResolutionTime
+from sql_queries.meta.customers import CustomersGroups, TrackedCustomersGroups
+from sql_queries.meta.cat import CatComponentsFeatures
+from sql_queries.meta.platforms_products import PlatformsProducts
+from sql_queries.meta.employees import Employees, EmployeesIterations
+
 import sql_queries.index.path.extract as RemotePathIndex
 import sql_queries.index.path.local as LocalPathIndex
 import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
+import toolbox.sql.index as RootPath
 
 
 # yapf: disable
@@ -34,12 +27,12 @@ import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
         ),
         (
             RemotePathIndex.tickets_with_properties,
-            TicketsWithPropertiesMeta.get_attrs(),
+            Tickets.get_attrs(),
         ),
         (
             LocalPathIndex.tickets_with_iterations_raw,
             {
-                **TicketsWithIterationsRawMeta.get_attrs(),
+                **TicketsWithIterationsRaw.get_attrs(),
                 'tickets_types_table': 'tickets_types_table',
                 'license_statuses_table': 'license_statuses_table',
                 'conversion_statuses_table': 'conversion_statuses_table',
@@ -59,12 +52,12 @@ import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
         ),
         (
             RemotePathIndex.customers_groups,
-            CustomersGroupsMeta.get_attrs(),
+            CustomersGroups.get_attrs(),
         ),
         (
             RemotePathIndex.tracked_customers_groups,
             {
-                **BaselineAlignedCustomersGroupsMeta.get_attrs(),
+                **TrackedCustomersGroups.get_attrs(),
                 'start_date': 'start_date',
                 'end_date': 'end_date',
             },
@@ -79,19 +72,20 @@ import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
         ),
         (
             RemotePathIndex.components_features,
-            CATComponentsFeaturesMeta.get_attrs(),
+            CatComponentsFeatures.get_attrs(),
         ),
         (
             RemotePathIndex.platforms_products,
-            PlatformsProductsMeta.get_attrs(),
+            PlatformsProducts.get_attrs(),
         ),
         (
             TransofrmLoadPathIndex.tickets_with_iterations,
             {
-                **TicketsWithIterationsMeta.get_attrs(),
-                **EmployeesIterationsMeta.get_attrs(),
+                **TicketsWithIterations.get_attrs(),
+                **EmployeesIterations.get_attrs(),
                 'TicketsWithIterations': 'TicketsWithIterations',
                 'CustomersTickets': 'CustomersTickets',
+                'ResolutionTime': 'ResolutionTime',
                 'EmployeesIterations': 'EmployeesIterations',
                 'rank_period_offset': 'rank_period_offset',
             },
@@ -99,7 +93,7 @@ import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
         (
             RemotePathIndex.employees,
             {
-                **EmployeesMeta.get_attrs(),
+                **Employees.get_attrs(),
                 'start_date': 'start_date',
                 'employees_json': 'employees_json',
             },
@@ -107,7 +101,7 @@ import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
         (
             RemotePathIndex.employees_iterations,
             {
-                **EmployeesIterationsMeta.get_attrs(),
+                **EmployeesIterations.get_attrs(),
                 'start_date': 'start_date',
                 'end_date': 'end_date',
                 'employees_json': 'employees_json',
@@ -152,7 +146,7 @@ import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
         ),
         (
             RemotePathIndex.csi,
-            CSIMeta.get_attrs(),
+            CSI.get_attrs(),
         ),
         (
             RemotePathIndex.tents,
@@ -165,7 +159,7 @@ import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
         (
             RemotePathIndex.resolution_time,
             {  
-                **ResolutionTimeMeta.get_attrs(),
+                **ResolutionTime.get_attrs(),
                 'years_of_history': 5,
             }
         ),

@@ -1,88 +1,86 @@
 from repository.local.core.customers_rank import Percentile
-from sql_queries.meta import (
-    PlatformsProductsMeta,
-    CustomersGroupsMeta,
-    ConversionStatusesMeta,
-    EmployeesIterationsMeta,
-    CATComponentsFeaturesMeta,
-)
 from toolbox.sql.generators.display_filter import QueryParams
 from toolbox.sql.generators.filter_clause_generator_factory import BaseNode
 import toolbox.sql.generators.display_filter as DisplayFilterGenerator
 import repository.local.generators.filters_generators.tickets_with_iterations.limit as limit
-import sql_queries.index.name as name_index
+import sql_queries.meta.platforms_products as  platforms_products
+import sql_queries.meta.customers as customers
+import sql_queries.meta.cat as cat
+import sql_queries.meta.employees as employees
+import sql_queries.meta.tickets as tickets
+import sql_queries.meta.tribes_tents as tribes_tents
 
 
 def __get_emps_params():
     return QueryParams(
-        table=name_index.employees,
-        value_field=EmployeesIterationsMeta.scid.name,
-        display_field=EmployeesIterationsMeta.name.name,
+        table=employees.Employee.get_name(),
+        value_field=employees.Employee.scid.name,
+        display_field=employees.Employee.name.name,
     )
 
 
 def __get_tickets_types_params():
-    return QueryParams(table=name_index.tickets_types)
+    return QueryParams(table=tickets.TicketsTypes.get_name())
 
 
 # yapf: disable
 _query_params_store = {
-    'tribe_ids': QueryParams(table=name_index.tribes),
-    'tent_ids': QueryParams(table=name_index.tents),
+    'tribe_ids': QueryParams(table=tribes_tents.Tribes.get_name()),
+    'tent_ids': QueryParams(table=tribes_tents.Tents.get_name()),
     'platforms_ids':
         QueryParams(
-            table=name_index.platforms_products,
-            value_field=PlatformsProductsMeta.platform_id.name,
-            display_field=PlatformsProductsMeta.platform_name.name,
+            table=platforms_products.Platforms.get_name(),
+            value_field=platforms_products.Platforms.platform_id.name,
+            display_field=platforms_products.Platforms.platform_name.name,
         ),
     'products_ids':
         QueryParams(
-            table=name_index.platforms_products,
-            value_field=PlatformsProductsMeta.product_id.name,
-            display_field=PlatformsProductsMeta.product_name.name,
+            table=platforms_products.Products.get_name(),
+            value_field=platforms_products.Products.product_id.name,
+            display_field=platforms_products.Products.product_name.name,
         ),
-    'tickets_tags': QueryParams(table=name_index.tickets_tags),
+    'tickets_tags': QueryParams(table=tickets.TicketsTags.get_name()),
     'tickets_types': __get_tickets_types_params(),
     'duplicated_to_tickets_types': __get_tickets_types_params(),
-    'severity': QueryParams(table=name_index.severity),
-    'ticket_status': QueryParams(table=name_index.ticket_statuses),
-    'frameworks': QueryParams(table=name_index.frameworks),
-    'operating_system_id': QueryParams(table=name_index.operating_systems),
-    'ide_id': QueryParams(table=name_index.ides),
+    'severity': QueryParams(table=tickets.Severity.get_name()),
+    'ticket_status': QueryParams(table=tickets.TicketStatuses.get_name()),
+    'frameworks': QueryParams(table=tickets.Frameworks.get_name()),
+    'operating_system_id': QueryParams(table=tickets.OperatingSystems.get_name()),
+    'ide_id': QueryParams(table=tickets.IDEs.get_name()),
     'customers_groups':
         QueryParams(
-            table=name_index.customers_groups,
-            value_field=CustomersGroupsMeta.id.name,
-            display_field=CustomersGroupsMeta.name.name,
+            table=customers.CustomersGroups.get_name(),
+            value_field=customers.CustomersGroups.id.name,
+            display_field=customers.CustomersGroups.name.name,
         ),
-    'license_statuses': QueryParams(table=name_index.license_statuses),
+    'license_statuses': QueryParams(table=customers.LicenseStatuses.get_name()),
     'conversion_statuses':
         QueryParams(
-            table=name_index.conversion_statuses,
-            value_field=ConversionStatusesMeta.id.name,
-            display_field=ConversionStatusesMeta.name.name,
+            table=customers.ConversionStatuses.get_name(),
+            value_field=customers.ConversionStatuses.id.name,
+            display_field=customers.ConversionStatuses.name.name,
         ),
-    'positions_ids': QueryParams(table=name_index.emp_positions),
-    'emp_tribe_ids': QueryParams(table=name_index.emp_tribes),
-    'emp_tent_ids': QueryParams(table=name_index.emp_tents),
+    'positions_ids': QueryParams(table=employees.Positions.get_name()),
+    'emp_tribe_ids': QueryParams(table=employees.EmpTribes.get_name()),
+    'emp_tent_ids': QueryParams(table=employees.EmpTents.get_name()),
     'emp_ids': __get_emps_params(),
     'assigned_to_ids': __get_emps_params(),
     'closed_by_ids': __get_emps_params(),
     'fixed_by_ids': __get_emps_params(),
-    'reply_ids': QueryParams(table=name_index.cat_replies_types),
+    'reply_ids': QueryParams(table=cat.CatRepliesTypes.get_name()),
     'components_ids':
         QueryParams(
-            table=name_index.cat_components_features,
-            value_field=CATComponentsFeaturesMeta.component_id.name,
-            display_field=CATComponentsFeaturesMeta.component_name.name,
+            table=cat.Components.get_name(),
+            value_field=cat.Components.component_id.name,
+            display_field=cat.Components.component_name.name,
         ),
     'feature_ids':
         QueryParams(
-            table=name_index.cat_components_features,
-            value_field=CATComponentsFeaturesMeta.feature_id.name,
-            display_field=CATComponentsFeaturesMeta.feature_name.name,
+            table=cat.Features.get_name(),
+            value_field=cat.Features.feature_id.name,
+            display_field=cat.Features.feature_name.name,
         ),
-    'customers_crmids': QueryParams(table=name_index.customers),
+    'customers_crmids': QueryParams(table=customers.Customers.get_name()),
 }
 # yapf: enable
 

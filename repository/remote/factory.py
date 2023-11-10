@@ -37,8 +37,8 @@ def create_cat_components_features_repository() -> Repository:
     return __create_repository(queries=cat.CATComponentsFeatures())
 
 
-def create_customers_tickets_repository() -> Repository:
-    return __create_repository(queries=tickets_and_iterations.CustomersTickets())
+def create_tickets_repository() -> Repository:
+    return __create_repository(queries=tickets_and_iterations.Tickets())
 
 
 def create_license_statuses_repository() -> Repository:

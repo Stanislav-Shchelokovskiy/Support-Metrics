@@ -56,7 +56,7 @@ def build_test_db():
     )
     tasks.load_builds()
     tasks.load_components_features()
-    tasks.load_customers_tickets(
+    tasks.load_tickets(
         start_date=start_date,
         end_date=end_date,
     )
@@ -65,4 +65,5 @@ def build_test_db():
         end_date=end_date,
     )
     tasks.load_csi()
-    tasks.process_staged_data(rank_period_offset='6 MONTHS')
+    tasks.load_resolution_time(years_of_history='YEAR, -2')
+    tasks.process_staged_data(rank_period_offset='6 MONTHS', years_of_history='2 YEARS')

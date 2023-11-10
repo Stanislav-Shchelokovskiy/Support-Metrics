@@ -71,12 +71,10 @@ def update_support_metrics(**kwargs):
             load_resolution_time.si(),
             chain(
                 get_employees.si(),
-                group(
-                    load_employees.s(),
-                    load_employees_iterations.s(),
-                )
+                load_employees.s(),
+                load_employees_iterations.s(),
             ),
-            load_customers_tickets.si(),
+            load_tickets.si(),
         ]
     )(process_staged_data.si())
 
@@ -219,11 +217,11 @@ def load_platforms_products(self, **kwargs):
     )
 
 
-@app.task(name='load_customers_tickets', bind=True)
-def load_customers_tickets(self, **kwargs):
+@app.task(name='load_tickets', bind=True)
+def load_tickets(self, **kwargs):
     return run_retriable_task(
         self,
-        tasks.load_customers_tickets,
+        tasks.load_tickets,
         **config.get_tickets_period(),
     )
 

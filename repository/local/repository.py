@@ -7,15 +7,13 @@ from toolbox.sql_async import (
 )
 from toolbox.utils.converters import Object_to_JSON
 from repository.local.aggs import select_metrics
-import repository.local.customers as sqlite_customers
-import repository.local.tickets as sqlite_tickets
-import repository.local.licenses_conversion as sqlite_licenses_conversion
-import repository.local.platforms_products as sqlite_platforms_products
-import repository.local.cat as sqlite_cat
-import repository.local.tickets_with_iterations as sqlite_tickets_with_iterations
-import repository.local.employees as sqlite_employees
-import repository.local.tents as sqlite_tents
-import repository.local.tribes as sqlite_tribes
+import repository.local.customers as _customers
+import repository.local.tickets as _tickets
+import repository.local.platforms_products as _platforms_products
+import repository.local.cat as _cat
+import repository.local.tickets_with_iterations as _tickets_with_iterations
+import repository.local.employees as _employees
+import repository.local.tribes_tents as _tribes_tents
 import repository.local.generators.filters_generators.display_filter as DisplayFilterGenerator
 import toolbox.sql.generators.sqlite.periods_generator as PeriodsGenerator
 
@@ -28,34 +26,34 @@ def create_repository(query_descriptor: QueryDescriptor) -> AsyncRepository:
     )
 
 
-tickets_with_iterations_period = create_repository(sqlite_tickets_with_iterations.TicketsPeriod())
-customers_groups = create_repository(sqlite_customers.CustomersGroups())
-tracked_customers_groups = create_repository(sqlite_customers.TrackedCustomersGroups())
-tickets_types = create_repository(sqlite_tickets.TicketsTypes())
-tickets_tags = create_repository(sqlite_tickets.TicketsTags())
-replies_types = create_repository(sqlite_cat.CATRepliesTypes())
-frameworks = create_repository(sqlite_tickets.Frameworks())
-operating_systems = create_repository(sqlite_tickets.OperatingSystems())
-builds = create_repository(sqlite_tickets.Builds())
-severity = create_repository(sqlite_tickets.Severity())
-ticket_statuses = create_repository(sqlite_tickets.TicketStatuses())
-ides = create_repository(sqlite_tickets.IDEs())
-license_statuses = create_repository(sqlite_licenses_conversion.LicenseStatuses())
-conversion_statuses = create_repository(sqlite_licenses_conversion.ConversionStatuses())
-platforms = create_repository(sqlite_platforms_products.Platforms())
-products = create_repository(sqlite_platforms_products.Products())
-components = create_repository(sqlite_cat.CATComponents())
-features = create_repository(sqlite_cat.CATFeatures())
-tickets_with_iterations_raw = create_repository(sqlite_tickets_with_iterations.TicketsWithIterationsRaw())
-tickets_with_iterations_aggregates = create_repository(sqlite_tickets_with_iterations.TicketsWithIterationsAggregates())
-emp_positions = create_repository(sqlite_employees.EmpPositions())
-emp_tribes = create_repository(sqlite_employees.EmpTribes())
-emp_tents = create_repository(sqlite_employees.EmpTents())
-employees = create_repository(sqlite_employees.Employees())
-customers = create_repository(sqlite_customers.Customers())
-customers_validation = create_repository(sqlite_customers.CustomersValidation())
-tents = create_repository(sqlite_tents.Tents())
-tribes = create_repository(sqlite_tribes.Tribes())
+tickets_with_iterations_period = create_repository(_tickets_with_iterations.TicketsPeriod())
+customers_groups = create_repository(_customers.CustomersGroups())
+tracked_customers_groups = create_repository(_customers.TrackedCustomersGroups())
+tickets_types = create_repository(_tickets.TicketsTypes())
+tickets_tags = create_repository(_tickets.TicketsTags())
+replies_types = create_repository(_cat.CATRepliesTypes())
+frameworks = create_repository(_tickets.Frameworks())
+operating_systems = create_repository(_tickets.OperatingSystems())
+builds = create_repository(_tickets.Builds())
+severity = create_repository(_tickets.Severity())
+ticket_statuses = create_repository(_tickets.TicketStatuses())
+ides = create_repository(_tickets.IDEs())
+license_statuses = create_repository(_customers.LicenseStatuses())
+conversion_statuses = create_repository(_customers.ConversionStatuses())
+platforms = create_repository(_platforms_products.Platforms())
+products = create_repository(_platforms_products.Products())
+components = create_repository(_cat.CATComponents())
+features = create_repository(_cat.CATFeatures())
+tickets_with_iterations_raw = create_repository(_tickets_with_iterations.TicketsWithIterationsRaw())
+tickets_with_iterations_aggregates = create_repository(_tickets_with_iterations.TicketsWithIterationsAggregates())
+emp_positions = create_repository(_employees.Positions())
+emp_tribes = create_repository(_employees.EmpTribes())
+emp_tents = create_repository(_employees.EmpTents())
+employees = create_repository(_employees.Employees())
+customers = create_repository(_customers.Customers())
+customers_validation = create_repository(_customers.CustomersValidation())
+tents = create_repository(_tribes_tents.Tents())
+tribes = create_repository(_tribes_tents.Tribes())
 
 async def get_group_by_periods() -> str:
     return await PeriodsGenerator.get_group_by_periods_json()

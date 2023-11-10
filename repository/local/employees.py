@@ -1,55 +1,54 @@
 from collections.abc import Mapping
 from toolbox.sql_async import GeneralSelectAsyncQueryDescriptor
-from toolbox.sql import MetaData, KnotMeta
+from toolbox.sql import MetaData
 from toolbox.sql.generators.utils import build_multiline_string_ignore_empties
-from sql_queries.meta import EmployeeMeta
 import repository.local.generators.filters_generators.employees as EmployeesSqlFilterClauseGenerator
-import sql_queries.index.name as name_index
+import sql_queries.meta.employees as employees
 
 
-class EmpPositions(GeneralSelectAsyncQueryDescriptor):
+class Positions(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return KnotMeta
+        return employees.Positions
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': name_index.emp_positions,
-            'where_group_limit': f'ORDER BY {KnotMeta.name}',
+            'from': employees.Positions.get_name(),
+            'where_group_limit': f'ORDER BY {employees.Positions.name}',
         }
 
 
 class EmpTribes(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return KnotMeta
+        return employees.EmpTribes
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': name_index.emp_tribes,
-            'where_group_limit': f'ORDER BY {KnotMeta.name}',
+            'from': employees.EmpTribes.get_name(),
+            'where_group_limit': f'ORDER BY {employees.EmpTribes.name}',
         }
 
 
 class EmpTents(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return KnotMeta
+        return employees.EmpTents
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
             'select': ', '.join(self.get_fields(kwargs)),
-            'from': name_index.emp_tents,
-            'where_group_limit': f'ORDER BY {KnotMeta.name}',
+            'from': employees.EmpTents.get_name(),
+            'where_group_limit': f'ORDER BY {employees.EmpTents.name}',
         }
 
 
 class Employees(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return EmployeeMeta
+        return employees.Employee
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         filter = EmployeesSqlFilterClauseGenerator.generate_positions_tribes_tents_filter(
@@ -59,11 +58,12 @@ class Employees(GeneralSelectAsyncQueryDescriptor):
         )
         return {
             'select': f"DISTINCT {', '.join(self.get_fields(kwargs))}",
-            'from': name_index.employees,
-            'where_group_limit':  build_multiline_string_ignore_empties(
-                (
-                    filter,
-                    f'ORDER BY {EmployeeMeta.name}',
+            'from': employees.Employees.get_name(),
+            'where_group_limit':
+                build_multiline_string_ignore_empties(
+                    (
+                        filter,
+                        f'ORDER BY {employees.Employee.name}',
+                    )
                 )
-            )
         }

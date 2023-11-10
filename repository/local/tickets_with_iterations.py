@@ -6,16 +6,16 @@ from toolbox.sql_async import (
     GeneralSelectAsyncQueryDescriptor,
 )
 from toolbox.sql import MetaData, PeriodMeta
-from sql_queries.meta import (
-    TicketsWithIterationsRawMeta,
-    TicketsWithIterationsMeta,
-    BaselineAlignedModeMeta,
-)
 from repository.local.core.tickets_with_iterations_table import get_tickets_with_iterations_table
 from repository.local.aggs import get_metric
 from toolbox.sql.generators.utils import build_multiline_string_ignore_empties
+import sql_queries.meta.aggs as aggs
+import sql_queries.meta.customers as customers
+import sql_queries.meta.tickets as tickets
+import sql_queries.meta.cat as cat
+import sql_queries.meta.platforms_products as platforms_products
+import sql_queries.meta.employees as employees
 import sql_queries.index.path.local as LocalPathIndex
-import sql_queries.index.name as name_index
 import repository.local.generators.periods as PeriodsGenerator
 import configs.config as config
 
@@ -27,8 +27,8 @@ class TicketsPeriod(GeneralSelectAsyncQueryDescriptor):
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'select': f"DATE(MIN({TicketsWithIterationsMeta.creation_date}), '+{config.get_rank_period_offset()}') AS {PeriodMeta.start}, MAX({TicketsWithIterationsMeta.creation_date}) AS {PeriodMeta.end}",
-            'from': name_index.tickets_with_iterations,
+            'select': f"DATE(MIN({aggs.TicketsWithIterations.creation_date}), '+{config.get_rank_period_offset()}') AS {PeriodMeta.start}, MAX({aggs.TicketsWithIterations.creation_date}) AS {PeriodMeta.end}",
+            'from': aggs.TicketsWithIterations.get_name(),
             'where_group_limit': '',
         }
 
@@ -43,36 +43,36 @@ class TicketsWithIterationsRaw(AsyncQueryDescriptor):
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'csi_table': name_index.csi,
-            'replies_types_table': name_index.cat_replies_types,
-            'components_features_table': name_index.cat_components_features,
-            'license_statuses_table': name_index.license_statuses,
-            'conversion_statuses_table': name_index.conversion_statuses,
-            'tickets_types_table': name_index.tickets_types,
-            'employees_table': name_index.employees,
-            'severity_table': name_index.severity,
-            'operating_systems_table': name_index.operating_systems,
-            'ides_table': name_index.ides,
-            'platforms_products_table': name_index.platforms_products,
-            'tickets_tags_table': name_index.tickets_tags,
-            **TicketsWithIterationsRawMeta.get_attrs(),
+            'csi_table': aggs.CSI.get_name(),
+            'replies_types_table': cat.CatRepliesTypes.get_name(),
+            'components_features_table': cat.CatComponentsFeatures.get_name(),
+            'license_statuses_table': customers.LicenseStatuses.get_name(),
+            'conversion_statuses_table': customers.ConversionStatuses.get_name(),
+            'tickets_types_table': tickets.TicketsTypes.get_name(),
+            'employees_table': employees.Employees.get_name(),
+            'severity_table': tickets.Severity.get_name(),
+            'operating_systems_table': tickets.OperatingSystems.get_name(),
+            'ides_table': tickets.IDEs.get_name(),
+            'platforms_products_table': platforms_products.PlatformsProducts.get_name(),
+            'tickets_tags_table': tickets.TicketsTags.get_name(),
+            **aggs.TicketsWithIterationsRaw.get_attrs(),
             'baseline_aligned_mode_fields': self.get_baseline_aligned_mode_fields(**kwargs),
             'tickets_with_iterations_table': get_tickets_with_iterations_table(**kwargs),
-            'tbl_alias': name_index.tickets_with_iterations_alias,
+            'tbl_alias': aggs.TicketsWithIterationsRaw.get_alias(),
         }
 
     def get_baseline_aligned_mode_fields(self, **kwargs) -> str:
         if kwargs['use_baseline_aligned_mode']:
-            return f', t.{BaselineAlignedModeMeta.days_since_baseline}'
+            return f', {aggs.TicketsWithIterationsRaw.get_alias()}.{customers.BaselineAlignedMode.days_since_baseline}'
         return ''
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return TicketsWithIterationsRawMeta
+        return aggs.TicketsWithIterationsRaw
 
     def get_fields(self, kwargs: Mapping) -> Iterable[str]:
         res = self.get_fields_meta(kwargs).get_values()
         if kwargs['use_baseline_aligned_mode']:
-            return tuple(chain(res, (BaselineAlignedModeMeta.days_since_baseline, )))
+            return tuple(chain(res, (customers.BaselineAlignedMode.days_since_baseline, )))
         return res
 
 
