@@ -105,8 +105,21 @@ class TicketsWithIterations(Tickets):
         cls,
         projector: Callable[[Field], Any] = str,
         *exfields: Field,
-    ) -> Sequence[Field | str | Any]:
+    ) -> Sequence[Field]:
         return tuple()
+
+    @classmethod
+    def get_index_fields(
+        cls,
+        projector: Callable[[Field], Any] = str,
+        *exfields: Field,
+    ) -> Sequence[Field]:
+        return MetaData.get_key_fields(
+            projector,
+            cls.user_crmid,
+            cls.ticket_scid,
+            cls.emp_post_id,
+        )
 
     @classmethod
     def get_alias(cls) -> str:
@@ -118,11 +131,7 @@ class TicketsWithIterations(Tickets):
         return (
             sqlite_index.create_index(
                 tbl=tbl,
-                cols=(
-                    cls.user_crmid,
-                    cls.ticket_scid,
-                    cls.emp_post_id,
-                ),
+                cols=cls.get_index_fields(),
                 name='unique_cols',
                 unique=True,
             ),

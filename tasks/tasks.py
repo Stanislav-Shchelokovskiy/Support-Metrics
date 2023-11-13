@@ -296,9 +296,9 @@ def __update_tickets_with_iterations():
         SqliteCreateTableFromTableQuery(
             source_table_or_subquery=__TICKETS_WITH_ITERATIONS_TEMP,
             target_table_name=aggs.TicketsWithIterations.get_name(),
-            unique_key_fields=None,
+            unique_key_fields=aggs.TicketsWithIterations.get_key_fields(),
             values_fields=aggs.TicketsWithIterations.get_values(__as_query_field),
-            unique_fields=aggs.TicketsWithIterations.get_key_fields(),
+            unique_fields=aggs.TicketsWithIterations.get_index_fields(),
             recreate=recalculate_from_beginning(),
         ),
     )
