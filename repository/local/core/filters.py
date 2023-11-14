@@ -73,6 +73,7 @@ def get_tickets_filter(**kwargs) -> str:
         bugs.generate_ticket_status_filter(params=kwargs['ticket_status']),
         tickets.generate_is_employee_filter(params=kwargs['is_employee']),
         tickets.generate_closed_for_n_days(params=kwargs['closed_for_n_days']),
+        tickets.generate_resolution_in_hours(params=kwargs['resolution_in_hours']),
         tickets.generate_frameworks_filter(params=kwargs['frameworks']),
         tickets.generate_operating_systems_filter(params=kwargs['operating_system_id']),
         tickets.generate_ides_filter(params=kwargs['ide_id']),

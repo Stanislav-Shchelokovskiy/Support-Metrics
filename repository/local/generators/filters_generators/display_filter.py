@@ -3,7 +3,7 @@ from toolbox.sql.generators.display_filter import QueryParams
 from toolbox.sql.generators.filter_clause_generator_factory import BaseNode
 import toolbox.sql.generators.display_filter as DisplayFilterGenerator
 import repository.local.generators.filters_generators.tickets_with_iterations.limit as limit
-import sql_queries.meta.platforms_products as  platforms_products
+import sql_queries.meta.platforms_products as platforms_products
 import sql_queries.meta.customers as customers
 import sql_queries.meta.cat as cat
 import sql_queries.meta.employees as employees
@@ -93,13 +93,12 @@ class DisplayValuesStore:
 
     @staticmethod
     def get_display_value(field: str, alias: str, value) -> str:
-        if field == 'is_private':
-            value = 'Private' if value else 'Public'
-        if field == 'is_employee':
-            value = 'Employee' if value else 'Customer'
-        if field == 'closed_for_n_days':
-            value = f'{value} day(s)'
-        return value
+        return {
+            'is_private': 'Private' if value else 'Public',
+            'is_employee': 'Employee' if value else 'Customer',
+            'closed_for_n_days': f'{value} day(s)',
+            'resolution_in_hours': f'{value} hour(s)'
+        }.get(field, value)
 
 
 def custom_display_filter(

@@ -118,10 +118,7 @@ def test_equals_filters(
     value_converter,
     equals_filter_cases,
 ) -> str:
-    # yapf: disable
-    for value, output in equals_filter_cases(convert=value_converter, prefix='AND'):
-        assert generator(params=value) == output.format(field=field)
-    # yapf: enable
+    __run_test(generator, field, equals_filter_cases, value_converter, 'AND')
 
 
 @pytest.mark.parametrize(
@@ -133,16 +130,31 @@ def test_equals_filters(
         ),
     ]
 )
-def test_le_filters(
+def test_less_equals_filters(
     generator,
     field: str,
     value_converter,
     less_equals_filter_cases,
 ) -> str:
-    # yapf: disable
-    for value, output in less_equals_filter_cases(convert=value_converter, prefix='AND'):
-        assert generator(params=value) == output.format(field=field)
-    # yapf: enable
+    __run_test(generator, field, less_equals_filter_cases, value_converter, 'AND')
+
+
+@pytest.mark.parametrize(
+    'generator, field, value_converter', [
+        (
+            tickets.generate_resolution_in_hours,
+            TicketsWithIterations.resolution_in_hours,
+            int,
+        ),
+    ]
+)
+def test_less_filters(
+    generator,
+    field: str,
+    value_converter,
+    less_filter_cases,
+) -> str:
+    __run_test(generator, field, less_filter_cases, value_converter, 'AND')
 
 
 @pytest.mark.parametrize(
@@ -186,8 +198,7 @@ def test_single_like_filters(
     field: str,
     single_like_filter_cases,
 ):
-    for values, output in single_like_filter_cases:
-        assert generator(params=values) == output.format(field=field)
+    __run_test(generator, field, single_like_filter_cases)
 
 
 @pytest.mark.parametrize(
@@ -300,10 +311,7 @@ def test_single_in_filters(
     values_converter,
     single_in_filter_cases,
 ):
-    # yapf: disable
-    for values, output in single_in_filter_cases(convert=values_converter, prefix='AND'):
-        assert generator(params=values) == output.format(field=field)
-    # yapf: enable
+    __run_test(generator, field, single_in_filter_cases, values_converter, 'AND')
 
 
 @pytest.mark.parametrize(
@@ -326,7 +334,9 @@ def test_between_filters(
     values_converter,
     between_filter_cases,
 ):
-    # yapf: disable
-    for values, output in between_filter_cases(convert=values_converter, prefix='AND'):
-        assert generator(params=values) == output.format(field=field)
-    # yapf: enable
+    __run_test(generator, field, between_filter_cases, values_converter, 'AND')
+
+
+def __run_test(generator, field, filter_cases, converter=None, prefix='WHERE'):
+    for params, output in filter_cases(convert=converter, prefix=prefix):
+        assert generator(params=params) == output.format(field=field)

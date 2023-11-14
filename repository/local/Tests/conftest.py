@@ -2,19 +2,19 @@ import pytest
 import toolbox.sql.generators.Tests.filter_cases as filter_cases
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def single_in_filter_cases():
     return filter_cases.single_in_filter_cases
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def double_in_filter_cases():
     return filter_cases.double_in_filter_cases
 
 
 @pytest.fixture
 def single_like_filter_cases():
-    return filter_cases.single_like_filter_cases()
+    return filter_cases.single_like_filter_cases
 
 
 @pytest.fixture
@@ -30,3 +30,8 @@ def equals_filter_cases():
 @pytest.fixture
 def less_equals_filter_cases():
     return filter_cases.less_equals_filter_cases
+
+
+@pytest.fixture
+def less_filter_cases():
+    return filter_cases.less_filter_cases
