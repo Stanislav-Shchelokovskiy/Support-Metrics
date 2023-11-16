@@ -33,5 +33,5 @@ def less_equals_filter_cases():
 
 
 @pytest.fixture
-def less_filter_cases():
-    return filter_cases.less_filter_cases
+def right_halfopen_interval_filter_cases():
+    return filter_cases.right_half_open_interval_filter_cases

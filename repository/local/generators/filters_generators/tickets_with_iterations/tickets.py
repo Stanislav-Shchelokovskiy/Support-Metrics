@@ -124,13 +124,13 @@ def generate_closed_for_n_days(
 
 @params_guard
 def generate_resolution_in_hours(
-    params: FilterParameterNode,
+    params: FilterParametersNode,
     col: str = TicketsWithIterations.resolution_in_hours,
 ) -> str:
-    generate_filter = filter_factory.get_less_filter_generator(params)
+    generate_filter = filter_factory.get_right_halfopen_interval_filter_generator(params)
     return generate_filter(
         col=col,
-        value=params.value,
+        values=params.values,
         filter_prefix='AND',
-        value_converter=int,
+        values_converter=int,
     )

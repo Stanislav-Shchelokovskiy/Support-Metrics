@@ -6,6 +6,7 @@ from toolbox.server_models import (
     FilterParametersNode,
     ViewState,
 )
+from toolbox.sql.generators import (between, notbetwen, ge, lt, right_half_open, not_right_half_open)
 
 
 class TentsParams(ServerModel):
@@ -67,11 +68,11 @@ class TicketsWithIterationsParams(ServerModel):
     emp_ids: FilterParametersNode[str] | None = Field(alias='Employees')
     assigned_to_ids: FilterParametersNode[str] | None = Field(alias='Assigned to')
     closed_by_ids: FilterParametersNode[str] | None = Field(alias='Closed by')
-    closed_between: FilterParametersNode[str] | None = Field(alias='Closed', positive_filter_op='between', negative_filter_op='notbetween')
-    closed_for_n_days: FilterParameterNode[int] | None = Field(alias='Closed for', positive_filter_op='>=', negative_filter_op='<')
-    resolution_in_hours: FilterParameterNode[int] | None = Field(alias='Resolution time', positive_filter_op='<', negative_filter_op='>=')
+    closed_between: FilterParametersNode[str] | None = Field(alias='Closed', positive_filter_op=between, negative_filter_op=notbetwen)
+    closed_for_n_days: FilterParameterNode[int] | None = Field(alias='Closed for', positive_filter_op=ge, negative_filter_op=lt)
+    resolution_in_hours: FilterParametersNode[int] | None = Field(alias='Resolution time', positive_filter_op=right_half_open, negative_filter_op=not_right_half_open)
     fixed_by_ids: FilterParametersNode[str] | None = Field(alias='Fixed by')
-    fixed_between: FilterParametersNode[str] | None = Field(alias='Fixed', positive_filter_op='between', negative_filter_op='notbetween')
+    fixed_between: FilterParametersNode[str] | None = Field(alias='Fixed', positive_filter_op=between, negative_filter_op=notbetwen)
     reply_ids: FilterParametersNode[str] | None = Field(alias='CAT replies types')
     components_ids: FilterParametersNode[str] | None = Field(alias='CAT components')
     feature_ids: FilterParametersNode[str] | None = Field(alias='CAT features')

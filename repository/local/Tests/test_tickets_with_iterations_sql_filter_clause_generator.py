@@ -148,13 +148,13 @@ def test_less_equals_filters(
         ),
     ]
 )
-def test_less_filters(
+def test_right_halfopen_interval_filters(
     generator,
     field: str,
     value_converter,
-    less_filter_cases,
+    right_halfopen_interval_filter_cases,
 ) -> str:
-    __run_test(generator, field, less_filter_cases, value_converter, 'AND')
+    __run_test(generator, field, right_halfopen_interval_filter_cases, value_converter, 'AND')
 
 
 @pytest.mark.parametrize(
