@@ -6,6 +6,5 @@ To calculate the CSI, the following steps are followed:<br>
    - Feedback scores ranging from [-1 to -0.3) are considered negative and rounded to -1.
    - Feedback scores ranging from [-0.3 to 0.3] are considered neutral and rounded to 0.
    - Feedback scores ranging from (0.3 to 1] are considered positive and rounded to 1.
-<br>
 Notes:<br>
 The feedback is anonymous and linked to a specific ticket. As a result, we are unable to identify the customers who submitted the feedback, making it impossible for us to filter by feedback properties such as their owners. Our current filters are only applicable to tickets for this particular metric and do not extend to feedback or their owners due to the limited information available, which is solely based on the ticket ID.
