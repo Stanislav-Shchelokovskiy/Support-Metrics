@@ -23,7 +23,7 @@ iterations = Metric(
 )
 iterations_to_tickets = Metric.from_metric(
     'Iterations / Tickets',
-    'Replies / Tickets',
+    'Replies Rate',
     'Activity',
     iterations / tickets,
 )
