@@ -77,6 +77,15 @@ class TrackedCustomersGroups(MetaData):
         )
 
 
+class TrackedGroups(KnotMeta):
+    id = TrackedCustomersGroups.id
+    name = TrackedCustomersGroups.name
+
+    @classmethod
+    def get_name(cls) -> str:
+        return TrackedCustomersGroups.get_name()
+
+
 class BaselineAlignedMode(TrackedCustomersGroups):
     days_since_baseline = Field(INTEGER)
 
