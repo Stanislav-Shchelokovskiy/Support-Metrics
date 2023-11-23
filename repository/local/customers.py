@@ -48,14 +48,14 @@ class CustomersGroups(GeneralSelectAsyncQueryDescriptor):
 class TrackedCustomersGroups(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
-        return customers.TrackedCustomersGroups
+        return customers.TrackedGroups
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         cols = ', '.join(self.get_fields(kwargs))
         return {
             'select': cols,
-            'from': customers.TrackedCustomersGroups.get_name(),
-            'where_group_limit': f'GROUP BY {cols}\nORDER BY {customers.TrackedCustomersGroups.name}',
+            'from': customers.TrackedGroups.get_name(),
+            'where_group_limit': f'GROUP BY {cols}\nORDER BY {customers.TrackedGroups.name}',
         }
 
 
