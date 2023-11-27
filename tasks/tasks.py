@@ -135,6 +135,15 @@ def load_employees(start_date: str, employees_json: str):
     return employees_json
 
 
+def load_roles(employees_json: str):
+    __create_table(
+        repository=RepositoryFactory.remote.create_roles_repository(),
+        cls=employees.Roles,
+        employees_json=employees_json,
+    )
+    return employees_json
+
+
 def load_csi():
     __create_table(
         repository=RepositoryFactory.remote.create_csi_repository(),
@@ -142,7 +151,7 @@ def load_csi():
     )
 
 
-def load_resolution_time(years_of_history: str,):
+def load_resolution_time(years_of_history: str):
     __create_table(
         repository=RepositoryFactory.remote.create_resolution_time_repository(),
         cls=aggs.ResolutionTime,
