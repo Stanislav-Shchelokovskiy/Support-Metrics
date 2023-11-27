@@ -10,6 +10,6 @@ SELECT  {tribe_id},
         {tribe_name},
         {tent_name},
         {position_name},
-        {roles},
+        {roles}
 FROM    DXStatisticsV2.dbo.parse_employees(@employees)
 WHERE   retired_at IS NULL OR retired_at > @start
