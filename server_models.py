@@ -21,6 +21,7 @@ class EmployeeParams(ServerModel):
     positions: FilterParametersNode[str]
     tribes: FilterParametersNode[str]
     tents: FilterParametersNode[str]
+    roles: FilterParametersNode[str]
 
 
 class ConversionStatusParams(ServerModel):
@@ -65,6 +66,7 @@ class TicketsWithIterationsParams(ServerModel):
     positions_ids: FilterParametersNode[str] | None = Field(alias='Employees positions')
     emp_tribe_ids: FilterParametersNode[str] | None = Field(alias='Employees tribes')
     emp_tent_ids: FilterParametersNode[str] | None = Field(alias='Employees tents')
+    roles: FilterParametersNode[str] | None = Field(alias='Roles')
     emp_ids: FilterParametersNode[str] | None = Field(alias='Employees')
     assigned_to_ids: FilterParametersNode[str] | None = Field(alias='Assigned to')
     closed_by_ids: FilterParametersNode[str] | None = Field(alias='Closed by')

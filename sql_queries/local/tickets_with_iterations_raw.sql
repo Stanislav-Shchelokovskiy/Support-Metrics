@@ -93,5 +93,6 @@ SELECT
     {tbl_alias}.{emp_name},
     {tbl_alias}.{emp_position_name},
     {tbl_alias}.{emp_tribe_name},
-    {tbl_alias}.{emp_tent_name}{baseline_aligned_mode_fields}
+    {tbl_alias}.{emp_tent_name},
+    {tbl_alias}.{roles}{baseline_aligned_mode_fields}
 FROM {tickets_with_iterations_table}

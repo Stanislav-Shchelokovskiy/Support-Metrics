@@ -49,6 +49,7 @@ tickets_with_iterations_aggregates = create_repository(_tickets_with_iterations.
 emp_positions = create_repository(_employees.Positions())
 emp_tribes = create_repository(_employees.EmpTribes())
 emp_tents = create_repository(_employees.EmpTents())
+roles = create_repository(_employees.Roles())
 employees = create_repository(_employees.Employees())
 customers = create_repository(_customers.Customers())
 customers_validation = create_repository(_customers.CustomersValidation())

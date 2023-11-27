@@ -45,16 +45,30 @@ class EmpTents(GeneralSelectAsyncQueryDescriptor):
         }
 
 
+class Roles(GeneralSelectAsyncQueryDescriptor):
+
+    def get_fields_meta(self, kwargs: Mapping) -> MetaData:
+        return employees.Roles
+
+    def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
+        return {
+            'select': employees.Roles,
+            'from': employees.Roles.get_name(),
+            'where_group_limit': f'ORDER BY {employees.Roles.name}',
+        }
+
+
 class Employees(GeneralSelectAsyncQueryDescriptor):
 
     def get_fields_meta(self, kwargs: Mapping) -> MetaData:
         return employees.Employee
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
-        filter = EmployeesSqlFilterClauseGenerator.generate_positions_tribes_tents_filter(
+        filter = EmployeesSqlFilterClauseGenerator.generate_positions_tribes_tents_roles_filter(
             position_ids=kwargs['position_ids'],
             tribe_ids=kwargs['tribe_ids'],
             tent_ids=kwargs['tent_ids'],
+            roles=kwargs['roles'],
         )
         return {
             'select': f"DISTINCT {', '.join(self.get_fields(kwargs))}",

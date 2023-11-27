@@ -121,8 +121,9 @@ def test_generate_products_filter(
 
 
 @pytest.mark.parametrize(
-    'positions, tribes, tents, output', [
+    'positions, tribes, tents, roles, output', [
         (
+            None,
             None,
             None,
             None,
@@ -130,6 +131,7 @@ def test_generate_products_filter(
         ), (
             None,
             None,
+            None,
             MockFilterParametersNode(include=True, values=[]),
             '',
         ),
@@ -137,30 +139,35 @@ def test_generate_products_filter(
             MockFilterParametersNode(include=True, values=[]),
             MockFilterParametersNode(include=True, values=[]),
             MockFilterParametersNode(include=True, values=['t1']),
+            MockFilterParametersNode(include=True, values=[]),
             f"WHERE {Employees.tent_id} IN ('t1')",
         ),
         (
             MockFilterParametersNode(include=True, values=[]),
             MockFilterParametersNode(include=True, values=['t1']),
             MockFilterParametersNode(include=True, values=['t1']),
-            f"WHERE {Employees.tribe_id} IN ('t1') AND {Employees.tent_id} IN ('t1')",
+            MockFilterParametersNode(include=True, values=['r1']),
+            f"WHERE {Employees.tribe_id} IN ('t1') AND {Employees.tent_id} IN ('t1') AND ({Employees.roles} LIKE '%r1%')",
         ),
         (
             MockFilterParametersNode(include=True, values=['t1']),
             MockFilterParametersNode(include=True, values=['t1']),
             MockFilterParametersNode(include=False, values=['t1']),
-            f"WHERE {Employees.position_id} IN ('t1') AND {Employees.tribe_id} IN ('t1') AND ({Employees.tent_id} IS NULL OR {Employees.tent_id} NOT IN ('t1'))",
+            MockFilterParametersNode(include=False, values=['r1']),
+            f"WHERE {Employees.position_id} IN ('t1') AND {Employees.tribe_id} IN ('t1') AND ({Employees.tent_id} IS NULL OR {Employees.tent_id} NOT IN ('t1')) AND ({Employees.roles} IS NULL OR NOT ({Employees.roles} LIKE '%r1%'))",
         )
     ]
 )
-def test_generate_positions_tribes_tents_filter(
+def test_generate_positions_tribes_tents_roles_filter(
     positions: MockFilterParametersNode,
     tribes: MockFilterParametersNode,
     tents: MockFilterParametersNode,
+    roles:MockFilterParametersNode,
     output: str,
 ):
-    assert EmployeesSqlFilterClauseGenerator.generate_positions_tribes_tents_filter(
+    assert EmployeesSqlFilterClauseGenerator.generate_positions_tribes_tents_roles_filter(
         position_ids=positions,
         tribe_ids=tribes,
         tent_ids=tents,
+        roles=roles,
     ) == output

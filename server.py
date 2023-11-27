@@ -180,6 +180,11 @@ async def get_emp_tents():
     return await LocalRepository.emp_tents.get_data()
 
 
+@app.get('/Roles')
+async def get_roles():
+    return await LocalRepository.roles.get_data()
+
+
 @app.get('/Tents')
 async def get_tents():
     return await LocalRepository.tents.get_data()
