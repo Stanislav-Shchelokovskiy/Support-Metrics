@@ -58,6 +58,7 @@ class TicketsWithIterationsRaw(AsyncQueryDescriptor):
             **aggs.TicketsWithIterationsRaw.get_attrs(),
             'baseline_aligned_mode_fields': self.get_baseline_aligned_mode_fields(**kwargs),
             'tickets_with_iterations_table': get_tickets_with_iterations_table(**kwargs),
+            'roles_table': employees.Roles.get_name(),
             'tbl_alias': aggs.TicketsWithIterationsRaw.get_alias(),
         }
 

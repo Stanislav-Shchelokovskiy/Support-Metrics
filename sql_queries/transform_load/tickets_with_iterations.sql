@@ -52,7 +52,8 @@ SELECT
     ei.{name}          			AS {emp_name},
     ei.{position_name} 			AS {emp_position_name},
     ei.{tribe_name}    			AS {emp_tribe_name},
-    ei.{tent_name}     			AS {emp_tent_name}
+    ei.{tent_name}     			AS {emp_tent_name},
+	ei.{roles}     				AS {roles}
 FROM
     {CustomersTickets} AS t
 	-- This makes sense only when period is greater than 6 months.

@@ -1,7 +1,7 @@
 import os
 from typing import Callable
 
-from celery import Celery, chord, chain, group
+from celery import Celery, chord, chain
 from celery.schedules import crontab
 from celery.signals import worker_ready
 
@@ -72,6 +72,7 @@ def update_support_metrics(**kwargs):
             chain(
                 get_employees.si(),
                 load_employees.s(),
+                load_roles.s(),
                 load_employees_iterations.s(),
             ),
             load_tickets.si(),
@@ -244,11 +245,21 @@ def load_employees(self, *args, **kwargs):
     )
 
 
+@app.task(name='load_roles', bind=True)
+def load_roles(self, *args, **kwargs):
+    return run_retriable_task(
+        self,
+        tasks.load_roles,
+        employees_json=args[0],
+    )
+
+
 @app.task(name='update_employees', bind=True)
 def update_employees(self, **kwargs):
     chain(
         get_employees.si(),
         load_employees.s(),
+        load_roles.s(),
     )()
 
 

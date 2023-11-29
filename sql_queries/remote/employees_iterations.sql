@@ -17,6 +17,7 @@ SELECT DISTINCT
 	emp_name		AS {name},
 	position_name	AS {position_name},
 	emp_tribe_name	AS {tribe_name},
-	emp_tent_name	AS {tent_name}
+	emp_tent_name	AS {tent_name},
+	roles			AS {roles}
 FROM DXStatisticsV2.dbo.get_replies(@start, @end, @employees, DEFAULT, DEFAULT) AS tr
 WHERE tr.line != @no_line

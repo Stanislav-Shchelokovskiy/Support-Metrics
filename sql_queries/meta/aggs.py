@@ -98,6 +98,7 @@ class TicketsWithIterations(Tickets):
     emp_position_name = Field(TEXT)
     emp_tribe_name = Field(TEXT)
     emp_tent_name = Field(TEXT)
+    roles=Field(TEXT)
     resolution_in_hours = ResolutionTime.resolution_in_hours
 
     @classmethod
@@ -227,6 +228,7 @@ class TicketsWithIterationsRaw(MetaData):
     emp_position_name = TicketsWithIterations.emp_position_name
     emp_tribe_name = TicketsWithIterations.emp_tribe_name
     emp_tent_name = TicketsWithIterations.emp_tent_name
+    roles = TicketsWithIterations.roles
 
     @classmethod
     def get_key_fields(

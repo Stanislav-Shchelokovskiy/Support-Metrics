@@ -17,6 +17,10 @@ class EmpTents(KnotMeta):
     pass
 
 
+class Roles(KnotMeta):
+    pass
+
+
 class EmployeesIterations(MetaData):
     ticket_id = Field(TEXT)
     post_id = Field(TEXT)
@@ -29,6 +33,7 @@ class EmployeesIterations(MetaData):
     position_name = Field(TEXT)
     tribe_name = Field(TEXT)
     tent_name = Field(TEXT)
+    roles = Field(TEXT)
 
     @classmethod
     def get_key_fields(
@@ -62,6 +67,7 @@ class Employees(MetaData):
     tribe_name = EmployeesIterations.tribe_name
     tent_name = EmployeesIterations.tent_name
     position_name = EmployeesIterations.position_name
+    roles = EmployeesIterations.roles
 
     @classmethod
     def get_key_fields(

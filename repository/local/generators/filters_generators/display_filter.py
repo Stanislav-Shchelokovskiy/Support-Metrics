@@ -81,6 +81,7 @@ _query_params_store = {
             display_field=cat.Features.feature_name.name,
         ),
     'customers_crmids': QueryParams(table=customers.Customers.get_name()),
+    'roles': QueryParams(table=employees.Roles.get_name()),
 }
 # yapf: enable
 

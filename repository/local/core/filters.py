@@ -82,6 +82,7 @@ def get_tickets_filter(**kwargs) -> str:
         customers.generate_conversion_status_filter(params=kwargs['conversion_statuses']),
         employees.generate_emp_tribes_filter(params=kwargs['emp_tribe_ids']),
         employees.generate_emp_tents_filter(params=kwargs['emp_tent_ids']),
+        employees.generate_roles_filter(params=kwargs['roles']),
         employees.generate_employees_filter(params=kwargs['emp_ids']),
         bugs.generate_assigned_to_filter(params=kwargs['assigned_to_ids']),
         bugs.generate_closed_by_filter(params=kwargs['closed_by_ids']),

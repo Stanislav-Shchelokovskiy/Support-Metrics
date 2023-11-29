@@ -180,6 +180,11 @@ async def get_emp_tents():
     return await LocalRepository.emp_tents.get_data()
 
 
+@app.get('/Roles')
+async def get_roles():
+    return await LocalRepository.roles.get_data()
+
+
 @app.get('/Tents')
 async def get_tents():
     return await LocalRepository.tents.get_data()
@@ -191,11 +196,9 @@ async def get_tribes():
 
 
 @app.post('/Employees')
-async def get_employees(params: EmployeeParams):
+async def get_employees(body: EmployeeParams):
     return await LocalRepository.employees.get_data(
-        position_ids=params.positions,
-        tribe_ids=params.tribes,
-        tent_ids=params.tents,
+        **body.get_field_values(),
     )
 
 

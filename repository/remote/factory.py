@@ -61,6 +61,10 @@ def create_employees_repository() -> Repository:
     return __create_repository(queries=employees.Employees())
 
 
+def create_roles_repository() -> Repository:
+    return __create_repository(queries=employees.Roles())
+
+
 def create_tickets_types_repository() -> Repository:
     return __create_repository(queries=tickets.TicketsTypes())
 

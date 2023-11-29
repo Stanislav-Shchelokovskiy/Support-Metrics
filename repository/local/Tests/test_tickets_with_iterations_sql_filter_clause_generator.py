@@ -191,6 +191,10 @@ def test_right_halfopen_interval_filters(
             customers.generate_customer_groups_filter,
             TicketsWithIterations.user_groups,
         ),
+        (
+            employees.generate_roles_filter,
+            TicketsWithIterations.roles,
+        ),
     ]
 )
 def test_single_like_filters(
