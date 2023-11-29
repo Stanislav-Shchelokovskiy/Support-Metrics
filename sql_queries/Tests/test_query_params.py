@@ -48,6 +48,7 @@ import toolbox.sql.index as RootPath
                 'tbl_alias': 'tbl',
                 'csi_table': 'tbl',
                 'tickets_tags_table': 'tbl',
+                'roles_table': 'tbl',
             },
         ),
         (

@@ -196,11 +196,9 @@ async def get_tribes():
 
 
 @app.post('/Employees')
-async def get_employees(params: EmployeeParams):
+async def get_employees(body: EmployeeParams):
     return await LocalRepository.employees.get_data(
-        position_ids=params.positions,
-        tribe_ids=params.tribes,
-        tent_ids=params.tents,
+        **body.get_field_values(),
     )
 
 

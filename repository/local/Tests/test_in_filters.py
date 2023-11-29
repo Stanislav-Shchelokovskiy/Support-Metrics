@@ -169,5 +169,5 @@ def test_generate_positions_tribes_tents_roles_filter(
         position_ids=positions,
         tribe_ids=tribes,
         tent_ids=tents,
-        roles=roles,
+        role_ids=roles,
     ) == output

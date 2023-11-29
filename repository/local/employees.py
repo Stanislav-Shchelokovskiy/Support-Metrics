@@ -68,7 +68,7 @@ class Employees(GeneralSelectAsyncQueryDescriptor):
             position_ids=kwargs['position_ids'],
             tribe_ids=kwargs['tribe_ids'],
             tent_ids=kwargs['tent_ids'],
-            roles=kwargs['roles'],
+            role_ids=kwargs['role_ids'],
         )
         return {
             'select': f"DISTINCT {', '.join(self.get_fields(kwargs))}",

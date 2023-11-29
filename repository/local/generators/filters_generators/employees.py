@@ -21,11 +21,11 @@ def generate_positions_tribes_tents_roles_filter(
     position_ids: FilterParametersNode,
     tribe_ids: FilterParametersNode,
     tent_ids: FilterParametersNode,
-    roles: FilterParametersNode,
+    role_ids: FilterParametersNode,
 ) -> str:
     generate_tribes_filter = filter_factory.get_in_filter_generator(tribe_ids)
     generate_tents_filter = filter_factory.get_in_filter_generator(tent_ids)
-    generate_roles_filter = filter_factory.get_like_filter_generator(roles)
+    generate_roles_filter = filter_factory.get_like_filter_generator(role_ids)
 
     positions_fitler = generate_positions_filter(position_ids=position_ids)
     tribes_filter = generate_tribes_filter(
@@ -46,7 +46,7 @@ def generate_positions_tribes_tents_roles_filter(
 
     roles_filter = generate_roles_filter(
         col=Employees.roles,
-        values=roles.values,
+        values=role_ids.values,
         filter_prefix=' AND' if positions_tribes_tents_filter else 'WHERE',
     )
     return positions_tribes_tents_filter + roles_filter
