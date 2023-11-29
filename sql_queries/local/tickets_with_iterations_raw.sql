@@ -94,5 +94,8 @@ SELECT
     {tbl_alias}.{emp_position_name},
     {tbl_alias}.{emp_tribe_name},
     {tbl_alias}.{emp_tent_name},
-    {tbl_alias}.{roles}{baseline_aligned_mode_fields}
+    ( SELECT GROUP_CONCAT(name, '; ')
+      FROM (SELECT DISTINCT name
+            FROM {roles_table}
+            WHERE id IN (SELECT value FROM JSON_EACH('["' || replace({tbl_alias}.{roles}, ';', '", "') || '"]')))) AS {roles}{baseline_aligned_mode_fields}
 FROM {tickets_with_iterations_table}
