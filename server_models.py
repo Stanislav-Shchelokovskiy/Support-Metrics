@@ -19,9 +19,9 @@ class FeatureParams(TentsParams):
 
 class EmployeeParams(ServerModel):
     position_ids: FilterParametersNode[str] = Field(alias='positions')
-    tribe_ids: FilterParametersNode[str]= Field(alias='tribes')
-    tent_ids: FilterParametersNode[str]= Field(alias='tents')
-    role_ids: FilterParametersNode[str]= Field(alias='roles')
+    tribe_ids: FilterParametersNode[str] = Field(alias='tribes')
+    tent_ids: FilterParametersNode[str] = Field(alias='tents')
+    role_ids: FilterParametersNode[str] = Field(alias='roles')
 
 
 class ConversionStatusParams(ServerModel):
