@@ -21,7 +21,7 @@ tickets = Metric(
     MetricGroup.entities,
     COUNT_DISTINCT(TicketsWithIterations.ticket_scid),
 )
-iterations = Metric(
+replies = Metric(
     'Iterations',
     'Replies',
     MetricGroup.entities,
@@ -32,7 +32,7 @@ iterations_to_tickets = Metric.from_metric(
     'Iterations / Tickets',
     'Replies Rate',
     MetricGroup.productivity,
-    iterations / tickets,
+    replies / tickets,
 )
 
 csi = Metric(
@@ -43,7 +43,7 @@ csi = Metric(
 )
 
 metrics = {
-    iterations.name: iterations,
+    replies.name: replies,
     people.name: people,
     tickets.name: tickets,
     iterations_to_tickets.name: iterations_to_tickets,
