@@ -162,6 +162,7 @@ import toolbox.sql.index as RootPath
             {  
                 **ResolutionTime.get_attrs(),
                 'years_of_history': 5,
+                'employees_json': 'employees_json',
             }
         ),
     ],

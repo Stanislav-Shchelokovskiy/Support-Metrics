@@ -35,7 +35,7 @@ def on_startup(sender, **kwargs):
     else:
         tasks.append('update_employees'),
         tasks.append('load_csi'),
-        tasks.append('load_resolution_time')
+        
 
     sender_app: Celery = sender.app
     with sender_app.connection() as conn:
@@ -68,12 +68,12 @@ def update_support_metrics(**kwargs):
             load_builds.si(),
             load_components_features.si(),
             load_csi.si(),
-            load_resolution_time.si(),
             chain(
                 get_employees.si(),
                 load_employees.s(),
                 load_roles.s(),
                 load_employees_iterations.s(),
+                load_resolution_time.s(),
             ),
             load_tickets.si(),
         ]
@@ -260,6 +260,7 @@ def update_employees(self, **kwargs):
         get_employees.si(),
         load_employees.s(),
         load_roles.s(),
+        load_resolution_time.s(),
     )()
 
 
@@ -282,11 +283,12 @@ def load_csi(self, **kwargs):
 
 
 @app.task(name='load_resolution_time', bind=True)
-def load_resolution_time(self, **kwargs):
+def load_resolution_time(self, *args, **kwargs):
     return run_retriable_task(
         self,
         tasks.load_resolution_time,
         years_of_history=config.years_of_history(config.TSQL),
+        employees_json=args[0],
     )
 
 
