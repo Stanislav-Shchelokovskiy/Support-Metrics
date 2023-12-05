@@ -81,6 +81,7 @@ def load_employees_iterations(
         end_date=end_date,
         employees_json=employees_json,
     )
+    return employees_json
 
 
 def load_tickets(start_date: str, end_date: str):
@@ -151,11 +152,12 @@ def load_csi():
     )
 
 
-def load_resolution_time(years_of_history: str):
+def load_resolution_time(years_of_history: str, employees_json: str):
     __create_table(
         repository=RepositoryFactory.remote.create_resolution_time_repository(),
         cls=aggs.ResolutionTime,
         years_of_history=years_of_history,
+        employees_json=employees_json,
     )
 
 

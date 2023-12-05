@@ -24,6 +24,7 @@ def generate_bam_group_by_period(format: str, field: str) -> str:
         '%Y-%m-%d': 1.0,
         '%Y-%W': 7.0,
         '%Y-%m': 30.0,
+        '%Y-%Q': 90.0,
         '%Y': 365.0,
     }[format]
     return f'CAST(CEILING(IIF({field} = 0, 1, {field}) / {period}) AS INT)'

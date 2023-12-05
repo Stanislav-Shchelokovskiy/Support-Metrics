@@ -71,7 +71,6 @@ class Tickets(MetaData):
 
 class ResolutionTime(MetaData):
     ticket_scid = Tickets.ticket_scid
-    creation_date = Tickets.creation_date
     resolution_in_hours = Field(INTEGER)
 
     @classmethod
