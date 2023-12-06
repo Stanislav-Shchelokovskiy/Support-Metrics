@@ -10,8 +10,4 @@ def get_employees() -> str:
             'X-UserId': os.environ['EMPS_USERID'],
             'User-Agent': 'SupportMetrics',
         },
-        params={
-            'expandDetails': True,
-            'expandDataForAnalytics': True,
-        },
     ).replace('":', '": ')
