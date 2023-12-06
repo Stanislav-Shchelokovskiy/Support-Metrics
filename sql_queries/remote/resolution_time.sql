@@ -24,7 +24,7 @@ WITH posts AS (
 				SELECT  t.FriendlyId, CASE WHEN t.Owner = posts.Owner THEN 1 ELSE 0 END AS is_ticket_owner
 				FROM    SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].Tickets AS t
 				WHERE   t.Id = posts.Ticket_Id
-						AND t.EntityType IN (@question, @bug, @suggestion) -- #Postulate: Take into account only questions, suggestions, bugs.
+					AND t.EntityType = @question
 			) AS tickets
 			OUTER APPLY (
 					SELECT  e.crmid
@@ -55,12 +55,12 @@ iterations_raw AS (
 
 iteration_lengths AS (
 	SELECT  ticket_scid,
+			emp_crmid,
 			is_ticket_owner,
 			iteration_no,
 			iteration_start,
 			iteration_end,
-		DATEDIFF(MINUTE, iteration_start, iteration_end) AS iteration_len_in_minutes,
-			emp_crmid
+			DATEDIFF(MINUTE, iteration_start, iteration_end) AS iteration_len_in_minutes
 	FROM    iterations_raw
 	WHERE   is_iteration = 1
 			AND emp_crmid IS NOT NULL
@@ -77,3 +77,22 @@ SELECT  ticket_scid							AS {ticket_scid},
         SUM(iteration_len_in_minutes) / 60 	AS {resolution_in_hours}
 FROM    iteration_lengths
 GROUP BY ticket_scid
+UNION
+SELECT	tickets.FriendlyId,
+		DATEDIFF(HOUR, tickets.Created, ISNULL(fixed_info.fixed_on, closed_info.closed_on))
+FROM   	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].Tickets AS tickets
+		OUTER APPLY (
+			SELECT	 TOP 1 AuditOwner AS closed_by, CAST(EntityModified AS DATE) AS closed_on
+			FROM	 scpaid_audit.[c1f0951c-3885-44cf-accb-1a390f34c342].scworkflow_TicketProperties
+			WHERE	 Ticket_Id = tickets.Id AND Name = 'TicketStatus' AND Value = 'Closed'
+			ORDER BY EntityModified DESC
+		) AS closed_info
+		OUTER APPLY (
+			SELECT	 TOP 1 AuditOwner AS fixed_by, CAST(EntityModified AS DATE) AS fixed_on
+			FROM	 scpaid_audit.[c1f0951c-3885-44cf-accb-1a390f34c342].scworkflow_TicketProperties
+			WHERE	 Ticket_Id = tickets.Id AND Name = 'FixedInBuild'
+			ORDER BY EntityModified DESC
+		) AS fixed_info
+WHERE 	Created BETWEEN @start AND @end
+	AND EntityType = @bug
+	AND (closed_info.closed_on IS NOT NULL OR fixed_info.fixed_on IS NOT NULL)
