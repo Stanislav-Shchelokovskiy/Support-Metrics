@@ -232,6 +232,7 @@ def get_employees(self, **kwargs):
     return run_retriable_task(
         self,
         employees.get_employees,
+        start_date=config.get_emp_start(),
     )
 
 
