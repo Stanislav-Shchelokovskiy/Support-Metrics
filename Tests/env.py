@@ -10,7 +10,7 @@ def __prepare_env(monkeypatch: pytest.MonkeyPatch):
             line = line.strip()
             if line[0] == '#':
                 continue
-            name, value = line.split('=')
+            name, value = line.split('=', maxsplit=1)
             monkeypatch.setenv(name, value)
     monkeypatch.setenv('SQLITE_DATABASE', f'{getcwd()}/Tests/test_db')
     monkeypatch.setenv('start_date', '2022-01-01')
