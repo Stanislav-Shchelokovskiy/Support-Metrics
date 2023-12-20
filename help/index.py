@@ -23,7 +23,7 @@ async def __run_in_executor(fn: Callable[..., str], *args):
 def __get_description_json(metric: Metric):
 
     def converter(title):
-        return metric.display_name or title
+        return (metric.display_name or title).replace(' / ', '_')
 
     path = Path(f'help/metrics_descriptions/{metric.name}.MD')
     desc = file_to_dict(path, converter)
