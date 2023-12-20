@@ -1,0 +1,1 @@
+Showcases the number of replies that align with the chosen criteria in the filters.
