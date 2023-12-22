@@ -1,5 +1,6 @@
 from toolbox.sql.generators.utils import build_filter_string
 from toolbox.sql.generators.filter_clause_generator_factory import FilterParametersNode
+from repository.local.aggs import is_baseline_aligned_mode
 import repository.local.generators.filters_generators.tickets_with_iterations.common as common
 import repository.local.generators.filters_generators.tickets_with_iterations.platforms_products as platforms_products
 import repository.local.generators.filters_generators.tickets_with_iterations.tickets as tickets
@@ -21,11 +22,8 @@ def get_creation_date_with_offset_start_filter(
     )
 
 
-def try_get_creation_date_and_tickets_filters(
-    use_baseline_aligned_mode: bool,
-    **kwargs,
-) -> str:
-    if use_baseline_aligned_mode:
+def try_get_creation_date_and_tickets_filters(kwargs) -> str:
+    if is_baseline_aligned_mode(kwargs):
         return ''
     return get_creation_date_and_tickets_filters(**kwargs)
 

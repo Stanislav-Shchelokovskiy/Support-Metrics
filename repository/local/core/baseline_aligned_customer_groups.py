@@ -5,8 +5,6 @@ from repository.local.core.filters import get_tickets_filter
 import repository.local.generators.filters_generators.tickets_with_iterations.customers as CustomersSqlFilterClauseGenerator
 
 
-
-
 def get_baseline_aligned_mode_query(**kwargs) -> str:
     return f"""(SELECT twi.*,
         CAST(JULIANDAY(creation_date)-JULIANDAY('{kwargs['range_start']}')-baseline_aligned_offest_in_days AS INT) AS {customers.BaselineAlignedMode.days_since_baseline}

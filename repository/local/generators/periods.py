@@ -1,5 +1,5 @@
 import toolbox.sql.generators.sqlite.periods_generator as periods_generator
-from repository.local.aggs import is_csi
+from repository.local.aggs import is_csi, is_baseline_aligned_mode
 import sql_queries.meta.aggs as aggs
 import sql_queries.meta.customers as customers
 
@@ -7,7 +7,7 @@ import sql_queries.meta.customers as customers
 def generate_group_by_period(kwargs: dict) -> str:
     format = kwargs['group_by_period']
 
-    if kwargs['use_baseline_aligned_mode']:
+    if is_baseline_aligned_mode(kwargs):
         return generate_bam_group_by_period(
             format=format,
             field=customers.BaselineAlignedMode.days_since_baseline,
@@ -31,6 +31,6 @@ def generate_bam_group_by_period(format: str, field: str) -> str:
 
 
 def _get_field(kwargs: dict):
-    if is_csi(kwargs.get('metric', None)):
+    if is_csi(kwargs):
         return aggs.CSI.date
     return aggs.TicketsWithIterations.creation_date

@@ -65,5 +65,9 @@ def get_metrics() -> Mapping[str, Metric]:
     return metrics
 
 
-def is_csi(name: str) -> bool:
-    return name == csi.name
+def is_csi(kwargs: dict) -> bool:
+    return kwargs.get('metric', None) == csi.name
+
+
+def is_baseline_aligned_mode(kwargs: dict) -> bool:
+    return not is_csi(kwargs) and kwargs['use_baseline_aligned_mode']

@@ -7,7 +7,7 @@ from toolbox.sql_async import (
 )
 from toolbox.sql import MetaData, PeriodMeta
 from repository.local.core.tickets_with_iterations_table import get_tickets_with_iterations_table
-from repository.local.aggs import get_metric
+from repository.local.aggs import get_metric, is_baseline_aligned_mode
 from toolbox.sql.generators.utils import build_multiline_string_ignore_empties
 import sql_queries.meta.aggs as aggs
 import sql_queries.meta.customers as customers
@@ -63,7 +63,7 @@ class TicketsWithIterationsRaw(AsyncQueryDescriptor):
         }
 
     def get_baseline_aligned_mode_fields(self, **kwargs) -> str:
-        if kwargs['use_baseline_aligned_mode']:
+        if is_baseline_aligned_mode(kwargs):
             return f', {aggs.TicketsWithIterationsRaw.get_alias()}.{customers.BaselineAlignedMode.days_since_baseline}'
         return ''
 
@@ -72,7 +72,7 @@ class TicketsWithIterationsRaw(AsyncQueryDescriptor):
 
     def get_fields(self, kwargs: Mapping) -> Iterable[str]:
         res = self.get_fields_meta(kwargs).get_values()
-        if kwargs['use_baseline_aligned_mode']:
+        if is_baseline_aligned_mode(kwargs):
             return tuple(chain(res, (customers.BaselineAlignedMode.days_since_baseline, )))
         return res
 
