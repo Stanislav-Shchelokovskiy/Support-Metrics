@@ -35,7 +35,7 @@ def get_ranked_tickets_with_iterations_query(**kwargs) -> str:
                 GROUP BY {TicketsWithIterations.user_crmid} ) AS rnk
         WHERE {LimitsSqlFilterClauseGenerator.generate_percentile_filter(alias='percentile', percentile=percentile.value)}
     ) AS usr_rnk ON usr_rnk.crmid = {tbl_alias}.{TicketsWithIterations.user_crmid}
-    {filters.try_get_creation_date_and_tickets_filters(**kwargs)}"""
+    {filters.try_get_creation_date_and_tickets_filters(kwargs)}"""
     )
 
 
