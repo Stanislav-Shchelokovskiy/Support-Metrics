@@ -337,13 +337,17 @@ def __update_tickets_with_iterations():
 
 
 def __build_employee_attr_tables():
+    # Contraintuitively, we use names as keys here because
+    # these tables are meant for filling UI editors.
+    # So, we need to ensure to filter out empty names.
+    # This also provides correct ordering.
     __save_table(
         employees.Positions,
         SqliteCreateTableFromTableQuery(
             source_table_or_subquery=employees.Employees.get_name(),
             target_table_name=employees.Positions.get_name(),
-            unique_key_fields=(employees.Employees.position_id.as_query_field(employees.Positions.id),),
-            values_fields=(employees.Employees.position_name.as_query_field(employees.Positions.name),),
+            unique_key_fields=(employees.Employees.position_name.as_query_field(employees.Positions.name),),
+            values_fields=(employees.Employees.position_id.as_query_field(employees.Positions.id),),
         ),
     )
     __save_table(
@@ -351,8 +355,8 @@ def __build_employee_attr_tables():
         SqliteCreateTableFromTableQuery(
             source_table_or_subquery=employees.Employees.get_name(),
             target_table_name=employees.EmpTribes.get_name(),
-            unique_key_fields=(employees.Employees.tribe_id.as_query_field(employees.EmpTribes.id),),
-            values_fields=(employees.Employees.tribe_name.as_query_field(employees.EmpTribes.name),),
+            unique_key_fields=(employees.Employees.tribe_name.as_query_field(employees.EmpTribes.name),),
+            values_fields=(employees.Employees.tribe_id.as_query_field(employees.EmpTribes.id),),
         ),
     )
     __save_table(
@@ -360,8 +364,8 @@ def __build_employee_attr_tables():
         SqliteCreateTableFromTableQuery(
             source_table_or_subquery=employees.Employees.get_name(),
             target_table_name=employees.EmpTents.get_name(),
-            unique_key_fields=(employees.Employees.tent_id.as_query_field(employees.EmpTents.id),),
-            values_fields=(employees.Employees.tent_name.as_query_field(employees.EmpTents.name),),
+            unique_key_fields=(employees.Employees.tent_name.as_query_field(employees.EmpTents.name),),
+            values_fields=(employees.Employees.tent_id.as_query_field(employees.EmpTents.id),),
         ),
     )
 
