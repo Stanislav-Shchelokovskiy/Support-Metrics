@@ -1,6 +1,6 @@
 from toolbox.sql.repository_queries import RepositoryAlchemyQueries
 import sql_queries.meta.aggs as aggs
-import sql_queries.index.path.extract as RemotePathIndex
+import sql_queries.index.path.remote as RemotePathIndex
 
 
 class ResolutionTime(RepositoryAlchemyQueries):

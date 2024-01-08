@@ -8,7 +8,7 @@ from sql_queries.meta.cat import CatComponentsFeatures
 from sql_queries.meta.platforms_products import PlatformsProducts
 from sql_queries.meta.employees import Employees, EmployeesIterations
 
-import sql_queries.index.path.extract as RemotePathIndex
+import sql_queries.index.path.remote as RemotePathIndex
 import sql_queries.index.path.local as LocalPathIndex
 import sql_queries.index.path.transform_load as TransofrmLoadPathIndex
 import toolbox.sql.index as RootPath
