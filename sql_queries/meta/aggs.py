@@ -72,6 +72,7 @@ class Tickets(MetaData):
 class ResolutionTime(MetaData):
     ticket_scid = Tickets.ticket_scid
     resolution_in_hours = Field(INTEGER)
+    lifetime_in_hours = Field(INTEGER)
 
     @classmethod
     def get_key_fields(
@@ -82,7 +83,6 @@ class ResolutionTime(MetaData):
         return MetaData.get_key_fields(
             projector,
             cls.ticket_scid,
-            cls.resolution_in_hours,
         )
 
 
@@ -97,8 +97,9 @@ class TicketsWithIterations(Tickets):
     emp_position_name = Field(TEXT)
     emp_tribe_name = Field(TEXT)
     emp_tent_name = Field(TEXT)
-    roles=Field(TEXT)
+    roles = Field(TEXT)
     resolution_in_hours = ResolutionTime.resolution_in_hours
+    lifetime_in_hours = ResolutionTime.lifetime_in_hours
 
     @classmethod
     def get_key_fields(
@@ -215,6 +216,7 @@ class TicketsWithIterationsRaw(MetaData):
     closed_by = TicketsWithIterations.closed_by
     closed_on = TicketsWithIterations.closed_on
     resolution_in_hours = TicketsWithIterations.resolution_in_hours
+    lifetime_in_hours = TicketsWithIterations.lifetime_in_hours
     severity = TicketsWithIterations.severity
     converted_to_bug_on = TicketsWithIterations.converted_to_bug_on
     duplicated_to_ticket_type = TicketsWithIterations.duplicated_to_ticket_type

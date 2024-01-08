@@ -67,6 +67,7 @@ SELECT
       LIMIT 1 )  AS {closed_by},
     {tbl_alias}.{closed_on},
     {tbl_alias}.{resolution_in_hours},
+    {tbl_alias}.{lifetime_in_hours},
     ( SELECT name 
       FROM   {severity_table}
       WHERE  id = {tbl_alias}.severity

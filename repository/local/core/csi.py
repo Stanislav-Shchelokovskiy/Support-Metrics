@@ -1,7 +1,7 @@
 from sql_queries.meta.aggs import CSI, TicketsWithIterations
 
 
-def get_csi_query(tbl: str, **kwargs) -> str:
+def get_csi_query(tbl: str) -> str:
     return (
         f"""(SELECT DISTINCT {TicketsWithIterations.ticket_scid}
     FROM {tbl}) AS tickets

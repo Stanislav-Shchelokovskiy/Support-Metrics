@@ -27,6 +27,7 @@ SELECT
 	t.{closed_by},
 	t.{closed_on},
 	rt.{resolution_in_hours},
+	rt.{lifetime_in_hours},
     t.{converted_to_bug_on},
 	t.{severity},
 	CAST(t.{duplicated_to_ticket_type} AS INT) AS {duplicated_to_ticket_type},
