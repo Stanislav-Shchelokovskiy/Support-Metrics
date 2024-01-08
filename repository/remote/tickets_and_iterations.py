@@ -3,7 +3,7 @@ from toolbox.sql.repository_queries import RepositoryAlchemyQueries
 from toolbox.sql.sql_query import SqlQuery
 import sql_queries.meta.aggs as aggs
 import sql_queries.meta.employees as employees
-import sql_queries.index.path.extract as RemotePathIndex
+import sql_queries.index.path.remote as RemotePathIndex
 
 
 class EmployeesIterations(RepositoryAlchemyQueries):
