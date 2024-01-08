@@ -7,4 +7,5 @@ FROM    DXStatisticsV2.dbo.parse_employees(@employees) AS e
             SELECT value
             FROM STRING_SPLIT(e.roles, ';')
         ) AS roles
-WHERE roles.value IS NOT NULL
+WHERE   roles.value IS NOT NULL
+    AND e.is_service_user = 0

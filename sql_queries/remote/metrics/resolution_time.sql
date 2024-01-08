@@ -27,10 +27,12 @@ WITH posts AS (
 					AND t.EntityType = @question
 			) AS tickets
 			OUTER APPLY (
-					SELECT  e.crmid
+					SELECT  e.crmid, e.is_service_user
 					FROM    DXStatisticsV2.dbo.parse_employees(@employees) AS e
 					WHERE   e.scid = posts.Owner
 			) AS employees
+	-- drop posts from service users
+	WHERE employees.crmid IS NULL OR employees.is_service_user = 0
 ),
 
 posts_with_prev_emp_crmid AS (
