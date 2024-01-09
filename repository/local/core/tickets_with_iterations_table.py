@@ -6,7 +6,7 @@ from repository.local.core.ticket_lifetime import get_ticket_lifetime_query
 from repository.local.aggs import is_csi, is_ticket_lifetime, is_baseline_aligned_mode
 
 
-def get_tickets_with_iterations_table(kwargs: Mapping) -> str:
+def get_tickets_with_iterations_table(**kwargs) -> str:
     if is_baseline_aligned_mode(kwargs):
         return get_baseline_aligned_mode_query(kwargs)
     tbl = get_ranked_tickets_with_iterations_query(kwargs)
