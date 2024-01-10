@@ -76,7 +76,7 @@ iteration_lengths AS (
 )
 
 SELECT  ticket_scid													AS {ticket_scid},
-        SUM(iteration_len_in_minutes) / 60 							AS {resolution_in_hours}
+        SUM(iteration_len_in_minutes) / 60 							AS {resolution_in_hours},
 		DATEDIFF(HOUR, MIN(iteration_start), MAX(iteration_end)) 	AS {lifetime_in_hours}
 FROM    iteration_lengths
 GROUP BY ticket_scid
