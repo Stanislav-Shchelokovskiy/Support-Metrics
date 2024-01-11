@@ -1,4 +1,3 @@
-from collections.abc import Mapping
 from repository.local.core.baseline_aligned_customer_groups import get_baseline_aligned_mode_query
 from repository.local.core.customers_rank import get_ranked_tickets_with_iterations_query
 from repository.local.core.csi import get_csi_query

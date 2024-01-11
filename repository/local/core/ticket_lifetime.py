@@ -8,7 +8,8 @@ def get_ticket_lifetime_query(tbl: str, kwargs: Mapping) -> str:
     return f"""(
 SELECT  *,
     NTH_VALUE({fld}, median) OVER (PARTITION BY {groupby_period} ORDER BY {fld}) AS median_{fld}
-    FROM    (   SELECT  *,
+    FROM    (   SELECT  {TicketsWithIterations.creation_date},
+                        {fld},
                         ROUND(COUNT({fld}) OVER (PARTITION BY {groupby_period}) / 2.) AS median
                 FROM    {tbl}  
             ) AS tickets_with_median
