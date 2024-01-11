@@ -75,9 +75,9 @@ iteration_lengths AS (
 			AND post_created = iteration_end
 )
 
-SELECT  ticket_scid													AS {ticket_scid},
-        SUM(iteration_len_in_minutes) / 60 							AS {resolution_in_hours},
-		DATEDIFF(HOUR, MIN(iteration_start), MAX(iteration_end)) 	AS {lifetime_in_hours}
+SELECT	ticket_scid														AS {ticket_scid},
+		SUM(iteration_len_in_minutes) / 60								AS {resolution_in_hours},
+		DATEDIFF(MINUTE, MIN(iteration_start), MAX(iteration_end)) / 60	AS {lifetime_in_hours}
 FROM    iteration_lengths
 GROUP BY ticket_scid
 UNION
