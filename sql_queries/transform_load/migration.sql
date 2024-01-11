@@ -130,9 +130,9 @@ SELECT DISTINCT
         license_status                  AS license_status,
         conversion_status               AS conversion_status
 FROM    TicketsWithIterationsTEMP
-WHERE   user_crmid IS NOT NULL AND
-        ticket_scid IS NOT NULL AND
-        emp_post_id IS NOT NULL
+-- WHERE   user_crmid IS NOT NULL AND
+--         ticket_scid IS NOT NULL AND
+        --emp_post_id IS NOT NULL
 
 /*
 ON CONFLICT(user_crmid, ticket_scid, emp_post_id) DO UPDATE SET
