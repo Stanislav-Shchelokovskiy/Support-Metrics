@@ -18,15 +18,15 @@ SELECT
     ( SELECT GROUP_CONCAT(platform_name, '; ')
       FROM (SELECT DISTINCT platform_name
             FROM {platforms_products_table}
-            WHERE platform_id IN (SELECT value FROM JSON_EACH('["' || replace({tbl_alias}.platforms, ';', '", "') || '"]')))) AS {platforms},
+            WHERE platform_id IN (SELECT value FROM JSON_EACH('["' || REPLACE({tbl_alias}.platforms, ';', '", "') || '"]')))) AS {platforms},
     ( SELECT GROUP_CONCAT(product_name, '; ')
       FROM (SELECT DISTINCT product_name 
             FROM {platforms_products_table}
-            WHERE product_id IN (SELECT value FROM JSON_EACH('["' || replace({tbl_alias}.products, ';', '", "') || '"]')))) AS {products},
+            WHERE product_id IN (SELECT value FROM JSON_EACH('["' || REPLACE({tbl_alias}.products, ';', '", "') || '"]')))) AS {products},
     ( SELECT GROUP_CONCAT(name, '; ')
       FROM (SELECT name
             FROM {tickets_tags_table}
-            WHERE id IN (SELECT value FROM JSON_EACH('["' || replace({tbl_alias}.ticket_tags, ';', '", "') || '"]')))) AS {ticket_tags},
+            WHERE id IN (SELECT value FROM JSON_EACH('["' || REPLACE({tbl_alias}.ticket_tags, ';', '", "') || '"]')))) AS {ticket_tags},
     {tbl_alias}.{is_private},
     {tbl_alias}.{creation_date},
     {tbl_alias}.license_name AS {license_name},
@@ -67,6 +67,7 @@ SELECT
       LIMIT 1 )  AS {closed_by},
     {tbl_alias}.{closed_on},
     {tbl_alias}.{resolution_in_hours},
+    {tbl_alias}.{lifetime_in_hours},
     ( SELECT name 
       FROM   {severity_table}
       WHERE  id = {tbl_alias}.severity
@@ -97,5 +98,5 @@ SELECT
     ( SELECT GROUP_CONCAT(name, '; ')
       FROM (SELECT DISTINCT name
             FROM {roles_table}
-            WHERE id IN (SELECT value FROM JSON_EACH('["' || replace({tbl_alias}.{roles}, ';', '", "') || '"]')))) AS {roles}{baseline_aligned_mode_fields}
+            WHERE id IN (SELECT value FROM JSON_EACH('["' || REPLACE({tbl_alias}.{roles}, ';', '", "') || '"]')))) AS {roles}{baseline_aligned_mode_fields}
 FROM {tickets_with_iterations_table}

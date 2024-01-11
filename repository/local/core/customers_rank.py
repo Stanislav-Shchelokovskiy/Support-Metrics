@@ -1,3 +1,4 @@
+from collections.abc import Mapping
 from typing import Protocol, Literal, runtime_checkable
 from sql_queries.meta.aggs import TicketsWithIterations
 from toolbox.sql.generators.filter_clause_generator_factory import FilterParameterNode
@@ -17,7 +18,7 @@ class Percentile(Protocol):
         return 'iterations'
 
 
-def get_ranked_tickets_with_iterations_query(**kwargs) -> str:
+def get_ranked_tickets_with_iterations_query(kwargs: Mapping) -> str:
     percentile: Percentile = kwargs['percentile']
     tbl = TicketsWithIterations.get_name()
     tbl_alias = TicketsWithIterations.get_alias()

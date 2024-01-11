@@ -1,3 +1,4 @@
+from collections.abc import Mapping
 from toolbox.sql.generators.utils import build_filter_string
 from toolbox.sql.generators.filter_clause_generator_factory import FilterParametersNode
 from repository.local.aggs import is_baseline_aligned_mode
@@ -14,7 +15,7 @@ import repository.local.generators.filters_generators.tickets_with_iterations.em
 def get_creation_date_with_offset_start_filter(
     range_start: str,
     range_end: str,
-    **kwargs,
+    **_,
 ) -> str:
     return common.generate_creation_date_with_rank_offset_start_filter(
         range_start=range_start,
@@ -42,7 +43,7 @@ def get_creation_date_and_tickets_filters(
 
 def get_creation_date_filter(
     filter_prefix: str,
-    kwargs: dict,
+    kwargs: Mapping,
 ) -> str:
     return common.generate_creation_date_filter(
         range_start=kwargs['range_start'],
@@ -98,7 +99,7 @@ def get_tickets_filter(**kwargs) -> str:
 def try_get_customer_groups_filter(
     customers_groups: FilterParametersNode,
     ignore_groups_filter: bool = False,
-    **kwargs,
+    **_,
 ) -> str:
     if ignore_groups_filter:
         return ''

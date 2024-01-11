@@ -1,3 +1,4 @@
+from collections.abc import Mapping
 import sql_queries.meta.aggs as aggs
 import sql_queries.meta.customers as customers
 from toolbox.sql.generators.utils import build_filter_string
@@ -5,7 +6,7 @@ from repository.local.core.filters import get_tickets_filter
 import repository.local.generators.filters_generators.tickets_with_iterations.customers as CustomersSqlFilterClauseGenerator
 
 
-def get_baseline_aligned_mode_query(**kwargs) -> str:
+def get_baseline_aligned_mode_query(kwargs: Mapping) -> str:
     return f"""(SELECT twi.*,
         CAST(JULIANDAY(creation_date)-JULIANDAY('{kwargs['range_start']}')-baseline_aligned_offest_in_days AS INT) AS {customers.BaselineAlignedMode.days_since_baseline}
 FROM    {aggs.TicketsWithIterations.get_name()} AS twi
@@ -47,20 +48,18 @@ def get_creation_date_and_tickets_filters(kwargs):
     return build_filter_string(
         [
             f"""creation_date BETWEEN {max_of_min_customers_groups_creation_date_and_param(kwargs)} AND '{kwargs['range_end']}'""",
-            get_tickets_filter(ignore_groups_filter=False, **kwargs)
+            get_tickets_filter(ignore_groups_filter=False, **kwargs),
         ]
     )
 
 
 def max_of_min_customers_groups_creation_date_and_param(kwargs, param=None):
     param_or_range_start = param or f"'{kwargs['range_start']}'"
-    return (
-f"""(SELECT MAX(start)
+    return f"""(SELECT MAX(start)
 FROM (  {get_min_customers_groups_creation_date(kwargs)}
         UNION ALL
         SELECT {param_or_range_start}
     ))"""
-    )
 
 
 def get_min_customers_groups_creation_date(kwargs):

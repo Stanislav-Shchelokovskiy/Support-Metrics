@@ -80,12 +80,24 @@ class Employees(MetaData):
     @classmethod
     def get_indices(cls) -> Sequence[str]:
         return (
+            # used by Employees repository
             sqlite_index.create_index(
                 tbl=cls.get_name(),
                 cols=(
                     cls.position_id,
                     cls.tribe_id,
                     cls.tent_id,
+                    cls.roles,
+                    cls.scid,
+                    cls.name,
+                ),
+            ),
+            # intensively used by tickets_with_iterations_raw
+            sqlite_index.create_index(
+                tbl=cls.get_name(),
+                cols=(
+                    cls.scid,
+                    cls.name,
                 ),
             ),
         )
