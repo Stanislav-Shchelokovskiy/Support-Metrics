@@ -9,10 +9,10 @@ CREATE TABLE TicketsWithIterationsTEMP AS SELECT * FROM TicketsWithIterationsBAC
 ALTER TABLE TicketsWithIterationsTEMP ADD COLUMN lifetime_in_hours INTEGER;
 
 -- update intermediate
-UPDATE TicketsWithIterationsTEMP AS ti
-SET ti.lifetime_in_hours = rt.lifetime_in_hours
-FROM ResolutionTime AS rt
-WHERE rt.ticket_scid = ti.ticket_scid
+UPDATE  TicketsWithIterationsTEMP AS ti
+SET     lifetime_in_hours = rt.lifetime_in_hours
+FROM    ResolutionTime AS rt
+WHERE   rt.ticket_scid = ti.ticket_scid
 
 -- update original
 DROP TABLE IF EXISTS TicketsWithIterations;
@@ -129,10 +129,10 @@ SELECT DISTINCT
         expiration_date                 AS expiration_date,
         license_status                  AS license_status,
         conversion_status               AS conversion_status
-FROM TicketsWithIterationsTEMP
-WHERE user_crmid IS NOT NULL AND
-ticket_scid IS NOT NULL AND
-emp_post_id IS NOT NULL
+FROM    TicketsWithIterationsTEMP
+WHERE   user_crmid IS NOT NULL AND
+        ticket_scid IS NOT NULL AND
+        emp_post_id IS NOT NULL
 ON CONFLICT(user_crmid, ticket_scid, emp_post_id) DO UPDATE SET
         --emp_post_id
         emp_crmid                       = excluded.emp_crmid,
@@ -187,4 +187,9 @@ ON CONFLICT(user_crmid, ticket_scid, emp_post_id) DO UPDATE SET
         subscription_start              = excluded.subscription_start,
         expiration_date                 = excluded.expiration_date,
         license_status                  = excluded.license_status,
-        conversion_status               = excluded.conversion_status
+        conversion_status               = excluded.conversion_status;
+
+CREATE UNIQUE INDEX idx_TicketsWithIterations_unique_cols ON TicketsWithIterations(user_crmid, ticket_scid, emp_post_id);
+CREATE INDEX idx_TicketsWithIterations_tickets_inner ON TicketsWithIterations(user_crmid, ticket_scid, creation_date, ticket_type, license_status, emp_position_id, is_private, tribes_ids, tent_id);
+CREATE INDEX idx_TicketsWithIterations_iterations_inner ON TicketsWithIterations(user_crmid, emp_post_id, creation_date, ticket_type, license_status, emp_position_id, is_private, tribes_ids, tent_id);
+CREATE INDEX idx_TicketsWithIterations_outer ON TicketsWithIterations(user_crmid, creation_date, ticket_type, license_status, emp_position_id, is_private, tribes_ids, tent_id, user_id, ticket_scid, emp_post_id);
