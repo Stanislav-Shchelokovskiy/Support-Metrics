@@ -82,6 +82,7 @@ FROM    iteration_lengths
 GROUP BY ticket_scid
 UNION
 SELECT	tickets.FriendlyId,
+		DATEDIFF(HOUR, tickets.Created, ISNULL(fixed_info.fixed_on, closed_info.closed_on)),
 		DATEDIFF(HOUR, tickets.Created, ISNULL(fixed_info.fixed_on, closed_info.closed_on))
 FROM   	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].Tickets AS tickets
 		OUTER APPLY (
