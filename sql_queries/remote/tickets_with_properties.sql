@@ -74,9 +74,10 @@ FROM #TicketsWithLicenses AS ti
 			[OperatingSystem]	AS [OperatingSystem],
 			[IDE]				AS [IDE],
 			[Severity]			AS [Severity]
-		FROM (	SELECT Ticket_Id, Name, Value
-				FROM [SupportCenterPaid].[c1f0951c-3885-44cf-accb-1a390f34c342].[TicketProperties]
-				WHERE Name IN ('ReplyId', 'ControlId', 'FeatureId', 'OperatingSystem', 'IDE', 'Severity', 'TicketStatus', 'Assignee') AND Ticket_Id = ti.ticket_id) AS tp
+		FROM (	SELECT 	Ticket_Id, Name, Value
+				FROM 	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
+				WHERE 	Name IN ('ReplyId', 'ControlId', 'FeatureId', 'OperatingSystem', 'IDE', 'Severity', 'TicketStatus', 'Assignee')
+					AND Ticket_Id = ti.ticket_id	) AS tp
 		PIVOT(MIN(Value) FOR Name IN ([Assignee], [TicketStatus], [ReplyId], [ControlId], [FeatureId], [OperatingSystem], [IDE], [Severity])) AS value
 	) AS single_selectors
 	OUTER APPLY (

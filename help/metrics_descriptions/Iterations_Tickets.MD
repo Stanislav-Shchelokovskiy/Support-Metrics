@@ -1,1 +1,1 @@
-Measures the average number of replies exchanged between the support team and customers before a ticket is marked as resolved. In other words, the average number of replies per ticket.
+The average number of reply exchanges between the support team and customers before problem is resolved. I.e., the average number of replies per ticket.
