@@ -254,7 +254,7 @@ FROM (	SELECT	Id, FriendlyId, EntityType, CAST(Created AS DATE) AS creation_date
 		CROSS APPLY (
 			SELECT 	IsEmployee, FriendlyId
 			FROM 	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].Users
-			WHERE	Id = tickets.Owner AND FriendlyId != 'A2151720'
+			WHERE	Id = tickets.Owner AND FriendlyId != 'A2151720' /* doc.ctor */
 		)  AS users
 		CROSS APPLY (
 			SELECT	Id AS user_crmid, CAST(ISNULL(RegisterDate, '1990-01-01') AS DATE) AS register_date

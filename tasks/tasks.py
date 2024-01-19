@@ -340,7 +340,7 @@ def __update_tickets_with_iterations():
         f"""
         UPDATE  {aggs.TicketsWithIterations.get_name()}
         SET     {aggs.TicketsWithIterations.emp_post_id} = NULL
-        WHERE   {aggs.TicketsWithIterations.emp_post_id} = ''
+        WHERE   {aggs.TicketsWithIterations.emp_post_id} IN ('', 'EMPTY')
         """
     )
 
