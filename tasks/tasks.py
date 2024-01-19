@@ -335,6 +335,15 @@ def __update_tickets_with_iterations():
         )"""
     )
 
+    # ensure empty emp_post_id is always NULL
+    __execute(
+        f"""
+        UPDATE  {aggs.TicketsWithIterations.get_name()}
+        SET     {aggs.TicketsWithIterations.emp_post_id} = NULL
+        WHERE   {aggs.TicketsWithIterations.emp_post_id} = ''
+        """
+    )
+
 
 def __build_employee_attr_tables():
     # Contraintuitively, we use names as keys here because
