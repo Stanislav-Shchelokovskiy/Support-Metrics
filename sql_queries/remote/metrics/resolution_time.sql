@@ -86,13 +86,13 @@ SELECT	tickets.FriendlyId,
 		DATEDIFF(HOUR, tickets.Created, ISNULL(fixed_info.fixed_on, closed_info.closed_on))
 FROM   	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].Tickets AS tickets
 		OUTER APPLY (
-			SELECT	 TOP 1 AuditOwner AS closed_by, CAST(EntityModified AS DATE) AS closed_on
+			SELECT	 TOP 1 AuditOwner AS closed_by, EntityModified AS closed_on
 			FROM	 scpaid_audit.[c1f0951c-3885-44cf-accb-1a390f34c342].scworkflow_TicketProperties
 			WHERE	 Ticket_Id = tickets.Id AND Name = 'TicketStatus' AND Value = 'Closed'
 			ORDER BY EntityModified DESC
 		) AS closed_info
 		OUTER APPLY (
-			SELECT	 TOP 1 AuditOwner AS fixed_by, CAST(EntityModified AS DATE) AS fixed_on
+			SELECT	 TOP 1 AuditOwner AS fixed_by, EntityModified AS fixed_on
 			FROM	 scpaid_audit.[c1f0951c-3885-44cf-accb-1a390f34c342].scworkflow_TicketProperties
 			WHERE	 Ticket_Id = tickets.Id AND Name = 'FixedInBuild'
 			ORDER BY EntityModified DESC
