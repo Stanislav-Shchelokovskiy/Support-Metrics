@@ -1,5 +1,5 @@
 from collections.abc import Callable, Mapping
-from toolbox.sql.aggs import Metric, COUNT_DISTINCT, COUNT, SUM, NONE_METRIC
+from toolbox.sql.aggs import Metric, COUNT_DISTINCT, COUNT, SUM, MEDIAN, NONE_METRIC
 from sql_queries.meta.aggs import TicketsWithIterations, CSI
 
 
@@ -42,12 +42,20 @@ csi = Metric(
     SUM(f'IIF({CSI.rating} = 1, 1, 0)') / COUNT('*') * 100,
 )
 
+ticket_lifetime = Metric(
+    'Ticket Lifetime',
+    '',
+    MetricGroup.productivity,
+    MEDIAN(TicketsWithIterations.lifetime_in_hours),
+)
+
 metrics = {
     replies.name: replies,
     people.name: people,
     tickets.name: tickets,
     iterations_to_tickets.name: iterations_to_tickets,
     csi.name: csi,
+    ticket_lifetime.name: ticket_lifetime,
 }
 
 
@@ -65,9 +73,13 @@ def get_metrics() -> Mapping[str, Metric]:
     return metrics
 
 
-def is_csi(kwargs: dict) -> bool:
+def is_csi(kwargs: Mapping) -> bool:
     return kwargs.get('metric', None) == csi.name
 
 
-def is_baseline_aligned_mode(kwargs: dict) -> bool:
-    return not is_csi(kwargs) and kwargs['use_baseline_aligned_mode']
+def is_ticket_lifetime(kwargs: Mapping) -> bool:
+    return kwargs.get('metric', None) == ticket_lifetime.name
+
+
+def is_baseline_aligned_mode(kwargs: Mapping) -> bool:
+    return not (is_csi(kwargs) or is_ticket_lifetime(kwargs)) and  kwargs['use_baseline_aligned_mode']

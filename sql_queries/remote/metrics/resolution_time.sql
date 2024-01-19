@@ -27,10 +27,12 @@ WITH posts AS (
 					AND t.EntityType = @question
 			) AS tickets
 			OUTER APPLY (
-					SELECT  e.crmid
+					SELECT  e.crmid, e.is_service_user
 					FROM    DXStatisticsV2.dbo.parse_employees(@employees) AS e
 					WHERE   e.scid = posts.Owner
 			) AS employees
+	-- drop posts from service users
+	WHERE employees.crmid IS NULL OR employees.is_service_user = 0
 ),
 
 posts_with_prev_emp_crmid AS (
@@ -73,12 +75,14 @@ iteration_lengths AS (
 			AND post_created = iteration_end
 )
 
-SELECT  ticket_scid							AS {ticket_scid},
-        SUM(iteration_len_in_minutes) / 60 	AS {resolution_in_hours}
+SELECT	ticket_scid														AS {ticket_scid},
+		SUM(iteration_len_in_minutes) / 60								AS {resolution_in_hours},
+		DATEDIFF(MINUTE, MIN(iteration_start), MAX(iteration_end)) / 60	AS {lifetime_in_hours}
 FROM    iteration_lengths
 GROUP BY ticket_scid
 UNION
 SELECT	tickets.FriendlyId,
+		DATEDIFF(HOUR, tickets.Created, ISNULL(fixed_info.fixed_on, closed_info.closed_on)),
 		DATEDIFF(HOUR, tickets.Created, ISNULL(fixed_info.fixed_on, closed_info.closed_on))
 FROM   	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].Tickets AS tickets
 		OUTER APPLY (

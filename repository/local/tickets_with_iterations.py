@@ -56,13 +56,13 @@ class TicketsWithIterationsRaw(AsyncQueryDescriptor):
             'platforms_products_table': platforms_products.PlatformsProducts.get_name(),
             'tickets_tags_table': tickets.TicketsTags.get_name(),
             **aggs.TicketsWithIterationsRaw.get_attrs(),
-            'baseline_aligned_mode_fields': self.get_baseline_aligned_mode_fields(**kwargs),
+            'baseline_aligned_mode_fields': self.get_baseline_aligned_mode_fields(kwargs),
             'tickets_with_iterations_table': get_tickets_with_iterations_table(**kwargs),
             'roles_table': employees.Roles.get_name(),
             'tbl_alias': aggs.TicketsWithIterationsRaw.get_alias(),
         }
 
-    def get_baseline_aligned_mode_fields(self, **kwargs) -> str:
+    def get_baseline_aligned_mode_fields(self, kwargs) -> str:
         if is_baseline_aligned_mode(kwargs):
             return f', {aggs.TicketsWithIterationsRaw.get_alias()}.{customers.BaselineAlignedMode.days_since_baseline}'
         return ''
@@ -85,11 +85,11 @@ class TicketsWithIterationsAggregates(MetricAsyncQueryDescriptor):
         metric = get_metric(kwargs['metric'])
         return {
             'select': f"{groupby_period} AS {period}, {metric} AS {agg}, '{metric.get_display_name()}' AS {agg_name}",
-            'from':  get_tickets_with_iterations_table(**kwargs),
+            'from': get_tickets_with_iterations_table(**kwargs, groupby_period=groupby_period),
             'where_group_limit': build_multiline_string_ignore_empties(
                 (
-                    f'GROUP BY {groupby_period}', 
+                    f'GROUP BY {groupby_period}',
                     f'ORDER BY {period}',
                 )
-            )
+            ),
         }

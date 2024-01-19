@@ -2,7 +2,7 @@ from typing import Iterable
 from toolbox.sql import KnotMeta
 from toolbox.sql.repository_queries import RepositoryAlchemyQueries
 import sql_queries.meta.cat as cat
-import sql_queries.index.path.extract as RemotePathIndex
+import sql_queries.index.path.remote as RemotePathIndex
 
 
 class CATRepliesTypes(RepositoryAlchemyQueries):

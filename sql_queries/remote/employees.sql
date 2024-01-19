@@ -12,4 +12,5 @@ SELECT  {tribe_id},
         {position_name},
         {roles}
 FROM    DXStatisticsV2.dbo.parse_employees(@employees)
-WHERE   retired_at IS NULL OR retired_at > @start
+WHERE   (retired_at IS NULL OR retired_at > @start)
+    AND is_service_user = 0
