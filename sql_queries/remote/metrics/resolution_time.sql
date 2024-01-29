@@ -49,9 +49,9 @@ iterations_raw AS (
 	SELECT  *,
 			MIN(post_created) OVER (PARTITION BY ticket_scid, iteration_no) AS iteration_start,
 			MAX(post_created) OVER (PARTITION BY ticket_scid, iteration_no) AS iteration_end,
-			IIF(MIN(CASE WHEN emp_crmid IS NULL             THEN 0 ELSE 1 END) OVER (PARTITION BY ticket_scid, iteration_no) = 0 AND
-					MAX(CASE WHEN emp_crmid IS NOT NULL THEN 1 ELSE 0 END) OVER (PARTITION BY ticket_scid, iteration_no) = 1,
-					1, 0 ) AS is_iteration
+			IIF(MIN(CASE WHEN emp_crmid IS 	   NULL THEN 0 ELSE 1 END) OVER (PARTITION BY ticket_scid, iteration_no) = 0 AND
+				MAX(CASE WHEN emp_crmid IS NOT NULL THEN 1 ELSE 0 END) OVER (PARTITION BY ticket_scid, iteration_no) = 1,
+				1, 0 ) AS is_iteration
 	FROM    posts_split_into_iterations
 ),
 
