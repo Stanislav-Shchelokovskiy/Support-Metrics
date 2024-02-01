@@ -46,7 +46,7 @@ ticket_lifetime = Metric(
     'Ticket Lifetime',
     '',
     MetricGroup.productivity,
-    MEDIAN(TicketsWithIterations.lifetime_in_hours),
+    MEDIAN(f'median_{TicketsWithIterations.lifetime_in_hours}'),
 )
 
 metrics = {
