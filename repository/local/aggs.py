@@ -46,7 +46,7 @@ ticket_lifetime = Metric(
     'Ticket Lifetime',
     '',
     MetricGroup.productivity,
-    MEDIAN(f'median_{TicketsWithIterations.lifetime_in_hours}'),
+    MEDIAN(TicketsWithIterations.lifetime_in_hours),
 )
 
 metrics = {
@@ -82,4 +82,4 @@ def is_ticket_lifetime(kwargs: Mapping) -> bool:
 
 
 def is_baseline_aligned_mode(kwargs: Mapping) -> bool:
-    return not (is_csi(kwargs) or is_ticket_lifetime(kwargs)) and  kwargs['use_baseline_aligned_mode']
+    return not (is_csi(kwargs) or is_ticket_lifetime(kwargs)) and kwargs['use_baseline_aligned_mode']
