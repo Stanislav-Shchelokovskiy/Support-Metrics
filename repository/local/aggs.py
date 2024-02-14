@@ -1,5 +1,5 @@
 from collections.abc import Callable, Mapping
-from toolbox.sql.aggs import Metric, COUNT_DISTINCT, COUNT, SUM, MEDIAN, NONE_METRIC
+from toolbox.sql.aggs import Metric, COUNT_DISTINCT, COUNT, SUM, MEDIAN, AVG, NONE_METRIC
 from sql_queries.meta.aggs import TicketsWithIterations, CSI
 
 
@@ -49,6 +49,13 @@ ticket_lifetime = Metric(
     MEDIAN(TicketsWithIterations.lifetime_in_hours),
 )
 
+ticket_resolution_time = Metric(
+    'Ticket Resolution Time',
+    '',
+    MetricGroup.productivity,
+    AVG(TicketsWithIterations.resolution_in_hours),
+)
+
 metrics = {
     replies.name: replies,
     people.name: people,
@@ -56,6 +63,7 @@ metrics = {
     iterations_to_tickets.name: iterations_to_tickets,
     csi.name: csi,
     ticket_lifetime.name: ticket_lifetime,
+    ticket_resolution_time.name: ticket_resolution_time,
 }
 
 
