@@ -105,8 +105,9 @@ FROM #TicketsWithLicenses AS ti
 	OUTER APPLY (
 		SELECT TOP 1 CAST(Modified AS DATE) AS happened_on
 		FROM 	scpaid_audit.[c1f0951c-3885-44cf-accb-1a390f34c342].scworkflow_Tickets
-		WHERE 	ChangedProperties LIKE '%EntityType%'
+		WHERE 	AuditAction IN (1 /* Update */)
 			AND EntityOid = ti.ticket_id
+			AND	ChangedProperties LIKE '%EntityType%'
 			AND	EntityType = @bug
 	) AS conversion_to_bug
 	OUTER APPLY (
