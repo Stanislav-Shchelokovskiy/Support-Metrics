@@ -344,6 +344,24 @@ def __update_tickets_with_iterations():
         """
     )
 
+    # drop duplicates which could appear for all records where emp_post_id is null.
+    # as we cannot upsert by null keys, we use 'EMPTY' hack which is obviusly gives duplicates.
+    __execute(
+        f"""
+        DROP TABLE IF EXISTS {__TICKETS_WITH_ITERATIONS_TEMP};
+
+        CREATE TABLE {__TICKETS_WITH_ITERATIONS_TEMP} AS
+        SELECT * FROM {aggs.TicketsWithIterations.get_name()}
+        WHERE {aggs.TicketsWithIterations.emp_post_id} IS NULL;
+
+        DELETE FROM {aggs.TicketsWithIterations.get_name()} WHERE {aggs.TicketsWithIterations.emp_post_id} IS NULL;
+
+        INSERT INTO {aggs.TicketsWithIterations.get_name()} SELECT DISTINCT * FROM {__TICKETS_WITH_ITERATIONS_TEMP};
+
+        DROP TABLE {__TICKETS_WITH_ITERATIONS_TEMP};
+        """
+    )
+
 
 def __build_employee_attr_tables():
     # Contraintuitively, we use names as keys here because
