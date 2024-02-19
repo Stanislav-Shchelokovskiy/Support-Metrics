@@ -1,5 +1,5 @@
 import os
-from typing import Callable
+from typing import Callable, Mapping
 
 from celery import Celery, chord, chain
 from celery.schedules import crontab
@@ -35,7 +35,6 @@ def on_startup(sender, **kwargs):
     else:
         tasks.append('update_employees'),
         tasks.append('load_csi'),
-        
 
     sender_app: Celery = sender.app
     with sender_app.connection() as conn:
@@ -52,9 +51,18 @@ def setup_periodic_tasks(sender, **kwargs):
         crontab(
             minute=0,
             hour=1,
-            day_of_week=(1, 3, 5),
+            day_of_week=[3, 5],
         ),
-        update_support_metrics.s(),
+        update_support_metrics.s(period=config.SHORT_PERIOD),
+    )
+
+    sender.add_periodic_task(
+        crontab(
+            minute=0,
+            hour=1,
+            day_of_week=[0],
+        ),
+        update_support_metrics.s(period=config.LONG_PERIOD),
     )
 
 
@@ -64,7 +72,7 @@ def update_support_metrics(**kwargs):
         [
             load_tags.si(),
             load_groups.si(),
-            load_tracked_groups.si(),
+            load_tracked_groups.si(**kwargs),
             load_builds.si(),
             load_components_features.si(),
             load_csi.si(),
@@ -72,10 +80,10 @@ def update_support_metrics(**kwargs):
                 get_employees.si(),
                 load_employees.s(),
                 load_roles.s(),
-                load_employees_iterations.s(),
+                load_employees_iterations.s(**kwargs),
                 load_resolution_time.s(),
             ),
-            load_tickets.si(),
+            load_tickets.s(**kwargs),
         ]
     )(process_staged_data.si())
 
@@ -186,10 +194,11 @@ def load_groups(self, **kwargs):
 
 @app.task(name='load_tracked_groups', bind=True)
 def load_tracked_groups(self, **kwargs):
+    period = __get_period(kwargs)
     return run_retriable_task(
         self,
         tasks.load_tracked_groups,
-        start_date=config.get_tickets_period()['start_date'],
+        start_date=config.get_tickets_period(period=period)['start_date'],
         end_date='9999-12-31',
     )
 
@@ -220,10 +229,11 @@ def load_platforms_products(self, **kwargs):
 
 @app.task(name='load_tickets', bind=True)
 def load_tickets(self, **kwargs):
+    period = __get_period(kwargs)
     return run_retriable_task(
         self,
         tasks.load_tickets,
-        **config.get_tickets_period(),
+        **config.get_tickets_period(period=period),
     )
 
 
@@ -267,10 +277,11 @@ def update_employees(self, **kwargs):
 
 @app.task(name='load_employees_iterations', bind=True)
 def load_employees_iterations(self, *args, **kwargs):
+    period = __get_period(kwargs)
     return run_retriable_task(
         self,
         tasks.load_employees_iterations,
-        **config.get_tickets_period(),
+        **config.get_tickets_period(period=period),
         employees_json=args[0],
     )
 
@@ -308,3 +319,7 @@ def run_retriable_task(task_instance, task: Callable, *args, **kwargs) -> str:
         return task(*args, **kwargs)
     except Exception as e:
         raise task_instance.retry(exc=e, countdown=600, max_retries=10)
+
+
+def __get_period(kwargs: Mapping):
+    return kwargs.get('period', config.SHORT_PERIOD)

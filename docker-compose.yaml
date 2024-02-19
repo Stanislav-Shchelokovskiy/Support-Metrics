@@ -23,6 +23,7 @@ x-support_metrics:
     - LD_LIBRARY_PATH=/usr/lib #https://stackoverflow.com/questions/49920444/upgrading-sqlite3-version-used-in-python3-on-linux
     - UPDATE_ON_STARTUP
     - RECALCULATE_FOR_LAST_DAYS
+    - RECALCULATE_FOR_LAST_DAYS_LONG
     - RECALCULATE_FROM_THE_BEGINNING
     - PRODUCTION
 

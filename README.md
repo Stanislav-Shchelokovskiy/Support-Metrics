@@ -13,6 +13,7 @@ Add **.env** file containing the following env vars:
  - # 0 = false, 1 = true
  - UPDATE_ON_STARTUP=0
  - RECALCULATE_FOR_LAST_DAYS=180
+ - RECALCULATE_FOR_LAST_DAYS_LONG = 730
  - RECALCULATE_FROM_THE_BEGINNING=0
  - PRODUCTION=1
  - VERSION=""

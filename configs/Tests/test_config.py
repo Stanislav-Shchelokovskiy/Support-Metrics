@@ -8,31 +8,44 @@ five_years_in_days = 365 * 5
 
 
 @pytest.mark.parametrize(
-    'envs, delta',
+    'envs, period, delta',
     (
         (
             (
                 ('RECALCULATE_FOR_LAST_DAYS', 36),
-                ('RECALCULATE_FROM_THE_BEGINNING', 0)
+                ('RECALCULATE_FOR_LAST_DAYS_LONG', 72),
+                ('RECALCULATE_FROM_THE_BEGINNING', 0),
             ),
+            config.SHORT_PERIOD,
             36,
         ),
         (
             (
                 ('RECALCULATE_FOR_LAST_DAYS', 36),
-                ('RECALCULATE_FROM_THE_BEGINNING', 1)
+                ('RECALCULATE_FOR_LAST_DAYS_LONG', 72),
+                ('RECALCULATE_FROM_THE_BEGINNING', 0),
             ),
+            config.LONG_PERIOD,
+            72,
+        ),
+        (
+            (
+                ('RECALCULATE_FOR_LAST_DAYS', 36),
+                ('RECALCULATE_FOR_LAST_DAYS_LONG', 72),
+                ('RECALCULATE_FROM_THE_BEGINNING', 1),
+            ),
+            config.SHORT_PERIOD,
             five_years_in_days,
         ),
     ),
 )
-def test_get_tickets_period(envs, delta):
+def test_get_tickets_period(envs, period, delta):
     with pytest.MonkeyPatch.context() as monkeypatch:
         for env in envs:
             monkeypatch.setenv(*env)
         end = date.today()
         start = end - relativedelta(days=delta)
-        assert config.get_tickets_period() == {
+        assert config.get_tickets_period(period) == {
             'start_date': start.strftime('%Y-%m-%d'),
             'end_date': end.strftime('%Y-%m-%d'),
         }
