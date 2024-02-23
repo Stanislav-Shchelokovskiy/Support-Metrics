@@ -90,7 +90,7 @@ SELECT
       FROM   {ides_table}
       WHERE  id = {tbl_alias}.ide_id
       LIMIT 1 )  AS {ide},
-    {tbl_alias}.{emp_post_id},
+    IIF({tbl_alias}.{emp_post_id}='00000000-0000-0000-0000-000000000000', NULL, {tbl_alias}.{emp_post_id}) AS {emp_post_id},
     {tbl_alias}.{emp_name},
     {tbl_alias}.{emp_position_name},
     {tbl_alias}.{emp_tribe_name},
