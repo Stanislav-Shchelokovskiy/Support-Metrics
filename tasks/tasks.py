@@ -335,6 +335,19 @@ def __update_tickets_with_iterations():
         )"""
     )
 
+    # Delete records without posts if there are records with posts as such records make no sense.
+    # This means that we collected this record before we replied in that ticket.
+    __execute(
+        f"""
+        DELETE FROM {aggs.TicketsWithIterations.get_name()}
+        WHERE   {aggs.TicketsWithIterations.emp_post_id} = '00000000-0000-0000-0000-000000000000'
+            AND {aggs.TicketsWithIterations.ticket_scid} IN (   SELECT  {aggs.TicketsWithIterations.ticket_scid}
+                                                                FROM    {aggs.TicketsWithIterations.get_name()}
+                                                                GROUP BY {aggs.TicketsWithIterations.ticket_scid}
+                                                                HAVING COUNT(*) > 1 )
+        )"""
+    )
+
 
 def __build_employee_attr_tables():
     # Contraintuitively, we use names as keys here because
