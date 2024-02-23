@@ -344,8 +344,7 @@ def __update_tickets_with_iterations():
             AND {aggs.TicketsWithIterations.ticket_scid} IN (   SELECT  {aggs.TicketsWithIterations.ticket_scid}
                                                                 FROM    {aggs.TicketsWithIterations.get_name()}
                                                                 GROUP BY {aggs.TicketsWithIterations.ticket_scid}
-                                                                HAVING COUNT(*) > 1 )
-        )"""
+                                                                HAVING COUNT(*) > 1 )"""
     )
 
 
