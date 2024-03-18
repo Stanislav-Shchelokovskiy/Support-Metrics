@@ -8,6 +8,8 @@ Add **.env** file containing the following env vars:
  - EMPS_ENDPOINT=https://hr-employee.devexpress.devx/api/v1/employees?expandDetails=True&expandDataForAnalytics=True&type=ActiveOrRetired&IncludeServiceUsers=True
  - EMPS_APPID=...
  - EMPS_USERID=...
+ - AUTH_ENDPOINT=https://graph.microsoft.com/v1.0/me
+ - AUTH_ENABLED=1
  - DB_HOME=/root/app/data
  - CORS_ORIGINS=["https://ubuntu-support.corp.devexpress.com","http://localhost:3000"]
  - # 0 = false, 1 = true

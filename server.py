@@ -1,11 +1,12 @@
 import os
+import aiohttp
 import help.index as help_index
-from repository import LocalRepository
 import toolbox.cache.view_state_cache as view_state_cache
-from fastapi import FastAPI, status
+from fastapi import FastAPI, status, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
-
+from repository import LocalRepository
+from toolbox.utils.fastapi.decorators import with_authorization
 from toolbox.utils.converters import JSON_to_object
 from server_models import (
     TicketsWithIterationsParams,
@@ -33,6 +34,10 @@ app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*'],
 )
+
+
+def check_status(response: aiohttp.ClientResponse):
+    return response.status == status.HTTP_200_OK
 
 
 def get_response(
@@ -225,12 +230,15 @@ async def validate_customers(params: CustomersParams):
 
 
 @app.post('/TicketsWithIterationsAggregates')
+@with_authorization(check_status)
 async def get_tickets_with_iterations_aggregates(
     group_by_period: str,
     range_start: str,
     range_end: str,
     baseline_aligned_mode_enabled: bool,
     body: TicketsWithIterationsParams,
+    response: Response,
+    access_token: str | None = Header(None, alias='Authorization'),
     metric: str = None,
 ):
     return await LocalRepository.tickets_with_iterations_aggregates.get_data(
@@ -244,11 +252,14 @@ async def get_tickets_with_iterations_aggregates(
 
 
 @app.post('/TicketsWithIterationsRaw')
+@with_authorization(check_status)
 async def get_tickets_with_iterations_raw(
     range_start: str,
     range_end: str,
     baseline_aligned_mode_enabled: bool,
     body: TicketsWithIterationsParams,
+    response: Response,
+    access_token: str | None = Header(None, alias='Authorization'),
 ):
     return await LocalRepository.tickets_with_iterations_raw.get_data(
         range_start=range_start,
@@ -285,7 +296,12 @@ def push_state(params: ViewState):
 
 
 @app.get('/PullState')
-def pull_state(state_id: str):
+@with_authorization(check_status)
+def pull_state(
+    state_id: str,
+    response: Response,
+    access_token: str | None = Header(None, alias='Authorization'),
+):
     state = view_state_cache.pull_state(state_id)
     return get_response(
         json_data=state or '{}',

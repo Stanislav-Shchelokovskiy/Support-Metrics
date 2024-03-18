@@ -13,6 +13,7 @@ def __prepare_env(monkeypatch: pytest.MonkeyPatch):
             name, value = line.split('=', maxsplit=1)
             monkeypatch.setenv(name, value)
     monkeypatch.setenv('SQLITE_DATABASE', f'{getcwd()}/Tests/test_db')
+    monkeypatch.setenv('AUTH_ENABLED', 0)
     monkeypatch.setenv('start_date', '2022-01-01')
     monkeypatch.setenv('end_date', '2023-01-01')
 
