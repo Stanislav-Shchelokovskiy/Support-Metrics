@@ -1,8 +1,9 @@
+import toolbox.sql.generators.sqlite.statements as sqlite_index
 from collections.abc import Sequence, Callable
 from typing import Any
 from toolbox.sql.meta_data import MetaData
 from toolbox.sql.field import Field, TEXT, INTEGER
-import toolbox.sql.generators.sqlite.statements as sqlite_index
+from sql_queries.meta.employees import EmployeesIterations
 
 
 class Tickets(MetaData):
@@ -97,7 +98,12 @@ class TicketsWithIterations(Tickets):
     emp_position_name = Field(TEXT)
     emp_tribe_name = Field(TEXT)
     emp_tent_name = Field(TEXT)
-    roles = Field(TEXT)
+    roles = EmployeesIterations.roles
+    post_tribe_id = EmployeesIterations.post_tribe_id
+    post_tent_id = EmployeesIterations.post_tent_id
+    post_reply_id = EmployeesIterations.post_reply_id
+    post_component_id = EmployeesIterations.post_component_id
+    post_feature_id = EmployeesIterations.post_feature_id
     resolution_in_hours = ResolutionTime.resolution_in_hours
     lifetime_in_hours = ResolutionTime.lifetime_in_hours
 
@@ -230,6 +236,11 @@ class TicketsWithIterationsRaw(MetaData):
     emp_tribe_name = TicketsWithIterations.emp_tribe_name
     emp_tent_name = TicketsWithIterations.emp_tent_name
     roles = TicketsWithIterations.roles
+    post_tribe_name = Field(TEXT)
+    post_tent_name = Field(TEXT)
+    post_reply = Field(TEXT)
+    post_component = Field(TEXT)
+    post_feature = Field(TEXT)
 
     @classmethod
     def get_key_fields(

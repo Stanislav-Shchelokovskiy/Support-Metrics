@@ -34,6 +34,11 @@ class EmployeesIterations(MetaData):
     tribe_name = Field(TEXT)
     tent_name = Field(TEXT)
     roles = Field(TEXT)
+    post_tribe_id = Field(TEXT)
+    post_tent_id = Field(TEXT)
+    post_reply_id = Field(TEXT)
+    post_component_id = Field(TEXT)
+    post_feature_id = Field(TEXT)
 
     @classmethod
     def get_key_fields(

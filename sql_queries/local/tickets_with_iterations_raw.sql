@@ -98,5 +98,25 @@ SELECT
     ( SELECT GROUP_CONCAT(name, '; ')
       FROM (SELECT DISTINCT name
             FROM {roles_table}
-            WHERE id IN (SELECT value FROM JSON_EACH('["' || REPLACE({tbl_alias}.{roles}, ';', '", "') || '"]')))) AS {roles}{baseline_aligned_mode_fields}
+            WHERE id IN (SELECT value FROM JSON_EACH('["' || REPLACE({tbl_alias}.{roles}, ';', '", "') || '"]')))) AS {roles},
+    ( SELECT name 
+      FROM   {tribes_table}
+      WHERE  id = {tbl_alias}.post_tribe_id
+      LIMIT 1 )  AS {post_tribe_name},
+    ( SELECT name 
+      FROM   {tents_table}
+      WHERE  id = {tbl_alias}.post_tent_id
+      LIMIT 1 )  AS {post_tent_name},
+    ( SELECT name 
+      FROM   {replies_types_table}
+      WHERE  id = {tbl_alias}.post_reply_id
+      LIMIT 1 ) AS {post_reply},
+    ( SELECT component_name 
+      FROM   {components_features_table}
+      WHERE  component_id = {tbl_alias}.post_component_id
+      LIMIT 1 ) AS {post_component},
+    ( SELECT feature_name 
+      FROM   {components_features_table}
+      WHERE  feature_id = {tbl_alias}.post_feature_id
+      LIMIT 1 ) AS {post_feature}{baseline_aligned_mode_fields}
 FROM {tickets_with_iterations_table}

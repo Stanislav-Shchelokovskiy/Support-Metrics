@@ -15,6 +15,7 @@ import sql_queries.meta.tickets as tickets
 import sql_queries.meta.cat as cat
 import sql_queries.meta.platforms_products as platforms_products
 import sql_queries.meta.employees as employees
+import sql_queries.meta.tribes_tents as tribes_tents
 import sql_queries.index.path.local as LocalPathIndex
 import repository.local.generators.periods as PeriodsGenerator
 import configs.config as config
@@ -59,6 +60,8 @@ class TicketsWithIterationsRaw(AsyncQueryDescriptor):
             'baseline_aligned_mode_fields': self.get_baseline_aligned_mode_fields(kwargs),
             'tickets_with_iterations_table': get_tickets_with_iterations_table(**kwargs),
             'roles_table': employees.Roles.get_name(),
+            'tribes_table': tribes_tents.Tribes.get_name(),
+            'tents_table': tribes_tents.Tents.get_name(),
             'tbl_alias': aggs.TicketsWithIterationsRaw.get_alias(),
         }
 
