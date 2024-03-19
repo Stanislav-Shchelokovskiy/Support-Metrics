@@ -13,6 +13,8 @@ x-support_metrics:
     - EMPS_ENDPOINT
     - EMPS_APPID
     - EMPS_USERID
+    - AUTH_ENDPOINT
+    - AUTH_ENABLED
     - REDIS_SERVICE=support_metrics_redis${VERSION}
     - REDIS_PORT=6379
     - CELERY_BROKER_URL=redis://support_metrics_redis${VERSION}:6379/0
