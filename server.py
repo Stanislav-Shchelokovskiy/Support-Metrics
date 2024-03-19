@@ -1,12 +1,11 @@
 import os
-import aiohttp
 import help.index as help_index
-import toolbox.cache.view_state_cache as view_state_cache
+import toolbox.cache.async_cache.view_state_cache as view_state_cache
 from fastapi import FastAPI, status, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from repository import LocalRepository
-from toolbox.utils.fastapi.decorators import with_authorization
+from toolbox.utils.fastapi.decorators import with_authorization, AuthResponse
 from toolbox.utils.converters import JSON_to_object
 from server_models import (
     TicketsWithIterationsParams,
@@ -36,19 +35,8 @@ app.add_middleware(
 )
 
 
-def check_status(response: aiohttp.ClientResponse):
+def check_status(response: AuthResponse):
     return response.status == status.HTTP_200_OK
-
-
-def get_response(
-    json_data: str,
-    status_code: status = status.HTTP_200_OK,
-) -> Response:
-    return Response(
-        content=json_data,
-        media_type='application/json',
-        status_code=status_code,
-    )
 
 
 # yapf: disable
@@ -290,21 +278,23 @@ async def get_metrics():
 
 
 @app.post('/PushState')
-def push_state(params: ViewState):
-    state_id = view_state_cache.push_state(params.state)
-    return get_response(json_data=state_id)
-
-
-@app.get('/PullState')
 @with_authorization(check_status)
-def pull_state(
+async def push_state(
+    body: ViewState,
+    response: Response,
+    access_token: str | None = Header(None, alias='Authorization'),
+):
+    return await view_state_cache.push_state(body.state)
+
+
+@app.get('/PullState', status_code=status.HTTP_200_OK)
+@with_authorization(check_status)
+async def pull_state(
     state_id: str,
     response: Response,
     access_token: str | None = Header(None, alias='Authorization'),
 ):
-    state = view_state_cache.pull_state(state_id)
-    return get_response(
-        json_data=state or '{}',
-        status_code=status.HTTP_404_NOT_FOUND
-        if state is None else status.HTTP_200_OK,
-    )
+    state = await view_state_cache.pull_state(state_id)
+    if not state:
+        response.status_code = status.HTTP_404_NOT_FOUND
+    return state
