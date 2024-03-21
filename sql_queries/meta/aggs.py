@@ -99,6 +99,7 @@ class TicketsWithIterations(Tickets):
     emp_tribe_name = Field(TEXT)
     emp_tent_name = Field(TEXT)
     roles = EmployeesIterations.roles
+    post_timestamp = EmployeesIterations.post_timestamp
     post_tribe_id = EmployeesIterations.post_tribe_id
     post_tent_id = EmployeesIterations.post_tent_id
     post_reply_id = EmployeesIterations.post_reply_id
@@ -236,6 +237,7 @@ class TicketsWithIterationsRaw(MetaData):
     emp_tribe_name = TicketsWithIterations.emp_tribe_name
     emp_tent_name = TicketsWithIterations.emp_tent_name
     roles = TicketsWithIterations.roles
+    post_timestamp = TicketsWithIterations.post_timestamp
     post_tribe_name = Field(TEXT)
     post_tent_name = Field(TEXT)
     post_reply = Field(TEXT)

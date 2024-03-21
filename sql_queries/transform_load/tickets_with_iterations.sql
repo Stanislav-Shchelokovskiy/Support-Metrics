@@ -55,6 +55,7 @@ SELECT
     ei.{tribe_name}    												AS {emp_tribe_name},
     ei.{tent_name}     												AS {emp_tent_name},
 	ei.{roles},
+	ei.{post_timestamp},
 	ei.{post_tribe_id},
     ei.{post_tent_id},
     ei.{post_reply_id},

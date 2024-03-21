@@ -6,19 +6,11 @@ DROP TABLE IF EXISTS TicketsWithIterationsTEMP;
 CREATE TABLE TicketsWithIterationsTEMP AS SELECT * FROM TicketsWithIterationsBACKUP;
 
 -- alter intermediate
-ALTER TABLE TicketsWithIterationsTEMP ADD COLUMN post_tribe_id      TEXT;
-ALTER TABLE TicketsWithIterationsTEMP ADD COLUMN post_tent_id       TEXT;
-ALTER TABLE TicketsWithIterationsTEMP ADD COLUMN post_reply_id      TEXT;
-ALTER TABLE TicketsWithIterationsTEMP ADD COLUMN post_component_id  TEXT;
-ALTER TABLE TicketsWithIterationsTEMP ADD COLUMN post_feature_id    TEXT;
+ALTER TABLE TicketsWithIterationsTEMP ADD COLUMN post_timestamp      TEXT;
 
 -- update intermediate
 UPDATE  TicketsWithIterationsTEMP AS ti
-SET     post_tribe_id = i.post_tribe_id,
-        post_tent_id = i.post_tent_id,
-        post_reply_id = i.post_reply_id,
-        post_component_id = i.post_component_id,
-        post_feature_id = i.post_feature_id
+SET     post_timestamp = i.post_timestamp
 FROM    EmployeesIterations AS i
 WHERE   i.ticket_id = ti.ticket_id AND i.post_id = ti.emp_post_id;
 
@@ -36,6 +28,7 @@ CREATE TABLE TicketsWithIterations (
         emp_tribe_name                  TEXT,
         emp_tent_name                   TEXT,
         roles                           TEXT,
+        post_timestamp                  TEXT,
         post_tribe_id                   TEXT,
         post_tent_id                    TEXT,
         post_reply_id                   TEXT,
@@ -99,6 +92,7 @@ SELECT DISTINCT
         emp_tribe_name                  AS emp_tribe_name,
         emp_tent_name                   AS emp_tent_name,
         roles                           AS roles,
+        post_timestamp                  AS post_timestamp,
         post_tribe_id                   AS post_tribe_id,
         post_tent_id                    AS post_tent_id,
         post_reply_id                   AS post_reply_id,
@@ -165,6 +159,7 @@ ON CONFLICT(user_crmid, ticket_scid, emp_post_id) DO UPDATE SET
         emp_tribe_name                  = excluded.emp_tribe_name,
         emp_tent_name                   = excluded.emp_tent_name,
         roles                           = excluded.roles,
+        post_timestamp                  = excluded.post_timestamp,
         post_tribe_id                   = excluded.post_tribe_id,
         post_tent_id                    = excluded.post_tent_id,
         post_reply_id                   = excluded.post_reply_id,

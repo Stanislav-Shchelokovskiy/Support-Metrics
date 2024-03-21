@@ -8,7 +8,7 @@ DECLARE @no_line		TINYINT = 2;
 
 WITH replies AS (
 	SELECT DISTINCT
-		reply_timestamp AS reply_timestamp,
+		CONVERT(NVARCHAR(30), reply_timestamp, 126)	AS reply_timestamp,
         LEAD(reply_timestamp, 1, '3000-01-01') OVER (PARTITION BY ticket_id ORDER BY reply_timestamp ASC) AS next_reply_timestamp,
 		ticket_id,
 		post_id,
@@ -27,6 +27,7 @@ WITH replies AS (
 )
 
 SELECT 	r.ticket_id			AS {ticket_id},
+		r.reply_timestamp	AS {post_timestamp},
 		r.post_id			AS {post_id},
 		r.emp_crmid			AS {crmid},
 		r.emp_scid			AS {scid},

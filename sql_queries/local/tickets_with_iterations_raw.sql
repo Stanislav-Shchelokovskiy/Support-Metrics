@@ -99,6 +99,7 @@ SELECT
       FROM (SELECT DISTINCT name
             FROM {roles_table}
             WHERE id IN (SELECT value FROM JSON_EACH('["' || REPLACE({tbl_alias}.{roles}, ';', '", "') || '"]')))) AS {roles},
+    {tbl_alias}.{post_timestamp},
     ( SELECT name 
       FROM   {tribes_table}
       WHERE  id = {tbl_alias}.post_tribe_id
