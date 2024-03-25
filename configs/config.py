@@ -1,7 +1,7 @@
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from toolbox.utils.converters import DateTimeToSqlString
-from toolbox.utils.env import (
+from toolbox.tasks_config import (
     recalculate_for_last_n_days,
     recalculate_from_beginning,
     recalculate_for_last_n_days_long,

@@ -1,5 +1,8 @@
 from pandas import DataFrame
-from toolbox.utils.env import recalculate_from_beginning
+from toolbox.tasks_config import (
+    recalculate_from_beginning,
+    reset_recalculate_from_beginning,
+)
 from toolbox.sql.field import Field
 from toolbox.sql.sql_query import SqlQuery
 from toolbox.sql.query_executors.sqlite_query_executor import SQLiteNonQueryExecutor
@@ -281,7 +284,6 @@ def __post_process(years_of_history: str):
     __execute('vacuum;')
     __execute('pragma optimize;')
 
-    from toolbox.utils.env import reset_recalculate_from_beginning
     reset_recalculate_from_beginning()
 
 
