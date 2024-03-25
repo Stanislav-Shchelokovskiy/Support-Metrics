@@ -4,9 +4,11 @@ import toolbox.cache.async_cache.view_state_cache as view_state_cache
 from fastapi import FastAPI, status, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
+from prometheus_client import make_asgi_app
 from repository import LocalRepository
 from toolbox.utils.fastapi.decorators import with_authorization, AuthResponse
 from toolbox.utils.converters import JSON_to_object
+from toolbox.sql.aggs.metrics_usage import track_metric_usage
 from server_models import (
     TicketsWithIterationsParams,
     TentsParams,
@@ -219,6 +221,7 @@ async def validate_customers(params: CustomersParams):
 
 @app.post('/TicketsWithIterationsAggregates')
 @with_authorization(check_status)
+@track_metric_usage(LocalRepository.metrics, 'support_metrics')
 async def get_tickets_with_iterations_aggregates(
     group_by_period: str,
     range_start: str,
@@ -298,3 +301,7 @@ async def pull_state(
     if not state:
         response.status_code = status.HTTP_404_NOT_FOUND
     return state
+
+
+metrics_app = make_asgi_app()
+app.mount('/metrics', metrics_app)

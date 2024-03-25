@@ -78,3 +78,5 @@ async def get_metrics() -> str:
             }
         )
     )
+
+metrics = select_metrics
