@@ -37,7 +37,7 @@ app.add_middleware(
 )
 
 
-def check_status(response: AuthResponse):
+async def check_status(response: AuthResponse):
     return response.status == status.HTTP_200_OK
 
 
