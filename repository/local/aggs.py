@@ -6,7 +6,7 @@ from sql_queries.meta.aggs import TicketsWithIterations, CSI
 class MetricGroup:
     entities = 'Entities'
     productivity = 'Productivity'
-    customers = 'Customers'
+    service = 'Service'
 
 
 people = Metric(
@@ -35,25 +35,25 @@ iterations_to_tickets = Metric.from_metric(
     replies / tickets,
 )
 
-csi = Metric(
-    'Satisfaction Index',
-    'Customer Satisfaction Index',
-    MetricGroup.customers,
-    SUM(f'IIF({CSI.rating} = 1, 1, 0)') / COUNT('*') * 100,
-)
-
-ticket_lifetime = Metric(
-    'Ticket Lifetime',
-    '',
-    MetricGroup.productivity,
-    MEDIAN(TicketsWithIterations.lifetime_in_hours),
-)
-
 ticket_resolution_time = Metric(
     'Ticket Resolution Time',
     '',
     MetricGroup.productivity,
     AVG(TicketsWithIterations.resolution_in_hours),
+)
+
+ticket_lifetime = Metric(
+    'Ticket Lifetime',
+    '',
+    MetricGroup.service,
+    MEDIAN(TicketsWithIterations.lifetime_in_hours),
+)
+
+csi = Metric(
+    'Satisfaction Index',
+    'Customer Satisfaction Index',
+    MetricGroup.service,
+    SUM(f'IIF({CSI.rating} = 1, 1, 0)') / COUNT('*') * 100,
 )
 
 metrics = {
