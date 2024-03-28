@@ -1,3 +1,5 @@
+### See [Engineering Metrics WIKI](http://wiki.pages.devx/supportwiki/new_tools_internal/engineering_metrics/) for a full review of the overall platform functionality.
+
 # How to start the app
 
 Add **.env** file containing the following env vars:
@@ -12,7 +14,7 @@ Add **.env** file containing the following env vars:
  - AUTH_ENABLED=1
  - DB_HOME=/root/app/data
  - CORS_ORIGINS=["https://ubuntu-support.corp.devexpress.com","http://localhost:3000"]
- - # 0 = false, 1 = true
+ - \# 0 = false, 1 = true
  - UPDATE_ON_STARTUP=0
  - RECALCULATE_FOR_LAST_DAYS=180
  - RECALCULATE_FOR_LAST_DAYS_LONG = 730
@@ -80,3 +82,21 @@ Having async repositories on the server side will give significant benefit in te
 # How to push an update
 There are two remote preconfigured branches: release and rc (see .github/workflows).<br>
 You create a new local branch, add changes to it, push it to remote and then merge your branch into rc or release (if you are shure you want to update release version directly). Then add VERSION=_rc to the .env file on production machine if you are going to run the release candidate (rc) version or skip it if you want to run release version.
+
+# How to force data recalculation or change update periods?
+Data is calculated periodically according to the schedule in **worker.setup_periodic_tasks** every Sunday (for the last 2 years), Wednesday, Friday at 1 AM (for the last 6 months).
+- UPDATE_ON_STARTUP env var controls whether or not to start updating DataMart when the service starts (0 = false, 1 = true). Default is 0.
+- RECALCULATE_FOR_LAST_DAYS env var specifies 'short' update horizon which is run every Wednesday and Friday.
+- RECALCULATE_FOR_LAST_DAYS_LONG env var specifies 'long' update horizon which is run every Sunday.
+- RECALCULATE_FROM_THE_BEGINNING env car controls whether is is necessary to recalculate data from scratch. It is effective only once as it is reset with the help of **toolbox.tasks_config.reset_recalculate_from_beginning** when recalculation is complete (see tasks->tasks->process_staged_data).
+
+At the moment, the service doesn't offer api to change these parameters. So, you need to either:
+1. Change them in the running container (support_metrics_worker) with the help of docker exec.
+2. Change these params in the .env file and restart the container.
+
+To run (apply) a task manually use [Flower API](https://flower.readthedocs.io/en/latest/api.html#post--api-task-async-apply-(.+)) like following:<br>
+POST https://ubuntu-support.corp.devexpress.com/SupportMetricsDash/api/task/async-apply/update_support_metrics
+
+This is probably the only task you will need to apply if you need to update DataMart out of schedule.
+
+Don't forget to specify auth request header(s) if the service is run [behind reverse proxy](https://flower.readthedocs.io/en/latest/reverse-proxy.html#running-behind-reverse-proxy)
