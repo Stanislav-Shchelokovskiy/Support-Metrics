@@ -1,3 +1,4 @@
+import os
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from toolbox.utils.converters import DateTimeToSqlString
@@ -54,3 +55,6 @@ def _offset_in_days(period: str, for_emps: bool):
         days = recalculate_for_last_n_days_long()
 
     return relativedelta(days=days)
+
+def update_on_startup()-> int:
+    return int(os.environ['UPDATE_ON_STARTUP'])

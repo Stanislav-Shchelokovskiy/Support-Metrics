@@ -1,6 +1,6 @@
 from sql_queries.meta.aggs import TicketsWithIterations
 from toolbox.sql.generators import filter_clause_generator
-import configs.config as config
+import configs.tasks_config as tasks_config
 
 
 def generate_creation_date_with_rank_offset_start_filter(
@@ -9,7 +9,7 @@ def generate_creation_date_with_rank_offset_start_filter(
 ) -> str:
     return filter_clause_generator.generate_between_filter(
         col=TicketsWithIterations.creation_date,
-        values=(f"DATE('{range_start}', '-{config.get_rank_period_offset()}')", f"'{range_end}'"),
+        values=(f"DATE('{range_start}', '-{tasks_config.get_rank_period_offset()}')", f"'{range_end}'"),
         filter_prefix='',
         values_converter=str,
     )

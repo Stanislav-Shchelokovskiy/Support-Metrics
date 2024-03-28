@@ -7,7 +7,7 @@ from celery.signals import worker_ready
 
 import tasks.tasks as tasks
 import tasks.employees as employees
-import configs.config as config
+import configs.tasks_config as tasks_config
 
 
 app = Celery(__name__)
@@ -30,7 +30,7 @@ def on_startup(sender, **kwargs):
         'load_platforms_products',
         'load_ides',
     ]
-    if int(os.environ['UPDATE_ON_STARTUP']):
+    if tasks_config.update_on_startup():
         tasks.append('update_support_metrics')
     else:
         tasks.append('update_employees'),
@@ -53,7 +53,7 @@ def setup_periodic_tasks(sender, **kwargs):
             hour=1,
             day_of_week=[3, 5],
         ),
-        update_support_metrics.s(period=config.SHORT_PERIOD),
+        update_support_metrics.s(period=tasks_config.SHORT_PERIOD),
     )
 
     sender.add_periodic_task(
@@ -62,7 +62,7 @@ def setup_periodic_tasks(sender, **kwargs):
             hour=1,
             day_of_week=[0],
         ),
-        update_support_metrics.s(period=config.LONG_PERIOD),
+        update_support_metrics.s(period=tasks_config.LONG_PERIOD),
     )
 
 
@@ -198,7 +198,7 @@ def load_tracked_groups(self, **kwargs):
     return run_retriable_task(
         self,
         tasks.load_tracked_groups,
-        start_date=config.get_tickets_period(period=period)['start_date'],
+        start_date=tasks_config.get_tickets_period(period=period)['start_date'],
         end_date='9999-12-31',
     )
 
@@ -233,7 +233,7 @@ def load_tickets(self, **kwargs):
     return run_retriable_task(
         self,
         tasks.load_tickets,
-        **config.get_tickets_period(period=period),
+        **tasks_config.get_tickets_period(period=period),
     )
 
 
@@ -242,7 +242,7 @@ def get_employees(self, **kwargs):
     return run_retriable_task(
         self,
         employees.get_employees,
-        start_date=config.get_emp_start(),
+        start_date=tasks_config.get_emp_start(),
     )
 
 
@@ -251,7 +251,7 @@ def load_employees(self, *args, **kwargs):
     return run_retriable_task(
         self,
         tasks.load_employees,
-        start_date=config.get_emp_start(),
+        start_date=tasks_config.get_emp_start(),
         employees_json=args[0],
     )
 
@@ -281,7 +281,7 @@ def load_employees_iterations(self, *args, **kwargs):
     return run_retriable_task(
         self,
         tasks.load_employees_iterations,
-        **config.get_tickets_period(period=period),
+        **tasks_config.get_tickets_period(period=period),
         employees_json=args[0],
     )
 
@@ -299,7 +299,7 @@ def load_resolution_time(self, *args, **kwargs):
     return run_retriable_task(
         self,
         tasks.load_resolution_time,
-        years_of_history=config.years_of_history(config.TSQL),
+        years_of_history=tasks_config.years_of_history(tasks_config.TSQL),
         employees_json=args[0],
     )
 
@@ -309,8 +309,8 @@ def process_staged_data(self, **kwargs):
     return run_retriable_task(
         self,
         tasks.process_staged_data,
-        rank_period_offset=config.get_rank_period_offset(),
-        years_of_history=config.years_of_history(config.SQLITE),
+        rank_period_offset=tasks_config.get_rank_period_offset(),
+        years_of_history=tasks_config.years_of_history(tasks_config.SQLITE),
     )
 
 
@@ -322,4 +322,4 @@ def run_retriable_task(task_instance, task: Callable, *args, **kwargs) -> str:
 
 
 def __get_period(kwargs: Mapping):
-    return kwargs.get('period', config.SHORT_PERIOD)
+    return kwargs.get('period', tasks_config.SHORT_PERIOD)

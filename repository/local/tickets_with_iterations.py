@@ -18,7 +18,7 @@ import sql_queries.meta.employees as employees
 import sql_queries.meta.tribes_tents as tribes_tents
 import sql_queries.index.path.local as LocalPathIndex
 import repository.local.generators.periods as PeriodsGenerator
-import configs.config as config
+import configs.tasks_config as tasks_config
 
 
 class TicketsPeriod(GeneralSelectAsyncQueryDescriptor):
@@ -28,7 +28,7 @@ class TicketsPeriod(GeneralSelectAsyncQueryDescriptor):
 
     def get_format_params(self, kwargs: Mapping) -> Mapping[str, str]:
         return {
-            'select': f"DATE(MIN({aggs.TicketsWithIterations.creation_date}), '+{config.get_rank_period_offset()}') AS {PeriodMeta.start}, MAX({aggs.TicketsWithIterations.creation_date}) AS {PeriodMeta.end}",
+            'select': f"DATE(MIN({aggs.TicketsWithIterations.creation_date}), '+{tasks_config.get_rank_period_offset()}') AS {PeriodMeta.start}, MAX({aggs.TicketsWithIterations.creation_date}) AS {PeriodMeta.end}",
             'from': aggs.TicketsWithIterations.get_name(),
             'where_group_limit': '',
         }

@@ -14,7 +14,7 @@ from toolbox.sql.generators.Tests.mocks import (
     MockFilterParameterNode,
     MockPercentile,
 )
-import configs.config as config
+import configs.tasks_config as tasks_config
 
 
 @pytest.mark.parametrize(
@@ -50,7 +50,7 @@ def test_generate_creation_date_filter(
                 'range_start': 'qwe',
                 'range_end': 'asd',
             },
-            f"{TicketsWithIterations.creation_date} BETWEEN DATE('qwe', '-{config.get_rank_period_offset()}') AND 'asd'",
+            f"{TicketsWithIterations.creation_date} BETWEEN DATE('qwe', '-{tasks_config.get_rank_period_offset()}') AND 'asd'",
         ),
     ]
 )

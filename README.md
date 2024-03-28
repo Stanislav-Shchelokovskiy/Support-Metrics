@@ -38,7 +38,7 @@ VERSION env var specifies prefix which allows running same container on same mac
  - Create virtual env using [poetry](https://python-poetry.org/docs/#installation). For this run poetry "env use /path/to/python". You can install python from source or download it from a repository. 
  - Install dependencies ("poetry install")
  - Execute ". .dev_env.sh" to export dev env vars
- - start redise_service **docker run -d --name=redis_service -v redis_stack:/data --network=support_analytics --restart always redis/redis-stack:latest** 
+ - start redise_service **docker run -d -p 6379:6379 -p 10001:8001 --name=redis_service -v redis_stack:/data --network=support_analytics --restart always redis/redis-stack:latest** 
  - Run .venv/bin/uvicorn server:app --host 0.0.0.0 --port $SERVER_PORT --reload --log-level=info
 
 ## To run on production
@@ -56,7 +56,7 @@ Server -->|push client app states|RedisCache
 
 # App components
 
-## config
+## configs
 Stores period and other possible configuration settings.<br>
 
 ## sql_queries
