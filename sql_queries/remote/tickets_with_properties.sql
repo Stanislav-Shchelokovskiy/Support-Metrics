@@ -25,11 +25,11 @@ SELECT
 	ti.is_private						AS {is_private},
 	ug.groups							AS {user_groups},
 	ticket_tags.tags					AS {ticket_tags},
-	multi_selectors.platforms_ids		AS {platforms},
-	multi_selectors.products_ids		AS {products},
-	multi_selectors.specifics_ids		AS {frameworks},
-	multi_selectors.builds_ids			AS {builds},
-	multi_selectors.fixed_in_builds_ids	AS {fixed_in_builds},
+	ticket_platforms					AS {platforms},
+	ticket_products						AS {products},
+	specifics							AS {frameworks},
+	builds								AS {builds},
+	fixed_in_builds						AS {fixed_in_builds},
 	fixed_info.fixed_by					AS {fixed_by},
 	fixed_info.fixed_on					AS {fixed_on},
 	single_selectors.TicketStatus		AS {ticket_status},
@@ -80,16 +80,6 @@ FROM #TicketsWithLicenses AS ti
 					AND Ticket_Id = ti.ticket_id	) AS tp
 		PIVOT(MIN(Value) FOR Name IN ([Assignee], [TicketStatus], [ReplyId], [ControlId], [FeatureId], [OperatingSystem], [IDE], [Severity])) AS value
 	) AS single_selectors
-	OUTER APPLY (
-		SELECT 	
-			STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'PlatformedProductId' AND Value NOT LIKE '%:%', CAST(Value AS UNIQUEIDENTIFIER), NULL)), @separator) AS platforms_ids,
-			STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'ProductId',	 CAST(Value AS UNIQUEIDENTIFIER), NULL)), @separator) AS products_ids,
-			STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'SpecificId',	 CAST(Value AS UNIQUEIDENTIFIER), NULL)), @separator) AS specifics_ids,
-			STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'BuildId',		 Value, NULL)), @separator) AS builds_ids,
-			STRING_AGG(CONVERT(NVARCHAR(MAX), IIF(Name = 'FixedInBuild', Value, NULL)), @separator) AS fixed_in_builds_ids
-		FROM	SupportCenterPaid.[c1f0951c-3885-44cf-accb-1a390f34c342].TicketProperties
-		WHERE	Ticket_Id = ti.ticket_id
-	) AS multi_selectors
 	OUTER APPLY (
 		SELECT	 TOP 1 AuditOwner AS closed_by, CAST(EntityModified AS DATE) AS closed_on
 		FROM	 scpaid_audit.[c1f0951c-3885-44cf-accb-1a390f34c342].scworkflow_TicketProperties

@@ -24,7 +24,7 @@ def test_csi():
 
         want = DataFrame(data=csi)
 
-        got = transform(got, dtfield=CSI.date.name)
-        want = transform(want, dtfield=CSI.date.name)
+        got = transform(got, dtfields=(CSI.date.name,))
+        want = transform(want, dtfields=(CSI.date.name,))
 
         assert_frame_equal(got, want)

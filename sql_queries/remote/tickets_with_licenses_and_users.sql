@@ -40,7 +40,7 @@ SELECT	platform_id								AS platform_id,
 		CEILING(COUNT(product_id) * 2.0 / 3)	AS product_cnt_boundary
 FROM (	SELECT	platforms.Id			AS platform_id,
 				products.Id				AS product_id,
-				platform_tribe.id		AS platform_tribe_id,
+				platform_tribe.Id		AS platform_tribe_id,
 				product_tribe.Id		AS product_tribe_id,
 				platform_tribe.Name		AS platform_tribe_name,
 				platforms.Name			AS platform_name,
@@ -265,12 +265,12 @@ FROM (	SELECT	Id, FriendlyId, EntityType, CAST(Created AS DATE) AS creation_date
 			SELECT	TOP 1 licenses_inner.*
 			FROM	(	SELECT	licenses_most_inner.*,
 							CASE 
-								WHEN tickets.creation_date BETWEEN licenses_most_inner.subscription_start AND licenses_most_inner.expiration_date
+								WHEN tickets.creation_date BETWEEN licenses_most_inner.subscription_start AND licenses_most_inner.expiration_date AND owner_crmid = end_user_crmid AND lic_origin = @actual_lic_origin
 									THEN IIF(parent_license_name IS NULL, @best_suitable, @better_suitable)
 								WHEN licenses_most_inner.revoked_since IS NULL AND licenses_most_inner.expiration_date IS NOT NULL AND tickets.creation_date > licenses_most_inner.expiration_date
 									THEN @suitable
-								WHEN licenses_most_inner.revoked_since IS NOT NULL AND tickets.creation_date > licenses_most_inner.revoked_since
-									THEN @least_suitable
+								WHEN licenses_most_inner.revoked_since IS NOT NULL
+									THEN IIF(tickets.creation_date > licenses_most_inner.revoked_since, @least_suitable, @better_suitable)
 								ELSE NULL
 							END AS suitability
 						FROM	licenses AS licenses_most_inner
