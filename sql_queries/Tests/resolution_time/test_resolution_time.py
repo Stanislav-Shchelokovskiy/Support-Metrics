@@ -2,10 +2,9 @@ import pytest
 import sql_queries.Tests.resolution_time.params as params
 import sql_queries.Tests.resolution_time.data as test_data
 from pandas import DataFrame
-from pandas.testing import assert_frame_equal
 from repository import RepositoryFactory
 from sql_queries.Tests.helpers.db import db
-from sql_queries.Tests.helpers.df import transform
+from sql_queries.Tests.helpers.df import assert_equal
 
 
 @pytest.mark.parametrize(
@@ -29,7 +28,4 @@ def test_resolution_time(up, want):
             employees_json='',
         )
 
-        got = transform(got)
-        want = transform(DataFrame(data=want))
-
-        assert_frame_equal(got, want)
+        assert_equal(got, want)
