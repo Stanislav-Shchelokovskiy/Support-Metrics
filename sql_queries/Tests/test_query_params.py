@@ -19,7 +19,7 @@ import toolbox.sql.index as RootPath
     'get_query_file_path, format_params',
     [
         (
-            RemotePathIndex.tickets_with_licenses_and_users,
+            RemotePathIndex.tickets_with_licenses,
             {
                 'start_date': 'start_date',
                 'end_date': 'end_date',

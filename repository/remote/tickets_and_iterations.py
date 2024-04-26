@@ -29,7 +29,23 @@ class Tickets(RepositoryAlchemyQueries):
     def get_prep_queries(self, **kwargs) -> Iterable[SqlQuery]:
         return (
             self.sql_query_type(
-                query_file_path=RemotePathIndex.tickets_with_licenses_and_users,
+                query_file_path=RemotePathIndex.sale_item_platforms,
+                format_params=kwargs,
+            ),
+            self.sql_query_type(
+                query_file_path=RemotePathIndex.sale_tem_products,
+                format_params=kwargs,
+            ),
+            self.sql_query_type(
+                query_file_path=RemotePathIndex.sale_items_flat,
+                format_params=kwargs,
+            ),
+            self.sql_query_type(
+                query_file_path=RemotePathIndex.licenses,
+                format_params=kwargs,
+            ),
+            self.sql_query_type(
+                query_file_path=RemotePathIndex.tickets_with_licenses,
                 format_params=kwargs,
             ),
         )

@@ -10,7 +10,6 @@ DECLARE @paid		  TINYINT = 5
 DECLARE @free_license TINYINT = 6
 
 DECLARE @actual_lic_origin     TINYINT = 0
-DECLARE @historical_lic_origin TINYINT = 1
 
 DECLARE @licensed					TINYINT = 0
 DECLARE @free						TINYINT = 1
@@ -32,110 +31,6 @@ DECLARE @best_suitable		TINYINT = 0
 DECLARE @better_suitable	TINYINT = 1
 DECLARE @suitable			TINYINT = 2
 DECLARE @least_suitable		TINYINT = 3
-
-
-DROP TABLE IF EXISTS #SaleItemPlatforms;
-WITH platform_product_count AS (
-SELECT	platform_id								AS platform_id,
-		CEILING(COUNT(product_id) * 2.0 / 3)	AS product_cnt_boundary
-FROM (	SELECT	platforms.Id			AS platform_id,
-				products.Id				AS product_id,
-				platform_tribe.Id		AS platform_tribe_id,
-				product_tribe.Id		AS product_tribe_id,
-				platform_tribe.Name		AS platform_tribe_name,
-				platforms.Name			AS platform_name,
-				product_tribe.Name		AS product_tribe_name,
-				products.Name			AS product_name
-		FROM (	SELECT DISTINCT Product_Id, Platform_Id 
-				FROM CRM.dbo.SaleItemBuild_Product_Plaform
-			 )	AS sibpp
-			  INNER JOIN CRM.dbo.Platforms	AS platforms		ON platforms.Id = sibpp.Platform_Id
-			  INNER JOIN CRM.dbo.Products	AS products			ON products.Id = sibpp.Product_Id
-			  INNER JOIN CRM.dbo.Tribes		AS platform_tribe	ON platform_tribe.Id = platforms.DefaultTribe
-			  LEFT JOIN CRM.dbo.Tribes		AS product_tribe	ON product_tribe.Id = products.Tribe_Id
-		WHERE platforms.DefaultTribe IS NOT NULL OR products.Tribe_Id IS NOT NULL
-	) AS PlatformsProductsTribes
-WHERE product_tribe_id = platform_tribe_id
-GROUP BY platform_id, platform_name )
-
-SELECT	sib.SaleItem_Id		AS sale_item_id,
-		sibpp.platform_id	AS platform_id
-INTO	#SaleItemPlatforms
-FROM	CRM.dbo.SaleItem_Build AS sib
-		CROSS APPLY (
-			SELECT	Platform_Id			AS platform_id,
-					COUNT(Product_Id)	AS product_cnt
-			FROM	CRM.dbo.SaleItemBuild_Product_Plaform
-			WHERE	SaleItemBuild_Id = sib.Id
-			GROUP BY Platform_Id
-		) AS sibpp
-		INNER JOIN platform_product_count AS ppc ON ppc.platform_id = sibpp.platform_id 
-												AND	ppc.product_cnt_boundary < sibpp.product_cnt
-GROUP BY sib.SaleItem_Id, sibpp.platform_id
-CREATE CLUSTERED INDEX sib_product_cnt ON #SaleItemPlatforms (sale_item_id, platform_id)
-
-
-DROP TABLE IF EXISTS #SaleItemProducts
-SELECT	sib.SaleItem_Id		AS sale_item_id,
-		sibpp.Product_Id	AS product_id
-INTO	#SaleItemProducts
-FROM	CRM.dbo.SaleItem_Build AS sib
-		INNER JOIN CRM.dbo.SaleItemBuild_Product_Plaform AS sibpp ON sibpp.SaleItemBuild_Id = sib.Id
-GROUP BY sib.SaleItem_Id, sibpp.Product_Id
-CREATE CLUSTERED INDEX si_products ON #SaleItemProducts (sale_item_id, product_id)
-
-
-DROP TABLE IF EXISTS #SaleItemsFlat;
-WITH sale_items_flat AS (
-	SELECT	Id AS id,
-			Parent AS parent,
-			Name AS name,
-			CONVERT(NVARCHAR(MAX), id) AS items,
-			0 AS level
-	FROM	CRM.dbo.SaleItems AS si
-	WHERE	IsTraining = 0
-	UNION ALL
-	SELECT	si.Id,
-			si.Parent,
-			si.Name,
-			sif.items + IIF(LEN(sif.items)>0, @separator, '') + CONVERT(NVARCHAR(MAX), si.id) AS items,
-			sif.level + 1
-	FROM	sale_items_flat	AS sif
-			INNER JOIN CRM.dbo.SaleItems AS si ON si.Id = sif.parent
-)
-
-SELECT	id			AS id,
-		name		AS name,
-		items.item	AS item
-INTO	#SaleItemsFlat
-FROM	sale_items_flat
-		CROSS APPLY (
-			SELECT DISTINCT CAST(value AS UNIQUEIDENTIFIER) AS item
-			FROM STRING_SPLIT(items, @separator)
-		) AS items
-GROUP BY id, name, items.item
-CREATE CLUSTERED INDEX idx_id ON #SaleItemsFlat (id)
-
-
-DROP TABLE IF EXISTS #LisencesOnly
-SELECT	*
-INTO	#LisencesOnly
-FROM (	SELECT	Id					AS id,
-				Owner_Id			AS owner_crmid,
-				EndUser_Id			AS end_user_crmid,
-				OrderItem_Id		AS order_item_id,
-				@actual_lic_origin	AS lic_origin,
-				NULL				AS revoked_since
-		FROM	CRM.dbo.Licenses
-		UNION
-		SELECT	EntityOid,
-				Owner_Id,
-				EndUser_Id,
-				OrderItem_Id,
-				@historical_lic_origin,
-				IIF(ChangedProperties LIKE '%EndUser%', CONVERT(DATE, EntityModified), NULL)
-		FROM 	CRMAudit.dxcrm.Licenses
-) AS l
 
 
 DROP TABLE IF EXISTS #TicketsWithLicenses;
