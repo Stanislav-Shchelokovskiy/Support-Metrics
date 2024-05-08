@@ -12,3 +12,5 @@ rating_range = {
     CSI.date.name: ['2023-01-01', '2023-02-01', '2023-03-01', '2023-04-01'],
     CSI.rating.name: [0, -1, 1, 0],
 }
+
+dtfields = [CSI.date.name]

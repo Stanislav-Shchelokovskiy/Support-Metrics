@@ -1,8 +1,9 @@
 from sql_queries.meta.aggs import TicketsWithIterations
-from sql_queries.Tests.tickets.results.licenses import lcs
+from sql_queries.Tests.tickets.cases.licenses import _lcs
+import sql_queries.index.path.remote as _path_index
 
 
-class twl:
+class __twl:
     specifics = 'specifics'
     ticket_platforms = 'ticket_platforms'
     ticket_products = 'ticket_products'
@@ -12,7 +13,7 @@ class twl:
     suitability = 'suitability'
 
 
-tickets_with_licenses = {
+want = {
     TicketsWithIterations.user_crmid.name:
         [
             '00000000-0000-0000-0000-000000000001',
@@ -90,7 +91,7 @@ tickets_with_licenses = {
             True, True, True, True, True, True, True, True, True, True, True,
             True, True, True, True
         ],
-    twl.specifics:
+    __twl.specifics:
         [
             None, None, None, None, None, None,
             '00000000-0000-0000-0000-000000000001', None, None, None, None,
@@ -107,7 +108,7 @@ tickets_with_licenses = {
             '00000000-0000-0000-0000-000000000007', None, None, None, None,
             None, None, None
         ],
-    twl.ticket_platforms:
+    __twl.ticket_platforms:
         [
             '00000000-0000-0000-0000-000000000001',
             '00000000-0000-0000-0000-000000000004', None,
@@ -117,7 +118,7 @@ tickets_with_licenses = {
             '00000000-0000-0000-0000-000000000001', None, None, None, None,
             None, '00000000-0000-0000-0000-000000000002'
         ],
-    twl.ticket_products:
+    __twl.ticket_products:
         [
             None, None, '00000000-0000-0000-0000-000000000007',
             '00000000-0000-0000-0000-000000000007',
@@ -132,7 +133,7 @@ tickets_with_licenses = {
             '00000000-0000-0000-0000-000000000011',
             '00000000-0000-0000-0000-000000000006'
         ],
-    lcs.owner_crmid:
+    _lcs.owner_crmid:
         [
             None, '00000000-0000-0000-0000-000000000001',
             '00000000-0000-0000-0000-000000000001',
@@ -142,7 +143,7 @@ tickets_with_licenses = {
             '00000000-0000-0000-0000-000000000004',
             '00000000-0000-0000-0000-000000000005'
         ],
-    lcs.end_user_crmid:
+    _lcs.end_user_crmid:
         [
             None, '00000000-0000-0000-0000-000000000001',
             '00000000-0000-0000-0000-000000000001',
@@ -152,7 +153,7 @@ tickets_with_licenses = {
             '00000000-0000-0000-0000-000000000004',
             '00000000-0000-0000-0000-000000000005'
         ],
-    lcs.lic_origin:
+    _lcs.lic_origin:
         [
             None,
             0,
@@ -170,7 +171,7 @@ tickets_with_licenses = {
             0,
             1,
         ],
-    lcs.revoked_since:
+    _lcs.revoked_since:
         [
             None, None, None, '2024-02-01', '2024-02-01', None, None, None,
             None, None, None, None, None, None, '2023-07-01'
@@ -187,7 +188,7 @@ tickets_with_licenses = {
             None, None, '2024-01-01', None, None, None, None, '2024-02-01',
             '2024-01-01'
         ],
-    twl.free:
+    __twl.free:
         [None, 5, 5, 5, 5, None, None, None, 5, None, None, None, None, 6, 5],
     TicketsWithIterations.license_name.name:
         [
@@ -199,7 +200,7 @@ tickets_with_licenses = {
             None, 'dxp', None, None, None, None, None, None, None, None, None,
             None, None, None, None
         ],
-    twl.licensed_platforms:
+    __twl.licensed_platforms:
         [
             None, '00000000-0000-0000-0000-000000000004',
             '00000000-0000-0000-0000-000000000002',
@@ -209,7 +210,7 @@ tickets_with_licenses = {
             '00000000-0000-0000-0000-000000000002',
             '00000000-0000-0000-0000-000000000002'
         ],
-    twl.licensed_products:
+    __twl.licensed_products:
         [
             None,
             '00000000-0000-0000-0000-000000000012;00000000-0000-0000-0000-000000000013;00000000-0000-0000-0000-000000000014;00000000-0000-0000-0000-000000000015',
@@ -222,8 +223,31 @@ tickets_with_licenses = {
             '00000000-0000-0000-0000-000000000008;00000000-0000-0000-0000-000000000009;00000000-0000-0000-0000-000000000010;00000000-0000-0000-0000-000000000011',
             '00000000-0000-0000-0000-000000000008;00000000-0000-0000-0000-000000000009;00000000-0000-0000-0000-000000000010;00000000-0000-0000-0000-000000000011'
         ],
-    twl.suitability:
+    __twl.suitability:
         [None, 1, 2, 1, 3, None, None, None, 0, None, None, None, None, 0, 3],
     TicketsWithIterations.license_status.name:
         [11, 0, 2, 0, 3, 6, 8, 5, 0, 7, 11, 9, 10, 1, 4],
 }
+
+queries = (
+    _path_index.sale_item_platforms,
+    _path_index.sale_tem_products,
+    _path_index.sale_items_flat,
+    _path_index.licenses,
+    _path_index.tickets_with_licenses,
+)
+
+params = {
+    'start_date': '2022-01-01',
+    'end_date': '2025-01-01',
+}
+
+dtfields = (
+    TicketsWithIterations.user_register_date.name,
+    TicketsWithIterations.creation_date.name,
+    _lcs.revoked_since,
+    TicketsWithIterations.subscription_start.name,
+    TicketsWithIterations.expiration_date.name,
+)
+
+tbl = '#TicketsWithLicenses'

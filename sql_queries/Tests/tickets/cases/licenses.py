@@ -1,4 +1,7 @@
-class lcs:
+import sql_queries.index.path.remote as _path_index
+
+
+class _lcs:
     id = 'id'
     owner_crmid = 'owner_crmid'
     end_user_crmid = 'end_user_crmid'
@@ -7,8 +10,8 @@ class lcs:
     revoked_since = 'revoked_since'
 
 
-licenses = {
-    lcs.id:
+want = {
+    _lcs.id:
         [
             '00000000-0000-0000-0000-000000000001',
             '00000000-0000-0000-0000-000000000001',
@@ -17,7 +20,7 @@ licenses = {
             '00000000-0000-0000-0000-000000000004',
             '00000000-0000-0000-0000-000000000005',
         ],
-    lcs.owner_crmid:
+    _lcs.owner_crmid:
         [
             '00000000-0000-0000-0000-000000000001',
             '00000000-0000-0000-0000-000000000001',
@@ -26,7 +29,7 @@ licenses = {
             '00000000-0000-0000-0000-000000000005',
             '00000000-0000-0000-0000-000000000005',
         ],
-    lcs.end_user_crmid:
+    _lcs.end_user_crmid:
         [
             '00000000-0000-0000-0000-000000000001',
             '00000000-0000-0000-0000-000000000002',
@@ -35,7 +38,7 @@ licenses = {
             '00000000-0000-0000-0000-000000000005',
             '00000000-0000-0000-0000-000000000006',
         ],
-    lcs.order_item_id:
+    _lcs.order_item_id:
         [
             '00000000-0000-0000-0000-000000000001',
             '00000000-0000-0000-0000-000000000001',
@@ -44,7 +47,7 @@ licenses = {
             '00000000-0000-0000-0000-000000000004',
             '00000000-0000-0000-0000-000000000004',
         ],
-    lcs.lic_origin: [
+    _lcs.lic_origin: [
         0,
         1,
         0,
@@ -52,7 +55,7 @@ licenses = {
         1,
         0,
     ],
-    lcs.revoked_since: [
+    _lcs.revoked_since: [
         None,
         '2024-02-01',
         None,
@@ -61,3 +64,8 @@ licenses = {
         None,
     ],
 }
+
+tbl = '#LisencesOnly'
+queries = [_path_index.licenses]
+dtfields = [_lcs.revoked_since]
+params = {}

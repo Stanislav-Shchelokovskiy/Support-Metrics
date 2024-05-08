@@ -1,7 +1,7 @@
 from sql_queries.meta.aggs import TicketsWithIterations
 
 
-tickets_with_properties = {
+want = {
     TicketsWithIterations.user_crmid.name:
         [
             '00000000-0000-0000-0000-000000000001',
@@ -307,4 +307,21 @@ tickets_with_properties = {
             0, 0, None, None, None, None, None, None, None, None, None, 1,
             None, None, 1
         ],
+}
+
+dtfields = (
+    TicketsWithIterations.user_register_date.name,
+    TicketsWithIterations.creation_date.name,
+    TicketsWithIterations.fixed_on.name,
+    TicketsWithIterations.closed_on.name,
+    TicketsWithIterations.converted_to_bug_on.name,
+    TicketsWithIterations.subscription_start.name,
+    TicketsWithIterations.expiration_date.name,
+)
+
+params = {
+    'years_of_history': 'YEAR, -35',
+    'employees_json': '',
+    'start_date': '2022-01-01',
+    'end_date': '2025-01-01',
 }
