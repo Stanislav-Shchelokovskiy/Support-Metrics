@@ -45,7 +45,7 @@ jobs:
           curl https://packages.microsoft.com/config/debian/11/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
           ACCEPT_EULA=Y sudo apt-get install -y --no-install-recommends msodbcsql18 mssql-tools18 unixodbc-dev
       - name: Test
-        run: poetry run pytest -xvs --disable-warnings -m "not e2e"
+        run: poetry run pytest -xvs --disable-warnings
         env:
           SQL_SERVER: localhost:1433
           SQL_SERVER_SQLCMD: localhost,1433
