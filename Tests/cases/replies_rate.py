@@ -1,15 +1,15 @@
-group_by = '%Y-%H'
+group_by = '%Y-%Q'
 start = '2023-05-01'
 end = '2024-06-01'
 baseline_aligned_mode_enabled = False
-metric = 'People'
+metric = 'Iterations / Tickets'
 body = {
     'Percentile':
         {
             'metric': 'iterations',
             'value': {
                 'include': True,
-                'value': 100
+                'value': 80
             }
         },
     'Ticket owner': {
@@ -19,10 +19,6 @@ body = {
     'Ticket visibility': {
         'include': False,
         'value': 0
-    },
-    'Resolution time': {
-        'include': True,
-        'values': [1, 430]
     },
     'Roles': {
         'include': True,

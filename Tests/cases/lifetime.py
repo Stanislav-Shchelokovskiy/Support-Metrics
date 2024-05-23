@@ -1,8 +1,8 @@
-group_by = '%Y-%H'
+group_by = '%Y-%W'
 start = '2023-05-01'
 end = '2024-06-01'
 baseline_aligned_mode_enabled = False
-metric = 'People'
+metric = 'Ticket Lifetime'
 body = {
     'Percentile':
         {

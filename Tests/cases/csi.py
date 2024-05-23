@@ -1,8 +1,8 @@
-group_by = '%Y-%H'
+group_by = '%Y'
 start = '2023-05-01'
 end = '2024-06-01'
 baseline_aligned_mode_enabled = False
-metric = 'People'
+metric = 'Satisfaction Index'
 body = {
     'Percentile':
         {
@@ -22,7 +22,7 @@ body = {
     },
     'Resolution time': {
         'include': True,
-        'values': [1, 430]
+        'values': [50, 430]
     },
     'Roles': {
         'include': True,

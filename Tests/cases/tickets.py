@@ -1,8 +1,8 @@
-group_by = '%Y-%H'
+group_by = '%Y-%Q'
 start = '2023-05-01'
 end = '2024-06-01'
-baseline_aligned_mode_enabled = False
-metric = 'People'
+baseline_aligned_mode_enabled = True
+metric = 'Tickets'
 body = {
     'Percentile':
         {
@@ -20,9 +20,9 @@ body = {
         'include': False,
         'value': 0
     },
-    'Resolution time': {
+    'User Groups': {
         'include': True,
-        'values': [1, 430]
+        'values': ['ug1']
     },
     'Roles': {
         'include': True,

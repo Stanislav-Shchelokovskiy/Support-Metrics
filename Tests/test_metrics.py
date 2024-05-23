@@ -12,6 +12,12 @@ import Tests.cases as cases
 @pytest.mark.parametrize(
     'resp_file,case', [
         ('people', cases.people),
+        ('tickets', cases.tickets),
+        ('iterations', cases.iterations),
+        ('replies_rate', cases.replies_rate),
+        ('resolution_time', cases.resolution_time),
+        ('lifetime', cases.lifetime),
+        ('csi', cases.csi),
     ]
 )
 def test_aggregates(resp_file: str, case: TestCase, test_client):
