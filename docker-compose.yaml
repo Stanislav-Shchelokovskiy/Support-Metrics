@@ -2,7 +2,7 @@ version: '3.4'
 
 x-support_metrics:
   &support_metrics
-  image: devexpress/support:support_metrics
+  image: shchelokovskiy/metrics:support_metrics
   restart: always
   environment:
     - SQL_SERVER
