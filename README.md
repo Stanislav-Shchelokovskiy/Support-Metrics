@@ -1,4 +1,4 @@
-### See [Engineering Metrics WIKI](http://wiki.pages.devx/supportwiki/new_tools_internal/engineering_metrics/) for a full review of the overall platform functionality.
+### See [Engineering Metrics WIKI](https://github.com/Stanislav-Shchelokovskiy/MetricsUI/blob/release/wiki/WIKI.md) for a full review of the overall platform functionality.
 
 # How to start the app
 
