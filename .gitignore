@@ -1,0 +1,11 @@
+**.lock
+**.venv
+**.pytest*
+**pycache*
+**.env
+**celerybeat-schedule
+**data
+**Tests/test_db
+**.ruff_cache
+**.mypy*
+**tmp.py

@@ -1,0 +1,1 @@
+Showcases the number of customers profiles that align with the chosen criteria in the filters.

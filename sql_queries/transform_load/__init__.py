@@ -1,0 +1,2 @@
+from sql_queries.transform_load.index_defs import get_create_index_statements
+from sql_queries.transform_load.table_defs import get_create_table_statements
